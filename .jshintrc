@@ -43,6 +43,7 @@
         "expect",
         "next",
         "L",
-        "confirm"
+        "confirm",
+        "$rootScope"
     ]
 }
