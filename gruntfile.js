@@ -178,9 +178,9 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        qunit: {
-            all: ['tests/**/*.html']
-        },
+        //qunit: {
+        //    all: ['tests/**/*.html']
+        //},
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -218,14 +218,6 @@ module.exports = function (grunt) {
                 ],
                 tasks: ['default']
             },
-            test: {
-                files: [
-                    '<%= jshint.files %>',
-                    'tests/**/*.js',
-                    'tests/**/*.html'
-                ],
-                tasks: ['test']
-            },
             html: {
                 files: [
                     'src/templates/**/*'
@@ -244,13 +236,17 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-preview');
 
     // register your tasks
-    grunt.registerTask('test', ['qunit']);
+    grunt.registerTask(
+        'test', 
+        [
+            'karma'
+        ]
+    );
     grunt.registerTask(
         'default',
         [

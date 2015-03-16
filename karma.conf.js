@@ -3,7 +3,7 @@ module.exports = function (config) {
 
     config.set({
 
-        basePath: '',
+        basePath: '.',
         frameworks: ['jasmine'],
 
         files: [
@@ -14,14 +14,16 @@ module.exports = function (config) {
             'src/scripts/services/satnet.js',
             'src/scripts/services/x.satnet.js',
             'src/scripts/services/maps.js',
+            'src/scripts/services/push.js',
             'src/scripts/models/marker.js',
             'src/scripts/models/x.servers.js',
             'src/scripts/models/x.groundstation.js',
             'src/scripts/models/x.spacecraft.js',
             'src/scripts/controllers/**/*.js',
+            'src/scripts/directives/**/*.js',
             'src/scripts/satnet.ui.js',
             'src/scripts/leop.ui.js',
-            'specs/unit/**/*.js'
+            'specs/**/*.spec.js'
         ],
 
         exclude: [],
@@ -31,7 +33,7 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_DEBUG,
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         singleRun: false
 
     });
