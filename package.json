@@ -52,5 +52,8 @@
     "karma-story-reporter": "^0.3.1",
     "phantomjs": "^1.9.13",
     "require.js": "^0.3.97"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   }
 }

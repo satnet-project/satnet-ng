@@ -19,10 +19,25 @@
 describe('Test Broadcaster Service', function () {
     'use strict';
 
-    var rootScope, broadcaster, __id__ = 'test-gs';
+    var broadcasterService, mockSatnetPush;
 
-    it('should return a broadcaster object', function () {
-        expect(broadcaster).not.toBeNull();
+    beforeEach(module('broadcaster'));
+
+    beforeEach(inject(function($injector) {
+
+        broadcasterService = $injector.get('broadcaster');
+        mockSatnetPush = {
+            getSomething: function () { return 'mockReturnValue'; }
+        };
+
+        module(function ($provide) {
+            $provide.value('satnetPush', mockSatnetPush);
+        });
+
+    }));
+
+    it('should return a non-null broadcaster object', function () {
+        expect(broadcasterService).not.toBeNull();
     });
 
     /*
