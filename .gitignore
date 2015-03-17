@@ -2,3 +2,4 @@ dist
 node_modules
 lib/bower
 .sass-cache
+.coverage
