@@ -6,7 +6,7 @@ AngularJS application that implements an user interface for the services of the 
 
 USAGE
 ================
-Add the files under the "dist" directory to your web application.
+The files under the "dist" directory are a frozen version. Current development version is no longer included compiled within "dist" since it is expected to be integrated in a CDN hosted domain. Whoever wants to use the latest available version, should generate the "dist" directory by him/herself using Grunt with the already included gruntfile.
 
 LICENSE
 ================
