@@ -145,14 +145,12 @@ angular.module('broadcaster').service('broadcaster', [
             $rootScope.$broadcast('leop.gss.updated', leop_id);
         };
         this.leopGsAssigned = function (data) {
-            console.log('@broadcaster, ev = LEOP_GS_ASSIGNED, data = ' + JSON.stringify(data));
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
             }
             $rootScope.$broadcast('leop.gs.assigned', data.groundstation_id);
         };
         this.leopGsReleased = function (data) {
-            console.log('@broadcaster, ev = LEOP_GS_RELEASED, data = ' + JSON.stringify(data));
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
             }

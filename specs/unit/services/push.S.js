@@ -25,12 +25,12 @@ describe('Testing Pusher Service', function () {
 	   'incrementCurrentItem'
     ]);
 
-    beforeEach(function($injector) {
-        satnetPush = $injector.get('satnetPush');
-    });
-
     beforeEach(module('pushServices'), function ($provide) {
         $provide.value('pusher', pusherMock);
+    });
+
+    beforeEach(function($injector) {
+        satnetPush = $injector.get('satnetPush');
     });
 
     it('should return a non-null satnetPush service object', function () {
