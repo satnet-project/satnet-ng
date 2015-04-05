@@ -32,7 +32,6 @@ describe('Test Broadcaster Service', function () {
         inject(function($injector) {
             broadcaster = $injector.get('broadcaster');
             rootScope = $injector.get('$rootScope');
-            spyOn(rootScope, '$broadcast');
         });
 
     });
@@ -70,12 +69,22 @@ describe('Test Broadcaster Service', function () {
     
     it('should broadcast the pushed events properly', function () {
         var __id__ = 'test_id',
-            __object__ = {
+            __object_id__ = {
                 identifier: 'available_test_id'
+            },
+            __data_frame__ = {
+                frame: 'TEST_FRAME_TEST_FRAME'
             },
             __gs_object_id__ = {
                 groundstation_id: 'gs_test_id'
+            },
+            __sc_object_id__ = {
+                launch_id: 'available_test_id',
+                launch_sc_id: 'launch_sc_test_id',
+                spacecraft_id: 'sc_test_id'
             };
+
+        spyOn(rootScope, '$broadcast');
 
         broadcaster.gsAdded(__id__);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.added', __id__);
@@ -84,18 +93,22 @@ describe('Test Broadcaster Service', function () {
         broadcaster.gsUpdated(__id__);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.updated', __id__);
 
-        broadcaster.gsAvailableAdded(__object__);
-        expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.available.added', __object__.identifier);
-        broadcaster.gsAvailableRemoved(__object__);
-        expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.available.removed', __object__.identifier);
-        broadcaster.gsAvailableUpdated(__object__);
-        expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.available.updated', __object__.identifier);
+        broadcaster.gsAvailableAdded(__object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.available.added', __object_id__.identifier);
+        broadcaster.gsAvailableRemoved(__object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.available.removed', __object_id__.identifier);
+        broadcaster.gsAvailableUpdated(__object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('gs.available.updated', __object_id__.identifier);
 
         broadcaster.passesUpdated();
         expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});
+        broadcaster.leopFrameReceived(__data_frame__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('leop.frame.rx', __data_frame__.frame);
+        broadcaster.keepAliveReceived({data: 'TEST_DATA_TEST'});
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('KEEP_ALIVE', {});
 
-        broadcaster.scGtUpdated(__object__);
-        expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.updated', __object__.identifier);
+        broadcaster.scGtUpdated(__object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.updated', __object_id__.identifier);
 
         broadcaster.leopGssUpdated(__id__);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('leop.gss.updated', __id__);
@@ -103,10 +116,33 @@ describe('Test Broadcaster Service', function () {
         expect(rootScope.$broadcast).toHaveBeenCalledWith('leop.gs.assigned', __gs_object_id__.groundstation_id);
         broadcaster.leopGsReleased(__gs_object_id__);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('leop.gs.released', __gs_object_id__.groundstation_id);
+        rootScope.$broadcast.calls.reset();
 
-        // TODO: start testing the more complex events left, with multiple events triggered
-        // TODO: reset the calls made to the Jasmine spy object for $rootScope.$brodacast()
+        rootScope.leop_id = __object_id__.identifier;
+        broadcaster.leopUpdated(__object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('leop.updated', __object_id__);
+        rootScope.$broadcast.calls.reset();
+
+        broadcaster.leopUfoIdentified(__sc_object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.added', __sc_object_id__.spacecraft_id);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});
+        rootScope.$broadcast.calls.reset();
+
+        broadcaster.leopUfoUpdated(__sc_object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.updated', __sc_object_id__.spacecraft_id);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});
+        rootScope.$broadcast.calls.reset();
         
+        broadcaster.leopUfoForgot(__sc_object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.removed', __sc_object_id__.spacecraft_id);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});
+        rootScope.$broadcast.calls.reset();
+
+        broadcaster.leopSCUpdated(__sc_object_id__);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.updated', __sc_object_id__.launch_sc_id);
+        expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});
+        rootScope.$broadcast.calls.reset();
+
         broadcaster.scAdded(__id__);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.added', __id__);
         broadcaster.scUpdated(__id__);
