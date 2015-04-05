@@ -20,15 +20,22 @@ describe('Testing Pusher Service', function () {
     'use strict';
 
     var satnetPush;
+    var pusherMock = jasmine.createSpyObj('pusher', [
+	   'initalizeCurrentItem',
+	   'incrementCurrentItem'
+    ]);
 
-    beforeEach(module('pushServices'));
-
-    beforeEach(inject(function($injector) {
+    beforeEach(function($injector) {
         satnetPush = $injector.get('satnetPush');
-    }));
+    });
+
+    beforeEach(module('pushServices'), function ($provide) {
+        $provide.value('pusher', pusherMock);
+    });
 
     it('should return a non-null satnetPush service object', function () {
         expect(satnetPush).not.toBeNull();
+        expect(satnetPush.LEOP_DOWNLINK_CHANNEL).not.toBeNull();
     });
 
 });

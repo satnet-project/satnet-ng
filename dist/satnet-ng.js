@@ -750,7 +750,7 @@ angular.module('satnet-services').service('satnetRPC', [
             return this.rCall('net.alive', []).then(function () {
                 return true;
             });
-        }
+        };
 
         /**
          * Retrieves the user location using an available Internet service.
