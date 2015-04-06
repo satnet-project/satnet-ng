@@ -27,12 +27,13 @@ module.exports = function (config) {
         ],
 
         exclude: [],
-        preprocessors: {
-            'src/scripts/**/*.js': ['coverage']
-        },
-        reporters: ['progress', 'coverage'],
+        //preprocessors: {
+        //    'src/scripts/**/*.js': ['coverage']
+        //},
+        reporters: ['progress', 'coverage', 'coveralls'],
         coverageReporter: {
-            type: 'html',
+            type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
+            repoToken: '',
             dir: '.coverage/'
         },
         port: 9876,
