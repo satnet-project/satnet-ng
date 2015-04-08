@@ -132,7 +132,7 @@ describe('Test Broadcaster Service', function () {
         expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.updated', __sc_object_id__.spacecraft_id);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});
         rootScope.$broadcast.calls.reset();
-        
+
         broadcaster.leopUfoForgot(__sc_object_id__);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('sc.removed', __sc_object_id__.spacecraft_id);
         expect(rootScope.$broadcast).toHaveBeenCalledWith('passes.updated', {});

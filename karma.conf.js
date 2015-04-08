@@ -27,12 +27,12 @@ module.exports = function (config) {
         ],
 
         exclude: [],
-        //preprocessors: {
-        //    'src/scripts/**/*.js': ['coverage']
-        //},
+        preprocessors: {
+            'src/scripts/**/*.js': ['coverage']
+        },
         reporters: ['progress', 'coverage', 'coveralls'],
         coverageReporter: {
-            type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
+            type: 'html', // lcov or lcovonly are required for generating lcov.info files
             repoToken: '',
             dir: '.coverage/'
         },
@@ -41,7 +41,7 @@ module.exports = function (config) {
         logLevel: config.LOG_DEBUG,
         autoWatch: true,
         browsers: ['PhantomJS'],
-        singleRun: false
+        singleRun: true
 
     });
 };
