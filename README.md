@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/satnet-project/satnet-ng.svg?branch=master)](https://travis-ci.org/satnet-project/satnet-ng)
 [![Coverage Status](https://coveralls.io/repos/satnet-project/satnet-ng/badge.svg)](https://coveralls.io/r/satnet-project/satnet-ng)
+[![Documentation Status](http://inch-ci.org/github/satnet-project/satnet-ng.svg?branch=master&style=flat)](http://inch-ci.org/github/satnet-project/satnet-ng)
 
 satnet-ng
 ================
