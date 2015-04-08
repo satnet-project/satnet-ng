@@ -16,7 +16,7 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe('Test Broadcaster Service', function () {
+describe('Testing Broadcaster Service', function () {
 
     var broadcaster, rootScope;
 

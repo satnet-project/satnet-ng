@@ -219,6 +219,14 @@ module.exports = function (grunt) {
                 ],
                 tasks: ['default']
             },
+            test: {
+                files: [
+                    '<%= jshint.files %>',
+                    'src/scripts/**/*',
+                    'src/specs/**/*'
+                ],
+                tasks: ['test']
+            },
             html: {
                 files: [
                     'src/templates/**/*'
@@ -242,12 +250,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-preview');
 
     // register your tasks
-    grunt.registerTask(
-        'test', 
-        [
-            'karma'
-        ]
-    );
+    grunt.registerTask('test',  ['karma']);
     grunt.registerTask(
         'default',
         [

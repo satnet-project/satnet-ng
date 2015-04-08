@@ -32,7 +32,7 @@ module.exports = function (config) {
         },
         reporters: ['progress', 'coverage', 'coveralls'],
         coverageReporter: {
-            type: 'html', // lcov or lcovonly are required for generating lcov.info files
+            type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
             repoToken: '',
             dir: '.coverage/'
         },
