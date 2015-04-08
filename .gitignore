@@ -3,3 +3,4 @@ node_modules
 lib/bower
 .sass-cache
 .coverage
+npm-debug.log
