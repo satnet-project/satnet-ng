@@ -16,6 +16,7 @@
     "predef": [
         "angular",
         "jasmine", "describe", "it", "expect", "afterEach", "beforeEach", "module", "inject", "spyOn",
+        "$", "qunit", "test", "throws", "deepEqual",
         "Pusher"
     ],
 

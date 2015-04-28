@@ -7,12 +7,13 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
 
         files: [
+            'lib/bower/jquery/dist/jquery.js',
             'node_modules/angular/angular.js',
             'node_modules/angular-mocks/angular-mocks.js',
+            'lib/bower/angular-material/angular-material.js',
             'src/scripts/services/celestrak.js',
             'src/scripts/services/broadcaster.js',
             'src/scripts/services/satnet.js',
-            'src/scripts/services/x.satnet.js',
             'src/scripts/services/maps.js',
             'src/scripts/services/push.js',
             'src/scripts/models/marker.js',
@@ -23,16 +24,21 @@ module.exports = function (config) {
             'src/scripts/directives/**/*.js',
             'src/scripts/satnet.ui.js',
             'src/scripts/leop.ui.js',
+            'src/templates/**/*.html',
             'specs/**/*.spec.js'
         ],
 
         exclude: [],
         preprocessors: {
-            'src/scripts/**/*.js': ['coverage']
+            'src/scripts/**/*.js': ['coverage'],
+            'src/templates/**/*.html': ['ng-html2js']
+        },
+        ngHtml2JsPreprocessor: {
+            moduleName: 'templates'
         },
         reporters: ['progress', 'coverage', 'coveralls'],
         coverageReporter: {
-            type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
+            type: 'lcov',
             repoToken: '',
             dir: '.coverage/'
         },

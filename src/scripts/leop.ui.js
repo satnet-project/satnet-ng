@@ -22,6 +22,7 @@
  */
 var app = angular.module('leop-ui', [
     // AngularJS libraries
+    'ngMaterial',
     'jsonrpc',
     'ngCookies',
     'ngResource',

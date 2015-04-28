@@ -47,7 +47,8 @@
     "angular-timer": "~1.2.0",
     "angular-gantt": "~1.1.0",
     "pusher-angular": "~0.1.4",
-    "angular-bootstrap-datetimepicker": "~0.3.8"
+    "angular-bootstrap-datetimepicker": "~0.3.8",
+    "angular-material": "~0.8.3"
   },
   "devDependencies": {
     "qunit": "~1.15.0"
