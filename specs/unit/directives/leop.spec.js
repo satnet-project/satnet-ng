@@ -22,10 +22,10 @@ describe('Testing LEOP Directive', function () {
         $compile,
         el, $el, $el_test,
         $body = $("body"),
-        simpleHtml = "<div class='jtest'>JTEST</div><leop></leop>";
+        simpleHtml = "<div class='jtest'>JTEST</div><leopApp></leopApp>";
 
     beforeEach(function() {
-    
+
         module('templates', 'leopDirective');
 
         inject(function($injector) {
@@ -37,11 +37,11 @@ describe('Testing LEOP Directive', function () {
             el = $compile(angular.element(simpleHtml))($scope);
 
         });
-        
+
         $body.append(el);
         $rootScope.$digest();
 
-        $el = $(".leop-app");
+        $el = $(".xtest");
         $el_test = $(".jtest");
 
     });
@@ -51,8 +51,7 @@ describe('Testing LEOP Directive', function () {
     });
 
     it("Should render the directive out in the DOM tree", function () {
-        expect($el).not.toBeNull();
-        expect($el_test).not.toBeNull();
+        expect($el.length).toEqual(1);
         expect($el_test.length).toEqual(1);
         expect($el_test.text()).toEqual('JTEST');
     });

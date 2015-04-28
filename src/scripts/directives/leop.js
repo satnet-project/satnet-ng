@@ -43,7 +43,7 @@ angular.module('leopDirective', [])
     };
 
 })
-.directive('leop', function () {
+.directive('leopApp', function () {
     'use strict';
 
     return {
