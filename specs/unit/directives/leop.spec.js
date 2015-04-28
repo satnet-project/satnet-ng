@@ -50,7 +50,7 @@ describe('Testing LEOP Directive', function () {
         $body.empty();
     });
 
-    it("Should render the directive out in the DOM tree", function () {
+    it("Should render the directive out in the DOM", function () {
         //expect($el.length).toEqual(1);
         expect($el_test.length).toEqual(1);
         expect($el_test.text()).toEqual('JTEST');
