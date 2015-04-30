@@ -17,6 +17,7 @@
 angular.module('leopDirective', [])
 .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
 
+    $scope.closed = false;
     $scope.toggle = angular.noop;
     $scope.isOpen = function () { return false; };
 
@@ -39,6 +40,7 @@ angular.module('leopDirective', [])
     $scope.close = function () {
         $mdSidenav('left').close().then(function () {
             $log.debug("close LEFT is done");
+            $scope.closed = true;
         });
     };
 
