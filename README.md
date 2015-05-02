@@ -1,7 +1,10 @@
 [![Build Status](https://travis-ci.org/satnet-project/satnet-ng.svg?branch=master)](https://travis-ci.org/satnet-project/satnet-ng)
 [![Coverage Status](https://coveralls.io/repos/satnet-project/satnet-ng/badge.svg)](https://coveralls.io/r/satnet-project/satnet-ng)
+
 [![Inline docs](http://inch-ci.org/github/satnet-project/satnet-ng.png)](http://inch-ci.org/github/satnet-project/satnet-ng)
-[![Dependencies](https://david-dm.org/satnet-project/satnet-ng.svg)](https://david-dm.org/satnet-project/satnet-ng.svg)
+
+[![Dependencies Status](https://david-dm.org/satnet-project/satnet-ng.svg)](https://david-dm.org/satnet-project/satnet-ng.svg)
+[![devDependency Status](https://david-dm.org/satnet-project/satnet-ng/dev-status.svg)](https://david-dm.org/satnet-project/satnet-ng#info=devDependencies)
 
 satnet-ng
 ================
