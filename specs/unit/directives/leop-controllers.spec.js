@@ -50,7 +50,7 @@ describe('Controller: MenuCtrl', function() {
     expect($scope.mdSidenav.isMock).toBeTruthy();
   });
 
-  /**/
+  /*
   describe('managing $mdSidenav', function () {
 
     it('should close the menu', function () {
@@ -71,6 +71,6 @@ describe('Controller: MenuCtrl', function() {
     });
   
   });
-  /**/
+  */
 
 });
