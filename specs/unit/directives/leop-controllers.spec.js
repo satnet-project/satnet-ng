@@ -16,61 +16,49 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe('Controller: MenuCtrl', function() {
+describe('MenuCtrl controller', function () {
 
-  var $rootScope, $scope, $controller, $q,
-      menuCtrl,
-      mock__mdSidenav = {
-        isMock: true,
-        close: function () {}
-      };
+    var $rootScope, $scope, $controller, $q, menuCtrl,
+        mock__mdSidenav = function () {
+            return {
+                close: function () {
+                    return $q.when();
+                }
+            };
+        };
 
-  beforeEach(function () {
+    beforeEach(function () {
 
-    module('leopDirective', function($provide) {
-      $provide.value('$mdSidenav', mock__mdSidenav);
-    });
+        module('leopDirective', function ($provide) {
+            $provide.value('$mdSidenav', mock__mdSidenav);
+        });
 
-    inject(function ($injector) {
+        inject(function ($injector) {
 
-      $rootScope = $injector.get('$rootScope');
-      $controller = $injector.get('$controller');
-      $q = $injector.get('$q');
+            $rootScope = $injector.get('$rootScope');
+            $controller = $injector.get('$controller');
+            $q = $injector.get('$q');
 
-      $scope = $rootScope.$new();
+            $scope = $rootScope.$new();
 
-    });
+        });
 
-    menuCtrl = $controller("MenuCtrl", { $scope: $scope });
-
-  });
-
-  it('should create the $mdSidenav object', function () {
-    expect($scope.mdSidenav).toBeDefined();
-    expect($scope.mdSidenav.isMock).toBeTruthy();
-  });
-
-  /*
-  describe('managing $mdSidenav', function () {
-
-    it('should close the menu', function () {
-
-      var data,
-          deferred = $q.defer(),
-          promise = deferred.promise;
-
-      // set up promise resolve callback
-      mock__mdSidenav.close = promise.then(function (response) {
-        data = response.success;
-      });
-      // force `$digest` to resolve/reject deferreds
-      $rootScope.$digest();
-
-      $scope.close();
+        menuCtrl = $controller("MenuCtrl", {
+            $scope: $scope,
+            $mdSidenav: mock__mdSidenav
+        });
 
     });
-  
-  });
-  */
+
+    it('should close the $mdSidenav menu', function () {
+
+        expect($scope.closed).toBe(false);
+
+        $scope.close();
+        $rootScope.$digest();
+
+        expect($scope.closed).toBe(true);
+
+    });
 
 });

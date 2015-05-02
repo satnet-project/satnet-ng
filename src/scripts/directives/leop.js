@@ -15,44 +15,51 @@
 */
 
 angular.module('leopDirective', [])
-.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
+    .controller(
+        'AppCtrl',
+        function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
+            'use strict';
 
-    $scope.closed = false;
-    $scope.toggle = angular.noop;
-    $scope.isOpen = function () { return false; };
+            $scope.closed = false;
+            $scope.toggle = angular.noop;
+            $scope.isOpen = function () {
+                return false;
+            };
 
-    $mdComponentRegistry.when('right').then(function (sideNav) {
+            $mdComponentRegistry.when('menu').then(function (sideNav) {
+                $scope.isOpen = angular.bind(sideNav, sideNav.isOpen);
+                $scope.toggle = angular.bind(sideNav, sideNav.toggle);
+            });
 
-        $scope.isOpen = angular.bind(sideNav, sideNav.isOpen);
-        $scope.toggle = angular.bind(sideNav, sideNav.toggle);
+            $scope.toggleMenu = function () {
+                $mdSidenav('menu').toggle().then(function () {
+                    $log.debug("MENU is done");
+                });
+            };
 
-    });
+        })
+    .controller(
+        'MenuCtrl',
+        function ($scope, $timeout, $mdSidenav, $log) {
+            'use strict';
 
-    $scope.toggleMenu = function () {
-        $mdSidenav('menu').toggle().then(function () {
-            $log.debug("MENU is done");
+            $scope.closed = false;
+            $scope.close = function () {
+                $mdSidenav('menu').close().then(function () {
+                    $log.debug("close LEFT is done");
+                    $scope.closed = true;
+                });
+            };
+
+        })
+    .directive(
+        'leopApp',
+        function () {
+            'use strict';
+
+            return {
+                restrict: 'E',
+                templateUrl: 'templates/leop/mainLeop.html'
+            };
+
         });
-    };
-
-})
-.controller('MenuCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-
-    $scope.mdSidenav = $mdSidenav;
-
-    $scope.close = function () {
-        $mdSidenav('left').close().then(function () {
-            $log.debug("close LEFT is done");
-            $scope.closed = true;
-        });
-    };
-
-})
-.directive('leopApp', function () {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        templateUrl: 'templates/leop/mainLeop.html'
-    };
-
-});
