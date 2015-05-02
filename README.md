@@ -4,7 +4,7 @@
 
 satnet-ng
 ================
-AngularJS application that implements an user interface for the services of the SATNet network.
+AngularJS application that implements a JavaScript user interface for the services of the SATNet network.
 
 USAGE
 ================
