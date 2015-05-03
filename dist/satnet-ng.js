@@ -2729,7 +2729,7 @@ angular.module('ui-leop-modalufo-controllers')
                     }
                 }
                 throw 'Pair not found in array, = (' +
-                    property + ', ' + value + ')';
+                property + ', ' + value + ')';
             };
 
             /**
@@ -2758,7 +2758,8 @@ angular.module('ui-leop-modalufo-controllers')
             this.findMaxTuple = function (array, property) {
                 this.check(array, property);
 
-                var i, max_value = -1, max_index = 0;
+                var i, max_value = -1,
+                    max_index = 0;
                 for (i = 0; i < array.length; i += 1) {
                     if (array[i][property] > max_value) {
                         max_value = array[i][property];
@@ -2921,7 +2922,9 @@ angular.module('ui-leop-modalufo-controllers')
                 if (!property) {
                     throw 'Property is null';
                 }
-                var obj = {}, dict = {}, key;
+                var obj = {},
+                    dict = {},
+                    key;
 
                 angular.forEach(array, function (i) {
                     angular.extend(obj, i);
@@ -2967,7 +2970,9 @@ angular.module('ui-leop-modalufo-controllers')
              */
             this.findMaxTuple = function (dict, property) {
                 this.check(dict, property);
-                var k, max_k, v = 0, max_v = 0, size = 0;
+                var k, max_k, v = 0,
+                    max_v = 0,
+                    size = 0;
                 for (k in dict) {
                     if (dict.hasOwnProperty(k)) {
                         size += 1;
@@ -3110,9 +3115,9 @@ angular.module('ui-leop-modalufo-controllers')
             $scope._nextObjectId = function () {
                 var id_ufos = $scope._biggestUfo(),
                     id_identified = $scope._biggestIded();
-                return (id_ufos > id_identified)
-                    ? parseInt(id_ufos, 10) + 1
-                    : parseInt(id_identified, 10) + 1;
+                return (id_ufos > id_identified) ?
+                    parseInt(id_ufos, 10) + 1 :
+                    parseInt(id_identified, 10) + 1;
             };
 
             $scope._isUfosEmpty = function () {
@@ -3122,7 +3127,9 @@ angular.module('ui-leop-modalufo-controllers')
                 return xDicts.size($scope.cluster.ufos);
             };
             $scope._addUfo = function (object_id) {
-                $scope.cluster.ufos[object_id] = { 'object_id': object_id };
+                $scope.cluster.ufos[object_id] = {
+                    'object_id': object_id
+                };
                 $scope.cluster.no_ufos += 1;
             };
             $scope._removeUfo = function (object_id) {
@@ -3134,7 +3141,9 @@ angular.module('ui-leop-modalufo-controllers')
             };
 
             $scope._addEditingUfo = function (object_id) {
-                if ($scope.is_anonymous) { return; }
+                if ($scope.is_anonymous) {
+                    return;
+                }
                 $scope.cluster.editing[object_id] = {
                     object_id: object_id,
                     sc_identifier: '',
@@ -3200,7 +3209,8 @@ angular.module('ui-leop-modalufo-controllers')
             };
 
             $scope.add = function () {
-                var next_id = $scope._nextObjectId(), scope = $scope;
+                var next_id = $scope._nextObjectId(),
+                    scope = $scope;
                 satnetRPC.rCall('leop.ufo.add', [$rootScope.leop_id, next_id])
                     .then(function (data) {
                         $log.info('[modal-ufo] New ufo, id = ' + data);
@@ -3209,7 +3219,8 @@ angular.module('ui-leop-modalufo-controllers')
             };
 
             $scope.remove = function () {
-                var id = $scope._biggestUfo(), scope = $scope;
+                var id = $scope._biggestUfo(),
+                    scope = $scope;
                 satnetRPC.rCall('leop.ufo.remove', [$rootScope.leop_id, id])
                     .then(function (data) {
                         $log.info('[modal-ufo] Removed ufo, id = ' + data);
@@ -3223,7 +3234,9 @@ angular.module('ui-leop-modalufo-controllers')
             };
 
             $scope.editingIded = function (object_id) {
-                if ($scope.is_anonymous) { return; }
+                if ($scope.is_anonymous) {
+                    return;
+                }
                 var object = $scope._getIdentified(object_id);
                 $scope._addEditingIded(object_id, object);
                 $scope._removeIdentified(object_id);
@@ -3252,8 +3265,7 @@ angular.module('ui-leop-modalufo-controllers')
             $scope._saveUfo = function (object_id, object) {
                 var err_msg = '[modal-ufo] Wrong configuration, ex = ';
                 satnetRPC.rCall(
-                    'leop.ufo.identify',
-                    [
+                    'leop.ufo.identify', [
                         $rootScope.leop_id,
                         object_id,
                         object.callsign,
@@ -3283,8 +3295,7 @@ angular.module('ui-leop-modalufo-controllers')
             $scope._saveIded = function (object_id, object) {
                 var err_msg = '[modal-ufo] Wrong configuration, ex = ';
                 satnetRPC.rCall(
-                    'leop.ufo.update',
-                    [
+                    'leop.ufo.update', [
                         $rootScope.leop_id,
                         object_id,
                         object.callsign,
@@ -3313,7 +3324,7 @@ angular.module('ui-leop-modalufo-controllers')
 
             $scope.forget = function (object_id) {
                 var ask_msg = 'Are you sure that you want to return <Object#' +
-                        object_id + '> back to the UFO list?',
+                    object_id + '> back to the UFO list?',
                     err_msg = '[modal-ufo] Wrong configuration, ex = ',
                     object = $scope._getIdentified(object_id),
                     object_sc_id = object.sc_identifier;
@@ -3324,8 +3335,7 @@ angular.module('ui-leop-modalufo-controllers')
                 }
 
                 satnetRPC.rCall(
-                    'leop.ufo.forget',
-                    [$rootScope.leop_id, object_id]
+                    'leop.ufo.forget', [$rootScope.leop_id, object_id]
                 ).then(
                     function (data) {
                         $log.info(
@@ -3378,7 +3388,9 @@ angular.module('ui-leop-modalufo-controllers')
                 $scope.cluster.edit = false;
             };
 
-            $scope.hide = function () { $modalInstance.close(); };
+            $scope.hide = function () {
+                $modalInstance.close();
+            };
             $scope.init();
 
         }
@@ -4023,6 +4035,70 @@ angular.module('countdownDirective', ['broadcaster', 'satnet-services'])
    limitations under the License.
 */
 
+angular.module('leopDirective', [])
+    .controller(
+        'AppCtrl',
+        function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
+            'use strict';
+
+            $scope.closed = false;
+            $scope.toggle = angular.noop;
+            $scope.isOpen = function () {
+                return false;
+            };
+
+            $mdComponentRegistry.when('menu').then(function (sideNav) {
+                $scope.isOpen = angular.bind(sideNav, sideNav.isOpen);
+                $scope.toggle = angular.bind(sideNav, sideNav.toggle);
+            });
+
+            $scope.toggleMenu = function () {
+                $mdSidenav('menu').toggle().then(function () {
+                    $log.debug("MENU is done");
+                });
+            };
+
+        })
+    .controller(
+        'MenuCtrl',
+        function ($scope, $timeout, $mdSidenav, $log) {
+            'use strict';
+
+            $scope.closed = false;
+            $scope.close = function () {
+                $mdSidenav('menu').close().then(function () {
+                    $log.debug("close LEFT is done");
+                    $scope.closed = true;
+                });
+            };
+
+        })
+    .directive(
+        'leopApp',
+        function () {
+            'use strict';
+
+            return {
+                restrict: 'E',
+                templateUrl: 'templates/leop/mainLeop.html'
+            };
+
+        });;/*
+   Copyright 2014 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 angular.module('messagesDirective', [
     'satnet-services', 'broadcaster', 'ui-leop-modalufo-controllers'
 ])
@@ -4579,6 +4655,7 @@ app.run([
  */
 var app = angular.module('leop-ui', [
     // AngularJS libraries
+    'ngMaterial',
     'jsonrpc',
     'ngCookies',
     'ngResource',

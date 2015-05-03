@@ -22,16 +22,13 @@ module.exports = function (grunt) {
         clean: ['dist'],
         jshint: {
             files: [
+                '.jshintrc',
                 'gruntfile.js',
                 'src/scripts/**/*.js',
                 'specs/**/*.js'
             ],
             options: {
-                globals: {
-                    jQuery: true,
-                    console: true,
-                    module: true
-                }
+                jshintrc: '.jshintrc'
             }
         },
         concat: {
@@ -179,9 +176,6 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        //qunit: {
-        //    all: ['tests/**/*.html']
-        //},
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -202,11 +196,17 @@ module.exports = function (grunt) {
                 }
             }
         },
-        preview: {
-            html: {
-                cwd: 'src/templates',
-                dest: 'http://localhost:9000',
-                src: ["**/*.html"]
+        express: {
+            options: {
+                bases: ['src/', 'dist/'],
+                port: 8080,
+                hostname: "0.0.0.0",
+                livereload: true
+            }
+        },
+        open: {
+            all: {
+                path: 'http://localhost:8080/leop-index.html'
             }
         },
         watch: {
@@ -217,7 +217,30 @@ module.exports = function (grunt) {
                     'src/images/**/*',
                     'src/templates/**/*'
                 ],
-                tasks: ['default']
+                tasks: ['build']
+            },
+            express: {
+                files: [
+                    '<%= jshint.files %>',
+                    'src/css/**/*',
+                    'src/images/**/*',
+                    'src/templates/**/*',
+                    'src/**/*.html'
+                ],
+                options: {
+                    livereload: true
+                },
+                tasks: ['express']
+            },
+            preview: {
+                files: [
+                    '<%= jshint.files %>',
+                    'src/leop-index.html',
+                    'src/css/**/*',
+                    'src/images/**/*',
+                    'src/templates/**/*'
+                ],
+                tasks: ['build', 'open']
             },
             test: {
                 files: [
@@ -227,17 +250,11 @@ module.exports = function (grunt) {
                     'src/specs/**/*'
                 ],
                 tasks: ['test']
-            },
-            html: {
-                files: [
-                    'src/templates/**/*'
-                ],
-                tasks: ['preview']
             }
         }
     });
 
-    // load up your plugins
+    // PLUGINS
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -246,23 +263,21 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-preview');
+    grunt.loadNpmTasks('grunt-angular-templates');
+    grunt.loadNpmTasks('grunt-open');
+    grunt.loadNpmTasks('grunt-express');
 
-    // register your tasks
-    grunt.registerTask('test',  ['karma']);
+    // TASKS
     grunt.registerTask(
-        'default',
-        [
-            'clean',
-            'sass',
-            'ngtemplates',
-            'concat',
-            'copy',
-            'cssmin',
-            'uglify'
-        ]
+        'test', ['jshint', 'karma']
+    );
+    grunt.registerTask(
+        'build', ['clean', 'sass', 'ngtemplates', 'concat', 'copy', 'cssmin', 'uglify']
+    );
+
+    grunt.registerTask(
+        'server', ['express', 'watch:express']
     );
 
 };
