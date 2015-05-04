@@ -13,16 +13,22 @@
    limitations under the License. */
 
 @import 'main';
-
-.menu-button b {
-    margin: 0 0 0 35%;
+body {
+    position: relative
 }
-.menu-button i {
-    font-size: 200%;
+
+.menu-button {
+    width: 100%;
+    b {
+        margin: 0 0 0 15%;
+    }
+    i {
+        font-size: 200%;
+    }
 }
 
 .leop-gs-duallist option {
-  font-size: 150%;
-  font-weight: bolder;
-  text-align: center;
+    font-size: 150%;
+    font-weight: bolder;
+    text-align: center;
 }

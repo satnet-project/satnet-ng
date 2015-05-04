@@ -471,11 +471,15 @@ a.button-red {
   vertical-align: middle;
   color: #ff0000; }
 
-.menu-button b {
-  margin: 0 0 0 35%; }
+body {
+  position: relative; }
 
-.menu-button i {
-  font-size: 200%; }
+.menu-button {
+  width: 100%; }
+  .menu-button b {
+    margin: 0 0 0 15%; }
+  .menu-button i {
+    font-size: 200%; }
 
 .leop-gs-duallist option {
   font-size: 150%;

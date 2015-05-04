@@ -208,7 +208,8 @@ module.exports = function (grunt) {
         },
         open: {
             all: {
-                path: 'http://localhost:8080/leop-index.html'
+                path: 'http://localhost:8080/leop-index.html',
+                app: 'chromium'
             }
         },
         watch: {
@@ -223,7 +224,7 @@ module.exports = function (grunt) {
             },
             express: {
                 files: [
-                    'src/index-leop.html',
+                    'src/leop-index.html',
                     'dist/**/*.*'
                 ],
                 options: {

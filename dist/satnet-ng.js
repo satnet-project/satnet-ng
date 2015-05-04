@@ -4035,7 +4035,7 @@ angular.module('countdownDirective', ['broadcaster', 'satnet-services'])
    limitations under the License.
 */
 
-angular.module('leopDirective', ['ngMaterial'])
+angular.module('leopDirective', ['ngMaterial', 'leaflet-directive'])
     .controller(
         'AppCtrl',
         function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
