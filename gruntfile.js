@@ -197,11 +197,13 @@ module.exports = function (grunt) {
             }
         },
         express: {
-            options: {
-                bases: ['src/', 'dist/'],
-                port: 8080,
-                hostname: "0.0.0.0",
-                livereload: true
+            all: {
+                options: {
+                    bases: ['src/', 'dist/'],
+                    port: 8080,
+                    hostname: "0.0.0.0",
+                    livereload: true
+                }
             }
         },
         open: {
@@ -221,26 +223,12 @@ module.exports = function (grunt) {
             },
             express: {
                 files: [
-                    '<%= jshint.files %>',
-                    'src/css/**/*',
-                    'src/images/**/*',
-                    'src/templates/**/*',
-                    'src/**/*.html'
+                    'src/index-leop.html',
+                    'dist/**/*.*'
                 ],
                 options: {
                     livereload: true
-                },
-                tasks: ['express']
-            },
-            preview: {
-                files: [
-                    '<%= jshint.files %>',
-                    'src/leop-index.html',
-                    'src/css/**/*',
-                    'src/images/**/*',
-                    'src/templates/**/*'
-                ],
-                tasks: ['build', 'open']
+                }
             },
             test: {
                 files: [
@@ -277,7 +265,7 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask(
-        'server', ['express', 'watch:express']
+        'server', ['express', 'open', 'watch:express']
     );
 
 };
