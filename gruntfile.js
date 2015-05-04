@@ -216,6 +216,7 @@ module.exports = function (grunt) {
             build: {
                 files: [
                     '<%= jshint.files %>',
+                    'src/leop-index.html',
                     'src/css/**/*',
                     'src/images/**/*',
                     'src/templates/**/*'
