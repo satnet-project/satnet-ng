@@ -1,8 +1,9 @@
 {
-  "files": {
-    "included": [
-      "src/scripts/**/*.js"
-    ],
-    "excluded": []
-  }
+    "files": {
+        "included": [
+            "src/scripts/**/*.js",
+            "src/splash/*.js"
+        ],
+        "excluded": []
+    }
 }

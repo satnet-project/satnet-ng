@@ -113,6 +113,19 @@ module.exports = function (grunt) {
             }
         },
         copy: {
+            bootup: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'src/splash',
+                        src: [
+                            'splash.css', 'splash.js'
+                        ],
+                        dest: 'dist/splash',
+                        filter: 'isFile'
+                    }
+                ]
+            },
             images: {
                 files: [
                     {
@@ -158,7 +171,10 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: 'dist',
-                        src: ['<%= pkg.name %>.css'],
+                        src: [
+                            '<%= pkg.name %>.css',
+                            'splash/splash.css'
+                        ],
                         dest: 'dist',
                         ext: '.min.css'
                     }
@@ -180,6 +196,11 @@ module.exports = function (grunt) {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
             },
+            splash: {
+                files: {
+                    'dist/splash/splash.min.js': ['dist/splash/splash.js']
+                }
+            },
             dist: {
                 files: {
                     'dist/<%= pkg.name %>.min.js': ['<%= concat.main.dest %>']
@@ -199,7 +220,10 @@ module.exports = function (grunt) {
         express: {
             all: {
                 options: {
-                    bases: ['src/', 'dist/'],
+                    bases: [
+                        'src/',
+                        'dist/'
+                    ],
                     port: 8080,
                     hostname: "0.0.0.0",
                     livereload: true
@@ -219,7 +243,8 @@ module.exports = function (grunt) {
                     'src/leop-index.html',
                     'src/css/**/*',
                     'src/images/**/*',
-                    'src/templates/**/*'
+                    'src/templates/**/*',
+                    'src/splash/**/*'
                 ],
                 tasks: ['build']
             },

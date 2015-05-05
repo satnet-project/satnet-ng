@@ -24,6 +24,7 @@ module.exports = function (config) {
             'src/scripts/models/x.servers.js',
             'src/scripts/models/x.groundstation.js',
             'src/scripts/models/x.spacecraft.js',
+            'src/splash/splash.js',
             'src/scripts/controllers/**/*.js',
             'src/scripts/directives/**/*.js',
             'src/scripts/satnet.ui.js',

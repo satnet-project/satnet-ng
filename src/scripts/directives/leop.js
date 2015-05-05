@@ -14,52 +14,88 @@
    limitations under the License.
 */
 
-angular.module('leopDirective', ['ngMaterial', 'leaflet-directive'])
-    .controller(
-        'AppCtrl',
-        function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
-            'use strict';
+var leopModule = angular.module(
+    'leopDirective', [
+        'ngMaterial', 'ngAnimate', 'leaflet-directive', 'splashDirective'
+    ]
+);
 
-            $scope.closed = false;
-            $scope.toggle = angular.noop;
-            $scope.isOpen = function () {
-                return false;
-            };
+leopModule.controller('LeopAppCtrl',
 
-            $mdComponentRegistry.when('menu').then(function (sideNav) {
-                $scope.isOpen = angular.bind(sideNav, sideNav.isOpen);
-                $scope.toggle = angular.bind(sideNav, sideNav.toggle);
-            });
+    /**
+     * Main controller for the LEOP application.
+     * @param   {Object}   $scope               Controller execution scope.
+     * @param   {Object}   $timeout             $timeout angular service.
+     * @param   {Object}   $mdSidenav           Side mane service from Angular Material.
+     * @param   {Object}   $mdComponentRegistry Component registry from Angular Material.
+     * @param   {Object}   $log                 $log from Angular.
+     */
+    function ($scope, $timeout, $mdSidenav, $mdComponentRegistry, $log) {
+        'use strict';
 
-            $scope.toggleMenu = function () {
-                $mdSidenav('menu').toggle().then(function () {
-                    $log.debug("MENU is done");
-                });
-            };
+        $scope.closed = false;
+        $scope.toggle = angular.noop;
+        $scope.isOpen = function () {
+            return false;
+        };
 
-        })
-    .controller(
-        'MenuCtrl',
-        function ($scope, $timeout, $mdSidenav, $log) {
-            'use strict';
-
-            $scope.closed = false;
-            $scope.close = function () {
-                $mdSidenav('menu').close().then(function () {
-                    $log.debug("close LEFT is done");
-                    $scope.closed = true;
-                });
-            };
-
-        })
-    .directive(
-        'leopApp',
-        function () {
-            'use strict';
-
-            return {
-                restrict: 'E',
-                templateUrl: 'templates/leop/mainLeop.html'
-            };
-
+        $mdComponentRegistry.when('menu').then(function (sideNav) {
+            $scope.isOpen = angular.bind(sideNav, sideNav.isOpen);
+            $scope.toggle = angular.bind(sideNav, sideNav.toggle);
         });
+
+        $scope.toggleMenu = function () {
+            $mdSidenav('menu').toggle().then(function () {
+                $log.debug("MENU is done");
+            });
+        };
+
+        console.log('APP BOOTED UP!');
+
+    });
+
+leopModule.controller('MenuCtrl',
+
+    /**
+     * Controller of the menu for the LEOP application. It creates a function bound to the event of
+     * closing the menu that it controls and a flag with the state (open or closed) of that menu.
+     * @param   {Object} $scope               Controller execution scope.
+     * @param   {Object} $timeout             $timeout angular service.
+     * @param   {Object} $mdSidenav           Side mane service from Angular Material.
+     * @param   {Object} $mdComponentRegistry Component registry from Angular Material.
+     * @param   {Object} $log                 $log from Angular.
+     */
+    function ($scope, $timeout, $mdSidenav, $log) {
+        'use strict';
+
+        $scope.closed = false;
+        $scope.close = function () {
+            $mdSidenav("menu").close().then(function () {
+                $log.debug("close LEFT is done");
+                $scope.closed = true;
+            });
+        };
+
+    });
+
+leopModule.directive('leopApp',
+
+    /**
+     * Function that creates the directive itself returning the object required by Angular.
+     * @returns {Object} Object directive required by Angular, with restrict and templateUrl.
+     */
+    function () {
+        'use strict';
+        return {
+            restrict: 'E',
+            templateUrl: 'templates/leop/leopApp.html'
+        };
+
+    });
+
+// Manual bootstrap of this directive...
+window.setTimeout(
+    function () {
+        angular.bootstrap(document, ['leopDirective']);
+    }, 1000
+);

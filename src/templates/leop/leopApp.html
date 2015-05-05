@@ -1,12 +1,9 @@
-<!--<div ng-app="satnetLeop" ng-controller="AppCtrl" layout="column" layout-fill>
+<div layout="column" layout-fill>
 
-<div class="leop-app" ng-controller="AppCtrl" layout="column" layout-fill>
     <section layout="row" flex>
         <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="menu" md-is-locked-open="$mdMedia('gt-md')">
-
             <md-toolbar class="md-theme-indigo">
-                 <h1 class="md-toolbar-tools">Menu</h1>
-
+                <h1 class="md-toolbar-tools">Menu</h1>
             </md-toolbar>
             <md-content class="md-padding" ng-controller="MenuCtrl">
                 <md-button ng-click="close()" aria-label="exit" class="md-primary menu-button">
@@ -17,18 +14,11 @@
                 </md-button>
                 <md-divider></md-divider>
             </md-content>
-
-            <div class="xtest"></div>
-            
         </md-sidenav>
         <md-content flex class="md-padding">
-
             <div layout="column" layout-fill layout-align="center center">
                 <div>
-                    <leaflet id="mainMap"
-                             center="center" markers="markers" layers="layers" paths="paths"
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-                    </leaflet>
+                    <leaflet id="mainMap" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></leaflet>
                 </div>
                 <div>
                     <md-button ng-click="toggleMenu()" aria-label="show menu" class="md-primary" hide-gt-md>
@@ -37,10 +27,7 @@
                     </md-button>
                 </div>
             </div>
-
         </md-content>
     </section>
-</div>
--->
 
-<div class="xtest"></div>
+</div>

@@ -37,51 +37,8 @@ angular.module('satnet-ui').run(['$templateCache', function($templateCache) {
   );
 
 
-  $templateCache.put('templates/leop/mainLeop.html',
-    "<!--<div ng-app=\"satnetLeop\" ng-controller=\"AppCtrl\" layout=\"column\" layout-fill>\n" +
-    "\n" +
-    "<div class=\"leop-app\" ng-controller=\"AppCtrl\" layout=\"column\" layout-fill>\n" +
-    "    <section layout=\"row\" flex>\n" +
-    "        <md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\">\n" +
-    "\n" +
-    "            <md-toolbar class=\"md-theme-indigo\">\n" +
-    "                 <h1 class=\"md-toolbar-tools\">Menu</h1>\n" +
-    "\n" +
-    "            </md-toolbar>\n" +
-    "            <md-content class=\"md-padding\" ng-controller=\"MenuCtrl\">\n" +
-    "                <md-button ng-click=\"close()\" aria-label=\"exit\" class=\"md-primary menu-button\">\n" +
-    "                    <div layout=\"row\" layout-fill layout-align=\"center center\">\n" +
-    "                        <i class=\"fa fa-power-off\"></i>\n" +
-    "                        <b>exit</b>\n" +
-    "                    </div>\n" +
-    "                </md-button>\n" +
-    "                <md-divider></md-divider>\n" +
-    "            </md-content>\n" +
-    "\n" +
-    "            <div class=\"xtest\"></div>\n" +
-    "            \n" +
-    "        </md-sidenav>\n" +
-    "        <md-content flex class=\"md-padding\">\n" +
-    "\n" +
-    "            <div layout=\"column\" layout-fill layout-align=\"center center\">\n" +
-    "                <div>\n" +
-    "                    <leaflet id=\"mainMap\"\n" +
-    "                             center=\"center\" markers=\"markers\" layers=\"layers\" paths=\"paths\"\n" +
-    "                             style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%;\">\n" +
-    "                    </leaflet>\n" +
-    "                </div>\n" +
-    "                <div>\n" +
-    "                    <md-button ng-click=\"toggleMenu()\" aria-label=\"show menu\" class=\"md-primary\" hide-gt-md>\n" +
-    "                        <p class=\"fa fa-bars\"></p>\n" +
-    "                        <md-tooltip>show menu</md-tooltip>\n" +
-    "                    </md-button>\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "\n" +
-    "        </md-content>\n" +
-    "    </section>\n" +
-    "</div>\n" +
-    "--><div class=\"xtest\"></div>"
+  $templateCache.put('templates/leop/leopApp.html',
+    "<div layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\"><md-toolbar class=\"md-theme-indigo\"><h1 class=\"md-toolbar-tools\">Menu</h1></md-toolbar><md-content class=\"md-padding\" ng-controller=\"MenuCtrl\"><md-button ng-click=\"close()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill layout-align=\"center center\"><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider></md-content></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><div><leaflet id=\"mainMap\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div><div><md-button ng-click=\"toggleMenu()\" aria-label=\"show menu\" class=\"md-primary\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip>show menu</md-tooltip></md-button></div></div></md-content></section></div>"
   );
 
 
