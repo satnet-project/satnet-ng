@@ -49,6 +49,8 @@ module.exports = function (grunt) {
                     'src/scripts/models/x.spacecraft.js',
                     'src/scripts/controllers/**/*.js',
                     'src/scripts/directives/**/*.js',
+                    'src/leop/directives/**/*.js',
+                    'src/leop/controllers/**/*.js',
                     'src/scripts/satnet.ui.js',
                     'src/scripts/leop.ui.js'
                 ],
@@ -77,7 +79,10 @@ module.exports = function (grunt) {
         ngtemplates: {
             satnet: {
                 cwd: 'src',
-                src: 'templates/**/*.html',
+                src: [
+                    'leop/templates/**/*.html',
+                    'templates/**/*.html'
+                ],
                 dest: 'dist/<%= pkg.name %>-tpls.js',
                 options: {
                     module: 'satnet-ui',
@@ -232,7 +237,7 @@ module.exports = function (grunt) {
         },
         open: {
             all: {
-                path: 'http://localhost:8080/leop-index.html',
+                path: 'http://localhost:8080/leop/leop-index.html',
                 app: 'chromium'
             }
         },
@@ -240,10 +245,10 @@ module.exports = function (grunt) {
             build: {
                 files: [
                     '<%= jshint.files %>',
-                    'src/leop-index.html',
                     'src/css/**/*',
                     'src/images/**/*',
                     'src/templates/**/*',
+                    'src/leop/**/*',
                     'src/splash/**/*'
                 ],
                 tasks: ['build']
@@ -262,6 +267,8 @@ module.exports = function (grunt) {
                     '<%= jshint.files %>',
                     'src/scripts/**/*',
                     'src/templates/**/*',
+                    'src/splash/**/*.js',
+                    'src/leop/**/*.js',
                     'src/specs/**/*'
                 ],
                 tasks: ['test']

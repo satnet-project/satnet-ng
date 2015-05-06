@@ -29,7 +29,7 @@ describe('MenuCtrl controller', function () {
 
     beforeEach(function () {
 
-        module('leopDirective', function ($provide) {
+        module('leopMenuControllers', function ($provide) {
             $provide.value('$mdSidenav', mock__mdSidenav);
         });
 

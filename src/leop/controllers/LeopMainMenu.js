@@ -14,13 +14,13 @@
    limitations under the License.
 */
 
-var leopModule = angular.module(
-    'leopDirective', [
+var leopMenuCtrlModule = angular.module(
+    'leopMenuControllers', [
         'ngMaterial', 'ngAnimate', 'leaflet-directive', 'splashDirective'
     ]
 );
 
-leopModule.controller('LeopAppCtrl',
+leopMenuCtrlModule.controller('LeopAppCtrl',
 
     /**
      * Main controller for the LEOP application.
@@ -54,7 +54,7 @@ leopModule.controller('LeopAppCtrl',
 
     });
 
-leopModule.controller('MenuCtrl',
+leopMenuCtrlModule.controller('MenuCtrl',
 
     /**
      * Controller of the menu for the LEOP application. It creates a function bound to the event of
@@ -77,25 +77,3 @@ leopModule.controller('MenuCtrl',
         };
 
     });
-
-leopModule.directive('leopApp',
-
-    /**
-     * Function that creates the directive itself returning the object required by Angular.
-     * @returns {Object} Object directive required by Angular, with restrict and templateUrl.
-     */
-    function () {
-        'use strict';
-        return {
-            restrict: 'E',
-            templateUrl: 'templates/leop/leopApp.html'
-        };
-
-    });
-
-// Manual bootstrap of this directive...
-window.setTimeout(
-    function () {
-        angular.bootstrap(document, ['leopDirective']);
-    }, 1000
-);

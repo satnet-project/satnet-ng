@@ -29,8 +29,10 @@ module.exports = function (config) {
             'src/scripts/directives/**/*.js',
             'src/scripts/satnet.ui.js',
             'src/scripts/leop.ui.js',
+            'src/scripts/specs/**/*.spec.js',
             'src/templates/**/*.html',
-            'specs/**/*.spec.js'
+            'src/leop/**/*.js',
+            'src/leop/specs/**/*.js'
         ],
 
         exclude: [],
