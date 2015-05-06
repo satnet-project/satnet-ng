@@ -14,14 +14,17 @@
    limitations under the License.
 */
 
-var leopDirectiveModule = angular.module(
-    'LeopDirective', [
-        'ngMaterial', 'ngAnimate', 'leaflet-directive',
-        'splashDirective', 'leopMenuControllers'
+var opsDirectiveModule = angular.module(
+    'operationsDirective', [
+        'ngMaterial',
+        'ngAnimate',
+        'leaflet-directive',
+        'splashDirective',
+        'operationsMenuControllers'
     ]
 );
 
-leopDirectiveModule.directive('LeopApp',
+opsDirectiveModule.directive('operationsApp',
 
     /**
      * Function that creates the directive itself returning the object required by Angular.
@@ -31,7 +34,7 @@ leopDirectiveModule.directive('LeopApp',
         'use strict';
         return {
             restrict: 'E',
-            templateUrl: 'templates/leop-app.html'
+            templateUrl: 'templates/operations-app.html'
         };
 
     });

@@ -53,6 +53,16 @@
     <link rel="stylesheet" href="http://localhost:8080/satnet-ng.min.css" />
     <script src="http://localhost:8080/satnet-ng.js"></script>
 
+
+    <script>
+        // Manual bootstrap of this directive...
+        window.setTimeout(
+            function () {
+                angular.bootstrap(document, ['leopDirective']);
+            }, 1000
+        );
+    </script>
+
 </body>
 
 </html>

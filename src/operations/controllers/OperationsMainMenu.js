@@ -14,16 +14,19 @@
    limitations under the License.
 */
 
-var leopMenuCtrlModule = angular.module(
-    'leopMenuControllers', [
-        'ngMaterial', 'ngAnimate', 'leaflet-directive', 'splashDirective'
+var opsMenuCtrlModule = angular.module(
+    'operationsMenuControllers', [
+        'ngMaterial',
+        'ngAnimate',
+        'leaflet-directive',
+        'splashDirective'
     ]
 );
 
-leopMenuCtrlModule.controller('LeopAppCtrl',
+opsMenuCtrlModule.controller('OperationsAppCtrl',
 
     /**
-     * Main controller for the LEOP application.
+     * Main controller for the Operations application.
      * @param   {Object}   $scope               Controller execution scope.
      * @param   {Object}   $timeout             $timeout angular service.
      * @param   {Object}   $mdSidenav           Side mane service from Angular Material.
@@ -44,14 +47,14 @@ leopMenuCtrlModule.controller('LeopAppCtrl',
             });
         };
 
-        console.log('APP BOOTED UP!');
+        console.log('Operations application BOOTED UP!');
 
     });
 
-leopMenuCtrlModule.controller('MenuCtrl',
+opsMenuCtrlModule.controller('OperationsMenuCtrl',
 
     /**
-     * Controller of the menu for the LEOP application. It creates a function bound to the event of
+     * Controller of the menu for the Operations application. It creates a function bound to the event of
      * closing the menu that it controls and a flag with the state (open or closed) of that menu.
      * @param   {Object} $scope               Controller execution scope.
      * @param   {Object} $timeout             $timeout angular service.

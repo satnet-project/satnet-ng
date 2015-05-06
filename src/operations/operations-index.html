@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>Nominal Operations Interface</title>
+    <title>Operations Interface</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
@@ -13,17 +13,17 @@
 
 </head>
 
-<body ng-controller="LeopAppCtrl">
+<body ng-controller="OperationsAppCtrl">
 
     <div class="m-app-loading" ng-animate-children>
         <div class="animated-container">
             <div class="messaging">
-                <h2>Nominal Operations Interface<br/>(loading)</h2>
+                <h2>Operations Interface<br/>(loading)</h2>
             </div>
         </div>
     </div>
 
-    <leop-app></leop-app>
+    <operations-app></operations-app>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
@@ -52,6 +52,15 @@
     <script src="http://localhost:8080/splash/splash.min.js"></script>
     <link rel="stylesheet" href="http://localhost:8080/satnet-ng.min.css" />
     <script src="http://localhost:8080/satnet-ng.js"></script>
+
+    <script>
+        // Manual bootstrap of this directive...
+        window.setTimeout(
+            function () {
+                angular.bootstrap(document, ['operationsDirective']);
+            }, 1000
+        );
+    </script>
 
 </body>
 

@@ -25,7 +25,10 @@ module.exports = function (grunt) {
                 '.jshintrc',
                 'gruntfile.js',
                 'src/scripts/**/*.js',
-                'specs/**/*.js'
+                'specs/**/*.js',
+                'src/leop/**/*.js',
+                'src/operations/**/*.js',
+                'src/splash/**/*.js'
             ],
             options: {
                 jshintrc: '.jshintrc'
@@ -49,10 +52,12 @@ module.exports = function (grunt) {
                     'src/scripts/models/x.spacecraft.js',
                     'src/scripts/controllers/**/*.js',
                     'src/scripts/directives/**/*.js',
+                    'src/scripts/satnet.ui.js',
+                    'src/scripts/leop.ui.js',
                     'src/leop/directives/**/*.js',
                     'src/leop/controllers/**/*.js',
-                    'src/scripts/satnet.ui.js',
-                    'src/scripts/leop.ui.js'
+                    'src/operations/directives/**/*.js',
+                    'src/operations/controllers/**/*.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.js'
             }
@@ -81,6 +86,7 @@ module.exports = function (grunt) {
                 cwd: 'src',
                 src: [
                     'leop/templates/**/*.html',
+                    'operations/templates/**/*.html',
                     'templates/**/*.html'
                 ],
                 dest: 'dist/<%= pkg.name %>-tpls.js',
@@ -237,7 +243,7 @@ module.exports = function (grunt) {
         },
         open: {
             all: {
-                path: 'http://localhost:8080/leop/leop-index.html',
+                path: 'http://localhost:8080/operations/operations-index.html',
                 app: 'chromium'
             }
         },
@@ -249,13 +255,15 @@ module.exports = function (grunt) {
                     'src/images/**/*',
                     'src/templates/**/*',
                     'src/leop/**/*',
+                    'src/operations/**/*',
                     'src/splash/**/*'
                 ],
                 tasks: ['build']
             },
             express: {
                 files: [
-                    'src/leop-index.html',
+                    'src/leop/leop-index.html',
+                    'src/operations/operations-index.html',
                     'dist/**/*.*'
                 ],
                 options: {
@@ -266,10 +274,11 @@ module.exports = function (grunt) {
                 files: [
                     '<%= jshint.files %>',
                     'src/scripts/**/*',
+                    'src/specs/**/*',
                     'src/templates/**/*',
                     'src/splash/**/*.js',
                     'src/leop/**/*.js',
-                    'src/specs/**/*'
+                    'src/operations/**/*.js'
                 ],
                 tasks: ['test']
             }
