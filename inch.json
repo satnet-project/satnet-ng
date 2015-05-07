@@ -1,8 +1,8 @@
 {
     "files": {
         "included": [
-            "src/scripts/**/*.js",
-            "src/splash/*.js"
+            "src/common/**/*.js",
+            "src/operations/*.js"
         ],
         "excluded": []
     }

@@ -126,8 +126,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'dist',
                         src: [
-                            '<%= pkg.name %>-operations.css',
-                            'splash/splash.css'
+                            '<%= pkg.name %>-operations.css'
                         ],
                         dest: 'dist',
                         ext: '.min.css'

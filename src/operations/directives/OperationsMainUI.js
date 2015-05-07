@@ -14,31 +14,31 @@
    limitations under the License.
 */
 
-var opsDirectiveModule = angular.module(
-    'operationsDirective', [
+angular.module('operationsDirective', [
         'ngMaterial',
         'ngAnimate',
         'leaflet-directive',
         'splashDirective',
         'operationsMenuControllers'
-    ]
-).config(function ($mdThemingProvider) {
-    $mdThemingProvider.theme('default')
-        .primaryPalette('blue-grey')
-        .accentPalette('grey');
-});
+    ]).config(function ($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('blue-grey')
+            .accentPalette('grey');
+    })
+    .directive('operationsApp',
 
-opsDirectiveModule.directive('operationsApp',
+        /**
+         * Function that creates the directive itself returning the
+         * object required by Angular.
+         *
+         * @returns {Object} Object directive required by Angular,
+         *                   with restrict and templateUrl.
+         */
+        function () {
+            'use strict';
+            return {
+                restrict: 'E',
+                templateUrl: 'templates/operations-app.html'
+            };
 
-    /**
-     * Function that creates the directive itself returning the object required by Angular.
-     * @returns {Object} Object directive required by Angular, with restrict and templateUrl.
-     */
-    function () {
-        'use strict';
-        return {
-            restrict: 'E',
-            templateUrl: 'templates/operations-app.html'
-        };
-
-    });
+        });
