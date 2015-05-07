@@ -21,6 +21,10 @@ describe('MenuCtrl controller', function () {
     var $rootScope, $scope, $controller, $q, menuCtrl,
         mock__mdSidenav = function () {
             return {
+                /**
+                 * Mock up function for simulating the closing method.
+                 * @returns {Object} Promise object.
+                 */
                 close: function () {
                     return $q.when();
                 }
