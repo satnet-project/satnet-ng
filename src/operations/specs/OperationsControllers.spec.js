@@ -16,9 +16,11 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe('MenuCtrl controller', function () {
+describe('Operations', function () {
 
-    var $rootScope, $scope, $controller, $q, menuCtrl,
+    var $rootScope, $controller, $q,
+        $app_scope, $menu_scope,
+        appCtrl, menuCtrl,
         /**
          * Factory for mocking $mdSidenav service from Angular material.
          *
@@ -26,6 +28,13 @@ describe('MenuCtrl controller', function () {
          */
         mock__mdSidenav = function () {
             return {
+                /**
+                 * Mock up function for simulating the toggling method.
+                 * @returns {Object} Promise object.
+                 */
+                toggle: function () {
+                    return $q.when();
+                },
                 /**
                  * Mock up function for simulating the closing method.
                  * @returns {Object} Promise object.
@@ -37,36 +46,54 @@ describe('MenuCtrl controller', function () {
         };
 
     beforeEach(function () {
-
+        
         module('operationsMenuControllers', function ($provide) {
             $provide.value('$mdSidenav', mock__mdSidenav);
         });
-
+        
         inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
             $controller = $injector.get('$controller');
             $q = $injector.get('$q');
 
-            $scope = $rootScope.$new();
+            $menu_scope = $rootScope.$new();
+            $app_scope = $rootScope.$new();
 
         });
 
+        appCtrl = $controller("OperationsAppCtrl", {
+            $scope: $app_scope,
+            $mdSidenav: mock__mdSidenav
+        });
+        
         menuCtrl = $controller("OperationsMenuCtrl", {
-            $scope: $scope,
+            $scope: $menu_scope,
             $mdSidenav: mock__mdSidenav
         });
 
     });
 
-    it('should close the $mdSidenav menu', function () {
+    it('AppCtrl should toggle the menu opening', function () {
 
-        expect($scope.closed).toBe(false);
+        spyOn($app_scope, 'toggleMenu');
 
-        $scope.close();
+        $app_scope.toggleMenu();
         $rootScope.$digest();
 
-        expect($scope.closed).toBe(true);
+        expect($app_scope.toggleMenu).toHaveBeenCalled();
+        expect($app_scope.toggle).toBeDefined();
+
+    });
+    
+    it('MenuCtrl should close the $mdSidenav menu', function () {
+
+        expect($menu_scope.closed).toBe(false);
+
+        $menu_scope.close();
+        $rootScope.$digest();
+
+        expect($menu_scope.closed).toBe(true);
 
     });
 

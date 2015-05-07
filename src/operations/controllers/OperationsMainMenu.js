@@ -28,24 +28,14 @@ opsMenuCtrlModule.controller('OperationsAppCtrl',
     /**
      * Main controller for the Operations application.
      * @param   {Object}   $scope               Controller execution scope.
-     * @param   {Object}   $timeout             $timeout angular service.
      * @param   {Object}   $mdSidenav           Side mane service from Angular
      *                                          Material.
      * @param   {Object}   $log                 $log from Angular.
      */
-    function ($scope, $timeout, $mdSidenav, $log) {
+    function ($scope, $mdSidenav, $log) {
         'use strict';
 
-        $scope.closed = false;
         $scope.toggle = angular.noop;
-
-        /**
-         * Handler that returns the status of the menu (open or closed).
-         * @returns {Boolean} $scope.closed
-         */
-        $scope.isOpen = function () {
-            return $scope.closed;
-        };
 
         /**
          * Handler to toggle the menu on and off. It is based on the $mdSidenav
@@ -71,12 +61,11 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
      * function bound to the event of closing the menu that it controls and
      * a flag with the state (open or closed) of that menu.
      * @param   {Object} $scope               Controller execution scope.
-     * @param   {Object} $timeout             $timeout angular service.
      * @param   {Object} $mdSidenav           Side mane service from Angular
      *                                        Material.
      * @param   {Object} $log                 $log from Angular.
      */
-    function ($scope, $timeout, $mdSidenav, $log) {
+    function ($scope, $mdSidenav, $log) {
         'use strict';
 
         $scope.closed = false;
