@@ -22,7 +22,11 @@ var opsDirectiveModule = angular.module(
         'splashDirective',
         'operationsMenuControllers'
     ]
-);
+).config(function ($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+        .primaryPalette('blue-grey')
+        .accentPalette('grey');
+});
 
 opsDirectiveModule.directive('operationsApp',
 

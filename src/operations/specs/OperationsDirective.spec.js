@@ -53,12 +53,6 @@ describe("Testing Operations Directive integration, ", function () {
         expect($ops_main.length).toEqual(1);
     });
 
-    it("should render a sidenav containing a toolbar with a header", function () {
-        var $toolbar_h1 = $('md-sidenav md-toolbar h1');
-        expect($toolbar_h1.length).toBe(1);
-        expect($toolbar_h1.text()).toBe('Operations Menu');
-    });
-
     it('should render a map within the content', function () {
         var map = $('#mainMap');
         expect(map.length).toBe(1);

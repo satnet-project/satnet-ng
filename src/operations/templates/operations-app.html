@@ -3,10 +3,6 @@
     <section layout="row" flex>
         <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="menu" md-is-locked-open="$mdMedia('gt-md')">
 
-            <md-toolbar class="md-theme-indigo">
-                <h1 class="md-toolbar-tools">Operations Menu</h1>
-            </md-toolbar>
-
             <md-content class="md-padding" ng-controller="OperationsMenuCtrl">
 
                 <md-button id="menuExit" ng-click="close()" aria-label="exit" class="md-primary menu-button">
@@ -30,6 +26,8 @@
                         <b>spacecraft</b>
                     </div>
                 </md-button>
+
+                <md-divider></md-divider>
 
             </md-content>
 

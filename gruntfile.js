@@ -24,11 +24,8 @@ module.exports = function (grunt) {
             files: [
                 '.jshintrc',
                 'gruntfile.js',
-                'src/scripts/**/*.js',
-                'specs/**/*.js',
-                'src/leop/**/*.js',
-                'src/operations/**/*.js',
-                'src/splash/**/*.js'
+                'src/common/**/*.js',
+                'src/operations/**/*.js'
             ],
             options: {
                 jshintrc: '.jshintrc'
@@ -40,17 +37,11 @@ module.exports = function (grunt) {
             },
             operations: {
                 src: [
+                    'src/common/directives/splash.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],
                 dest: 'dist/<%= pkg.name %>-operations.js'
-            },
-            leop: {
-                src: [
-                    'src/leop/directives/**/*.js',
-                    'src/leop/controllers/**/*.js'
-                ],
-                dest: 'dist/<%= pkg.name %>-leop.js'
             }
         },
         karma: {
@@ -87,17 +78,6 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            bootup: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'src/splash',
-                        src: ['splash.css', 'splash.js'],
-                        dest: 'dist/splash',
-                        filter: 'isFile'
-                    }
-                ]
-            },
             images: {
                 files: [
                     {
@@ -168,11 +148,6 @@ module.exports = function (grunt) {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
             },
-            splash: {
-                files: {
-                    'dist/splash/splash.min.js': ['dist/splash/splash.js']
-                }
-            },
             operations: {
                 files: {
                     'dist/<%= pkg.name %>-operations.min.js': [
@@ -187,10 +162,7 @@ module.exports = function (grunt) {
         express: {
             all: {
                 options: {
-                    bases: [
-                        'src/',
-                        'dist/'
-                    ],
+                    bases: ['src/'],
                     port: 8080,
                     hostname: "0.0.0.0",
                     livereload: true
@@ -207,17 +179,16 @@ module.exports = function (grunt) {
             build: {
                 files: [
                     '<%= jshint.files %>',
-                    'src/css/**/*',
                     'src/images/**/*',
-                    'src/operations/**/*',
-                    'src/splash/**/*'
+                    'src/common/**/*',
+                    'src/operations/**/*'
                 ],
                 tasks: ['build']
             },
             express: {
                 files: [
                     'src/operations/operations-index.html',
-                    'dist/**/*.*'
+                    'dist/**/*'
                 ],
                 options: {
                     livereload: true
@@ -226,7 +197,7 @@ module.exports = function (grunt) {
             test: {
                 files: [
                     'karma.conf.js',
-                    'src/splash/**/*.js',
+                    'src/common/**/*.js',
                     'src/operations/**/*.js',
                     'src/operations/templates/**/*.html'
                 ],
