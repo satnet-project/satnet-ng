@@ -15,33 +15,27 @@ module.exports = function (config) {
             'node_modules/angular-material/angular-material.js',
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
-            'src/scripts/services/celestrak.js',
-            'src/scripts/services/broadcaster.js',
-            'src/scripts/services/satnet.js',
-            'src/scripts/services/maps.js',
-            'src/scripts/services/push.js',
-            'src/scripts/models/marker.js',
-            'src/scripts/models/x.servers.js',
-            'src/scripts/models/x.groundstation.js',
-            'src/scripts/models/x.spacecraft.js',
-            'src/splash/splash.js',
-            'src/scripts/controllers/**/*.js',
-            'src/scripts/directives/**/*.js',
-            'src/scripts/satnet.ui.js',
-            'src/scripts/leop.ui.js',
-            'src/scripts/specs/**/*.spec.js',
-            'src/templates/**/*.html',
-            'src/leop/**/*.js',
-            'src/leop/specs/**/*.js'
+            'src/splash/**/*.js',
+            'src/splash/**/*.html',
+            'src/operations/**/*.js',
+            'src/operations/templates/**/*.html'
         ],
 
         exclude: [],
         preprocessors: {
-            'src/scripts/**/*.js': ['coverage'],
-            'src/templates/**/*.html': ['ng-html2js']
+            'src/operations/**/*.js': ['coverage'],
+            'src/operations/templates/**/*.html': ['ng-html2js']
         },
         ngHtml2JsPreprocessor: {
-            moduleName: 'templates'
+            moduleName: 'templates',
+            // The following function removes the first two directories from the
+            // given path for a template since those are omitted within the distributable
+            // template packages and, therefore, they are also omitted within the
+            // <templateUrl> parameter of the definition of the directive.
+            cacheIdFromPath: function (filepath) {
+                var regex = /^(\w+\/)(\w+\/)/;
+                return filepath.replace(regex, '');
+            },
         },
         reporters: ['progress', 'coverage', 'coveralls'],
         coverageReporter: {

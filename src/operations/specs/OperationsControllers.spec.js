@@ -43,7 +43,7 @@ describe('MenuCtrl controller', function () {
 
         });
 
-        menuCtrl = $controller("MenuCtrl", {
+        menuCtrl = $controller("OperationsMenuCtrl", {
             $scope: $scope,
             $mdSidenav: mock__mdSidenav
         });

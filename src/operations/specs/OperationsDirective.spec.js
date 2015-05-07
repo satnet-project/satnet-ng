@@ -20,9 +20,9 @@ describe("Testing Operations Directive integration, ", function () {
 
     var $rootScope, $scope,
         $compile,
-        el, $el, $el_test,
+        $directive,
         $body = $("body"),
-        simpleHtml = "<div class='jtest'>JTEST</div><operations-app></operations-app>";
+        simpleHtml = "<operations-app></operations-app>";
 
     beforeEach(function () {
 
@@ -32,17 +32,14 @@ describe("Testing Operations Directive integration, ", function () {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
-            $scope = $rootScope.$new();
 
-            el = $compile(angular.element(simpleHtml))($scope);
+            $scope = $rootScope.$new();
+            $directive = $compile(angular.element(simpleHtml))($rootScope);
 
         });
 
-        $body.append(el);
+        $body.append($directive);
         $rootScope.$digest();
-
-        $el = $(".xtest");
-        $el_test = $(".jtest");
 
     });
 
@@ -50,10 +47,58 @@ describe("Testing Operations Directive integration, ", function () {
         $body.empty();
     });
 
-    it("should render the directive out in the DOM", function () {
-        //expect($el.length).toEqual(1);
-        expect($el_test.length).toEqual(1);
-        expect($el_test.text()).toEqual('JTEST');
+    it("should render the directive within the DOM", function () {
+        var $ops_main = $('.operations-main');
+        expect($ops_main).toBeDefined();
+        expect($ops_main.length).toEqual(1);
+    });
+
+    it("should render a sidenav containing a toolbar with a header", function () {
+        var $toolbar_h1 = $('md-sidenav md-toolbar h1');
+        expect($toolbar_h1.length).toBe(1);
+        expect($toolbar_h1.text()).toBe('Operations Menu');
+    });
+
+    it('should render a map within the content', function () {
+        var map = $('#mainMap');
+        expect(map.length).toBe(1);
+    });
+
+    it('should add a unique toggle menu button with an icon', function () {
+        var button = $('#toggleMenu'),
+            icon = $('.fa-bars');
+        expect(button.length).toBe(1);
+        expect(icon.length).toBe(1);
+    });
+
+    it('should add a unique exit button on the menu with an icon', function () {
+        var button = $('#menuExit'),
+            icon = $('.fa-power-off'),
+            label = $('#menuExit div b');
+        expect(button.length).toBe(1);
+        expect(icon.length).toBe(1);
+        expect(label.length).toBe(1);
+        expect(label.text()).toBe('exit');
+    });
+
+    it('should add a unique GS button on the menu with an icon', function () {
+        var button = $('#menuGS'),
+            icon = $('.fa-home'),
+            label = $('#menuGS div b');
+        expect(button.length).toBe(1);
+        expect(icon.length).toBe(1);
+        expect(label.length).toBe(1);
+        expect(label.text()).toBe('ground stations');
+    });
+
+    it('should add a unique SC button on the menu with an icon', function () {
+        var button = $('#menuSC'),
+            icon = $('.fa-space-shuttle'),
+            label = $('#menuSC div b');
+        expect(button.length).toBe(1);
+        expect(icon.length).toBe(1);
+        expect(label.length).toBe(1);
+        expect(label.text()).toBe('spacecraft');
     });
 
 });

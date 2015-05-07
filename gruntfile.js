@@ -38,28 +38,19 @@ module.exports = function (grunt) {
             options: {
                 separator: ';'
             },
-            main: {
+            operations: {
                 src: [
-                    'src/scripts/services/push.js',
-                    'src/scripts/services/celestrak.js',
-                    'src/scripts/services/broadcaster.js',
-                    'src/scripts/services/satnet.js',
-                    'src/scripts/services/x.satnet.js',
-                    'src/scripts/services/maps.js',
-                    'src/scripts/models/marker.js',
-                    'src/scripts/models/x.servers.js',
-                    'src/scripts/models/x.groundstation.js',
-                    'src/scripts/models/x.spacecraft.js',
-                    'src/scripts/controllers/**/*.js',
-                    'src/scripts/directives/**/*.js',
-                    'src/scripts/satnet.ui.js',
-                    'src/scripts/leop.ui.js',
-                    'src/leop/directives/**/*.js',
-                    'src/leop/controllers/**/*.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],
-                dest: 'dist/<%= pkg.name %>.js'
+                dest: 'dist/<%= pkg.name %>-operations.js'
+            },
+            leop: {
+                src: [
+                    'src/leop/directives/**/*.js',
+                    'src/leop/controllers/**/*.js'
+                ],
+                dest: 'dist/<%= pkg.name %>-leop.js'
             }
         },
         karma: {
@@ -69,7 +60,7 @@ module.exports = function (grunt) {
             }
         },
         sass: {
-            main: {
+            operations: {
                 files: [
                     {
                         expand: true,
@@ -82,40 +73,12 @@ module.exports = function (grunt) {
             }
         },
         ngtemplates: {
-            satnet: {
-                cwd: 'src',
-                src: [
-                    'leop/templates/**/*.html',
-                    'operations/templates/**/*.html',
-                    'templates/**/*.html'
-                ],
-                dest: 'dist/<%= pkg.name %>-tpls.js',
-                options: {
-                    module: 'satnet-ui',
-                    htmlmin: {
-                        collapseWhitespace: true,
-                        collapseBooleanAttributes: true
-                    }
-                }
-            },
-            leop: {
-                cwd: 'src',
+            operations: {
+                cwd: 'src/operations',
                 src: 'templates/**/*.html',
-                dest: 'dist/<%= pkg.name %>-leop-tpls.js',
+                dest: 'dist/<%= pkg.name %>-operations-tpls.js',
                 options: {
-                    module: 'leop-ui',
-                    htmlmin: {
-                        collapseWhitespace: true,
-                        collapseBooleanAttributes: true
-                    }
-                }
-            },
-            idle: {
-                cwd: 'src',
-                src: 'templates/idle/*.html',
-                dest: 'dist/<%= pkg.name %>-idle-tpls.js',
-                options: {
-                    module: 'idle',
+                    module: 'satnet-operations-tpls',
                     htmlmin: {
                         collapseWhitespace: true,
                         collapseBooleanAttributes: true
@@ -129,9 +92,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: 'src/splash',
-                        src: [
-                            'splash.css', 'splash.js'
-                        ],
+                        src: ['splash.css', 'splash.js'],
                         dest: 'dist/splash',
                         filter: 'isFile'
                     }
@@ -212,21 +173,16 @@ module.exports = function (grunt) {
                     'dist/splash/splash.min.js': ['dist/splash/splash.js']
                 }
             },
-            dist: {
+            operations: {
                 files: {
-                    'dist/<%= pkg.name %>.min.js': ['<%= concat.main.dest %>']
-                }
-            },
-            templates: {
-                files: {
-                    'dist/<%= pkg.name %>-tpls.min.js': [
-                        '<%= ngtemplates.satnet.dest %>'
+                    'dist/<%= pkg.name %>-operations.min.js': [
+                        '<%= concat.operations.dest %>'
                     ],
-                    'dist/<%= pkg.name %>-leop-tpls.min.js': [
-                        '<%= ngtemplates.leop.dest %>'
+                    'dist/<%= pkg.name %>-operations-tpls.min.js': [
+                        '<%= ngtemplates.operations.dest %>'
                     ]
                 }
-            }
+            },
         },
         express: {
             all: {
@@ -253,8 +209,6 @@ module.exports = function (grunt) {
                     '<%= jshint.files %>',
                     'src/css/**/*',
                     'src/images/**/*',
-                    'src/templates/**/*',
-                    'src/leop/**/*',
                     'src/operations/**/*',
                     'src/splash/**/*'
                 ],
@@ -262,7 +216,6 @@ module.exports = function (grunt) {
             },
             express: {
                 files: [
-                    'src/leop/leop-index.html',
                     'src/operations/operations-index.html',
                     'dist/**/*.*'
                 ],
@@ -272,13 +225,10 @@ module.exports = function (grunt) {
             },
             test: {
                 files: [
-                    '<%= jshint.files %>',
-                    'src/scripts/**/*',
-                    'src/specs/**/*',
-                    'src/templates/**/*',
+                    'karma.conf.js',
                     'src/splash/**/*.js',
-                    'src/leop/**/*.js',
-                    'src/operations/**/*.js'
+                    'src/operations/**/*.js',
+                    'src/operations/templates/**/*.html'
                 ],
                 tasks: ['test']
             }

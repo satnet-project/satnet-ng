@@ -21,7 +21,7 @@ var leopDirectiveModule = angular.module(
     ]
 );
 
-leopDirectiveModule.directive('LeopApp',
+leopDirectiveModule.directive('leopApp',
 
     /**
      * Function that creates the directive itself returning the object required by Angular.
