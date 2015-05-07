@@ -15,8 +15,8 @@ module.exports = function (config) {
             'node_modules/angular-material/angular-material.js',
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
-            'src/splash/**/*.js',
-            'src/splash/**/*.html',
+            'src/common/**/*.js',
+            'src/common/**/*.html',
             'src/operations/**/*.js',
             'src/operations/templates/**/*.html'
         ],

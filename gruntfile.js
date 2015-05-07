@@ -89,6 +89,7 @@ module.exports = function (grunt) {
                     }
                 ]
             },
+            /*
             lib: {
                 files: [
                     {
@@ -116,6 +117,7 @@ module.exports = function (grunt) {
                     }
                 ]
             }
+            */
         },
         cssmin: {
             main: {
