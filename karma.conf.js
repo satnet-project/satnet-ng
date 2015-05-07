@@ -22,7 +22,10 @@ module.exports = function (config) {
 
         exclude: [],
         preprocessors: {
-            'src/**/*.js': ['coverage'],
+            'src/common/directives/**/*.js': ['coverage'],
+            'src/common/services/**/*.js': ['coverage'],
+            'src/operations/controllers/**/*.js': ['coverage'],
+            'src/operations/directives/**/*.js': ['coverage'],
             'src/operations/templates/**/*.html': ['ng-html2js']
         },
         ngHtml2JsPreprocessor: {
