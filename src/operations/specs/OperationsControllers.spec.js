@@ -19,6 +19,11 @@
 describe('MenuCtrl controller', function () {
 
     var $rootScope, $scope, $controller, $q, menuCtrl,
+        /**
+         * Factory for mocking $mdSidenav service from Angular material.
+         *
+         * @returns {Object} Factory for mocking.
+         */
         mock__mdSidenav = function () {
             return {
                 /**
