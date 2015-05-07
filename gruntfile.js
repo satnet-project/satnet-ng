@@ -37,7 +37,7 @@ module.exports = function (grunt) {
             },
             operations: {
                 src: [
-                    'src/common/directives/splash.js',
+                    'src/common/directives/Splash.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],

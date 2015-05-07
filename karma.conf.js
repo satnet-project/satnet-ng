@@ -16,14 +16,13 @@ module.exports = function (config) {
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
             'src/common/**/*.js',
-            'src/common/**/*.html',
             'src/operations/**/*.js',
             'src/operations/templates/**/*.html'
         ],
 
         exclude: [],
         preprocessors: {
-            'src/operations/**/*.js': ['coverage'],
+            'src/**/*.js': ['coverage'],
             'src/operations/templates/**/*.html': ['ng-html2js']
         },
         ngHtml2JsPreprocessor: {
