@@ -2,7 +2,7 @@
     "files": {
         "included": [
             "src/common/**/*.js",
-            "src/operations/*.js"
+            "src/operations/**/*.js"
         ],
         "excluded": []
     }
