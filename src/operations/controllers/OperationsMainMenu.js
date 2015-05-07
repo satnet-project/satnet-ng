@@ -29,7 +29,8 @@ opsMenuCtrlModule.controller('OperationsAppCtrl',
      * Main controller for the Operations application.
      * @param   {Object}   $scope               Controller execution scope.
      * @param   {Object}   $timeout             $timeout angular service.
-     * @param   {Object}   $mdSidenav           Side mane service from Angular Material.
+     * @param   {Object}   $mdSidenav           Side mane service from Angular
+     *                                          Material.
      * @param   {Object}   $log                 $log from Angular.
      */
     function ($scope, $timeout, $mdSidenav, $log) {
@@ -37,15 +38,21 @@ opsMenuCtrlModule.controller('OperationsAppCtrl',
 
         $scope.closed = false;
         $scope.toggle = angular.noop;
+
+        /**
+         * Handler that returns the status of the menu (open or closed).
+         * @returns {Boolean} $scope.closed
+         */
         $scope.isOpen = function () {
-            return false;
+            return $scope.closed;
         };
 
         /**
          * Handler to toggle the menu on and off. It is based on the $mdSidenav
-         * service provided by Angular Material. Its main objective is tor provide
-         * a button overlayed over the map so that in case the menu is hidden (due
-         * to the small size of the screen), the menu can still be shown.
+         * service provided by Angular Material. Its main objective is to
+         * provide a button overlayed over the map so that in case the menu is
+         * hidden (due to the small size of the screen), the menu can still be
+         * shown.
          */
         $scope.toggleMenu = function () {
             $mdSidenav('menu').toggle().then(function () {
@@ -65,7 +72,8 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
      * a flag with the state (open or closed) of that menu.
      * @param   {Object} $scope               Controller execution scope.
      * @param   {Object} $timeout             $timeout angular service.
-     * @param   {Object} $mdSidenav           Side mane service from Angular Material.
+     * @param   {Object} $mdSidenav           Side mane service from Angular
+     *                                        Material.
      * @param   {Object} $log                 $log from Angular.
      */
     function ($scope, $timeout, $mdSidenav, $log) {
