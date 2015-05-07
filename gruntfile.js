@@ -64,7 +64,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'src/css/sass',
+                        cwd: 'src/operations/templates/sass',
                         src: ['*.scss'],
                         dest: 'dist',
                         ext: '.css'
@@ -144,7 +144,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'dist',
                         src: [
-                            '<%= pkg.name %>.css',
+                            '<%= pkg.name %>-operations.css',
                             'splash/splash.css'
                         ],
                         dest: 'dist',
