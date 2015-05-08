@@ -128,47 +128,86 @@ angular.module('broadcaster').service('broadcaster', [
         /***************************************************** PUSH CALLBACKS */
         /**********************************************************************/
 
+        /**
+         * Broadcasts the event.
+         */
         this.gsAvailableAdded = function (id_object) {
             $rootScope.$broadcast('gs.available.added', id_object.identifier);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.gsAvailableRemoved = function (id_object) {
             $rootScope.$broadcast('gs.available.removed', id_object.identifier);
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.gsAvailableUpdated = function (id_object) {
             $rootScope.$broadcast('gs.available.updated', id_object.identifier);
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.passesUpdated = function () {
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.scGtUpdated = function (data) {
             $rootScope.$broadcast('sc.updated', data.identifier);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopGssUpdated = function (leop_id) {
             if ($rootScope.leop_id !== leop_id.identifier) {
                 return;
             }
             $rootScope.$broadcast('leop.gss.updated', leop_id);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopGsAssigned = function (data) {
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
             }
             $rootScope.$broadcast('leop.gs.assigned', data.groundstation_id);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopGsReleased = function (data) {
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
             }
             $rootScope.$broadcast('leop.gs.released', data.groundstation_id);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopUpdated = function (leop_id) {
             if ($rootScope.leop_id !== leop_id.identifier) {
                 return;
             }
             $rootScope.$broadcast('leop.updated', leop_id);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopUfoIdentified = function (data) {
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
@@ -176,6 +215,10 @@ angular.module('broadcaster').service('broadcaster', [
             $rootScope.$broadcast('sc.added', data.spacecraft_id);
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopUfoUpdated = function (data) {
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
@@ -183,6 +226,10 @@ angular.module('broadcaster').service('broadcaster', [
             $rootScope.$broadcast('sc.updated', data.spacecraft_id);
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopUfoForgot = function (data) {
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
@@ -190,6 +237,10 @@ angular.module('broadcaster').service('broadcaster', [
             $rootScope.$broadcast('sc.removed', data.spacecraft_id);
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopSCUpdated = function (data) {
             if ($rootScope.leop_id !== data.launch_id) {
                 return;
@@ -197,9 +248,17 @@ angular.module('broadcaster').service('broadcaster', [
             $rootScope.$broadcast('sc.updated', data.launch_sc_id);
             $rootScope.$broadcast('passes.updated', {});
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.leopFrameReceived = function (data) {
             $rootScope.$broadcast('leop.frame.rx', data.frame);
         };
+
+        /**
+         * Broadcasts the event.
+         */
         this.keepAliveReceived = function (data) {
             $rootScope.$broadcast('KEEP_ALIVE', {});
             console.log('ALIVE! data = ' + JSON.stringify(data));

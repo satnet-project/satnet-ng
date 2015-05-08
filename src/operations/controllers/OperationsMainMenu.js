@@ -30,9 +30,8 @@ opsMenuCtrlModule.controller('OperationsAppCtrl',
      * @param   {Object}   $scope               Controller execution scope.
      * @param   {Object}   $mdSidenav           Side mane service from Angular
      *                                          Material.
-     * @param   {Object}   $log                 $log from Angular.
      */
-    function ($scope, $mdSidenav, $log) {
+    function ($scope, $mdSidenav) {
         'use strict';
 
         $scope.toggle = angular.noop;
@@ -45,12 +44,8 @@ opsMenuCtrlModule.controller('OperationsAppCtrl',
          * shown.
          */
         $scope.toggleMenu = function () {
-            $mdSidenav('menu').toggle().then(function () {
-                $log.debug("MENU is done");
-            });
+            $mdSidenav('menu').toggle().then(function () {});
         };
-
-        console.log('Operations application BOOTED UP!');
 
     });
 
@@ -63,9 +58,8 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
      * @param   {Object} $scope               Controller execution scope.
      * @param   {Object} $mdSidenav           Side mane service from Angular
      *                                        Material.
-     * @param   {Object} $log                 $log from Angular.
      */
-    function ($scope, $mdSidenav, $log) {
+    function ($scope, $mdSidenav) {
         'use strict';
 
         $scope.closed = false;
@@ -76,7 +70,6 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
          */
         $scope.close = function () {
             $mdSidenav("menu").close().then(function () {
-                $log.debug("close LEFT is done");
                 $scope.closed = true;
             });
         };

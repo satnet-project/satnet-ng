@@ -71,7 +71,9 @@ angular.module('pushServices').service('satnetPush', [
          */
         this._initData = function () {
 
-            this._client = new Pusher(this._API_KEY, { encrypted: true });
+            this._client = new Pusher(this._API_KEY, {
+                encrypted: true
+            });
             this._service = $pusher(this._client);
             this._service.connection.bind('state_change', this._logConnection);
             $log.info('[push] pusher.com service initialized!');
@@ -88,7 +90,7 @@ angular.module('pushServices').service('satnetPush', [
         this._logConnection = function (states) {
             $log.warn(
                 '[push] State connection change, states = ' +
-                    JSON.stringify(states)
+                JSON.stringify(states)
             );
         };
 
@@ -133,27 +135,6 @@ angular.module('pushServices').service('satnetPush', [
                 this
             );
         };
-
-        /**
-         * Binds a callback function to the event with the name provided and
-         * triggered through the specific events channel.
-         * @param name Name of the event
-         * @param callback_fn Callback function
-         *
-        this.bindEvent = function (name, callback_fn) {
-            this.bind(this.EVENTS_CHANNEL, name, callback_fn, this);
-        };
-
-        this.bindGSAdded = function (callback_fn) {
-            this.bindEvent(this.GS_ADDED_EVENT, callback_fn);
-        };
-        this.bindGSRemoved = function (callback_fn) {
-            this.bindEvent(this.GS_REMOVED_EVENT, callback_fn);
-        };
-        this.bindGSUpdated = function (callback_fn) {
-            this.bindEvent(this.GS_UPDATED_EVENT, callback_fn);
-        };
-        */
 
         this._initData();
 
