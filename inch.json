@@ -1,8 +1,10 @@
 {
     "files": {
         "included": [
-            "src/common/**/*.js",
-            "src/operations/**/*.js"
+            "src/common/directives/**/*.js",
+            "src/common/services/**/*.js",
+            "src/operations/controllers/**/*.js",
+            "src/operations/directives/**/*.js"
         ],
         "excluded": []
     }
