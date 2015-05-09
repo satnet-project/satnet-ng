@@ -86,9 +86,12 @@ app.config([
         $keepaliveProvider.interval(10);
 
         $provide.decorator('$log', function ($delegate) {
+
             var rScope = null;
             return {
-                setScope: function (scope) { rScope = scope; },
+                setScope: function (scope) {
+                    rScope = scope;
+                },
                 log: function (args) {
                     console.log('@log event');
                     $delegate.log.apply(null, ['[log] ' + args]);
