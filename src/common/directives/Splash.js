@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-angular.module('splashDirective', ['ngAnimate'])
+angular.module('splashDirective', [])
     .directive('mAppLoading', ['$animate',
 
     /**
