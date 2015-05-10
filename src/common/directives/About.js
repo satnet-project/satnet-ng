@@ -14,19 +14,11 @@
    limitations under the License.
 */
 
-angular.module('operationsDirective', [
-        'ngMaterial',
-        'ngAnimate',
-        'leaflet-directive',
-        'splashDirective',
-        'snAboutDirective',
-        'operationsMenuControllers'
-    ]).config(function ($mdThemingProvider) {
-        $mdThemingProvider.theme('default')
-            .primaryPalette('blue-grey')
-            .accentPalette('grey');
-    })
-    .directive('operationsApp',
+angular.module('snAboutDirective', ['ngMaterial'])
+    .controller('snAboutCtrl', [function () {
+
+    }])
+    .directive('snAbout',
 
         /**
          * Function that creates the directive itself returning the
@@ -37,9 +29,15 @@ angular.module('operationsDirective', [
          */
         function () {
             'use strict';
+
             return {
                 restrict: 'E',
-                templateUrl: 'templates/operations-app.html'
+                template: '<md-button id="menuAbout" ng-controller="snAboutCtrl" aria-label="about" class="md-primary menu-button">' +
+                    '   <div layout="row" layout-fill>' +
+                    '       <i class="fa fa-question"></i>' +
+                    '       <b>about</b>' +
+                    '   </div>' +
+                    '</md-button>'
             };
 
         });

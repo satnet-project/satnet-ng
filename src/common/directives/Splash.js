@@ -31,20 +31,21 @@ angular.module('splashDirective', [])
             'use strict';
 
             /**
-             * This function links the just created CSS class-like directive in order to
-             * control the end of the animation. Once the animation is over, it removes
-             * itself from the DOM tree.
+             * This function links the just created CSS class-like directive in
+             * order to control the end of the animation. Once the animation is
+             * over, it removes itself from the DOM tree.
              *
-             * Due to the way AngularJS prevents animation during the bootstrap of the
-             * application, we can't animate the top-level container; but, since we
-             * added "ngAnimateChildren", we can animated the inner container during
-             * this phase.
+             * Due to the way AngularJS prevents animation during the bootstrap
+             * of the application, we can't animate the top-level container;
+             * but, since we added "ngAnimateChildren", we can animated the
+             * inner container during this phase.
              * --
              * NOTE: Am using .eq(1) so that we don't animate the Style block.
              *
              * @param {Object} scope      The scope for this directive.
              * @param {Object} element    The parent element from the DOM tree.
-             * @param {Object} attributes Object with the attributes of the element.
+             * @param {Object} attributes Object with the attributes of the
+             *                            element.
              */
             var link = function (scope, element, attributes) {
 

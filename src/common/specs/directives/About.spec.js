@@ -16,37 +16,22 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe('Testing Splash directive', function () {
+describe('Testing About directive', function () {
 
     var $rootScope, $scope, $q,
         $compile,
         $directive,
         $body = $("body"),
-        mock__animate = {
-            leave: function () {
-                return $q.when();
-            }
-        },
-        html =
-        "<div class='m-app-loading' ng-animate-children>" +
-        "   <div class='animated-container'>" +
-        "       <div class='messaging'>" +
-        "           <h2>Operations Interface</h2>" +
-        "       </div>" +
-        "   </div>" +
-        "</div>";
+        html = "<sn-about></sn-about>";
 
     beforeEach(function () {
 
-        module('splashDirective', function ($provide) {
-            $provide.value('$animate', mock__animate);
-        });
+        module('snAboutDirective');
 
         inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
-            $q = $injector.get('$q');
 
             $scope = $rootScope.$new();
             $directive = $compile(angular.element(html))($scope);
@@ -62,11 +47,14 @@ describe('Testing Splash directive', function () {
         $body.empty();
     });
 
-    it('should compile the directive', function () {
-        $body = $("body");
-        $body.append($directive);
-        var div_directive = $("div.m-app-loading");
-        expect(div_directive.length).toBe(1);
+    it('should add a unique ABOUT button on the menu with an icon', function () {
+        var button = $('#menuAbout'),
+            icon = $('.fa-question'),
+            label = $('#menuAbout div b');
+        expect(button.length).toBe(1);
+        expect(icon.length).toBe(1);
+        expect(label.length).toBe(1);
+        expect(label.text()).toBe('about');
     });
 
 });

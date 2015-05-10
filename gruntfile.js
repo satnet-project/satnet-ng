@@ -38,6 +38,7 @@ module.exports = function (grunt) {
             operations: {
                 src: [
                     'src/common/directives/Splash.js',
+                    'src/common/directives/About.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],
@@ -65,8 +66,11 @@ module.exports = function (grunt) {
         },
         ngtemplates: {
             operations: {
-                cwd: 'src/operations',
-                src: 'templates/**/*.html',
+                cwd: 'src',
+                src: [
+                    'common/templates/**/*.html',
+                    'operations/templates/**/*.html'
+                ],
                 dest: 'dist/<%= pkg.name %>-operations-tpls.js',
                 options: {
                     module: 'satnet-operations-tpls',
@@ -134,7 +138,7 @@ module.exports = function (grunt) {
         express: {
             all: {
                 options: {
-                    bases: ['dist/', 'src/'],
+                    bases: ['dist/', 'src/operations/'],
                     port: 8080,
                     hostname: "0.0.0.0",
                     livereload: true
@@ -143,7 +147,7 @@ module.exports = function (grunt) {
         },
         open: {
             all: {
-                path: 'http://localhost:8080/operations/operations-index.html',
+                path: 'http://localhost:8080/operations-index.html',
                 app: 'chromium'
             }
         },
