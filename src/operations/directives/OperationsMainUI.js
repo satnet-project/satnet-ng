@@ -42,4 +42,6 @@ angular.module('operationsDirective', [
                 templateUrl: 'templates/operations-app.html'
             };
 
-        });
+        }
+
+    );

@@ -15,24 +15,77 @@
 */
 
 angular.module('snAboutDirective', ['ngMaterial'])
-    .controller('snAboutCtrl', [function () {
+    .controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
 
-    }])
+        /**
+         * Controller function for handling the SatNet about dialog itself.
+         *
+         * @param {Object} $scope $scope for the controller.
+         */
+        function ($scope, $mdDialog) {
+            'use strict';
+
+            /**
+             * Function that closes the dialog.
+             */
+            $scope.closeDialog = function () {
+                $mdDialog.hide();
+            };
+
+        }
+
+    ])
+    .controller('snAboutCtrl', ['$scope', '$mdDialog',
+
+        /**
+         * Controller function for opening the SatNet About dialog.
+         *
+         * @param {Object} $scope    $scope for the controller.
+         * @param {Object} $mdDialog Angular material Dialog service.
+         */
+        function ($scope, $mdDialog) {
+            'use strict';
+
+            /**
+             * Function that opens the dialog when the snAbout button is
+             * clicked.
+             */
+            $scope.openSnAbout = function () {
+                $mdDialog.show({
+                    templateUrl: 'templates/sn-about-dialog.html'
+                        /*
+                        template: '' +
+                            '<md-dialog>' +
+                            '  <md-content>The SatNet Network</md-content>' +
+                            '  <div class="md-actions">' +
+                            '    <md-button ng-click="closeDialog()">' +
+                            '      Close' +
+                            '    </md-button>' +
+                            '  </div>' +
+                            '</md-dialog>',
+                        controller: 'snAboutDlgCtrl'
+                        */
+                });
+            };
+
+        }
+    ])
     .directive('snAbout',
 
         /**
-         * Function that creates the directive itself returning the
-         * object required by Angular.
+         * Function that creates the directive itself returning the object
+         * required by Angular.
          *
-         * @returns {Object} Object directive required by Angular,
-         *                   with restrict and templateUrl.
+         * @returns {Object} Object directive required by Angular, with
+         *                   restrict and templateUrl.
          */
         function () {
             'use strict';
 
             return {
                 restrict: 'E',
-                template: '<md-button id="menuAbout" ng-controller="snAboutCtrl" aria-label="about" class="md-primary menu-button">' +
+                template: '' +
+                    '<md-button id="menuAbout" ng-controller="snAboutCtrl" ng-click="openSnAbout()" aria-label="about" class="md-primary menu-button">' +
                     '   <div layout="row" layout-fill>' +
                     '       <i class="fa fa-question"></i>' +
                     '       <b>about</b>' +
@@ -40,4 +93,5 @@ angular.module('snAboutDirective', ['ngMaterial'])
                     '</md-button>'
             };
 
-        });
+        }
+    );
