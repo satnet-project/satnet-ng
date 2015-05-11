@@ -26,7 +26,7 @@ describe('Testing About directive', function () {
 
     beforeEach(function () {
 
-        module('snAboutDirective');
+        module('templates', 'snAboutDirective');
 
         inject(function ($injector) {
 

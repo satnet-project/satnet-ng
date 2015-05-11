@@ -117,23 +117,12 @@ angular.module('snAboutDirective', ['ngMaterial'])
              */
             $scope.openSnAbout = function () {
                 $mdDialog.show({
-                    templateUrl: 'templates/sn-about-dialog.html'
-                        /*
-                        template: '' +
-                            '<md-dialog>' +
-                            '  <md-content>The SatNet Network</md-content>' +
-                            '  <div class="md-actions">' +
-                            '    <md-button ng-click="closeDialog()">' +
-                            '      Close' +
-                            '    </md-button>' +
-                            '  </div>' +
-                            '</md-dialog>',
-                        controller: 'snAboutDlgCtrl'
-                        */
+                    templateUrl: 'common/templates/sn-about-dialog.html'
                 });
             };
 
         }
+
     ])
     .directive('snAbout',
 
@@ -149,13 +138,7 @@ angular.module('snAboutDirective', ['ngMaterial'])
 
             return {
                 restrict: 'E',
-                template: '' +
-                    '<md-button id="menuAbout" ng-controller="snAboutCtrl" ng-click="openSnAbout()" aria-label="about" class="md-primary menu-button">' +
-                    '   <div layout="row" layout-fill>' +
-                    '       <i class="fa fa-question"></i>' +
-                    '       <b>about</b>' +
-                    '   </div>' +
-                    '</md-button>'
+                templateUrl: 'common/templates/sn-about.html'
             };
 
         }
@@ -198,9 +181,10 @@ angular.module('operationsDirective', [
          */
         function () {
             'use strict';
+
             return {
                 restrict: 'E',
-                templateUrl: 'templates/operations-app.html'
+                templateUrl: 'operations/templates/operations-app.html'
             };
 
         }

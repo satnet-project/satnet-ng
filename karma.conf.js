@@ -32,6 +32,7 @@ module.exports = function (config) {
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
             'src/common/**/*.js',
+            'src/common/templates/**/*.html',
             'src/operations/**/*.js',
             'src/operations/templates/**/*.html'
         ],
@@ -42,17 +43,18 @@ module.exports = function (config) {
             'src/common/services/**/*.js': ['coverage'],
             'src/operations/controllers/**/*.js': ['coverage'],
             'src/operations/directives/**/*.js': ['coverage'],
+            'src/common/templates/**/*.html': ['ng-html2js'],
             'src/operations/templates/**/*.html': ['ng-html2js']
         },
         ngHtml2JsPreprocessor: {
             moduleName: 'templates',
-            // The following function removes the first two directories from the
+            // The following function removes the first directory from the
             // given path for a template since those are omitted within the
-            // distributable
-            // template packages and, therefore, they are also omitted within the
-            // <templateUrl> parameter of the definition of the directive.
+            // distributable template packages and, therefore, they are also
+            // omitted within the <templateUrl> parameter of the definition of
+            // the directive.
             cacheIdFromPath: function (filepath) {
-                var regex = /^(\w+\/)(\w+\/)/;
+                var regex = /^(\w+\/)/;
                 return filepath.replace(regex, '');
             },
         },

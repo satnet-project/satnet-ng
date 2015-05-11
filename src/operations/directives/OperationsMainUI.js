@@ -37,9 +37,10 @@ angular.module('operationsDirective', [
          */
         function () {
             'use strict';
+
             return {
                 restrict: 'E',
-                templateUrl: 'templates/operations-app.html'
+                templateUrl: 'operations/templates/operations-app.html'
             };
 
         }

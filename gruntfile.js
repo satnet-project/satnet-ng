@@ -73,7 +73,7 @@ module.exports = function (grunt) {
                 ],
                 dest: 'dist/<%= pkg.name %>-operations-tpls.js',
                 options: {
-                    module: 'satnet-operations-tpls',
+                    module: 'operationsDirective',
                     htmlmin: {
                         collapseWhitespace: true,
                         collapseBooleanAttributes: true
@@ -87,7 +87,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: 'src/images',
-                        src: ['*'],
+                        src: '*',
                         dest: 'dist/images',
                         filter: 'isFile'
                     }
@@ -100,9 +100,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: 'dist',
-                        src: [
-                            '<%= pkg.name %>-operations.css'
-                        ],
+                        src: '<%= pkg.name %>-operations.css',
                         dest: 'dist',
                         ext: '.min.css'
                     }
@@ -138,7 +136,7 @@ module.exports = function (grunt) {
         express: {
             all: {
                 options: {
-                    bases: ['dist/', 'src/operations/'],
+                    bases: ['dist/', 'src/'],
                     port: 8080,
                     hostname: "0.0.0.0",
                     livereload: true
@@ -147,7 +145,7 @@ module.exports = function (grunt) {
         },
         open: {
             all: {
-                path: 'http://localhost:8080/operations-index.html',
+                path: 'http://localhost:8080/operations/operations-index.html',
                 app: 'chromium'
             }
         },
@@ -174,6 +172,7 @@ module.exports = function (grunt) {
                 files: [
                     'karma.conf.js',
                     'src/common/**/*.js',
+                    'src/common/templates/**/*.html',
                     'src/operations/**/*.js',
                     'src/operations/templates/**/*.html'
                 ],
