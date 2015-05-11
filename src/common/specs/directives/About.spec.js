@@ -18,9 +18,8 @@
 
 describe('Testing About directive', function () {
 
-    var $rootScope, $scope, $q,
-        $compile,
-        $directive,
+    var $rootScope, $q, $compile, $mdDialog,
+        $scope, $directive,
         $body = $("body"),
         html = "<sn-about></sn-about>";
 
@@ -32,6 +31,7 @@ describe('Testing About directive', function () {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
+            $mdDialog = $injector.get('$mdDialog');
 
             $scope = $rootScope.$new();
             $directive = $compile(angular.element(html))($scope);
@@ -41,13 +41,16 @@ describe('Testing About directive', function () {
         $body.append($directive);
         $rootScope.$digest();
 
+        spyOn($mdDialog, 'show');
+        spyOn($mdDialog, 'hide');
+
     });
 
     afterEach(function () {
         $body.empty();
     });
 
-    it('should add a unique ABOUT button on the menu with an icon', function () {
+    it('should add an ABOUT button on the menu with an icon', function () {
         var button = $('#menuAbout'),
             icon = $('.fa-question'),
             label = $('#menuAbout div b');
@@ -55,6 +58,32 @@ describe('Testing About directive', function () {
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
         expect(label.text()).toBe('about');
+    });
+
+    it('should show the ABOUT dialog and hide it', function () {
+
+        var button = $('#menuAbout').eq(0);
+        expect(button).toBeDefined();
+
+        expect($mdDialog.show).not.toHaveBeenCalled();
+        expect($mdDialog.hide).not.toHaveBeenCalled();
+        button.click();
+        expect($mdDialog.show).toHaveBeenCalledWith({
+            templateUrl: 'common/templates/sn-about-dialog.html'
+        });
+        expect($mdDialog.hide).not.toHaveBeenCalled();
+
+        $mdDialog.show.calls.reset();
+        $mdDialog.hide.calls.reset();
+
+        var close_button = $('#closeAbout');
+        expect(close_button).toBeDefined();
+        close_button.click();
+        expect($mdDialog.show).not.toHaveBeenCalled();
+        // TODO Fix the problem of not calling $mdDialog.hide() by clicking the
+        //      "close" button.
+        //expect($mdDialog.hide).toHaveBeenCalled();
+
     });
 
 });

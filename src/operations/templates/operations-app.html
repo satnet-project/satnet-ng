@@ -1,4 +1,4 @@
-<div class="operations-main" layout="column" layout-fill>
+<div class="operations-main" ng-controller="OperationsAppCtrl" layout="column" layout-fill>
 
     <section layout="row" flex>
         <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="menu" md-is-locked-open="$mdMedia('gt-md')">
@@ -12,6 +12,7 @@
                     </div>
                 </md-button>
 
+                <md-divider></md-divider>
                 <md-divider></md-divider>
 
                 <md-button id="menuGS" ng-click="close()" aria-label="ground stations" class="md-primary menu-button">
@@ -29,7 +30,6 @@
                 </md-button>
 
                 <md-divider></md-divider>
-
                 <md-divider></md-divider>
 
                 <sn-about></sn-about>

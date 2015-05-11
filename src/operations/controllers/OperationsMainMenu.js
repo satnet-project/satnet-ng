@@ -23,32 +23,6 @@ var opsMenuCtrlModule = angular.module(
     ]
 );
 
-opsMenuCtrlModule.controller('OperationsAppCtrl',
-
-    /**
-     * Main controller for the Operations application.
-     * @param   {Object}   $scope               Controller execution scope.
-     * @param   {Object}   $mdSidenav           Side mane service from Angular
-     *                                          Material.
-     */
-    function ($scope, $mdSidenav) {
-        'use strict';
-
-        $scope.toggle = angular.noop;
-
-        /**
-         * Handler to toggle the menu on and off. It is based on the $mdSidenav
-         * service provided by Angular Material. Its main objective is to
-         * provide a button overlayed over the map so that in case the menu is
-         * hidden (due to the small size of the screen), the menu can still be
-         * shown.
-         */
-        $scope.toggleMenu = function () {
-            $mdSidenav('menu').toggle().then(function () {});
-        };
-
-    });
-
 opsMenuCtrlModule.controller('OperationsMenuCtrl',
 
     /**
@@ -65,8 +39,8 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
         $scope.closed = false;
 
         /**
-         * Handler to close the menu that actually takes the user out of
-         * the application.
+         * Handler to close the menu that actually takes the user out of the
+         * application.
          */
         $scope.close = function () {
             $mdSidenav("menu").close().then(function () {

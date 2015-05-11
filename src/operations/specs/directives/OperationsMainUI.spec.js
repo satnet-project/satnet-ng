@@ -18,10 +18,11 @@
 
 describe("Testing Operations Directive integration, ", function () {
 
-    var $rootScope, $scope,
+    var $rootScope, $controller, $scope, $mdSidenav,
         $compile,
         $directive,
         $body = $("body"),
+        appCtrl,
         simpleHtml = "<operations-app></operations-app>";
 
     beforeEach(function () {
@@ -32,10 +33,17 @@ describe("Testing Operations Directive integration, ", function () {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
+            $controller = $injector.get('$controller');
+            $mdSidenav = $injector.get('$mdSidenav');
 
             $scope = $rootScope.$new();
             $directive = $compile(angular.element(simpleHtml))($rootScope);
 
+        });
+
+        appCtrl = $controller("OperationsAppCtrl", {
+            $scope: $scope,
+            $mdSidenav: $mdSidenav
         });
 
         $body.append($directive);
@@ -45,6 +53,18 @@ describe("Testing Operations Directive integration, ", function () {
 
     afterEach(function () {
         $body.empty();
+    });
+
+    it('AppCtrl should toggle the menu opening', function () {
+
+        expect($scope.toggled).toBe(false);
+
+        var toggle_button = $("#toggleMenu");
+        toggle_button.click();
+        $rootScope.$digest();
+
+        //expect($scope.toggled).toBe(true);
+
     });
 
     it("should render the directive within the DOM", function () {

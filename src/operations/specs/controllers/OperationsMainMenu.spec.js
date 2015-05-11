@@ -18,7 +18,7 @@
 
 describe('Operations', function () {
 
-    var $rootScope, $controller, $q,
+    var $rootScope, $controller, $q, $mdSidenav,
         $app_scope, $menu_scope,
         appCtrl, menuCtrl,
         /**
@@ -44,48 +44,36 @@ describe('Operations', function () {
                 }
             };
         };
+    /**/
 
     beforeEach(function () {
-        
+
+        //module('operationsMenuControllers');
+        /**/
         module('operationsMenuControllers', function ($provide) {
             $provide.value('$mdSidenav', mock__mdSidenav);
         });
-        
+        /**/
+
         inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
             $controller = $injector.get('$controller');
+            $mdSidenav = $injector.get('$mdSidenav');
             $q = $injector.get('$q');
 
             $menu_scope = $rootScope.$new();
-            $app_scope = $rootScope.$new();
 
         });
 
-        appCtrl = $controller("OperationsAppCtrl", {
-            $scope: $app_scope,
-            $mdSidenav: mock__mdSidenav
-        });
-        
         menuCtrl = $controller("OperationsMenuCtrl", {
             $scope: $menu_scope,
+            //$mdSidenav: $mdSidenav
             $mdSidenav: mock__mdSidenav
         });
 
     });
 
-    it('AppCtrl should toggle the menu opening', function () {
-
-        spyOn($app_scope, 'toggleMenu');
-
-        $app_scope.toggleMenu();
-        $rootScope.$digest();
-
-        expect($app_scope.toggleMenu).toHaveBeenCalled();
-        expect($app_scope.toggle).toBeDefined();
-
-    });
-    
     it('MenuCtrl should close the $mdSidenav menu', function () {
 
         expect($menu_scope.closed).toBe(false);

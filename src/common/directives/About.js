@@ -77,4 +77,5 @@ angular.module('snAboutDirective', ['ngMaterial'])
             };
 
         }
+
     );
