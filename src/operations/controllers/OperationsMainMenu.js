@@ -16,10 +16,7 @@
 
 var opsMenuCtrlModule = angular.module(
     'operationsMenuControllers', [
-        'ngMaterial',
-        'ngAnimate',
-        'leaflet-directive',
-        'splashDirective'
+        'ngMaterial'
     ]
 );
 
@@ -34,18 +31,13 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
      *                                        Material.
      */
     function ($scope, $mdSidenav) {
-        'use strict';
-
-        $scope.closed = false;
 
         /**
          * Handler to close the menu that actually takes the user out of the
          * application.
          */
         $scope.close = function () {
-            $mdSidenav("menu").close().then(function () {
-                $scope.closed = true;
-            });
+            $mdSidenav("menu").close();
         };
 
     });

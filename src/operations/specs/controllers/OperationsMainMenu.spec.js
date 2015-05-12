@@ -19,41 +19,37 @@
 describe('Operations', function () {
 
     var $rootScope, $controller, $q, $mdSidenav,
-        $app_scope, $menu_scope,
-        appCtrl, menuCtrl,
-        /**
-         * Factory for mocking $mdSidenav service from Angular material.
-         *
-         * @returns {Object} Factory for mocking.
-         */
-        mock__mdSidenav = function () {
-            return {
-                /**
-                 * Mock up function for simulating the toggling method.
-                 * @returns {Object} Promise object.
-                 */
-                toggle: function () {
-                    return $q.when();
-                },
-                /**
-                 * Mock up function for simulating the closing method.
-                 * @returns {Object} Promise object.
-                 */
-                close: function () {
-                    return $q.when();
-                }
-            };
+        $menu_scope, menuCtrl;
+    /*
+    close_fn = jasmine.createSpy("close").and.callFake(function () {
+        return $q.when();
+    }),
+    toggle_fn = jasmine.createSpy("toggle").and.callFake(function () {
+        return $q.when();
+    }),
+    */
+    /**
+     * Factory for mocking $mdSidenav service from Angular material.
+     *
+     * @returns {Object} Factory for mocking.
+     */
+    /*
+    mock__mdSidenav = function () {
+        return {
+            toggle: toggle_fn,
+            close: close_fn
         };
-    /**/
+    };
+    */
 
     beforeEach(function () {
 
-        //module('operationsMenuControllers');
-        /**/
+        module('operationsMenuControllers');
+        /*
         module('operationsMenuControllers', function ($provide) {
             $provide.value('$mdSidenav', mock__mdSidenav);
         });
-        /**/
+        */
 
         inject(function ($injector) {
 
@@ -68,20 +64,17 @@ describe('Operations', function () {
 
         menuCtrl = $controller("OperationsMenuCtrl", {
             $scope: $menu_scope,
-            //$mdSidenav: $mdSidenav
-            $mdSidenav: mock__mdSidenav
+            $mdSidenav: $mdSidenav
+                //$mdSidenav: mock__mdSidenav
         });
 
     });
 
     it('MenuCtrl should close the $mdSidenav menu', function () {
 
-        expect($menu_scope.closed).toBe(false);
-
-        $menu_scope.close();
+        var exit_button = $("#menuExit");
+        exit_button.click();
         $rootScope.$digest();
-
-        expect($menu_scope.closed).toBe(true);
 
     });
 

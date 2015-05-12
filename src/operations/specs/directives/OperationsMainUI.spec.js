@@ -57,13 +57,9 @@ describe("Testing Operations Directive integration, ", function () {
 
     it('AppCtrl should toggle the menu opening', function () {
 
-        expect($scope.toggled).toBe(false);
-
         var toggle_button = $("#toggleMenu");
         toggle_button.click();
         $rootScope.$digest();
-
-        //expect($scope.toggled).toBe(true);
 
     });
 
