@@ -255,4 +255,10 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
             $mdSidenav("menu").close();
         };
 
+        /**
+         * Handler to open the dialog for managing the ground stations.
+         */
+        $scope.groundStations = function () {
+        };
+    
     });
