@@ -19,7 +19,8 @@
 describe('Operations', function () {
 
     var $rootScope, $controller, $q, $mdSidenav,
-        $menu_scope, menuCtrl;
+        $body = $("body"),
+        $scope, menuCtrl;
     /*
     close_fn = jasmine.createSpy("close").and.callFake(function () {
         return $q.when();
@@ -58,23 +59,31 @@ describe('Operations', function () {
             $mdSidenav = $injector.get('$mdSidenav');
             $q = $injector.get('$q');
 
-            $menu_scope = $rootScope.$new();
+            $scope = $rootScope.$new();
 
         });
 
         menuCtrl = $controller("OperationsMenuCtrl", {
-            $scope: $menu_scope,
+            $scope: $scope,
             $mdSidenav: $mdSidenav
                 //$mdSidenav: mock__mdSidenav
         });
 
+        $rootScope.$digest();
+
+    });
+
+    afterEach(function () {
+        $body.empty();
     });
 
     it('MenuCtrl should close the $mdSidenav menu', function () {
 
-        var exit_button = $("#menuExit");
+        var exit_button = $("#menuExit").eq(0);
         exit_button.click();
         $rootScope.$digest();
+
+        $scope.close();
 
     });
 

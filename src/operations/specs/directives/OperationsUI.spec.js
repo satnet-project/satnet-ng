@@ -16,13 +16,13 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe("Testing Operations Directive integration, ", function () {
+describe("Testing Operations Interface", function () {
 
-    var $rootScope, $controller, $scope, $mdSidenav,
-        $compile,
-        $directive,
+    var $controller, $mdSidenav,
+        $compile, $directive,
         $body = $("body"),
-        appCtrl,
+        $rootScope, app_scope, menu_scope,
+        appCtrl, menuCtrl,
         simpleHtml = "<operations-app></operations-app>";
 
     beforeEach(function () {
@@ -36,13 +36,19 @@ describe("Testing Operations Directive integration, ", function () {
             $controller = $injector.get('$controller');
             $mdSidenav = $injector.get('$mdSidenav');
 
-            $scope = $rootScope.$new();
+            app_scope = $rootScope.$new();
+            menu_scope = $rootScope.$new();
+
             $directive = $compile(angular.element(simpleHtml))($rootScope);
 
         });
 
         appCtrl = $controller("OperationsAppCtrl", {
-            $scope: $scope,
+            $scope: app_scope,
+            $mdSidenav: $mdSidenav
+        });
+        menuCtrl = $controller("OperationsMenuCtrl", {
+            $scope: menu_scope,
             $mdSidenav: $mdSidenav
         });
 
@@ -57,9 +63,23 @@ describe("Testing Operations Directive integration, ", function () {
 
     it('AppCtrl should toggle the menu opening', function () {
 
-        var toggle_button = $("#toggleMenu");
-        toggle_button.click();
+        var button = $("#toggleMenu");
+        button.click();
         $rootScope.$digest();
+
+        expect(button).toBeDefined();
+        expect(button.length).toBe(1);
+
+    });
+
+    it('MenuCtrl should close itself', function () {
+
+        var button = $("#menuExit").eq(0);
+        button.click();
+        $rootScope.$digest();
+
+        expect(button).toBeDefined();
+        expect(button.length).toBe(1);
 
     });
 
