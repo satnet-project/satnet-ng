@@ -18,7 +18,7 @@
 
 describe('Testing Pusher Service', function () {
 
-    var $rootScope,
+    var $rootScope, $log,
         satnetPush,
         /**
          * Mock for the factory object of the pushServices service.
@@ -39,7 +39,27 @@ describe('Testing Pusher Service', function () {
         inject(function ($injector) {
             satnetPush = $injector.get('satnetPush');
             $rootScope = $injector.get('$rootScope');
+            $log = $injector.get('$log');
         });
+
+        spyOn($log, 'info');
+        spyOn(satnetPush, '_subscribeChannels');
+        spyOn(angular, 'forEach');
+
+        satnetPush._initData();
+        expect(satnetPush._subscribeChannels).toHaveBeenCalled();
+
+        /* FIXME: angular.forEach never called in the tests
+        expect(angular.forEach).toHaveBeenCalledWith(
+            [
+                'leop.downlink.ch',
+                'configuration.events.ch',
+                'simulation.events.ch',
+                'network.events.ch',
+                'leop.events.ch'
+            ], Function
+        );
+        */
 
     });
 
@@ -47,14 +67,39 @@ describe('Testing Pusher Service', function () {
         expect(satnetPush).toBeDefined();
     });
 
+    /* FIXME: $pusher.allChannels() is undefined, ask @github?
+    it('it should bind callbacks to the channels', function () {
+
+        var __mock__frame_rx_cb = function () {};
+
+        satnetPush.bind(
+            'leop.downlink.ch', 'frameEv', __mock__frame_rx_cb, satnetPush
+        );
+
+    });
+    */
+
     it('should bind the frame received callback', function () {
 
         var __mock__frame_rx_cb = function () {};
 
-        spyOn(satnetPush, 'bindFrameReceived');
+        spyOn(satnetPush, 'bind');
         satnetPush.bindFrameReceived(__mock__frame_rx_cb);
 
-        expect(satnetPush.bindFrameReceived).toHaveBeenCalled();
+        expect(satnetPush.bind).toHaveBeenCalledWith(
+            'leop.downlink.ch', 'frameEv', __mock__frame_rx_cb, satnetPush
+        );
+
+    });
+
+    it('should log the connection change status', function () {
+
+        spyOn($log, 'warn');
+        satnetPush._logConnection(['state_a', 'state_b']);
+
+        expect($log.warn).toHaveBeenCalledWith(
+            '[push] State connection change, states = [\"state_a\",\"state_b\"]'
+        );
 
     });
 
