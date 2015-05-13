@@ -19,7 +19,10 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        clean: ['dist'],
+        clean: {
+            dist: 'dist',
+            pusher: 'node_modules/pusher-stubs/pusher-test-stub.js'
+        },
         jshint: {
             files: [
                 '.jshintrc',
@@ -79,6 +82,19 @@ module.exports = function (grunt) {
                         collapseBooleanAttributes: true
                     }
                 }
+            }
+        },
+        mkdir: {
+            pusher: {
+                options: {
+                    create: ['node_modules/pusher-stubs']
+                }
+            },
+        },
+        curl: {
+            'pusher': {
+                dest: 'node_modules/pusher-stubs/pusher-test-stub.js',
+                src: 'https://rawgit.com/pusher/pusher-js-test-stub/master/build/bin/pusher-test-stub.js'
             }
         },
         copy: {
@@ -194,17 +210,23 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-express');
+    grunt.loadNpmTasks('grunt-curl');
+    grunt.loadNpmTasks('grunt-mkdir');
 
     // TASKS
     grunt.registerTask(
         'test', ['jshint', 'karma']
     );
     grunt.registerTask(
-        'build', ['clean', 'sass', 'ngtemplates', 'concat', 'copy', 'cssmin', 'uglify']
+        'build', ['clean:dist', 'sass', 'ngtemplates', 'concat', 'copy', 'cssmin', 'uglify']
     );
 
     grunt.registerTask(
         'server', ['express', 'open', 'watch:express']
+    );
+
+    grunt.registerTask(
+        'stubs', ['clean:pusher', 'mkdir:pusher', 'curl:pusher']
     );
 
 };

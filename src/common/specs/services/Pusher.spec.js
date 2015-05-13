@@ -18,24 +18,44 @@
 
 describe('Testing Pusher Service', function () {
 
-    var $rootScope, pushServices, mock__pusher = {};
+    var $rootScope,
+        satnetPush,
+        /**
+         * Mock for the factory object of the pushServices service.
+         * @param   {Object} $client $pusher object.
+         * @returns {Object} $pusher object.
+         */
+        __mock__pusher = function ($client) {
+            return $client;
+        };
 
     beforeEach(function () {
         module('pushServices');
 
         module(function ($provide) {
-            $provide.value('$pusher', mock__pusher);
+            $provide.value('$pusher', __mock__pusher);
         });
 
         inject(function ($injector) {
-            //pushServices = $injector.get('satnetPush');
+            satnetPush = $injector.get('satnetPush');
             $rootScope = $injector.get('$rootScope');
         });
 
     });
 
     it('should return a non-null pushServices object', function () {
-        expect(pushServices).not.toBeNull();
+        expect(satnetPush).toBeDefined();
+    });
+
+    it('should bind the frame received callback', function () {
+
+        var __mock__frame_rx_cb = function () {};
+
+        spyOn(satnetPush, 'bindFrameReceived');
+        satnetPush.bindFrameReceived(__mock__frame_rx_cb);
+
+        expect(satnetPush.bindFrameReceived).toHaveBeenCalled();
+
     });
 
 });

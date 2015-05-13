@@ -36,9 +36,11 @@
     "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-curl": "^2.2.0",
     "grunt-express": "^1.4.1",
     "grunt-jasmine-runner": "^0.6.0",
     "grunt-karma": "^0.10.1",
+    "grunt-mkdir": "^0.1.2",
     "grunt-open": "^0.2.3",
     "grunt-preview": "0.0.1",
     "grunt-template-jasmine-requirejs": "^0.2.0",
@@ -60,6 +62,7 @@
     "require.js": "^0.3.97"
   },
   "scripts": {
+    "pretest": "grunt stubs",
     "test": "grunt test"
   }
 }
