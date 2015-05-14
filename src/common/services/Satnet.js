@@ -67,9 +67,9 @@ angular
                 'sc.getPasses': this._simulation.createMethod('spacecraft.getPasses'),
                 'gs.getPasses': this._simulation.createMethod('groundstation.getPasses'),
                 // LEOP services
-                'leop.cfg': this._leop.createMethod('getConfiguration'),
+                'leop.getCfg': this._leop.createMethod('getConfiguration'),
                 'leop.setCfg': this._leop.createMethod('setConfiguration'),
-                'leop.passes': this._leop.createMethod('getPasses'),
+                'leop.getPasses': this._leop.createMethod('getPasses'),
                 'leop.gs.list': this._leop.createMethod('gs.list'),
                 'leop.sc.list': this._leop.createMethod('sc.list'),
                 'leop.gs.add': this._leop.createMethod('gs.add'),
@@ -79,7 +79,7 @@ angular
                 'leop.ufo.identify': this._leop.createMethod('launch.identify'),
                 'leop.ufo.forget': this._leop.createMethod('launch.forget'),
                 'leop.ufo.update': this._leop.createMethod('launch.update'),
-                'leop.messages': this._leop.createMethod('getMessages'),
+                'leop.getMessages': this._leop.createMethod('getMessages'),
                 // NETWORK services
                 'net.alive': this._network.createMethod('keepAlive')
             };
@@ -111,17 +111,6 @@ angular
                         throw msg;
                     }
                 );
-            };
-
-            /**
-             * Simple convenience method for invoking the remote keep alive of the
-             * network sevice.
-             * @returns {*} Promise that returns True.
-             */
-            this.alive = function () {
-                return this.rCall('net.alive', []).then(function () {
-                    return true;
-                });
             };
 
             /**
