@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Ricardo Tubio-Pardavila
+ * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by rtubio on 11/01/14.
+ * Created by rtubio on 15/05/15.
  */
 
 /** Module definition (empty array is vital!). */
@@ -28,7 +28,6 @@ angular.module('mapServices', [
     .constant('MAX_ZOOM', 12)
     .constant('ZOOM', 7)
     .service('maps', [
-        '$q',
         'leafletData',
         'satnetRPC',
         'MIN_ZOOM',
@@ -378,4 +377,24 @@ angular.module('mapServices', [
             };
 
         }
-    ]);
+    ])
+    .directive('snMap',
+
+        /**
+         * Function that creates the directive itself returning the object
+         * required by Angular.
+         *
+         * @returns {Object} Object directive required by Angular, with
+         *                   restrict and templateUrl.
+         */
+        function () {
+            'use strict';
+
+            return {
+                restrict: 'E',
+                templateUrl: 'common/templates/sn-map.html'
+            };
+
+        }
+
+    );

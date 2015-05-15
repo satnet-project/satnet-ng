@@ -20,6 +20,7 @@ angular.module('operationsDirective', [
         'leaflet-directive',
         'splashDirective',
         'snAboutDirective',
+        'snMapDirective',
         'operationsMenuControllers'
     ]).config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
