@@ -83,14 +83,8 @@ describe('Testing About directive', function () {
         $mdDialog.show.calls.reset();
         $mdDialog.hide.calls.reset();
 
-        var close_button = $('#closeAbout').eq(0);
-        expect(close_button).toBeDefined();
-        // FIXME: close_button is not found
-        //expect(close_button.length).toBe(1);
-        close_button.click();
-        expect($mdDialog.show).not.toHaveBeenCalled();
-        // FIXME: not calling $mdDialog.hide() when clicking the "close" button
-        //expect($mdDialog.hide).toHaveBeenCalled();
+        $scope.closeDialog();
+        expect($mdDialog.hide).toHaveBeenCalled();
 
     });
 
