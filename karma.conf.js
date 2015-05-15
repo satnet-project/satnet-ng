@@ -30,6 +30,7 @@ module.exports = function (config) {
             'node_modules/angular-aria/angular-aria.js',
             'node_modules/angular-material/angular-material.js',
             'node_modules/pusher-stubs/pusher-test-stub.js',
+            'node_modules/pusher-angular/lib/pusher-angular.js',
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
             'src/common/**/*.js',

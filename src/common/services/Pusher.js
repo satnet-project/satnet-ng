@@ -17,7 +17,7 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('pushServices', []);
+angular.module('pushServices', ['pusher-angular']);
 
 /**
  * Service that defines the basic calls to the services of the SATNET network
@@ -118,7 +118,8 @@ angular.module('pushServices').service('satnetPush', [
          */
         this.bind = function (channel_name, event_name, callback_fn) {
             if (!this._service.allChannels().hasOwnProperty(channel_name)) {
-                throw 'Not subscribed to this channel, name = ' + channel_name;
+                throw 'Not subscribed to this channel, ' +
+                'name = <' + channel_name + '>';
             }
             this._service.channel(channel_name).bind(event_name, callback_fn);
         };

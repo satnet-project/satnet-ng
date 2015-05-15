@@ -18,53 +18,25 @@
 
 describe('Testing Pusher Service', function () {
 
-    var $rootScope, $log,
-        satnetPush,
-        /**
-         * Mock for the factory object of the pushServices service.
-         * @param   {Object} $client $pusher object.
-         * @returns {Object} $pusher object.
-         */
-        __mock__pusher = function ($client) {
-            return $client;
-        };
+    var $rootScope, $log, $pusher,
+        satnetPush;
 
     beforeEach(function () {
         module('pushServices');
 
-        module(function ($provide) {
-            $provide.value('$pusher', __mock__pusher);
-        });
-
         inject(function ($injector) {
-            satnetPush = $injector.get('satnetPush');
             $rootScope = $injector.get('$rootScope');
             $log = $injector.get('$log');
+            $pusher = $injector.get('$pusher');
+
+            satnetPush = $injector.get('satnetPush');
         });
 
-        spyOn($log, 'info');
-        spyOn(satnetPush, '_subscribeChannels');
-        spyOn(angular, 'forEach');
-
-        satnetPush._initData();
-        expect(satnetPush._subscribeChannels).toHaveBeenCalled();
-
-        /* FIXME: angular.forEach never called in the tests
-        expect(angular.forEach).toHaveBeenCalledWith(
-            [
-                'leop.downlink.ch',
-                'configuration.events.ch',
-                'simulation.events.ch',
-                'network.events.ch',
-                'leop.events.ch'
-            ], Function
-        );
-        */
+        expect(satnetPush).toBeDefined();
 
     });
 
     it('should return a valid API pushServices object', function () {
-        expect(satnetPush).toBeDefined();
 
         expect(satnetPush.LEOP_DOWNLINK_CHANNEL).toBe('leop.downlink.ch');
         expect(satnetPush.EVENTS_CHANNEL).toBe('configuration.events.ch');
@@ -93,20 +65,21 @@ describe('Testing Pusher Service', function () {
         expect(satnetPush.LEOP_SC_UPDATED_EVENT).toBe('leopSCUpdatedEv');
 
     });
-    
-    /* FIXME: $pusher.allChannels() is undefined, ask @github?
+
     it('it should bind callbacks to the channels', function () {
 
         var __mock__frame_rx_cb = function () {};
 
-        expect(satnetPush.bind('xxxx', 'zzzz', function () {})).toThrow('Not subscribed to this channel, name = xxxx');
+        expect(function () {
+                satnetPush.bind('xxxx', 'zzzz', __mock__frame_rx_cb);
+            })
+            .toThrow('Not subscribed to this channel, name = <xxxx>');
 
         satnetPush.bind(
             'leop.downlink.ch', 'frameEv', __mock__frame_rx_cb, satnetPush
         );
 
     });
-    */
 
     it('should bind the frame received callback', function () {
 

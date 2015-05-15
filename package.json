@@ -59,6 +59,7 @@
     "karma-story-reporter": "^0.3.1",
     "leaflet": "^0.7.3",
     "phantomjs": "^1.9.13",
+    "pusher-angular": "^0.1.5",
     "require.js": "^0.3.97"
   },
   "scripts": {
