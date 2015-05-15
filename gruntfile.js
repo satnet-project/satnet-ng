@@ -42,6 +42,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/common/directives/Splash.js',
                     'src/common/directives/About.js',
+                    'src/common/directives/Maps.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],
