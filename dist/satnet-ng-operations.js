@@ -161,7 +161,6 @@ angular.module('snAboutDirective', ['ngMaterial'])
  * Created by rtubio on 15/05/15.
  */
 
-/** Module definition (empty array is vital!). */
 angular.module('snMapDirective', ['leaflet-directive'])
     .directive('snMap',
 

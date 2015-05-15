@@ -20,7 +20,7 @@ var opsMenuCtrlModule = angular.module(
     ]
 );
 
-opsMenuCtrlModule.controller('OperationsMenuCtrl',
+opsMenuCtrlModule.controller('OperationsMenuCtrl', [ '$scope', '$mdSidenav',
 
     /**
      * Controller of the menu for the Operations application. It creates a
@@ -46,4 +46,4 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
         $scope.groundStations = function () {
         };
     
-    });
+    }]);

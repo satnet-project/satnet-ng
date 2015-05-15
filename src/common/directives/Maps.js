@@ -16,8 +16,33 @@
  * Created by rtubio on 15/05/15.
  */
 
-/** Module definition (empty array is vital!). */
-angular.module('snMapDirective', ['leaflet-directive'])
+angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
+    .controller('MapCtrl', [ '$scope', 'mapServices',
+
+        /**
+         * Main controller for the map directive. It should be in charge of all
+         * the additional controls and/or objects that are overlayed over the
+         * original map. The main control of the map should be written in
+         * re-usable functions within the 'mapServices' object.
+         * 
+         * @param {Object} $scope      $scope for the controller.
+         * @param {Object} mapServices Service with the custom functions to
+         *                             control the maps object.
+         */
+        function($scope, mapServices) {
+            'use strict';
+
+            /**
+             * Function that handles the initialization of the map.
+             */
+            $scope.init = function () {
+                mapServices.createMainMap();
+            };
+
+            $scope.init();
+
+        }
+    ])
     .directive('snMap',
 
         /**

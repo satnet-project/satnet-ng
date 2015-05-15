@@ -17,7 +17,7 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('mapServices', [
+angular.module('snMapServices', [
     'satnet-services',
     'leaflet-directive'
 ])
@@ -27,22 +27,26 @@ angular.module('mapServices', [
     .constant('MIN_ZOOM', 2)
     .constant('MAX_ZOOM', 12)
     .constant('ZOOM', 7)
-    .service('maps', [
-        'leafletData',
-        'satnetRPC',
-        'MIN_ZOOM',
-        'MAX_ZOOM',
-        'ZOOM',
-        'T_OPACITY',
-        function (
-            $q,
-            leafletData,
-            satnetRPC,
-            MIN_ZOOM,
-            MAX_ZOOM,
-            ZOOM,
-            T_OPACITY
-        ) {
+    .service('mapServices', ['$q', 'leafletData', 'satnetRPC', 'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',
+
+        /**
+         * Function to construct the services provided by this module.
+         * 
+         * @param   {Object}   $q          $q angular service.
+         * @param   {Object}   leafletData Object to access to the Leaflet
+         *                               map properties.
+         * @param   {Object}   satnetRPC   Object with the RPC services
+         *                               of the SatNet network.
+         * @param   {Number}   MIN_ZOOM    Minimum value for the zoom over
+         *                               the map.
+         * @param   {Number}   MAX_ZOOM    Maximum value for the zoom over
+         *                               the map.
+         * @param   {Number}   ZOOM        Default value of the zoom over
+         *                               the map.
+         * @param   {Number} T_OPACITY   Default opacity of the layers
+         *                               over the map.
+         */
+        function ($q, leafletData, satnetRPC, MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY) {
 
             'use strict';
 
@@ -377,24 +381,4 @@ angular.module('mapServices', [
             };
 
         }
-    ])
-    .directive('snMap',
-
-        /**
-         * Function that creates the directive itself returning the object
-         * required by Angular.
-         *
-         * @returns {Object} Object directive required by Angular, with
-         *                   restrict and templateUrl.
-         */
-        function () {
-            'use strict';
-
-            return {
-                restrict: 'E',
-                templateUrl: 'common/templates/sn-map.html'
-            };
-
-        }
-
-    );
+    ]);
