@@ -21,10 +21,11 @@ describe('Testing snMapServices Service', function () {
     var snMapServices, $rootScope;
 
     beforeEach(function () {
+
         module('snMapServices');
 
         inject(function ($injector) {
-            snMapServices = $injector.get('snMapServices');
+            snMapServices = $injector.get('mapServices');
             $rootScope = $injector.get('$rootScope');
         });
 
@@ -47,10 +48,10 @@ describe('Testing snMapServices Service', function () {
             }
         };
 
-        expect(snMapServices.getOSMBaseLayer()).toBe(expected_baselayers);
+        expect(snMapServices.getOSMBaseLayer()).toEqual(expected_baselayers);
 
     });
-    
+
     it('should return the overlay objects', function () {
 
         var expected_MIN_ZOOM = 2,
@@ -121,8 +122,8 @@ describe('Testing snMapServices Service', function () {
                 }
             };
 
-        expect(snMapServices.getOverlays()).toBe(expected_overlays);
+        expect(snMapServices.getOverlays()).toEqual(expected_overlays);
 
     });
-    
+
 });

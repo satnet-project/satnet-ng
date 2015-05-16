@@ -18,9 +18,8 @@
 
 describe('Testing Maps directive', function () {
 
-    var $compile, $directive, $rootScope, $scope,
-        $body = $("body"),
-        html = "<sn-map></sn-map>";
+    var $compile, $rootScope, $scope, $httpBackend,
+        $directive, $body, html = "<sn-map></sn-map>";
 
     beforeEach(function () {
 
@@ -30,12 +29,21 @@ describe('Testing Maps directive', function () {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
+            $httpBackend = $injector.get('$httpBackend');
 
             $scope = $rootScope.$new();
             $directive = $compile(angular.element(html))($scope);
 
         });
 
+        $httpBackend
+            .when('GET', '/configuration/user/geoip')
+            .respond({
+                latitude: '40.0',
+                longitude: '50.0'
+            });
+
+        $body = $("body");
         $body.append($directive);
         $rootScope.$digest();
 

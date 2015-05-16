@@ -19,7 +19,7 @@
 describe("Testing Operations Interface", function () {
 
     var $controller, $mdSidenav,
-        $compile, $directive,
+        $compile, $directive, $httpBackend,
         satnetRPC,
         $body = $("body"),
         $rootScope, app_scope, menu_scope,
@@ -36,6 +36,7 @@ describe("Testing Operations Interface", function () {
             $compile = $injector.get('$compile');
             $controller = $injector.get('$controller');
             $mdSidenav = $injector.get('$mdSidenav');
+            $httpBackend = $injector.get('$httpBackend');
             satnetRPC = $injector.get('satnetRPC');
 
             app_scope = $rootScope.$new();
@@ -53,6 +54,13 @@ describe("Testing Operations Interface", function () {
             $scope: menu_scope,
             $mdSidenav: $mdSidenav
         });
+
+        $httpBackend
+            .when('GET', '/configuration/user/geoip')
+            .respond({
+                latitude: '40.0',
+                longitude: '50.0'
+            });
 
         $body.append($directive);
         $rootScope.$digest();

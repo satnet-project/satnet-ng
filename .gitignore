@@ -1,5 +1,6 @@
-node_modules
-lib/bower
-.sass-cache
-.coverage
+.complexity/
+.coverage/
+lib/bower/
+node_modules/
 npm-debug.log
+.sass-cache/

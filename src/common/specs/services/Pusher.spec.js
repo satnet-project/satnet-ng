@@ -18,8 +18,7 @@
 
 describe('Testing Pusher Service', function () {
 
-    var $rootScope, $log, $pusher,
-        satnetPush;
+    var $rootScope, $log, $pusher, satnetPush;
 
     beforeEach(function () {
         module('pushServices');

@@ -21,6 +21,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: {
             dist: 'dist',
+            reports: ['.coverage', '.complexity'],
             libs: 'node_modules/libs'
         },
         jshint: {
@@ -32,6 +33,24 @@ module.exports = function (grunt) {
             ],
             options: {
                 jshintrc: '.jshintrc'
+            }
+        },
+        complexity: {
+            generic: {
+                src: ['src/**/*.js'],
+                exclude: ['src/**/*.spec.js'],
+                options: {
+                    breakOnErrors: true,
+                    jsLintXML: '.complexity/report.xml', // create XML JSLint-like report 
+                    checkstyleXML: '.complexity/checkstyle.xml', // create checkstyle report 
+                    pmdXML: '.complexity/pmd.xml', // create pmd report 
+                    errorsOnly: false, // show only maintainability errors 
+                    cyclomatic: [3, 7, 12], // or optionally a single value, like 3 
+                    halstead: [8, 13, 20], // or optionally a single value, like 8 
+                    maintainability: 100,
+                    hideComplexFunctions: false, // only display maintainability 
+                    broadcast: false // broadcast data over event-bus 
+                }
             }
         },
         concat: {
@@ -92,6 +111,11 @@ module.exports = function (grunt) {
                 options: {
                     create: ['node_modules/libs']
                 }
+            },
+            reports: {
+                options: {
+                    create: ['.coverage', '.complexity']
+                }
             }
         },
         'curl-dir': {
@@ -99,6 +123,7 @@ module.exports = function (grunt) {
                 src: [
                     'https://rawgit.com/ajsd/angular-uuid/master/uuid.min.js',
                     'https://rawgit.com/ajsd/angular-jsonrpc/master/src/jsonrpc.js',
+                    'https://rawgit.com/pusher/pusher-angular/master/lib/pusher-angular.js',
                     'https://rawgit.com/pusher/pusher-js-test-stub/master/build/bin/pusher-test-stub.js'
                 ],
                 dest: 'node_modules/libs'
@@ -219,13 +244,25 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-express');
     grunt.loadNpmTasks('grunt-curl');
     grunt.loadNpmTasks('grunt-mkdir');
+    grunt.loadNpmTasks('grunt-complexity');
 
     // TASKS
     grunt.registerTask(
         'test', ['jshint', 'karma']
     );
     grunt.registerTask(
-        'build', ['clean:dist', 'sass', 'ngtemplates', 'concat', 'copy', 'cssmin', 'uglify']
+        'build', [
+            'clean:dist',
+            'clean:reports',
+            'jshint',
+            'sass',
+            'ngtemplates',
+            'concat',
+            'copy',
+            'cssmin',
+            'uglify',
+            'complexity'
+        ]
     );
 
     grunt.registerTask(
@@ -233,7 +270,11 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask(
-        'libs', ['clean:libs', 'mkdir:libs', 'curl-dir:libs']
+        'libs', [
+            'clean:libs',
+            'mkdir:libs',
+            'curl-dir:libs'
+        ]
     );
 
 };
