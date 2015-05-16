@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: {
             dist: 'dist',
-            pusher: 'node_modules/pusher-stubs/pusher-test-stub.js'
+            libs: 'node_modules/libs'
         },
         jshint: {
             files: [
@@ -88,16 +88,20 @@ module.exports = function (grunt) {
             }
         },
         mkdir: {
-            pusher: {
+            libs: {
                 options: {
-                    create: ['node_modules/pusher-stubs']
+                    create: ['node_modules/libs']
                 }
-            },
+            }
         },
-        curl: {
-            'pusher': {
-                dest: 'node_modules/pusher-stubs/pusher-test-stub.js',
-                src: 'https://rawgit.com/pusher/pusher-js-test-stub/master/build/bin/pusher-test-stub.js'
+        'curl-dir': {
+            'libs': {
+                src: [
+                    'https://rawgit.com/ajsd/angular-uuid/master/uuid.min.js',
+                    'https://rawgit.com/ajsd/angular-jsonrpc/master/src/jsonrpc.js',
+                    'https://rawgit.com/pusher/pusher-js-test-stub/master/build/bin/pusher-test-stub.js'
+                ],
+                dest: 'node_modules/libs'
             }
         },
         copy: {
@@ -229,7 +233,7 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask(
-        'stubs', ['clean:pusher', 'mkdir:pusher', 'curl:pusher']
+        'libs', ['clean:libs', 'mkdir:libs', 'curl-dir:libs']
     );
 
 };

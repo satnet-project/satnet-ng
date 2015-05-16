@@ -94,7 +94,6 @@ angular.module('pushServices').service('satnetPush', [
             );
         };
 
-
         /**
          * Subscribe this service to all the channels whose names are part of
          * the "_channel_names_ array.
