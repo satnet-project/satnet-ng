@@ -161,7 +161,33 @@ angular.module('snAboutDirective', ['ngMaterial'])
  * Created by rtubio on 15/05/15.
  */
 
-angular.module('snMapDirective', ['leaflet-directive'])
+angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
+    .controller('MapCtrl', [ '$scope', 'mapServices',
+
+        /**
+         * Main controller for the map directive. It should be in charge of all
+         * the additional controls and/or objects that are overlayed over the
+         * original map. The main control of the map should be written in
+         * re-usable functions within the 'mapServices' object.
+         * 
+         * @param {Object} $scope      $scope for the controller.
+         * @param {Object} mapServices Service with the custom functions to
+         *                             control the maps object.
+         */
+        function($scope, mapServices) {
+            'use strict';
+
+            /**
+             * Function that handles the initialization of the map.
+             */
+            $scope.init = function () {
+                mapServices.createMainMap();
+            };
+
+            $scope.init();
+
+        }
+    ])
     .directive('snMap',
 
         /**
@@ -181,7 +207,604 @@ angular.module('snMapDirective', ['leaflet-directive'])
 
         }
 
-    );;/*
+    );;/**
+ * Copyright 2015 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 15/05/15.
+ */
+
+/** Module definition (empty array is vital!). */
+angular.module('snMapServices', [
+    'satnetServices',
+    'leaflet-directive'
+])
+    .constant('T_OPACITY', 0.125)
+    .constant('LAT', 37.7833)
+    .constant('LNG', -122.4167)
+    .constant('MIN_ZOOM', 2)
+    .constant('MAX_ZOOM', 12)
+    .constant('ZOOM', 7)
+    .service('mapServices', ['$q', 'leafletData', 'satnetRPC', 'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',
+
+        /**
+         * Function to construct the services provided by this module.
+         * 
+         * @param   {Object}   $q          $q angular service.
+         * @param   {Object}   leafletData Object to access to the Leaflet
+         *                               map properties.
+         * @param   {Object}   satnetRPC   Object with the RPC services
+         *                               of the SatNet network.
+         * @param   {Number}   MIN_ZOOM    Minimum value for the zoom over
+         *                               the map.
+         * @param   {Number}   MAX_ZOOM    Maximum value for the zoom over
+         *                               the map.
+         * @param   {Number}   ZOOM        Default value of the zoom over
+         *                               the map.
+         * @param   {Number} T_OPACITY   Default opacity of the layers
+         *                               over the map.
+         */
+        function ($q, leafletData, satnetRPC, MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY) {
+
+            'use strict';
+
+            /**
+             * Returns the mapInfo structure for the rest of the chained
+             * promises.
+             * @returns {*} Promise that returns the mapInfo structure with
+             *               a reference to the Leaflet map object.
+             */
+            this.getMainMap = function () {
+                return leafletData.getMap('mainMap').then(function (m) {
+                    return {
+                        map: m
+                    };
+                });
+            };
+
+            /**
+             * Redraws the Terminator to its new position.
+             * @returns {*} Promise that returns the updated Terminator object.
+             * @private
+             */
+            this._updateTerminator = function (t) {
+                var t2 = L.terminator();
+                t.setLatLngs(t2.getLatLngs());
+                t.redraw();
+                return t;
+            };
+
+            /**
+             * Creates the main map and adds a terminator for the illuminated
+             * surface of the Earth.
+             * @returns {*} Promise that returns the mapInfo object
+             *               {map, terminator}.
+             */
+            this._createTerminatorMap = function () {
+                var update_function = this._updateTerminator;
+                return this.getMainMap().then(function (mapInfo) {
+                    var t = L.terminator({
+                        fillOpacity: T_OPACITY
+                    });
+                    t.addTo(mapInfo.map);
+                    mapInfo.terminator = t;
+                    setInterval(function () {
+                        update_function(t);
+                    }, 500);
+                    return mapInfo;
+                });
+            };
+
+            /**
+             * This promise returns a simple object with a reference to the
+             * just created map.
+             *
+             * @param terminator If 'true' adds the overlaying terminator line.
+             * @returns {*} Promise that returns the 'mapData' structure with
+             *               a reference to the Leaflet map and to the
+             *               terminator overlaying line (if requested).
+             */
+            this.createMainMap = function (terminator) {
+
+                var p = [];
+
+                if (terminator) {
+                    p.push(this._createTerminatorMap());
+                } else {
+                    p.push(this.getMainMap());
+                }
+                p.push(satnetRPC.getUserLocation());
+
+                return $q.all(p).then(function (results) {
+                    var ll = new L.LatLng(
+                            results[1].latitude,
+                            results[1].longitude
+                        ),
+                        map = results[0].map;
+
+                    map.setView(ll, ZOOM);
+
+                    return ({
+                        map: results[0].map,
+                        terminator: results[0].terminator,
+                        center: {
+                            lat: results[1].latitude,
+                            lng: results[1].longitude
+                        }
+                    });
+
+                });
+
+            };
+
+            /**
+             * Creates a map centered at the estimated user position.
+             *
+             * @param scope $scope to be configured
+             * @param zoom Zoom level
+             * @returns {ng.IPromise<{empty}>|*}
+             */
+            this.autocenterMap = function (scope, zoom) {
+                var self = this;
+                return satnetRPC.getUserLocation().then(function (location) {
+                    self.centerMap(
+                        scope,
+                        location.latitude,
+                        location.longitude,
+                        zoom
+                    );
+                });
+            };
+
+            /**
+             * Creates a map centered at the position of the given
+             * GroundStation.
+             *
+             * @param scope $scope to be configured
+             * @param identifier Identifier of the GroundStation
+             * @param zoom Zoom level
+             * @returns {ng.IPromise<{}>|*}
+             */
+            this.centerAtGs = function (scope, identifier, zoom) {
+                var self = this;
+                return satnetRPC.rCall('gs.get', [identifier])
+                    .then(function (cfg) {
+                        self.centerMap(
+                            scope,
+                            cfg.groundstation_latlon[0],
+                            cfg.groundstation_latlon[1],
+                            zoom
+                        );
+                        return cfg;
+                    });
+            };
+
+            /**
+             * Configures the given scope variable to correctly hold a map. It
+             * zooms with the provided level, at the center given through the
+             * latitude and longitude parameters. It also adds a draggable
+             * marker at the center of the map.
+             *
+             * @param scope Scope to be configured (main variables passed as
+             *              instances to angular-leaflet should have been
+             *              already created, at least, as empty objects before
+             *              calling this function)
+             * @param latitude Latitude of the map center
+             * @param longitude Longitude of the map center
+             * @param zoom Zoom level
+             */
+            this.centerMap = function (scope, latitude, longitude, zoom) {
+                angular.extend(
+                    scope.center, {
+                        lat: latitude,
+                        lng: longitude,
+                        zoom: zoom
+                    }
+                );
+                angular.extend(scope.markers, {
+                    gs: {
+                        lat: latitude,
+                        lng: longitude,
+                        focus: true,
+                        draggable: true,
+                        label: {
+                            message: 'Drag me!',
+                            options: {
+                                noHide: true
+                            }
+                        }
+                    }
+                });
+                angular.extend(
+                    scope.layers.baselayers,
+                    this.getOSMBaseLayer()
+                );
+            };
+
+            /**
+             * Returns the base layers in the format required by the Angular
+             * Leaflet plugin.
+             *
+             * @returns {{esri_baselayer: {name: string, type: string, url: string, layerOptions: {attribution: string}}, osm_baselayer: {name: string, type: string, url: string, layerOptions: {attribution: string}}}}
+             */
+            this.getBaseLayers = function () {
+                return {
+                    osm_baselayer: {
+                        name: 'OSM Base Layer',
+                        type: 'xyz',
+                        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }
+                    },
+                    esri_baselayer: {
+                        name: 'ESRI Base Layer',
+                        type: 'xyz',
+                        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                        }
+                    }
+                    /*,
+                    acetate_terrain: {
+                        name: 'Acetate Terrain',
+                        type: 'xyz',
+                        url: 'http://a{s}.acetate.geoiq.com/tiles/terrain/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth'
+                        }
+                    }
+                    */
+                };
+            };
+
+            /**
+             * Returns the OSM baselayer for Angular Leaflet.
+             *
+             * @returns {{osm_baselayer: {name: string, type: string, url: string, layerOptions: {noWrap: boolean, attribution: string}}}}
+             */
+            this.getOSMBaseLayer = function () {
+                return {
+                    osm_baselayer: {
+                        name: 'OSM Base Layer',
+                        type: 'xyz',
+                        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: true,
+                            continuousWorld: false,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }
+                    }
+                };
+            };
+
+            /**
+             * Returns the overlays in the format required by the Angular
+             * Leaflet plugin.
+             *
+             * @returns {{oms_admin_overlay: {name: string, type: string, url: string, visible: boolean, layerOptions: {minZoom: number, maxZoom: number, attribution: string}}, hydda_roads_labels_overlay: {name: string, type: string, url: string, layerOptions: {minZoom: number, maxZoom: number, attribution: string}}, stamen_toner_labels_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, subdomains: string, minZoom: number, maxZoom: number}}, owm_rain_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, opacity: number}}, owm_temperature_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, opacity: number}}}}
+             */
+            this.getOverlays = function () {
+                return {
+                    oms_admin_overlay: {
+                        name: 'Administrative Boundaries',
+                        type: 'xyz',
+                        url: 'http://openmapsurfer.uni-hd.de/tiles/adminb/x={x}&y={y}&z={z}',
+                        visible: true,
+                        layerOptions: {
+                            noWrap: true,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }
+                    },
+                    hydda_roads_labels_overlay: {
+                        name: 'Roads and Labels',
+                        type: 'xyz',
+                        url: 'http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: true,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }
+                    },
+                    stamen_toner_labels_overlay: {
+                        name: 'Labels',
+                        type: 'xyz',
+                        url: 'http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: true,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            subdomains: 'abcd',
+                            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }
+                    },
+                    owm_rain_overlay: {
+                        name: 'Rain',
+                        type: 'xyz',
+                        url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: true,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            opacity: 0.325,
+                            attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
+                        }
+                    },
+                    owm_temperature_overlay: {
+                        name: 'Temperature',
+                        type: 'xyz',
+                        url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: true,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
+                        }
+                    }
+                };
+            };
+
+            /**
+             * Returns a string with the data from a MapInfo like structure.
+             *
+             * @param   {Object} mapInfo The structure to be printed out.
+             * @returns {String} Human-readable representation (string).
+             */
+            this.asString = function (mapInfo) {
+                return 'mapInfo = {' +
+                    '"center": ' + JSON.stringify(mapInfo.center) + ', ' +
+                    '"terminator": ' + mapInfo.terminator + ', ' +
+                    '"map": ' + mapInfo.map +
+                    '}';
+            };
+
+        }
+    ]);;/**
+ * Copyright 2015 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 10/24/14.
+ */
+
+/** Module definition (empty array is vital!). */
+angular
+    .module('satnetServices', ['jsonrpc'])
+    .service('satnetRPC', ['jsonrpc', '$location', '$log', '$q', '$http',
+
+        /**
+         * Service that defines the basic calls to the services of the SATNET
+         * network through JSON RPC. It defines a common error handler for all
+         * the errors that can be overriden by users.
+         *
+         * @param   {Object} jsonrpc   JSON RPC service.
+         * @param   {Object} $location $location service.
+         * @param   {Object} $log      $log service.
+         * @param   {Object} $q        $q service.
+         * @param   {Object} $http     $http service.
+         */
+        function (jsonrpc, $location, $log, $q, $http) {
+            'use strict';
+
+            var _rpc = $location.protocol() + '://' +
+                $location.host() + ':' + $location.port() + '/jrpc/';
+
+            this._configuration = jsonrpc.newService('configuration', _rpc);
+            this._simulation = jsonrpc.newService('simulation', _rpc);
+            this._leop = jsonrpc.newService('leop', _rpc);
+            this._network = jsonrpc.newService('network', _rpc);
+
+            this._services = {
+                // Configuration methods (Ground Stations)
+                'gs.list': this._configuration.createMethod('gs.list'),
+                'gs.add': this._configuration.createMethod('gs.create'),
+                'gs.get': this._configuration.createMethod('gs.getConfiguration'),
+                'gs.update': this._configuration.createMethod('gs.setConfiguration'),
+                'gs.delete': this._configuration.createMethod('gs.delete'),
+                // Configuration methods (Spacecraft)
+                'sc.list': this._configuration.createMethod('sc.list'),
+                'sc.add': this._configuration.createMethod('sc.create'),
+                'sc.get': this._configuration.createMethod('sc.getConfiguration'),
+                'sc.update': this._configuration.createMethod('sc.setConfiguration'),
+                'sc.delete': this._configuration.createMethod('sc.delete'),
+                // User configuration
+                'user.getLocation': this._configuration.createMethod('user.getLocation'),
+                // TLE methods
+                'tle.celestrak.getSections': this._configuration.createMethod('tle.celestrak.getSections'),
+                'tle.celestrak.getResource': this._configuration.createMethod('tle.celestrak.getResource'),
+                'tle.celestrak.getTle': this._configuration.createMethod('tle.celestrak.getTle'),
+                // Simulation methods
+                'sc.getGroundtrack': this._simulation.createMethod('spacecraft.getGroundtrack'),
+                'sc.getPasses': this._simulation.createMethod('spacecraft.getPasses'),
+                'gs.getPasses': this._simulation.createMethod('groundstation.getPasses'),
+                // LEOP services
+                'leop.getCfg': this._leop.createMethod('getConfiguration'),
+                'leop.setCfg': this._leop.createMethod('setConfiguration'),
+                'leop.getPasses': this._leop.createMethod('getPasses'),
+                'leop.gs.list': this._leop.createMethod('gs.list'),
+                'leop.sc.list': this._leop.createMethod('sc.list'),
+                'leop.gs.add': this._leop.createMethod('gs.add'),
+                'leop.gs.remove': this._leop.createMethod('gs.remove'),
+                'leop.ufo.add': this._leop.createMethod('launch.addUnknown'),
+                'leop.ufo.remove': this._leop.createMethod('launch.removeUnknown'),
+                'leop.ufo.identify': this._leop.createMethod('launch.identify'),
+                'leop.ufo.forget': this._leop.createMethod('launch.forget'),
+                'leop.ufo.update': this._leop.createMethod('launch.update'),
+                'leop.getMessages': this._leop.createMethod('getMessages'),
+                // NETWORK services
+                'net.alive': this._network.createMethod('keepAlive')
+            };
+
+            /**
+             * Method for calling the remote service through JSON-RPC.
+             * @param service The name of the service, as per the internal services
+             * name definitions.
+             * @param params The parameters for the service (as an array).
+             * @returns {*}
+             */
+            this.rCall = function (service, params) {
+                if ((this._services.hasOwnProperty(service)) === false) {
+                    throw '[satnetRPC] service not found, id = <' + service + '>';
+                }
+                $log.info(
+                    '[satnetRPC] Invoked service = <' + service + '>' +
+                    ', params = ' + JSON.stringify(params)
+                );
+                return this._services[service](params).then(
+                    function (data) {
+                        return data.data;
+                    },
+                    function (error) {
+                        var msg = '[satnetRPC] Error invoking = <' + service +
+                            '>, with params = <' + JSON.stringify(params) +
+                            '>, description = <' + JSON.stringify(error) + '>';
+                        $log.warn(msg);
+                        throw msg;
+                    }
+                );
+            };
+
+            /**
+             * Retrieves the user location using an available Internet service.
+             * @returns Promise that returns a { latitude, longitude } object.
+             */
+            this.getUserLocation = function () {
+                return $http
+                    .get('/configuration/user/geoip')
+                    .then(function (data) {
+                        $log.info('[satnet] user@(' + JSON.stringify(data.data) + ')');
+                        return {
+                            latitude: parseFloat(data.data.latitude),
+                            longitude: parseFloat(data.data.longitude)
+                        };
+                    });
+            };
+
+            /**
+             * Retrieves the server location using an available Internet service.
+             * @returns Promise that returns a { latitude, longitude } object.
+             */
+            this.getServerLocation = function (hostname) {
+                return $http
+                    .post('/configuration/hostname/geoip', {
+                        'hostname': hostname
+                    })
+                    .then(function (data) {
+                        $log.info(
+                            '[satnet] server name = ' + hostname +
+                            '@(' + JSON.stringify(data.data) + ')'
+                        );
+                        return {
+                            latitude: parseFloat(data.data.latitude),
+                            longitude: parseFloat(data.data.longitude)
+                        };
+                    });
+            };
+
+            /**
+             * Reads the configuration for a given spacecraft, including the
+             * estimated groundtrack.
+             * @param scId The identifier of the spacecraft.
+             * @returns Promise that resturns the Spacecraft configuration object.
+             */
+            this.readSCCfg = function (scId) {
+                var cfg = {},
+                    p = [
+                    this.rCall('sc.get', [scId]),
+                    this.rCall('sc.getGroundtrack', [scId]),
+                    this.rCall('tle.celestrak.getTle', [scId])
+                ];
+                return $q.all(p).then(function (results) {
+                    cfg = results[0];
+                    cfg.groundtrack = results[1];
+                    cfg.tle = results[2];
+                    angular.extend(cfg, results[0]);
+                    angular.extend(cfg.groundtrack, results[1]);
+                    angular.extend(cfg.tle, results[2]);
+                    return cfg;
+                });
+            };
+
+            /**
+             * Reads the configuration for all the GroundStations associated with
+             * this LEOP cluster.
+             * @param leop_id Identifier of the LEOP cluster.
+             * @returns {*} { leop_gs_available: [gs_cfg], leop_gs_inuse: [gs_cfg]}
+             */
+            this.readAllLEOPGS = function (leop_id) {
+                var self = this;
+                return this.rCall('leop.gs.list', [leop_id])
+                    .then(function (gss) {
+                        var p = [];
+                        angular.forEach(gss.leop_gs_available, function (gs) {
+                            p.push(self.rCall('gs.get', [gs]));
+                        });
+                        angular.forEach(gss.leop_gs_inuse, function (gs) {
+                            p.push(self.rCall('gs.get', [gs]));
+                        });
+                        return $q.all(p).then(function (results) {
+                            var a_cfgs = [],
+                                u_cfgs = [],
+                                j, r_j, r_j_id;
+                            for (j = 0; j < results.length; j += 1) {
+                                r_j = results[j];
+                                r_j_id = r_j.groundstation_id;
+                                if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
+                                    a_cfgs.push(r_j);
+                                } else {
+                                    u_cfgs.push(r_j);
+                                }
+                            }
+                            return {
+                                leop_gs_available: a_cfgs,
+                                leop_gs_inuse: u_cfgs
+                            };
+                        });
+                    });
+            };
+
+    }]);;/*
    Copyright 2015 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -274,7 +897,7 @@ var opsMenuCtrlModule = angular.module(
     ]
 );
 
-opsMenuCtrlModule.controller('OperationsMenuCtrl',
+opsMenuCtrlModule.controller('OperationsMenuCtrl', [ '$scope', '$mdSidenav',
 
     /**
      * Controller of the menu for the Operations application. It creates a
@@ -300,4 +923,4 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl',
         $scope.groundStations = function () {
         };
     
-    });
+    }]);

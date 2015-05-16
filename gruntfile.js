@@ -43,6 +43,8 @@ module.exports = function (grunt) {
                     'src/common/directives/Splash.js',
                     'src/common/directives/About.js',
                     'src/common/directives/Maps.js',
+                    'src/common/services/Maps.js',
+                    'src/common/services/Satnet.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],
@@ -153,7 +155,7 @@ module.exports = function (grunt) {
         express: {
             all: {
                 options: {
-                    bases: ['dist/', 'src/'],
+                    bases: ['dist/', 'src/', 'lib/'],
                     port: 8080,
                     hostname: "0.0.0.0",
                     livereload: true

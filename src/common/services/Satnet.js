@@ -18,7 +18,7 @@
 
 /** Module definition (empty array is vital!). */
 angular
-    .module('satnetServices', [])
+    .module('satnetServices', ['jsonrpc'])
     .service('satnetRPC', ['jsonrpc', '$location', '$log', '$q', '$http',
 
         /**

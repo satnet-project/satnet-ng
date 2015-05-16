@@ -20,6 +20,7 @@ describe("Testing Operations Interface", function () {
 
     var $controller, $mdSidenav,
         $compile, $directive,
+        satnetRPC,
         $body = $("body"),
         $rootScope, app_scope, menu_scope,
         appCtrl, menuCtrl,
@@ -27,7 +28,7 @@ describe("Testing Operations Interface", function () {
 
     beforeEach(function () {
 
-        module('templates', 'operationsDirective');
+        module('templates', 'operationsDirective', 'satnetServices');
 
         inject(function ($injector) {
 
@@ -35,6 +36,7 @@ describe("Testing Operations Interface", function () {
             $compile = $injector.get('$compile');
             $controller = $injector.get('$controller');
             $mdSidenav = $injector.get('$mdSidenav');
+            satnetRPC = $injector.get('satnetRPC');
 
             app_scope = $rootScope.$new();
             menu_scope = $rootScope.$new();

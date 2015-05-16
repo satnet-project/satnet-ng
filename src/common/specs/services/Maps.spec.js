@@ -18,8 +18,7 @@
 
 describe('Testing snMapServices Service', function () {
 
-    var snMapServices, $rootScope,
-        __test_center = { lat: '40.0', lon: '50.0' };
+    var snMapServices, $rootScope;
 
     beforeEach(function () {
         module('snMapServices');

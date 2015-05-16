@@ -12,7 +12,7 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('common/templates/sn-map.html',
-    "<div><leaflet id=\"mainMap\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+    "<div ng-controller=\"MapCtrl\"><leaflet id=\"mainMap\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
   );
 
 
