@@ -19,17 +19,19 @@
 describe('Testing Maps directive', function () {
 
     var $compile, $rootScope, $scope, $httpBackend,
+        mapServices,
         $directive, $body, html = "<sn-map></sn-map>";
 
     beforeEach(function () {
 
-        module('templates', 'snMapDirective');
+        module('templates', 'snMapDirective', 'snMapServices');
 
         inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
             $httpBackend = $injector.get('$httpBackend');
+            mapServices = $injector.get('mapServices');
 
             $scope = $rootScope.$new();
             $directive = $compile(angular.element(html))($scope);
@@ -46,6 +48,8 @@ describe('Testing Maps directive', function () {
         $body = $("body");
         $body.append($directive);
         $rootScope.$digest();
+
+        expect(mapServices).toBeDefined();
 
     });
 

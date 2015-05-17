@@ -240,7 +240,7 @@ angular.module('snMapServices', [
 
         /**
          * Function to construct the services provided by this module.
-         * 
+         *
          * @param   {Object}   $q          $q angular service.
          * @param   {Object}   leafletData Object to access to the Leaflet
          *                               map properties.
@@ -327,6 +327,7 @@ angular.module('snMapServices', [
                 p.push(satnetRPC.getUserLocation());
 
                 return $q.all(p).then(function (results) {
+
                     var ll = new L.LatLng(
                             results[1].latitude,
                             results[1].longitude
@@ -405,14 +406,14 @@ angular.module('snMapServices', [
              * @param zoom Zoom level
              */
             this.centerMap = function (scope, latitude, longitude, zoom) {
-                angular.extend(
-                    scope.center, {
-                        lat: latitude,
-                        lng: longitude,
-                        zoom: zoom
-                    }
-                );
-                angular.extend(scope.markers, {
+
+                /**/
+                scope.center = {
+                    lat: latitude,
+                    lng: longitude,
+                    zoom: zoom,
+                };
+                scope.markers = {
                     gs: {
                         lat: latitude,
                         lng: longitude,
@@ -425,11 +426,11 @@ angular.module('snMapServices', [
                             }
                         }
                     }
-                });
-                angular.extend(
-                    scope.layers.baselayers,
-                    this.getOSMBaseLayer()
-                );
+                };
+                scope.layers = {
+                    baselayers: this.getOSMBaseLayer()
+                };
+
             };
 
             /**
@@ -589,8 +590,8 @@ angular.module('snMapServices', [
                     '}';
             };
 
-        }
-    ]);;/**
+                }
+                ]);;/**
  * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -837,9 +838,9 @@ angular.module('operationsDirective', [
 
         /**
          * Main controller for the Operations application.
-         * @param   {Object}   $scope               Controller execution scope.
-         * @param   {Object}   $mdSidenav           Side mane service from Angular
-         *                                          Material.
+         * @param   {Object}   $scope       Controller execution scope.
+         * @param   {Object}   $mdSidenav   Side mane service from Angular
+         *                                  Material.
          */
         function ($scope, $mdSidenav) {
             'use strict';

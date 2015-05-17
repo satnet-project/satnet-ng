@@ -18,24 +18,12 @@
 
 describe('Testing snMapServices Service', function () {
 
-    var snMapServices, $rootScope;
-
-    beforeEach(function () {
-
-        module('snMapServices');
-
-        inject(function ($injector) {
-            snMapServices = $injector.get('mapServices');
-            $rootScope = $injector.get('$rootScope');
-        });
-
-        expect(snMapServices).toBeDefined();
-
-    });
-
-    it('should return the base layer objects', function () {
-
-        var expected_baselayers = {
+    var $rootScope, $httpBackend, $q,
+        mapServices, satnetRPC,
+        x_gs_cfg = {
+            groundstation_latlon: [40.0, 50.0]
+        },
+        x_baselayer = {
             osm_baselayer: {
                 name: 'OSM Base Layer',
                 type: 'xyz',
@@ -48,7 +36,76 @@ describe('Testing snMapServices Service', function () {
             }
         };
 
-        expect(snMapServices.getOSMBaseLayer()).toEqual(expected_baselayers);
+    beforeEach(function () {
+
+        module('snMapServices');
+
+        inject(function ($injector) {
+
+            $rootScope = $injector.get('$rootScope');
+            $httpBackend = $injector.get('$httpBackend');
+            $q = $injector.get('$q');
+
+            satnetRPC = $injector.get('satnetRPC');
+            mapServices = $injector.get('mapServices');
+
+            spyOn(satnetRPC, 'rCall').and.callFake(function () {
+                var deferred = $q.defer();
+                deferred.resolve(x_gs_cfg);
+                return deferred.promise;
+            });
+
+        });
+
+        $httpBackend
+            .when('GET', '/configuration/user/geoip')
+            .respond({
+                latitude: '40.0',
+                longitude: '50.0'
+            });
+
+        expect(mapServices).toBeDefined();
+
+    });
+
+    it('should return the default base layer object', function () {
+
+        expect(mapServices.getOSMBaseLayer()).toEqual(x_baselayer);
+
+    });
+
+    it('should return the set of available base layers', function () {
+
+        var expected_MIN_ZOOM = 2,
+            expected_MAX_ZOOM = 12,
+            expected_baselayers = {
+                osm_baselayer: {
+                    name: 'OSM Base Layer',
+                    type: 'xyz',
+                    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    layerOptions: {
+                        noWrap: false,
+                        continuousWorld: false,
+                        minZoom: expected_MIN_ZOOM,
+                        maxZoom: expected_MAX_ZOOM,
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }
+                },
+                esri_baselayer: {
+                    name: 'ESRI Base Layer',
+                    type: 'xyz',
+                    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                    layerOptions: {
+                        noWrap: false,
+                        continuousWorld: false,
+                        minZoom: expected_MIN_ZOOM,
+                        maxZoom: expected_MAX_ZOOM,
+                        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                    }
+                }
+            };
+
+        expect(mapServices.getBaseLayers()).toEqual(expected_baselayers);
 
     });
 
@@ -122,7 +179,159 @@ describe('Testing snMapServices Service', function () {
                 }
             };
 
-        expect(snMapServices.getOverlays()).toEqual(expected_overlays);
+        expect(mapServices.getOverlays()).toEqual(expected_overlays);
+
+    });
+
+    /** FIXME: should execute the code within the promises */
+    it('should create a map with a terminator', function () {
+
+        var x_map_info = {
+            map: Object,
+            terminator: Object
+        };
+
+        mapServices._createTerminatorMap().then(
+            function (result) {
+                expect(result.toEqual(x_map_info));
+            }
+        );
+
+        $rootScope.$digest();
+
+    });
+
+    /** FIXME: should execute the code within the promises */
+    it('should create a main map with a terminator', function () {
+
+        var x_map_info = {
+            map: Object,
+            terminator: Object,
+            center: {
+                lat: '41.0',
+                lng: '50.0'
+            }
+        };
+
+        mapServices.createMainMap(true).then(function (result) {
+            expect(result.toEqual(x_map_info));
+            expect(false).toBe(true);
+        });
+        $rootScope.$digest();
+
+    });
+
+    it('should center the map object', function () {
+
+        var scope = {},
+            x_lat = '30.0',
+            x_lng = '31.0',
+            x_zoom = '10',
+            x_scope = {
+                center: {
+                    lat: x_lat,
+                    lng: x_lng,
+                    zoom: x_zoom
+                },
+                markers: {
+                    gs: {
+                        lat: x_lat,
+                        lng: x_lng,
+                        focus: true,
+                        draggable: true,
+                        label: {
+                            message: 'Drag me!',
+                            options: {
+                                noHide: true
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    baselayers: x_baselayer
+                }
+
+            };
+
+        mapServices.centerMap(scope, x_lat, x_lng, x_zoom);
+        expect(scope).toEqual(x_scope);
+
+    });
+
+    it('should automatically center the map object', function () {
+
+        var scope = {},
+            x_lat = 40.0,
+            x_lng = 50.0,
+            x_zoom = '10',
+            x_scope = {
+                center: {
+                    lat: x_lat,
+                    lng: x_lng,
+                    zoom: x_zoom
+                },
+                markers: {
+                    gs: {
+                        lat: x_lat,
+                        lng: x_lng,
+                        focus: true,
+                        draggable: true,
+                        label: {
+                            message: 'Drag me!',
+                            options: {
+                                noHide: true
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    baselayers: x_baselayer
+                }
+
+            };
+
+        mapServices.autocenterMap(scope, x_zoom);
+        $httpBackend.flush();
+        expect(scope).toEqual(x_scope);
+
+    });
+
+    it('should automatically center the map object at a GS', function () {
+
+        var scope = {},
+            x_lat = 40.0,
+            x_lng = 50.0,
+            x_zoom = '10',
+            x_gs_id = 'test-gs',
+            x_scope = {
+                center: {
+                    lat: x_lat,
+                    lng: x_lng,
+                    zoom: x_zoom
+                },
+                markers: {
+                    gs: {
+                        lat: x_lat,
+                        lng: x_lng,
+                        focus: true,
+                        draggable: true,
+                        label: {
+                            message: 'Drag me!',
+                            options: {
+                                noHide: true
+                            }
+                        }
+                    }
+                },
+                layers: {
+                    baselayers: x_baselayer
+                }
+
+            };
+
+        mapServices.centerAtGs(scope, x_gs_id, x_zoom);
+        $rootScope.$digest();
+        expect(scope).toEqual(x_scope);
 
     });
 
