@@ -20,6 +20,17 @@ describe('Testing snMapServices Service', function () {
 
     var $rootScope, $httpBackend, $q,
         mapServices, satnetRPC,
+        __mock__terminator = {
+            getLatLngs: function () {},
+            setLatLngs: function () {},
+            redraw: function () {}
+        },
+        __mock__L = {
+            terminator: jasmine.createSpy('terminator')
+                .and.callFake(function () {
+                    return (__mock__terminator);
+                })
+        },
         x_gs_cfg = {
             groundstation_latlon: [40.0, 50.0]
         },
@@ -39,6 +50,10 @@ describe('Testing snMapServices Service', function () {
     beforeEach(function () {
 
         module('snMapServices');
+
+        module(function ($provide) {
+            $provide.value('L', __mock__L);
+        });
 
         inject(function ($injector) {
 
@@ -183,7 +198,7 @@ describe('Testing snMapServices Service', function () {
 
     });
 
-    /** FIXME: should execute the code within the promises */
+    /* FIXME: should execute the code within the promises */
     it('should create a map with a terminator', function () {
 
         var x_map_info = {
@@ -201,7 +216,7 @@ describe('Testing snMapServices Service', function () {
 
     });
 
-    /** FIXME: should execute the code within the promises */
+    /* FIXME: should execute the code within the promises */
     it('should create a main map with a terminator', function () {
 
         var x_map_info = {
@@ -332,6 +347,15 @@ describe('Testing snMapServices Service', function () {
         mapServices.centerAtGs(scope, x_gs_id, x_zoom);
         $rootScope.$digest();
         expect(scope).toEqual(x_scope);
+
+    });
+
+    it('should implement a proper update for the Terminator', function () {
+
+        /* FIXME: it seems that L from leaflet is not properly invoked...
+        expect(mapServices._updateTerminator(__mock__terminator))
+            .toBe(__mock__terminator);
+        */
 
     });
 
