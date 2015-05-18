@@ -64,6 +64,7 @@ module.exports = function (grunt) {
                     'src/common/directives/Maps.js',
                     'src/common/services/Maps.js',
                     'src/common/services/Satnet.js',
+                    'src/common/services/Pusher.js',
                     'src/operations/directives/**/*.js',
                     'src/operations/controllers/**/*.js'
                 ],
@@ -248,8 +249,12 @@ module.exports = function (grunt) {
 
     // TASKS
     grunt.registerTask(
-        'test', ['jshint', 'karma']
+        'test', [
+            'jshint',
+            'karma'
+        ]
     );
+
     grunt.registerTask(
         'build', [
             'clean:dist',
@@ -266,7 +271,11 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask(
-        'server', ['express', 'open', 'watch:express']
+        'server', [
+            'express',
+            'open',
+            'watch:express'
+        ]
     );
 
     grunt.registerTask(

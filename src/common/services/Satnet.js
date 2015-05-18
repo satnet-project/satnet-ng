@@ -19,7 +19,8 @@
 /** Module definition (empty array is vital!). */
 angular
     .module('satnetServices', ['jsonrpc'])
-    .service('satnetRPC', ['jsonrpc', '$location', '$log', '$q', '$http',
+    .constant('TEST_PORT', 8000)
+    .service('satnetRPC', ['jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
 
         /**
          * Service that defines the basic calls to the services of the SATNET
@@ -32,11 +33,69 @@ angular
          * @param   {Object} $q        $q service.
          * @param   {Object} $http     $http service.
          */
-        function (jsonrpc, $location, $log, $q, $http) {
+        function (jsonrpc, $location, $log, $q, $http, TEST_PORT) {
             'use strict';
 
-            var _rpc = $location.protocol() + '://' +
-                $location.host() + ':' + $location.port() + '/jrpc/';
+            /**
+             * PRIVATE METHOD
+             *
+             * Returns the complete address to connect to the sever where the
+             * SatNet services are running. This can be use as the base for any
+             * of the offered services, regardless of whether they are offered
+             * over JRPC or over HTTP (AJAX requests).
+             *
+             * If the current connection address is "localhost", it assumes
+             * debug mode and the URL that it returns has the port changed so
+             * that it re-routes the calls to the port 8000. At that port, the
+             * code for the SatNet server is supposed to be running.
+             *
+             * The latter policy for automatic test detection might incurr in
+             * further Cross-Reference connection problems.
+             *
+             * @returns {String} Corrected address for the remote SatNet server.
+             */
+            this._getSatNetAddress = function () {
+
+                var protocol = $location.protocol(),
+                    hostname = $location.host(),
+                    port = $location.port();
+
+                if (hostname === 'localhost') {
+                    port = TEST_PORT;
+                }
+
+                // JASMINE TESTS
+                if (hostname === 'server') {
+                    port = TEST_PORT;
+                }
+
+                return '' + protocol + '://' + hostname + ':' + port;
+
+            };
+
+            /**
+             * PRIVATE METHOD
+             *
+             * Returns the complete address to connect with the remote server
+             * that implements the remote SATNET API over JRPC.
+             *
+             * If the current connection address is "localhost", it assumes
+             * debug mode and the URL that it returns has the port changed so
+             * that it re-routes the calls to the port 8000. At that port, the
+             * code for the SatNet server is supposed to be running.
+             *
+             * The latter policy for automatic test detection might incurr in
+             * further Cross-Reference connection problems.
+             *
+             * @returns {String} Corrected address for the remote SatNet server.
+             */
+            this._getRPCAddress = function () {
+                return this._getSatNetAddress() + '/jrpc/';
+            };
+
+            var _rpc = this._getRPCAddress();
+
+            console.log('XXX, rpc = ' + _rpc);
 
             this._configuration = jsonrpc.newService('configuration', _rpc);
             this._simulation = jsonrpc.newService('simulation', _rpc);
@@ -45,43 +104,74 @@ angular
 
             this._services = {
                 // Configuration methods (Ground Stations)
-                'gs.list': this._configuration.createMethod('gs.list'),
-                'gs.add': this._configuration.createMethod('gs.create'),
-                'gs.get': this._configuration.createMethod('gs.getConfiguration'),
-                'gs.update': this._configuration.createMethod('gs.setConfiguration'),
-                'gs.delete': this._configuration.createMethod('gs.delete'),
+                'gs.list': this._configuration
+                    .createMethod('gs.list'),
+                'gs.add': this
+                    ._configuration.createMethod('gs.create'),
+                'gs.get': this._configuration
+                    .createMethod('gs.getConfiguration'),
+                'gs.update': this._configuration
+                    .createMethod('gs.setConfiguration'),
+                'gs.delete': this._configuration
+                    .createMethod('gs.delete'),
                 // Configuration methods (Spacecraft)
-                'sc.list': this._configuration.createMethod('sc.list'),
-                'sc.add': this._configuration.createMethod('sc.create'),
-                'sc.get': this._configuration.createMethod('sc.getConfiguration'),
-                'sc.update': this._configuration.createMethod('sc.setConfiguration'),
-                'sc.delete': this._configuration.createMethod('sc.delete'),
+                'sc.list': this._configuration
+                    .createMethod('sc.list'),
+                'sc.add': this._configuration
+                    .createMethod('sc.create'),
+                'sc.get': this._configuration
+                    .createMethod('sc.getConfiguration'),
+                'sc.update': this._configuration
+                    .createMethod('sc.setConfiguration'),
+                'sc.delete': this._configuration
+                    .createMethod('sc.delete'),
                 // User configuration
-                'user.getLocation': this._configuration.createMethod('user.getLocation'),
+                'user.getLocation': this._configuration
+                    .createMethod('user.getLocation'),
                 // TLE methods
-                'tle.celestrak.getSections': this._configuration.createMethod('tle.celestrak.getSections'),
-                'tle.celestrak.getResource': this._configuration.createMethod('tle.celestrak.getResource'),
-                'tle.celestrak.getTle': this._configuration.createMethod('tle.celestrak.getTle'),
+                'tle.celestrak.getSections': this._configuration
+                    .createMethod('tle.celestrak.getSections'),
+                'tle.celestrak.getResource': this._configuration
+                    .createMethod('tle.celestrak.getResource'),
+                'tle.celestrak.getTle': this._configuration
+                    .createMethod('tle.celestrak.getTle'),
                 // Simulation methods
-                'sc.getGroundtrack': this._simulation.createMethod('spacecraft.getGroundtrack'),
-                'sc.getPasses': this._simulation.createMethod('spacecraft.getPasses'),
-                'gs.getPasses': this._simulation.createMethod('groundstation.getPasses'),
+                'sc.getGroundtrack': this._simulation
+                    .createMethod('spacecraft.getGroundtrack'),
+                'sc.getPasses': this._simulation
+                    .createMethod('spacecraft.getPasses'),
+                'gs.getPasses': this._simulation
+                    .createMethod('groundstation.getPasses'),
                 // LEOP services
-                'leop.getCfg': this._leop.createMethod('getConfiguration'),
-                'leop.setCfg': this._leop.createMethod('setConfiguration'),
-                'leop.getPasses': this._leop.createMethod('getPasses'),
-                'leop.gs.list': this._leop.createMethod('gs.list'),
-                'leop.sc.list': this._leop.createMethod('sc.list'),
-                'leop.gs.add': this._leop.createMethod('gs.add'),
-                'leop.gs.remove': this._leop.createMethod('gs.remove'),
-                'leop.ufo.add': this._leop.createMethod('launch.addUnknown'),
-                'leop.ufo.remove': this._leop.createMethod('launch.removeUnknown'),
-                'leop.ufo.identify': this._leop.createMethod('launch.identify'),
-                'leop.ufo.forget': this._leop.createMethod('launch.forget'),
-                'leop.ufo.update': this._leop.createMethod('launch.update'),
-                'leop.getMessages': this._leop.createMethod('getMessages'),
+                'leop.getCfg': this._leop
+                    .createMethod('getConfiguration'),
+                'leop.setCfg': this._leop
+                    .createMethod('setConfiguration'),
+                'leop.getPasses': this._leop
+                    .createMethod('getPasses'),
+                'leop.gs.list': this._leop
+                    .createMethod('gs.list'),
+                'leop.sc.list': this._leop
+                    .createMethod('sc.list'),
+                'leop.gs.add': this._leop
+                    .createMethod('gs.add'),
+                'leop.gs.remove': this._leop
+                    .createMethod('gs.remove'),
+                'leop.ufo.add': this._leop
+                    .createMethod('launch.addUnknown'),
+                'leop.ufo.remove': this._leop
+                    .createMethod('launch.removeUnknown'),
+                'leop.ufo.identify': this._leop
+                    .createMethod('launch.identify'),
+                'leop.ufo.forget': this._leop
+                    .createMethod('launch.forget'),
+                'leop.ufo.update': this._leop
+                    .createMethod('launch.update'),
+                'leop.getMessages': this._leop
+                    .createMethod('getMessages'),
                 // NETWORK services
-                'net.alive': this._network.createMethod('keepAlive')
+                'net.alive': this._network
+                    .createMethod('keepAlive')
             };
 
             /**
@@ -121,7 +211,8 @@ angular
                 return $http
                     .get('/configuration/user/geoip')
                     .then(function (data) {
-                        $log.info('[satnet] user@(' + JSON.stringify(data.data) + ')');
+                        $log.info('[satnet] user@(' + JSON
+                            .stringify(data.data) + ')');
                         return {
                             latitude: parseFloat(data.data.latitude),
                             longitude: parseFloat(data.data.longitude)
@@ -140,8 +231,8 @@ angular
                     })
                     .then(function (data) {
                         $log.info(
-                            '[satnet] server name = ' + hostname +
-                            '@(' + JSON.stringify(data.data) + ')'
+                            '[satnet] server name = ' + hostname + '@(' + JSON
+                            .stringify(data.data) + ')'
                         );
                         return {
                             latitude: parseFloat(data.data.latitude),

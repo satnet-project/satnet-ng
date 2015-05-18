@@ -59,7 +59,8 @@ describe('Testing Pusher Service', function () {
 
         expect(satnetPush.LEOP_UPDATED_EVENT).toBe('leopUpdatedEv');
 
-        expect(satnetPush.LEOP_UFO_IDENTIFIED_EVENT).toBe('leopUFOIdentifiedEv');
+        expect(satnetPush.LEOP_UFO_IDENTIFIED_EVENT)
+            .toBe('leopUFOIdentifiedEv');
         expect(satnetPush.LEOP_UFO_FORGOTTEN_EVENT).toBe('leopUFOForgottenEv');
         expect(satnetPush.LEOP_SC_UPDATED_EVENT).toBe('leopSCUpdatedEv');
 

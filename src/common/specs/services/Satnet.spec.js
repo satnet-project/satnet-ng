@@ -57,6 +57,19 @@ describe('Testing SatNet Service', function () {
 
     });
 
+    it('should tweak the port for the server during (TESTING)', function () {
+
+        var x_satnet_address = 'http://server:8000',
+            x_rpc_address = 'http://server:8000/jrpc/';
+
+        expect(satnetServices._getSatNetAddress).toBeDefined();
+        expect(satnetServices._getSatNetAddress()).toBe(x_satnet_address);
+
+        expect(satnetServices._getRPCAddress).toBeDefined();
+        expect(satnetServices._getRPCAddress()).toBe(x_rpc_address);
+
+    });
+
     it('should return a valid satnetServices object', function () {
 
         expect(satnetServices).toBeDefined();
