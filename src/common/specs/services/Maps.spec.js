@@ -45,6 +45,99 @@ describe('Testing snMapServices Service', function () {
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }
             }
+        },
+        expected_MIN_ZOOM = 2,
+        expected_MAX_ZOOM = 12,
+        x_baselayers = {
+            esri_baselayer: {
+                name: 'ESRI Base Layer',
+                type: 'xyz',
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                layerOptions: {
+                    noWrap: false,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                }
+            },
+            osm_baselayer: {
+                name: 'OSM Base Layer',
+                type: 'xyz',
+                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                layerOptions: {
+                    noWrap: false,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }
+            }
+        },
+        x_overlays = {
+            oms_admin_overlay: {
+                name: 'Administrative Boundaries',
+                type: 'xyz',
+                url: 'http://openmapsurfer.uni-hd.de/tiles/adminb/x={x}&y={y}&z={z}',
+                visible: true,
+                layerOptions: {
+                    noWrap: true,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }
+            },
+            hydda_roads_labels_overlay: {
+                name: 'Roads and Labels',
+                type: 'xyz',
+                url: 'http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png',
+                layerOptions: {
+                    noWrap: true,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }
+            },
+            stamen_toner_labels_overlay: {
+                name: 'Labels',
+                type: 'xyz',
+                url: 'http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png',
+                layerOptions: {
+                    noWrap: true,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    subdomains: 'abcd',
+                    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }
+            },
+            owm_rain_overlay: {
+                name: 'Rain',
+                type: 'xyz',
+                url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png',
+                layerOptions: {
+                    noWrap: true,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    opacity: 0.325,
+                    attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
+                }
+            },
+            owm_temperature_overlay: {
+                name: 'Temperature',
+                type: 'xyz',
+                url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png',
+                layerOptions: {
+                    noWrap: true,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
+                }
+            }
         };
 
     beforeEach(function () {
@@ -73,7 +166,7 @@ describe('Testing snMapServices Service', function () {
         });
 
         $httpBackend
-            .when('GET', '/configuration/user/geoip')
+            .when('GET', 'http://server:80/configuration/user/geoip')
             .respond({
                 latitude: '40.0',
                 longitude: '50.0'
@@ -91,110 +184,13 @@ describe('Testing snMapServices Service', function () {
 
     it('should return the set of available base layers', function () {
 
-        var expected_MIN_ZOOM = 2,
-            expected_MAX_ZOOM = 12,
-            expected_baselayers = {
-                osm_baselayer: {
-                    name: 'OSM Base Layer',
-                    type: 'xyz',
-                    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    layerOptions: {
-                        noWrap: false,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }
-                },
-                esri_baselayer: {
-                    name: 'ESRI Base Layer',
-                    type: 'xyz',
-                    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-                    layerOptions: {
-                        noWrap: false,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-                    }
-                }
-            };
-
-        expect(mapServices.getBaseLayers()).toEqual(expected_baselayers);
+        expect(mapServices.getBaseLayers()).toEqual(x_baselayers);
 
     });
 
     it('should return the overlay objects', function () {
 
-        var expected_MIN_ZOOM = 2,
-            expected_MAX_ZOOM = 12,
-            expected_overlays = {
-                oms_admin_overlay: {
-                    name: 'Administrative Boundaries',
-                    type: 'xyz',
-                    url: 'http://openmapsurfer.uni-hd.de/tiles/adminb/x={x}&y={y}&z={z}',
-                    visible: true,
-                    layerOptions: {
-                        noWrap: true,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }
-                },
-                hydda_roads_labels_overlay: {
-                    name: 'Roads and Labels',
-                    type: 'xyz',
-                    url: 'http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png',
-                    layerOptions: {
-                        noWrap: true,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }
-                },
-                stamen_toner_labels_overlay: {
-                    name: 'Labels',
-                    type: 'xyz',
-                    url: 'http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png',
-                    layerOptions: {
-                        noWrap: true,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        subdomains: 'abcd',
-                        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }
-                },
-                owm_rain_overlay: {
-                    name: 'Rain',
-                    type: 'xyz',
-                    url: 'http://{s}.tile.openweathermap.org/map/rain/{z}/{x}/{y}.png',
-                    layerOptions: {
-                        noWrap: true,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        opacity: 0.325,
-                        attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
-                    }
-                },
-                owm_temperature_overlay: {
-                    name: 'Temperature',
-                    type: 'xyz',
-                    url: 'http://{s}.tile.openweathermap.org/map/temp/{z}/{x}/{y}.png',
-                    layerOptions: {
-                        noWrap: true,
-                        continuousWorld: false,
-                        minZoom: expected_MIN_ZOOM,
-                        maxZoom: expected_MAX_ZOOM,
-                        attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
-                    }
-                }
-            };
-
-        expect(mapServices.getOverlays()).toEqual(expected_overlays);
+        expect(mapServices.getOverlays()).toEqual(x_overlays);
 
     });
 
@@ -206,7 +202,7 @@ describe('Testing snMapServices Service', function () {
             terminator: Object
         };
 
-        mapServices._createTerminatorMap().then(
+        mapServices.createTerminatorMap().then(
             function (result) {
                 expect(result.toEqual(x_map_info));
             }
@@ -216,29 +212,14 @@ describe('Testing snMapServices Service', function () {
 
     });
 
-    /* FIXME: should execute the code within the promises */
-    it('should create a main map with a terminator', function () {
-
-        var x_map_info = {
-            map: Object,
-            terminator: Object,
-            center: {
-                lat: '41.0',
-                lng: '50.0'
-            }
-        };
-
-        mapServices.createMainMap(true).then(function (result) {
-            expect(result.toEqual(x_map_info));
-            expect(false).toBe(true);
-        });
-        $rootScope.$digest();
-
-    });
-
     it('should center the map object', function () {
 
-        var scope = {},
+        var scope = {
+                layers: {
+                    baselayers: {},
+                    overlays: {}
+                }
+            },
             x_lat = '30.0',
             x_lng = '31.0',
             x_zoom = '10',
@@ -263,19 +244,25 @@ describe('Testing snMapServices Service', function () {
                     }
                 },
                 layers: {
-                    baselayers: x_baselayer
+                    baselayers: x_baselayers,
+                    overlays: x_overlays
                 }
 
             };
 
-        mapServices.centerMap(scope, x_lat, x_lng, x_zoom);
+        mapServices.configureMap(scope, x_lat, x_lng, x_zoom);
         expect(scope).toEqual(x_scope);
 
     });
 
     it('should automatically center the map object', function () {
 
-        var scope = {},
+        var scope = {
+                layers: {
+                    baselayers: {},
+                    overlays: {}
+                }
+            },
             x_lat = 40.0,
             x_lng = 50.0,
             x_zoom = '10',
@@ -300,7 +287,8 @@ describe('Testing snMapServices Service', function () {
                     }
                 },
                 layers: {
-                    baselayers: x_baselayer
+                    baselayers: x_baselayers,
+                    overlays: x_overlays
                 }
 
             };
@@ -313,7 +301,12 @@ describe('Testing snMapServices Service', function () {
 
     it('should automatically center the map object at a GS', function () {
 
-        var scope = {},
+        var scope = {
+                layers: {
+                    baselayers: {},
+                    overlays: {}
+                }
+            },
             x_lat = 40.0,
             x_lng = 50.0,
             x_zoom = '10',
@@ -339,7 +332,8 @@ describe('Testing snMapServices Service', function () {
                     }
                 },
                 layers: {
-                    baselayers: x_baselayer
+                    baselayers: x_baselayers,
+                    overlays: x_overlays
                 }
 
             };

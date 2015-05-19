@@ -17,29 +17,35 @@
  */
 
 angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
-    .controller('MapCtrl', [ '$scope', 'mapServices',
+    .controller('MapCtrl', ['$scope', 'mapServices', 'ZOOM',
 
         /**
          * Main controller for the map directive. It should be in charge of all
          * the additional controls and/or objects that are overlayed over the
          * original map. The main control of the map should be written in
          * re-usable functions within the 'mapServices' object.
-         * 
+         *
          * @param {Object} $scope      $scope for the controller.
          * @param {Object} mapServices Service with the custom functions to
          *                             control the maps object.
          */
-        function($scope, mapServices) {
+        function ($scope, mapServices, ZOOM) {
             'use strict';
+
+            $scope.center = {};
+            $scope.markers = {};
+            $scope.layers = {
+                baselayers: {},
+                overlays: {}
+            };
 
             /**
              * Function that handles the initialization of the map.
              */
             $scope.init = function () {
-                mapServices.createMainMap();
+                $scope.map = mapServices.createTerminatorMap(true);
+                mapServices.autocenterMap($scope, ZOOM);
             };
-
-            $scope.init();
 
         }
     ])

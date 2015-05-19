@@ -27,7 +27,9 @@ angular.module('snMapServices', [
     .constant('MIN_ZOOM', 2)
     .constant('MAX_ZOOM', 12)
     .constant('ZOOM', 7)
-    .service('mapServices', ['$q', 'leafletData', 'satnetRPC', 'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',
+    .service('mapServices', [
+        '$q', 'leafletData', 'satnetRPC',
+        'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',
 
         /**
          * Function to construct the services provided by this module.
@@ -46,7 +48,10 @@ angular.module('snMapServices', [
          * @param   {Number} T_OPACITY   Default opacity of the layers
          *                               over the map.
          */
-        function ($q, leafletData, satnetRPC, MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY) {
+        function (
+            $q, leafletData, satnetRPC,
+            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY
+        ) {
 
             'use strict';
 
@@ -82,7 +87,7 @@ angular.module('snMapServices', [
              * @returns {*} Promise that returns the mapInfo object
              *               {map, terminator}.
              */
-            this._createTerminatorMap = function () {
+            this.createTerminatorMap = function () {
                 var update_function = this._updateTerminator;
                 return this.getMainMap().then(function (mapInfo) {
                     var t = L.terminator({
@@ -98,49 +103,6 @@ angular.module('snMapServices', [
             };
 
             /**
-             * This promise returns a simple object with a reference to the
-             * just created map.
-             *
-             * @param terminator If 'true' adds the overlaying terminator line.
-             * @returns {*} Promise that returns the 'mapData' structure with
-             *               a reference to the Leaflet map and to the
-             *               terminator overlaying line (if requested).
-             */
-            this.createMainMap = function (terminator) {
-
-                var p = [];
-
-                if (terminator) {
-                    p.push(this._createTerminatorMap());
-                } else {
-                    p.push(this.getMainMap());
-                }
-                p.push(satnetRPC.getUserLocation());
-
-                return $q.all(p).then(function (results) {
-
-                    var ll = new L.LatLng(
-                            results[1].latitude,
-                            results[1].longitude
-                        ),
-                        map = results[0].map;
-
-                    map.setView(ll, ZOOM);
-
-                    return ({
-                        map: results[0].map,
-                        terminator: results[0].terminator,
-                        center: {
-                            lat: results[1].latitude,
-                            lng: results[1].longitude
-                        }
-                    });
-
-                });
-
-            };
-
-            /**
              * Creates a map centered at the estimated user position.
              *
              * @param scope $scope to be configured
@@ -150,7 +112,7 @@ angular.module('snMapServices', [
             this.autocenterMap = function (scope, zoom) {
                 var self = this;
                 return satnetRPC.getUserLocation().then(function (location) {
-                    self.centerMap(
+                    self.configureMap(
                         scope,
                         location.latitude,
                         location.longitude,
@@ -172,7 +134,7 @@ angular.module('snMapServices', [
                 var self = this;
                 return satnetRPC.rCall('gs.get', [identifier])
                     .then(function (cfg) {
-                        self.centerMap(
+                        self.configureMap(
                             scope,
                             cfg.groundstation_latlon[0],
                             cfg.groundstation_latlon[1],
@@ -196,9 +158,8 @@ angular.module('snMapServices', [
              * @param longitude Longitude of the map center
              * @param zoom Zoom level
              */
-            this.centerMap = function (scope, latitude, longitude, zoom) {
+            this.configureMap = function (scope, latitude, longitude, zoom) {
 
-                /**/
                 scope.center = {
                     lat: latitude,
                     lng: longitude,
@@ -218,9 +179,9 @@ angular.module('snMapServices', [
                         }
                     }
                 };
-                scope.layers = {
-                    baselayers: this.getOSMBaseLayer()
-                };
+
+                scope.layers.baselayers = this.getBaseLayers();
+                scope.layers.overlays = this.getOverlays();
 
             };
 
@@ -232,18 +193,6 @@ angular.module('snMapServices', [
              */
             this.getBaseLayers = function () {
                 return {
-                    osm_baselayer: {
-                        name: 'OSM Base Layer',
-                        type: 'xyz',
-                        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        layerOptions: {
-                            noWrap: false,
-                            continuousWorld: false,
-                            minZoom: MIN_ZOOM,
-                            maxZoom: MAX_ZOOM,
-                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        }
-                    },
                     esri_baselayer: {
                         name: 'ESRI Base Layer',
                         type: 'xyz',
@@ -254,6 +203,18 @@ angular.module('snMapServices', [
                             minZoom: MIN_ZOOM,
                             maxZoom: MAX_ZOOM,
                             attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                        }
+                    },
+                    osm_baselayer: {
+                        name: 'OSM Base Layer',
+                        type: 'xyz',
+                        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         }
                     }
                     /*,
@@ -381,5 +342,5 @@ angular.module('snMapServices', [
                     '}';
             };
 
-                }
-                ]);
+    }
+]);

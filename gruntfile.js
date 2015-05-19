@@ -122,6 +122,7 @@ module.exports = function (grunt) {
         'curl-dir': {
             'libs': {
                 src: [
+                    'https://rawgit.com/joergdietrich/Leaflet.Terminator/master/L.Terminator.js',
                     'https://rawgit.com/ajsd/angular-uuid/master/uuid.min.js',
                     'https://rawgit.com/ajsd/angular-jsonrpc/master/src/jsonrpc.js',
                     'https://rawgit.com/pusher/pusher-angular/master/lib/pusher-angular.js',

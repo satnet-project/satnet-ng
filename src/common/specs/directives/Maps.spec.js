@@ -39,7 +39,7 @@ describe('Testing Maps directive', function () {
         });
 
         $httpBackend
-            .when('GET', '/configuration/user/geoip')
+            .when('GET', 'http://server:80/configuration/user/geoip')
             .respond({
                 latitude: '40.0',
                 longitude: '50.0'

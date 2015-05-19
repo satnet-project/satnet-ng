@@ -64,11 +64,6 @@ angular
                     port = TEST_PORT;
                 }
 
-                // JASMINE TESTS
-                if (hostname === 'server') {
-                    port = TEST_PORT;
-                }
-
                 return '' + protocol + '://' + hostname + ':' + port;
 
             };
@@ -94,8 +89,6 @@ angular
             };
 
             var _rpc = this._getRPCAddress();
-
-            console.log('XXX, rpc = ' + _rpc);
 
             this._configuration = jsonrpc.newService('configuration', _rpc);
             this._simulation = jsonrpc.newService('simulation', _rpc);
@@ -183,7 +176,8 @@ angular
              */
             this.rCall = function (service, params) {
                 if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '[satnetRPC] service not found, id = <' + service + '>';
+                    throw '[satnetRPC] service not found, id = <' +
+                    service + '>';
                 }
                 $log.info(
                     '[satnetRPC] Invoked service = <' + service + '>' +
@@ -208,16 +202,15 @@ angular
              * @returns Promise that returns a { latitude, longitude } object.
              */
             this.getUserLocation = function () {
-                return $http
-                    .get('/configuration/user/geoip')
-                    .then(function (data) {
-                        $log.info('[satnet] user@(' + JSON
-                            .stringify(data.data) + ')');
-                        return {
-                            latitude: parseFloat(data.data.latitude),
-                            longitude: parseFloat(data.data.longitude)
-                        };
-                    });
+                var url = this._getSatNetAddress() + '/configuration/user/geoip';
+                return $http.get(url).then(function (data) {
+                    $log.info('[satnet] user@(' + JSON
+                        .stringify(data.data) + ')');
+                    return {
+                        latitude: parseFloat(data.data.latitude),
+                        longitude: parseFloat(data.data.longitude)
+                    };
+                });
             };
 
             /**
