@@ -432,20 +432,6 @@ angular.module('snMapServices', [
                             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         }
                     }
-                    /*,
-                    acetate_terrain: {
-                        name: 'Acetate Terrain',
-                        type: 'xyz',
-                        url: 'http://a{s}.acetate.geoiq.com/tiles/terrain/{z}/{x}/{y}.png',
-                        layerOptions: {
-                            noWrap: false,
-                            continuousWorld: false,
-                            minZoom: MIN_ZOOM,
-                            maxZoom: MAX_ZOOM,
-                            attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth'
-                        }
-                    }
-                    */
                 };
             };
 
@@ -580,7 +566,8 @@ angular.module('snMapServices', [
 angular
     .module('satnetServices', ['jsonrpc'])
     .constant('TEST_PORT', 8000)
-    .service('satnetRPC', ['jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
+    .service('satnetRPC', [
+        'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
 
         /**
          * Service that defines the basic calls to the services of the SATNET
@@ -1087,23 +1074,64 @@ angular.module('operationsDirective', [
    limitations under the License.
 */
 
+var gsMenuCtrlModule = angular.module(
+    'gsMenuControllers', [
+        'ngMaterial'
+    ]
+);
+
+gsMenuCtrlModule.controller('GsListMenuCtrl', [
+    '$scope', '$mdDialog',
+
+    /**
+     * Controller of the menu for the Operations application. It creates a
+     * function bound to the event of closing the menu that it controls and
+     * a flag with the state (open or closed) of that menu.
+     * @param   {Object} $scope Controller execution scope.
+     */
+    function ($scope) {
+
+        /**
+         * Function that initializes the list of registered ground stations.
+         */
+        $scope.init = function () {
+        };
+
+    }
+
+]);;/*
+   Copyright 2014 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 var opsMenuCtrlModule = angular.module(
     'operationsMenuControllers', [
         'ngMaterial'
     ]
 );
 
-opsMenuCtrlModule.controller('OperationsMenuCtrl', [ '$scope', '$mdSidenav',
+opsMenuCtrlModule.controller('OperationsMenuCtrl', [
+    '$scope', '$mdSidenav', '$mdDialog',
 
     /**
      * Controller of the menu for the Operations application. It creates a
      * function bound to the event of closing the menu that it controls and
      * a flag with the state (open or closed) of that menu.
-     * @param   {Object} $scope               Controller execution scope.
-     * @param   {Object} $mdSidenav           Side mane service from Angular
-     *                                        Material.
+     * @param   {Object} $scope Controller execution scope.
+     * @param   {Object} $mdSidenav Side mane service from Angular Material.
      */
-    function ($scope, $mdSidenav) {
+    function ($scope, $mdSidenav, $mdDialog) {
 
         /**
          * Handler to close the menu that actually takes the user out of the
@@ -1116,7 +1144,12 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [ '$scope', '$mdSidenav',
         /**
          * Handler to open the dialog for managing the ground stations.
          */
-        $scope.groundStations = function () {
+        $scope.showGsMenu = function () {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gslist-dialog.html'
+            });
         };
-    
-    }]);
+
+    }
+
+]);

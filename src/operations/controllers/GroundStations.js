@@ -14,39 +14,27 @@
    limitations under the License.
 */
 
-var opsMenuCtrlModule = angular.module(
-    'operationsMenuControllers', [
+var gsMenuCtrlModule = angular.module(
+    'gsMenuControllers', [
         'ngMaterial'
     ]
 );
 
-opsMenuCtrlModule.controller('OperationsMenuCtrl', [
-    '$scope', '$mdSidenav', '$mdDialog',
+gsMenuCtrlModule.controller('GsListMenuCtrl', [
+    '$scope', '$mdDialog',
 
     /**
      * Controller of the menu for the Operations application. It creates a
      * function bound to the event of closing the menu that it controls and
      * a flag with the state (open or closed) of that menu.
      * @param   {Object} $scope Controller execution scope.
-     * @param   {Object} $mdSidenav Side mane service from Angular Material.
      */
-    function ($scope, $mdSidenav, $mdDialog) {
+    function ($scope) {
 
         /**
-         * Handler to close the menu that actually takes the user out of the
-         * application.
+         * Function that initializes the list of registered ground stations.
          */
-        $scope.close = function () {
-            $mdSidenav("menu").close();
-        };
-
-        /**
-         * Handler to open the dialog for managing the ground stations.
-         */
-        $scope.showGsMenu = function () {
-            $mdDialog.show({
-                templateUrl: 'operations/templates/gslist-dialog.html'
-            });
+        $scope.init = function () {
         };
 
     }

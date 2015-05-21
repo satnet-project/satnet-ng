@@ -20,7 +20,8 @@
 angular
     .module('satnetServices', ['jsonrpc'])
     .constant('TEST_PORT', 8000)
-    .service('satnetRPC', ['jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
+    .service('satnetRPC', [
+        'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
 
         /**
          * Service that defines the basic calls to the services of the SATNET

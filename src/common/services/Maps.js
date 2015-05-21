@@ -217,20 +217,6 @@ angular.module('snMapServices', [
                             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         }
                     }
-                    /*,
-                    acetate_terrain: {
-                        name: 'Acetate Terrain',
-                        type: 'xyz',
-                        url: 'http://a{s}.acetate.geoiq.com/tiles/terrain/{z}/{x}/{y}.png',
-                        layerOptions: {
-                            noWrap: false,
-                            continuousWorld: false,
-                            minZoom: MIN_ZOOM,
-                            maxZoom: MAX_ZOOM,
-                            attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth'
-                        }
-                    }
-                    */
                 };
             };
 
