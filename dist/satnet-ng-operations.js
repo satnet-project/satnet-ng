@@ -1023,7 +1023,7 @@ gsCtrlModule.controller('GsListCtrl', [
      */
     function ($scope, $mdDialog, satnetRPC) {
 
-        $scope.groundStations = {};
+        $scope.groundStations = [];
 
         /**
          * Function that refreshes the list of registered ground stations.
@@ -1041,7 +1041,6 @@ gsCtrlModule.controller('GsListCtrl', [
          * displayed.
          */
         $scope.init = function () {
-            console.log('XXX');
             $scope.refresh();
         };
 
