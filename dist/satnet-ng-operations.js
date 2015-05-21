@@ -988,77 +988,6 @@ angular.module('pushServices').service('satnetPush', [
     }
 
 ]);;/*
-   Copyright 2015 Ricardo Tubio-Pardavila
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
-angular.module('operationsDirective', [
-        'ngMaterial',
-        'ngAnimate',
-        'leaflet-directive',
-        'splashDirective',
-        'snAboutDirective',
-        'snMapDirective',
-        'operationsMenuControllers'
-    ]).config(function ($mdThemingProvider) {
-        $mdThemingProvider.theme('default')
-            .primaryPalette('blue-grey')
-            .accentPalette('grey');
-    })
-    .controller('OperationsAppCtrl',
-
-        /**
-         * Main controller for the Operations application.
-         * @param   {Object}   $scope       Controller execution scope.
-         * @param   {Object}   $mdSidenav   Side mane service from Angular
-         *                                  Material.
-         */
-        function ($scope, $mdSidenav) {
-            'use strict';
-
-            /**
-             * Handler to toggle the menu on and off. It is based on the
-             * $mdSidenav service provided by Angular Material. Its main
-             * objective is to provide a button overlayed over the map so that
-             * in case the menu is hidden (due to the small size of the screen),
-             * the menu can still be shown.
-             */
-            $scope.toggleMenu = function () {
-                $mdSidenav("menu").toggle();
-            };
-
-        })
-    .directive('operationsApp',
-
-        /**
-         * Function that creates the directive itself returning the
-         * object required by Angular.
-         *
-         * @returns {Object} Object directive required by Angular,
-         *                   with restrict and templateUrl.
-         */
-        function () {
-            'use strict';
-
-            return {
-                restrict: 'E',
-                templateUrl: 'operations/templates/operations-app.html'
-            };
-
-        }
-
-    );;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -1074,27 +1003,46 @@ angular.module('operationsDirective', [
    limitations under the License.
 */
 
-var gsMenuCtrlModule = angular.module(
-    'gsMenuControllers', [
+var gsCtrlModule = angular.module(
+    'gsControllers', [
         'ngMaterial'
     ]
 );
 
-gsMenuCtrlModule.controller('GsListMenuCtrl', [
+gsCtrlModule.controller('GsListCtrl', [
     '$scope', '$mdDialog',
+    'satnetRPC',
 
     /**
-     * Controller of the menu for the Operations application. It creates a
-     * function bound to the event of closing the menu that it controls and
-     * a flag with the state (open or closed) of that menu.
-     * @param   {Object} $scope Controller execution scope.
+     * Controller of the list with the Ground Stations registered for a given
+     * user. This controller takes care of initializing the list and of
+     * updating it whenever it is necessary through the SatNet RPC available
+     * service.
+     *
+     * @param {Object} $scope Controller execution scope.
      */
-    function ($scope) {
+    function ($scope, $mdDialog, satnetRPC) {
+
+        $scope.groundStations = {};
 
         /**
-         * Function that initializes the list of registered ground stations.
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                if (results !== null) {
+                    $scope.groundStations = results.slice(0);
+                }
+            });
+        };
+
+        /**
+         * Function that initializes the list of ground stations that is
+         * displayed.
          */
         $scope.init = function () {
+            console.log('XXX');
+            $scope.refresh();
         };
 
     }
@@ -1152,4 +1100,76 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
 
     }
 
-]);
+]);;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('operationsDirective', [
+        'ngMaterial',
+        'ngAnimate',
+        'leaflet-directive',
+        'splashDirective',
+        'snAboutDirective',
+        'snMapDirective',
+        'operationsMenuControllers',
+        'gsControllers'
+    ]).config(function ($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('blue-grey')
+            .accentPalette('grey');
+    })
+    .controller('OperationsAppCtrl',
+
+        /**
+         * Main controller for the Operations application.
+         * @param   {Object}   $scope       Controller execution scope.
+         * @param   {Object}   $mdSidenav   Side mane service from Angular
+         *                                  Material.
+         */
+        function ($scope, $mdSidenav) {
+            'use strict';
+
+            /**
+             * Handler to toggle the menu on and off. It is based on the
+             * $mdSidenav service provided by Angular Material. Its main
+             * objective is to provide a button overlayed over the map so that
+             * in case the menu is hidden (due to the small size of the screen),
+             * the menu can still be shown.
+             */
+            $scope.toggleMenu = function () {
+                $mdSidenav("menu").toggle();
+            };
+
+        })
+    .directive('operationsApp',
+
+        /**
+         * Function that creates the directive itself returning the
+         * object required by Angular.
+         *
+         * @returns {Object} Object directive required by Angular,
+         *                   with restrict and templateUrl.
+         */
+        function () {
+            'use strict';
+
+            return {
+                restrict: 'E',
+                templateUrl: 'operations/templates/operations-app.html'
+            };
+
+        }
+
+    );

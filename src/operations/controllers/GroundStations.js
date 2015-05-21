@@ -14,27 +14,46 @@
    limitations under the License.
 */
 
-var gsMenuCtrlModule = angular.module(
-    'gsMenuControllers', [
+var gsCtrlModule = angular.module(
+    'gsControllers', [
         'ngMaterial'
     ]
 );
 
-gsMenuCtrlModule.controller('GsListMenuCtrl', [
+gsCtrlModule.controller('GsListCtrl', [
     '$scope', '$mdDialog',
+    'satnetRPC',
 
     /**
-     * Controller of the menu for the Operations application. It creates a
-     * function bound to the event of closing the menu that it controls and
-     * a flag with the state (open or closed) of that menu.
-     * @param   {Object} $scope Controller execution scope.
+     * Controller of the list with the Ground Stations registered for a given
+     * user. This controller takes care of initializing the list and of
+     * updating it whenever it is necessary through the SatNet RPC available
+     * service.
+     *
+     * @param {Object} $scope Controller execution scope.
      */
-    function ($scope) {
+    function ($scope, $mdDialog, satnetRPC) {
+
+        $scope.groundStations = {};
 
         /**
-         * Function that initializes the list of registered ground stations.
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                if (results !== null) {
+                    $scope.groundStations = results.slice(0);
+                }
+            });
+        };
+
+        /**
+         * Function that initializes the list of ground stations that is
+         * displayed.
          */
         $scope.init = function () {
+            console.log('XXX');
+            $scope.refresh();
         };
 
     }

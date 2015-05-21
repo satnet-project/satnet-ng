@@ -1,6 +1,6 @@
 <div class="gs-list-dialog">
 
-    <md-list ng-controller="GsListCtrl">
+    <md-list ng-controller="GsListCtrl" ng-init="init()">
         <md-subheader class="md-no-sticky">Registered Ground Stations</md-subheader>
         <md-list-item ng-repeat="gs in groundStations" ng-click="manageGs(gs.id, $event)">
             <img alt="{{ gs.id }}" ng-src="{{ person.img }}" class="md-avatar" />

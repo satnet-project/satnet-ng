@@ -17,7 +17,7 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('operations/templates/gslist-dialog.html',
-    "<div class=\"gs-list-dialog\"><md-list ng-controller=\"GsListCtrl\"><md-subheader class=\"md-no-sticky\">Registered Ground Stations</md-subheader><md-list-item ng-repeat=\"gs in groundStations\" ng-click=\"manageGs(gs.id, $event)\"><img alt=\"{{ gs.id }}\" ng-src=\"{{ person.img }}\" class=\"md-avatar\"><p>{{ gs.id }}</p><md-icon md-svg-icon=\"communication:messenger\" ng-click=\"doSecondaryAction($event)\" aria-label=\"Open Chat\" class=\"md-secondary md-hue-3\" ng-class=\"{'md-primary': person.newMessage}\"></md-icon></md-list-item></md-list></div>"
+    "<div class=\"gs-list-dialog\"><md-list ng-controller=\"GsListCtrl\" ng-init=\"init()\"><md-subheader class=\"md-no-sticky\">Registered Ground Stations</md-subheader><md-list-item ng-repeat=\"gs in groundStations\" ng-click=\"manageGs(gs.id, $event)\"><img alt=\"{{ gs.id }}\" ng-src=\"{{ person.img }}\" class=\"md-avatar\"><p>{{ gs.id }}</p><md-icon md-svg-icon=\"communication:messenger\" ng-click=\"doSecondaryAction($event)\" aria-label=\"Open Chat\" class=\"md-secondary md-hue-3\" ng-class=\"{'md-primary': person.newMessage}\"></md-icon></md-list-item></md-list></div>"
   );
 
 

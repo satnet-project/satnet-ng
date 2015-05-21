@@ -21,7 +21,8 @@ angular.module('operationsDirective', [
         'splashDirective',
         'snAboutDirective',
         'snMapDirective',
-        'operationsMenuControllers'
+        'operationsMenuControllers',
+        'gsControllers'
     ]).config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue-grey')

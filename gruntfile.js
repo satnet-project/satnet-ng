@@ -65,8 +65,8 @@ module.exports = function (grunt) {
                     'src/common/services/Maps.js',
                     'src/common/services/Satnet.js',
                     'src/common/services/Pusher.js',
-                    'src/operations/directives/**/*.js',
-                    'src/operations/controllers/**/*.js'
+                    'src/operations/controllers/**/*.js',
+                    'src/operations/directives/**/*.js'
                 ],
                 dest: 'dist/<%= pkg.name %>-operations.js'
             }
