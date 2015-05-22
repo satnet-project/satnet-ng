@@ -42,6 +42,7 @@ gsCtrlModule.controller('GsListCtrl', [
         $scope.refresh = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 if (results !== null) {
+                    console.log('XXX = ' + JSON.stringify(results));
                     $scope.groundStations = results.slice(0);
                 }
             });
