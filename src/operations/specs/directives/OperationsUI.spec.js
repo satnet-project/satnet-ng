@@ -62,6 +62,14 @@ describe("Testing Operations Interface", function () {
                 longitude: '50.0'
             });
 
+        spyOn(satnetRPC, 'rCall').and.callFake(function () {
+            return {
+                then: function () {
+                    return ['gs_test_1', 'gs_test_2'];
+                }
+            };
+        });
+
         $body.append($directive);
         $rootScope.$digest();
 
@@ -79,6 +87,14 @@ describe("Testing Operations Interface", function () {
 
         expect(button).toBeDefined();
         expect(button.length).toBe(1);
+
+    });
+
+    it('MenuCtrl should show the GS menu', function () {
+
+        var button = $('#menuGS');
+        button.click();
+        $rootScope.$digest();
 
     });
 

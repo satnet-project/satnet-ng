@@ -346,10 +346,27 @@ describe('Testing snMapServices Service', function () {
 
     it('should implement a proper update for the Terminator', function () {
 
-        /* FIXME: it seems that L from leaflet is not properly invoked...
+        /* FIXME: it seems that L from leaflet is not properly invoked... */
         expect(mapServices._updateTerminator(__mock__terminator))
             .toBe(__mock__terminator);
-        */
+        $rootScope.$digest();
+
+    });
+
+    it('should stringify a mapInfo structure', function () {
+
+        var map_info = {
+                center: [10.0, 20.0],
+                terminator: {
+                    terminator: 'test_terminator'
+                },
+                map: {
+                    map: 'test_map'
+                }
+            },
+            x_str = 'mapInfo = {"center": [10,20], "terminator": [object Object], "map": [object Object]}';
+
+        expect(mapServices.asString(map_info)).toBe(x_str);
 
     });
 
