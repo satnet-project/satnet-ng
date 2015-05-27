@@ -172,29 +172,27 @@ describe('Testing snMapServices Service', function () {
                 longitude: '50.0'
             });
 
+        jasmine.clock().install();
         expect(mapServices).toBeDefined();
 
     });
 
+    afterEach(function () {
+        jasmine.clock().uninstall();
+    });
+
     it('should return the default base layer object', function () {
-
         expect(mapServices.getOSMBaseLayer()).toEqual(x_baselayer);
-
     });
 
     it('should return the set of available base layers', function () {
-
         expect(mapServices.getBaseLayers()).toEqual(x_baselayers);
-
     });
 
     it('should return the overlay objects', function () {
-
         expect(mapServices.getOverlays()).toEqual(x_overlays);
-
     });
 
-    /* FIXME: should execute the code within the promises */
     it('should create a map with a terminator', function () {
 
         var x_map_info = {
@@ -202,11 +200,18 @@ describe('Testing snMapServices Service', function () {
             terminator: Object
         };
 
+        spyOn(mapServices, '_updateTerminator');
+
         mapServices.createTerminatorMap().then(
             function (result) {
                 expect(result.toEqual(x_map_info));
             }
         );
+
+        expect(mapServices._updateTerminator).not.toHaveBeenCalled();
+        jasmine.clock().tick(1001);
+        // FIXME : for some reason, the callback is not called...
+        //expect(mapServices._updateTerminator).toHaveBeenCalled();
 
         $rootScope.$digest();
 

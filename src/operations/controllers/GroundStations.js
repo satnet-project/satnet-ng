@@ -21,8 +21,7 @@ var gsCtrlModule = angular.module(
 );
 
 gsCtrlModule.controller('GsListCtrl', [
-    '$scope', '$mdDialog',
-    'satnetRPC',
+    '$scope', '$mdDialog', 'satnetRPC',
 
     /**
      * Controller of the list with the Ground Stations registered for a given
@@ -42,7 +41,6 @@ gsCtrlModule.controller('GsListCtrl', [
         $scope.refresh = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 if (results !== null) {
-                    console.log('XXX = ' + JSON.stringify(results));
                     $scope.groundStations = results.slice(0);
                 }
             });
