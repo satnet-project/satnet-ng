@@ -10,7 +10,7 @@
     "amateur"
   ],
   "author": "rtubiopa@calpoly.edu",
-  "license": "Apache v2",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/satnet-project/server.git"
