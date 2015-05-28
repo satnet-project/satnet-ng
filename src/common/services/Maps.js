@@ -39,14 +39,10 @@ angular.module('snMapServices', [
          *                               map properties.
          * @param   {Object}   satnetRPC   Object with the RPC services
          *                               of the SatNet network.
-         * @param   {Number}   MIN_ZOOM    Minimum value for the zoom over
-         *                               the map.
-         * @param   {Number}   MAX_ZOOM    Maximum value for the zoom over
-         *                               the map.
-         * @param   {Number}   ZOOM        Default value of the zoom over
-         *                               the map.
-         * @param   {Number} T_OPACITY   Default opacity of the layers
-         *                               over the map.
+         * @param   {Number}   MIN_ZOOM    Minimum value for the zoom.
+         * @param   {Number}   MAX_ZOOM    Maximum value for the zoom.
+         * @param   {Number}   ZOOM        Default value of the zoom over.
+         * @param   {Number} T_OPACITY   Default opacity of the layers.
          */
         function (
             $q, leafletData, satnetRPC,
@@ -58,6 +54,7 @@ angular.module('snMapServices', [
             /**
              * Returns the mapInfo structure for the rest of the chained
              * promises.
+             * 
              * @returns {*} Promise that returns the mapInfo structure with
              *               a reference to the Leaflet map object.
              */
@@ -71,6 +68,7 @@ angular.module('snMapServices', [
 
             /**
              * Redraws the Terminator to its new position.
+             * 
              * @returns {*} Promise that returns the updated Terminator object.
              * @private
              */
@@ -84,6 +82,7 @@ angular.module('snMapServices', [
             /**
              * Creates the main map and adds a terminator for the illuminated
              * surface of the Earth.
+             * 
              * @returns {*} Promise that returns the mapInfo object
              *               {map, terminator}.
              */
