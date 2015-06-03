@@ -21,27 +21,25 @@ describe('Operations', function () {
     var $rootScope, $controller, $q, $mdSidenav,
         $body = $("body"),
         $scope, menuCtrl;
-    /*
+
     close_fn = jasmine.createSpy("close").and.callFake(function () {
         return $q.when();
     }),
     toggle_fn = jasmine.createSpy("toggle").and.callFake(function () {
         return $q.when();
     }),
-    */
+
     /**
      * Factory for mocking $mdSidenav service from Angular material.
      *
      * @returns {Object} Factory for mocking.
      */
-    /*
     mock__mdSidenav = function () {
         return {
             toggle: toggle_fn,
             close: close_fn
         };
     };
-    */
 
     beforeEach(function () {
 

@@ -169,13 +169,39 @@ angular
             };
 
             /**
+             * PRIVATE function that is used only by this service in order to
+             * generate in the same way all possible errors produced by the
+             * remote invokation of the SatNet services.
+             *
+             * @param {String} service Name of the SatNet JRPC service that
+             *                         has just been invoked.
+             * @param {Array}  params  Array with the parameters for the
+             *                         service to be invoked.
+             * @param {String} code    Error code.
+             * @param {String} message Messsage description.
+             */
+            this._generateError = function (service, params, code, message) {
+
+                var msg = '[satnetRPC] Error invoking = <' + service +
+                    '>, with params = <' + JSON.stringify(params) +
+                    '>, code = <' + JSON.stringify(code) +
+                    '>, description = <' + JSON.stringify(message) + '>';
+                $log.warn(msg);
+                throw msg;
+
+            };
+
+            /**
              * Method for calling the remote service through JSON-RPC.
-             * @param service The name of the service, as per the internal services
-             * name definitions.
+             * @param service The name of the service, as per the internal
+             * services name definitions.
+             *
              * @param params The parameters for the service (as an array).
              * @returns {*}
              */
             this.rCall = function (service, params) {
+                var error_fn = this._generateError;
+
                 if ((this._services.hasOwnProperty(service)) === false) {
                     throw '[satnetRPC] service not found, id = <' +
                     service + '>';
@@ -185,21 +211,24 @@ angular
                     ', params = ' + JSON.stringify(params)
                 );
                 return this._services[service](params).then(
+
                     function (data) {
+                        // TODO : workaround for the JSON-RPC library.
+                        if (data.data.name === 'JSONRPCError') {
+                            error_fn(service, params, data.code, data.message);
+                        }
                         return data.data;
                     },
                     function (error) {
-                        var msg = '[satnetRPC] Error invoking = <' + service +
-                            '>, with params = <' + JSON.stringify(params) +
-                            '>, description = <' + JSON.stringify(error) + '>';
-                        $log.warn(msg);
-                        throw msg;
+                        error_fn(service, params, 'NONE', error);
                     }
+
                 );
             };
 
             /**
              * Retrieves the user location using an available Internet service.
+             *
              * @returns Promise that returns a { latitude, longitude } object.
              */
             this.getUserLocation = function () {
@@ -215,7 +244,9 @@ angular
             };
 
             /**
-             * Retrieves the server location using an available Internet service.
+             * Retrieves the server location using an available Internet
+             * service.
+             *
              * @returns Promise that returns a { latitude, longitude } object.
              */
             this.getServerLocation = function (hostname) {
@@ -238,8 +269,10 @@ angular
             /**
              * Reads the configuration for a given spacecraft, including the
              * estimated groundtrack.
+             *
              * @param scId The identifier of the spacecraft.
-             * @returns Promise that resturns the Spacecraft configuration object.
+             * @returns Promise that resturns the Spacecraft configuration
+             * object.
              */
             this.readSCCfg = function (scId) {
                 var cfg = {},

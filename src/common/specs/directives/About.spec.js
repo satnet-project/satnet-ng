@@ -59,7 +59,7 @@ describe('Testing About directive', function () {
 
     it('should add an ABOUT button on the menu with an icon', function () {
         var button = $('#menuAbout'),
-            icon = $('.fa-question'),
+            icon = $('.fa-info'),
             label = $('#menuAbout div b');
         expect(button.length).toBe(1);
         expect(icon.length).toBe(1);

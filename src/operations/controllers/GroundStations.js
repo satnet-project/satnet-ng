@@ -36,6 +36,12 @@ gsCtrlModule.controller('GsListCtrl', [
         $scope.groundStations = [];
 
         /**
+         * Function that triggers the opening of a window to add a new ground
+         * station into the system.
+         */
+        $scope.addGsMenu = function () {};
+
+        /**
          * Function that refreshes the list of registered ground stations.
          */
         $scope.refresh = function () {

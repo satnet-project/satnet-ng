@@ -165,4 +165,25 @@ describe('Testing SatNet Service', function () {
 
     });
 
+    it('should internall handle JRPC errors', function () {
+
+        var x_service = 'x_srv',
+            x_param = ['p1'],
+            x_code = 'c',
+            x_msg = 'm',
+            x_th_msg = '[satnetRPC] Error invoking = <' + x_service +
+            '>, with params = <' + JSON.stringify(x_param) +
+            '>, code = <' + JSON.stringify(x_code) +
+            '>, description = <' + JSON.stringify(x_msg) + '>';
+
+        spyOn($log, 'warn');
+
+        expect(function () {
+            satnetServices._generateError(x_service, x_param, x_code, x_msg);
+        }).toThrow(x_th_msg);
+
+        expect($log.warn).toHaveBeenCalledWith(x_th_msg);
+
+    });
+
 });
