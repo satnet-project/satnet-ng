@@ -758,7 +758,7 @@ angular
                 return this._services[service](params).then(
 
                     function (data) {
-                        // TODO : workaround for the JSON-RPC library.
+                        // TODO Workaround for the JSON-RPC library.
                         if (data.data.name === 'JSONRPCError') {
                             error_fn(service, params, data.code, data.message);
                         }
@@ -1042,7 +1042,7 @@ var gsCtrlModule = angular.module(
 );
 
 gsCtrlModule.controller('GsListCtrl', [
-    '$scope', '$mdDialog', 'satnetRPC',
+    '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
 
     /**
      * Controller of the list with the Ground Stations registered for a given
@@ -1052,7 +1052,7 @@ gsCtrlModule.controller('GsListCtrl', [
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($scope, $mdDialog, satnetRPC) {
+    function ($log, $scope, $mdDialog, $mdToast, satnetRPC) {
 
         $scope.groundStations = [];
 
@@ -1070,6 +1070,14 @@ gsCtrlModule.controller('GsListCtrl', [
                 if (results !== null) {
                     $scope.groundStations = results.slice(0);
                 }
+            }).catch(function (cause) {
+                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
+                $mdToast.show({
+                    controller: 'ToastCtrl',
+                    templateUrl: 'toast-template.html',
+                    hideDelay: 6000,
+                    position: 'top'
+                });
             });
         };
 

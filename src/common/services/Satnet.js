@@ -213,7 +213,7 @@ angular
                 return this._services[service](params).then(
 
                     function (data) {
-                        // TODO : workaround for the JSON-RPC library.
+                        // TODO Workaround for the JSON-RPC library.
                         if (data.data.name === 'JSONRPCError') {
                             error_fn(service, params, data.code, data.message);
                         }

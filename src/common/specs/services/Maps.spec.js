@@ -210,7 +210,7 @@ describe('Testing snMapServices Service', function () {
 
         expect(mapServices._updateTerminator).not.toHaveBeenCalled();
         jasmine.clock().tick(1001);
-        // FIXME : for some reason, the callback is not called...
+        // FIXME For some reason, the callback is not called...
         //expect(mapServices._updateTerminator).toHaveBeenCalled();
 
         $rootScope.$digest();
