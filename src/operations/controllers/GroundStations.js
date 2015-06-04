@@ -16,7 +16,8 @@
 
 var gsCtrlModule = angular.module(
     'gsControllers', [
-        'ngMaterial'
+        'ngMaterial',
+        'toastModule'
     ]
 );
 
@@ -52,11 +53,17 @@ gsCtrlModule.controller('GsListCtrl', [
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
                 $mdToast.show({
-                    controller: 'ToastCtrl',
-                    templateUrl: 'toast-template.html',
-                    hideDelay: 6000,
-                    position: 'top'
+                    controller: 'ErrorToastCtrl',
+                    templateUrl: 'common/templates/sn-error-toast.html',
+                    locals: {
+                        error: {
+                            message: 'Network Error'
+                        }
+                    },
+                    hideDelay: 5000,
+                    position: 'bottom'
                 });
+                $mdDialog.hide();
             });
         };
 

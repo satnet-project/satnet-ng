@@ -23,7 +23,6 @@ angular.module('snAboutDirective', ['ngMaterial'])
          * @param {Object} $scope $scope for the controller.
          */
         function ($scope, $mdDialog) {
-            'use strict';
 
             /**
              * Function that closes the dialog.
@@ -44,7 +43,6 @@ angular.module('snAboutDirective', ['ngMaterial'])
          * @param {Object} $mdDialog Angular material Dialog service.
          */
         function ($scope, $mdDialog) {
-            'use strict';
 
             /**
              * Function that opens the dialog when the snAbout button is

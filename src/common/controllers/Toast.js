@@ -21,19 +21,22 @@ var toastModule = angular.module(
 );
 
 toastModule.controller('ErrorToastCtrl', [
-    '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
+    '$scope', '$mdToast', '$mdDialog', 'error',
 
     /**
      * Controller of the Error Toast toast.
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($scope) {
+    function ($scope, $mdToast, $mdDialog, error) {
+
+        $scope.message = error.message;
 
         /**
          * Handles the closing of the Toast element.
          */
-        $scope.close = function() {
+        $scope.hide = function() {
+            $mdToast.hide();
         };
 
     }

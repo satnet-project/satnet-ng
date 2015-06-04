@@ -37,7 +37,6 @@ angular.module('operationsDirective', [
          *                                  Material.
          */
         function ($scope, $mdSidenav) {
-            'use strict';
 
             /**
              * Handler to toggle the menu on and off. It is based on the
@@ -61,7 +60,6 @@ angular.module('operationsDirective', [
          *                   with restrict and templateUrl.
          */
         function () {
-            'use strict';
 
             return {
                 restrict: 'E',

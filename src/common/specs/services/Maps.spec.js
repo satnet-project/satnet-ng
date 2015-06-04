@@ -239,7 +239,11 @@ describe('Testing snMapServices Service', function () {
                         lat: x_lat,
                         lng: x_lng,
                         focus: true,
-                        draggable: true,
+                        draggable: false,
+                        icon: {
+                            iconUrl: '/images/user.png',
+                            iconSize: [15, 15]
+                        },
                         label: {
                             message: 'Drag me!',
                             options: {
@@ -282,7 +286,11 @@ describe('Testing snMapServices Service', function () {
                         lat: x_lat,
                         lng: x_lng,
                         focus: true,
-                        draggable: true,
+                        draggable: false,
+                        icon: {
+                            iconUrl: '/images/user.png',
+                            iconSize: [15, 15]
+                        },
                         label: {
                             message: 'Drag me!',
                             options: {
@@ -327,7 +335,11 @@ describe('Testing snMapServices Service', function () {
                         lat: x_lat,
                         lng: x_lng,
                         focus: true,
-                        draggable: true,
+                        draggable: false,
+                        icon: {
+                            iconUrl: '/images/user.png',
+                            iconSize: [15, 15]
+                        },
                         label: {
                             message: 'Drag me!',
                             options: {

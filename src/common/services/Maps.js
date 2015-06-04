@@ -121,8 +121,8 @@ angular.module('snMapServices', [
             };
 
             /**
-             * Creates a map centered at the position of the given
-             * GroundStation.
+             * Creates a map centered at the position of the given Ground
+             * Station.
              *
              * @param scope $scope to be configured
              * @param identifier Identifier of the GroundStation
@@ -169,7 +169,11 @@ angular.module('snMapServices', [
                         lat: latitude,
                         lng: longitude,
                         focus: true,
-                        draggable: true,
+                        draggable: false,
+                        icon: {
+                            iconUrl: '/images/user.png',
+                            iconSize: [15, 15]
+                        },
                         label: {
                             message: 'Drag me!',
                             options: {
@@ -188,7 +192,7 @@ angular.module('snMapServices', [
              * Returns the base layers in the format required by the Angular
              * Leaflet plugin.
              *
-             * @returns {{esri_baselayer: {name: string, type: string, url: string, layerOptions: {attribution: string}}, osm_baselayer: {name: string, type: string, url: string, layerOptions: {attribution: string}}}}
+             * @returns Object with the baselayers indexed by their names.
              */
             this.getBaseLayers = function () {
                 return {
@@ -222,7 +226,7 @@ angular.module('snMapServices', [
             /**
              * Returns the OSM baselayer for Angular Leaflet.
              *
-             * @returns {{osm_baselayer: {name: string, type: string, url: string, layerOptions: {noWrap: boolean, attribution: string}}}}
+             * @returns Object with the baselayers indexed by their names.
              */
             this.getOSMBaseLayer = function () {
                 return {
@@ -243,7 +247,7 @@ angular.module('snMapServices', [
              * Returns the overlays in the format required by the Angular
              * Leaflet plugin.
              *
-             * @returns {{oms_admin_overlay: {name: string, type: string, url: string, visible: boolean, layerOptions: {minZoom: number, maxZoom: number, attribution: string}}, hydda_roads_labels_overlay: {name: string, type: string, url: string, layerOptions: {minZoom: number, maxZoom: number, attribution: string}}, stamen_toner_labels_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, subdomains: string, minZoom: number, maxZoom: number}}, owm_rain_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, opacity: number}}, owm_temperature_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, opacity: number}}}}
+             * @returns Object with the overlays indexed by their names
              */
             this.getOverlays = function () {
                 return {

@@ -12,7 +12,7 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('common/templates/sn-error-toast.html',
-    "<md-toast><span flex>ERROR</span><md-button ng-click=\"closeToast()\">Close</md-button></md-toast>"
+    "<md-toast><span flex>Error: {{ message }}</span><md-button ng-click=\"hide()\" aria-label=\"Close Toast\"><i class=\"fa fa-close\"></i></md-button></md-toast>"
   );
 
 

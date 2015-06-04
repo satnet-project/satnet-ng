@@ -1,4 +1,47 @@
 /*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+var toastModule = angular.module(
+    'toastModule', [
+        'ngMaterial'
+    ]
+);
+
+toastModule.controller('ErrorToastCtrl', [
+    '$scope', '$mdToast', '$mdDialog', 'error',
+
+    /**
+     * Controller of the Error Toast toast.
+     *
+     * @param {Object} $scope Controller execution scope.
+     */
+    function ($scope, $mdToast, $mdDialog, error) {
+
+        $scope.message = error.message;
+
+        /**
+         * Handles the closing of the Toast element.
+         */
+        $scope.hide = function() {
+            $mdToast.hide();
+        };
+
+    }
+
+]);;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,7 +131,6 @@ angular.module('snAboutDirective', ['ngMaterial'])
          * @param {Object} $scope $scope for the controller.
          */
         function ($scope, $mdDialog) {
-            'use strict';
 
             /**
              * Function that closes the dialog.
@@ -109,7 +151,6 @@ angular.module('snAboutDirective', ['ngMaterial'])
          * @param {Object} $mdDialog Angular material Dialog service.
          */
         function ($scope, $mdDialog) {
-            'use strict';
 
             /**
              * Function that opens the dialog when the snAbout button is
@@ -336,8 +377,8 @@ angular.module('snMapServices', [
             };
 
             /**
-             * Creates a map centered at the position of the given
-             * GroundStation.
+             * Creates a map centered at the position of the given Ground
+             * Station.
              *
              * @param scope $scope to be configured
              * @param identifier Identifier of the GroundStation
@@ -384,7 +425,11 @@ angular.module('snMapServices', [
                         lat: latitude,
                         lng: longitude,
                         focus: true,
-                        draggable: true,
+                        draggable: false,
+                        icon: {
+                            iconUrl: '/images/user.png',
+                            iconSize: [15, 15]
+                        },
                         label: {
                             message: 'Drag me!',
                             options: {
@@ -403,7 +448,7 @@ angular.module('snMapServices', [
              * Returns the base layers in the format required by the Angular
              * Leaflet plugin.
              *
-             * @returns {{esri_baselayer: {name: string, type: string, url: string, layerOptions: {attribution: string}}, osm_baselayer: {name: string, type: string, url: string, layerOptions: {attribution: string}}}}
+             * @returns Object with the baselayers indexed by their names.
              */
             this.getBaseLayers = function () {
                 return {
@@ -437,7 +482,7 @@ angular.module('snMapServices', [
             /**
              * Returns the OSM baselayer for Angular Leaflet.
              *
-             * @returns {{osm_baselayer: {name: string, type: string, url: string, layerOptions: {noWrap: boolean, attribution: string}}}}
+             * @returns Object with the baselayers indexed by their names.
              */
             this.getOSMBaseLayer = function () {
                 return {
@@ -458,7 +503,7 @@ angular.module('snMapServices', [
              * Returns the overlays in the format required by the Angular
              * Leaflet plugin.
              *
-             * @returns {{oms_admin_overlay: {name: string, type: string, url: string, visible: boolean, layerOptions: {minZoom: number, maxZoom: number, attribution: string}}, hydda_roads_labels_overlay: {name: string, type: string, url: string, layerOptions: {minZoom: number, maxZoom: number, attribution: string}}, stamen_toner_labels_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, subdomains: string, minZoom: number, maxZoom: number}}, owm_rain_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, opacity: number}}, owm_temperature_overlay: {name: string, type: string, url: string, layerOptions: {attribution: string, opacity: number}}}}
+             * @returns Object with the overlays indexed by their names
              */
             this.getOverlays = function () {
                 return {
@@ -738,9 +783,9 @@ angular
 
             /**
              * Method for calling the remote service through JSON-RPC.
+             * 
              * @param service The name of the service, as per the internal
-             * services name definitions.
-             *
+             * services name definition.
              * @param params The parameters for the service (as an array).
              * @returns {*}
              */
@@ -838,8 +883,9 @@ angular
             };
 
             /**
-             * Reads the configuration for all the GroundStations associated with
-             * this LEOP cluster.
+             * Reads the configuration for all the GroundStations associated
+             * with this LEOP cluster.
+             * 
              * @param leop_id Identifier of the LEOP cluster.
              * @returns {*} { leop_gs_available: [gs_cfg], leop_gs_inuse: [gs_cfg]}
              */
@@ -1037,7 +1083,8 @@ angular.module('pushServices').service('satnetPush', [
 
 var gsCtrlModule = angular.module(
     'gsControllers', [
-        'ngMaterial'
+        'ngMaterial',
+        'toastModule'
     ]
 );
 
@@ -1073,11 +1120,17 @@ gsCtrlModule.controller('GsListCtrl', [
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
                 $mdToast.show({
-                    controller: 'ToastCtrl',
-                    templateUrl: 'toast-template.html',
-                    hideDelay: 6000,
-                    position: 'top'
+                    controller: 'ErrorToastCtrl',
+                    templateUrl: 'common/templates/sn-error-toast.html',
+                    locals: {
+                        error: {
+                            message: 'Network Error'
+                        }
+                    },
+                    hideDelay: 5000,
+                    position: 'bottom'
                 });
+                $mdDialog.hide();
             });
         };
 
@@ -1183,7 +1236,6 @@ angular.module('operationsDirective', [
          *                                  Material.
          */
         function ($scope, $mdSidenav) {
-            'use strict';
 
             /**
              * Handler to toggle the menu on and off. It is based on the
@@ -1207,7 +1259,6 @@ angular.module('operationsDirective', [
          *                   with restrict and templateUrl.
          */
         function () {
-            'use strict';
 
             return {
                 restrict: 'E',
