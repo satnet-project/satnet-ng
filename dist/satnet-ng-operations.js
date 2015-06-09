@@ -203,6 +203,48 @@ angular.module('snAboutDirective', ['ngMaterial'])
  */
 
 angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
+    .controller('SelectMapCtrl', [
+        '$scope', 'leafletData', 'leafletEvents', 'ZOOM_SELECT',
+
+        /**
+         * Main controller for the map used by the user to pick a given
+         * location. The main usage of this map within the SatNet system will
+         * be enabling the users in placing their ground segments.
+         * 
+         * @param {Object} $scope        $scope for the controller.
+         * @param {Object} leafletData   Object with direct Leaflet access.
+         * @param {Object} leafletEvents Object with direct Leaflet events
+         *                               access.
+         * @param {Number} ZOOM_SELECT   Default zoom level for the select map.
+         */
+        function($scope, leafletData, leafletEvents, ZOOM_SELECT) {
+
+            $scope.center = {
+                autoDiscover: true,
+                zoom: ZOOM_SELECT
+            };
+            $scope.markers = {
+                gs: {
+                    lat: $scope.center.lat,
+                    lng: $scope.center.lng,
+                    focus: true,
+                    draggable: false,
+                    icon: {
+                        iconUrl: '/images/user.png',
+                        iconSize: [15, 15]
+                    },
+                    label: {
+                        message: 'Drag me!',
+                        options: {
+                            noHide: true
+                        }
+                    }
+                }
+            };
+
+        }
+
+    ])
     .controller('MapCtrl', [
         '$log', '$scope',
         'mapServices',
@@ -222,7 +264,6 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
         function ($log, $scope, mapServices, leafletData, leafletEvents, ZOOM) {
 
             $scope.center = {
-                autoDiscover: true,
                 zoom: ZOOM
             };
             $scope.markers = {};
@@ -265,6 +306,14 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
 
         }
     ])
+    .directive('selectMap',
+        function () {
+            return {
+                restrict: 'E',
+                templateUrl: 'common/templates/select-map.html'
+            };
+        }
+    )
     .directive('snMap',
 
         /**
@@ -275,13 +324,10 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
          *                   restrict and templateUrl.
          */
         function () {
-            'use strict';
-
             return {
                 restrict: 'E',
                 templateUrl: 'common/templates/sn-map.html'
             };
-
         }
 
     );;/**
@@ -313,6 +359,7 @@ angular.module('snMapServices', [
     .constant('MIN_ZOOM', 2)
     .constant('MAX_ZOOM', 12)
     .constant('ZOOM', 7)
+    .constant('ZOOM_SELECT', 10)
     .service('mapServices', [
         '$q', 'leafletData', 'satnetRPC',
         'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',
@@ -1137,7 +1184,12 @@ gsCtrlModule.controller('GsListCtrl', [
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addGsMenu = function () {};
+        $scope.addGsMenu = function () {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gsadd-dialog.html'
+            });
+        };
 
         /**
          * Function that refreshes the list of registered ground stations.
@@ -1174,6 +1226,38 @@ gsCtrlModule.controller('GsListCtrl', [
 
     }
 
+]);
+
+gsCtrlModule.controller('GsAddCtrl', [
+    '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
+
+    /**
+     * Controller of the dialog used to add a new Ground Station. This dialog
+     * provides all the required controls as for gathering all the information
+     * about the new element for the database.
+     *
+     * @param {Object} $scope Controller execution scope.
+     */
+    function ($log, $scope, $mdDialog, $mdToast, satnetRPC) {
+
+        $scope.configuration = {};
+
+        /**
+         * Function that triggers the opening of a window to add a new ground
+         * station into the system.
+         */
+        $scope.add = function () {
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gslist-dialog.html'
+            });
+        };
+
+    }
+
 ]);;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
@@ -1191,9 +1275,7 @@ gsCtrlModule.controller('GsListCtrl', [
 */
 
 var opsMenuCtrlModule = angular.module(
-    'operationsMenuControllers', [
-        'ngMaterial'
-    ]
+    'operationsMenuControllers', ['ngMaterial']
 );
 
 opsMenuCtrlModule.controller('OperationsMenuCtrl', [
@@ -1203,6 +1285,7 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
      * Controller of the menu for the Operations application. It creates a
      * function bound to the event of closing the menu that it controls and
      * a flag with the state (open or closed) of that menu.
+     * 
      * @param   {Object} $scope Controller execution scope.
      * @param   {Object} $mdSidenav Side mane service from Angular Material.
      */

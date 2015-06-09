@@ -40,7 +40,12 @@ gsCtrlModule.controller('GsListCtrl', [
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addGsMenu = function () {};
+        $scope.addGsMenu = function () {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gsadd-dialog.html'
+            });
+        };
 
         /**
          * Function that refreshes the list of registered ground stations.
@@ -73,6 +78,38 @@ gsCtrlModule.controller('GsListCtrl', [
          */
         $scope.init = function () {
             $scope.refresh();
+        };
+
+    }
+
+]);
+
+gsCtrlModule.controller('GsAddCtrl', [
+    '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
+
+    /**
+     * Controller of the dialog used to add a new Ground Station. This dialog
+     * provides all the required controls as for gathering all the information
+     * about the new element for the database.
+     *
+     * @param {Object} $scope Controller execution scope.
+     */
+    function ($log, $scope, $mdDialog, $mdToast, satnetRPC) {
+
+        $scope.configuration = {};
+
+        /**
+         * Function that triggers the opening of a window to add a new ground
+         * station into the system.
+         */
+        $scope.add = function () {
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gslist-dialog.html'
+            });
         };
 
     }

@@ -27,6 +27,7 @@ angular.module('snMapServices', [
     .constant('MIN_ZOOM', 2)
     .constant('MAX_ZOOM', 12)
     .constant('ZOOM', 7)
+    .constant('ZOOM_SELECT', 10)
     .service('mapServices', [
         '$q', 'leafletData', 'satnetRPC',
         'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',

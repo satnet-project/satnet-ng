@@ -17,6 +17,48 @@
  */
 
 angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
+    .controller('SelectMapCtrl', [
+        '$scope', 'leafletData', 'leafletEvents', 'ZOOM_SELECT',
+
+        /**
+         * Main controller for the map used by the user to pick a given
+         * location. The main usage of this map within the SatNet system will
+         * be enabling the users in placing their ground segments.
+         * 
+         * @param {Object} $scope        $scope for the controller.
+         * @param {Object} leafletData   Object with direct Leaflet access.
+         * @param {Object} leafletEvents Object with direct Leaflet events
+         *                               access.
+         * @param {Number} ZOOM_SELECT   Default zoom level for the select map.
+         */
+        function($scope, leafletData, leafletEvents, ZOOM_SELECT) {
+
+            $scope.center = {
+                autoDiscover: true,
+                zoom: ZOOM_SELECT
+            };
+            $scope.markers = {
+                gs: {
+                    lat: $scope.center.lat,
+                    lng: $scope.center.lng,
+                    focus: true,
+                    draggable: false,
+                    icon: {
+                        iconUrl: '/images/user.png',
+                        iconSize: [15, 15]
+                    },
+                    label: {
+                        message: 'Drag me!',
+                        options: {
+                            noHide: true
+                        }
+                    }
+                }
+            };
+
+        }
+
+    ])
     .controller('MapCtrl', [
         '$log', '$scope',
         'mapServices',
@@ -36,7 +78,6 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
         function ($log, $scope, mapServices, leafletData, leafletEvents, ZOOM) {
 
             $scope.center = {
-                autoDiscover: true,
                 zoom: ZOOM
             };
             $scope.markers = {};
@@ -79,6 +120,14 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
 
         }
     ])
+    .directive('selectMap',
+        function () {
+            return {
+                restrict: 'E',
+                templateUrl: 'common/templates/select-map.html'
+            };
+        }
+    )
     .directive('snMap',
 
         /**
@@ -89,13 +138,10 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
          *                   restrict and templateUrl.
          */
         function () {
-            'use strict';
-
             return {
                 restrict: 'E',
                 templateUrl: 'common/templates/sn-map.html'
             };
-
         }
 
     );

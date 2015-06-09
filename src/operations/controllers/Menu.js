@@ -15,9 +15,7 @@
 */
 
 var opsMenuCtrlModule = angular.module(
-    'operationsMenuControllers', [
-        'ngMaterial'
-    ]
+    'operationsMenuControllers', ['ngMaterial']
 );
 
 opsMenuCtrlModule.controller('OperationsMenuCtrl', [
@@ -27,6 +25,7 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
      * Controller of the menu for the Operations application. It creates a
      * function bound to the event of closing the menu that it controls and
      * a flag with the state (open or closed) of that menu.
+     * 
      * @param   {Object} $scope Controller execution scope.
      * @param   {Object} $mdSidenav Side mane service from Angular Material.
      */

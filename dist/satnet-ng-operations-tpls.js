@@ -1,6 +1,11 @@
 angular.module('operationsDirective').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('common/templates/select-map.html',
+    "<div ng-controller=\"SelectMapCtrl\" ng-init=\"init()\"><leaflet id=\"selectMap\" center=\"center\" markers=\"markers\" layers=\"layers\" event-broadcast=\"events\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+  );
+
+
   $templateCache.put('common/templates/sn-about-dialog.html',
     "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\"><md-content>The SatNet Network</md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
   );
@@ -18,6 +23,11 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
   $templateCache.put('common/templates/sn-map.html',
     "<div ng-controller=\"MapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" center=\"center\" markers=\"markers\" layers=\"layers\" event-broadcast=\"events\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+  );
+
+
+  $templateCache.put('operations/templates/gsadd-dialog.html',
+    "<md-dialog ng-controller=\"GsAddCtrl\" aria-label=\"Add Ground Station\"><md-content class=\"menu-list\"><md-divider></md-divider><div layout=\"row\"><md-button id=\"add\" ng-click=\"add()\" aria-label=\"Add new Ground Station\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-plus\"></i> <b>add</b></div></md-button><md-button id=\"cancel\" ng-click=\"cancel()\" aria-label=\"Cancel\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
