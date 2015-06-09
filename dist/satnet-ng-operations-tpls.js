@@ -17,7 +17,7 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('common/templates/sn-map.html',
-    "<div ng-controller=\"MapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" center=\"center\" markers=\"markers\" layers=\"layers\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+    "<div ng-controller=\"MapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" center=\"center\" markers=\"markers\" layers=\"layers\" event-broadcast=\"events\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
   );
 
 
