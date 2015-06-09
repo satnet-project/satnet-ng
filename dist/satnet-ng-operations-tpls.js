@@ -27,7 +27,7 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('operations/templates/gsadd-dialog.html',
-    "<md-dialog ng-controller=\"GsAddCtrl\" aria-label=\"Add Ground Station\"><md-content class=\"menu-list\"><md-divider></md-divider><div layout=\"row\"><md-button id=\"add\" ng-click=\"add()\" aria-label=\"Add new Ground Station\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-plus\"></i> <b>add</b></div></md-button><md-button id=\"cancel\" ng-click=\"cancel()\" aria-label=\"Cancel\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog ng-controller=\"GsAddCtrl\" aria-label=\"Add Ground Station\"><md-content class=\"add-gs-dialog menu-list\"><div><select-map></select-map></div><md-divider></md-divider><div layout=\"row\"><md-button id=\"add\" ng-click=\"add()\" aria-label=\"Add Ground Station\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-plus\"></i> <b>add</b></div></md-button><md-button id=\"cancel\" ng-click=\"cancel()\" aria-label=\"Cancel\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 

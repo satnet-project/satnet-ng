@@ -42,11 +42,7 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
                     lat: $scope.center.lat,
                     lng: $scope.center.lng,
                     focus: true,
-                    draggable: false,
-                    icon: {
-                        iconUrl: '/images/user.png',
-                        iconSize: [15, 15]
-                    },
+                    draggable: true,
                     label: {
                         message: 'Drag me!',
                         options: {
