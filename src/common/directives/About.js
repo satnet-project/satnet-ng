@@ -67,13 +67,10 @@ angular.module('snAboutDirective', ['ngMaterial'])
          *                   restrict and templateUrl.
          */
         function () {
-            'use strict';
-
             return {
                 restrict: 'E',
                 templateUrl: 'common/templates/sn-about.html'
             };
-
         }
 
     );

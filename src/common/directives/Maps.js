@@ -18,38 +18,25 @@
 
 angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
     .controller('SelectMapCtrl', [
-        '$scope', 'leafletData', 'leafletEvents', 'ZOOM_SELECT',
+        '$scope', 'mapServices',
 
         /**
          * Main controller for the map used by the user to pick a given
          * location. The main usage of this map within the SatNet system will
          * be enabling the users in placing their ground segments.
-         * 
+         *
          * @param {Object} $scope        $scope for the controller.
          * @param {Object} leafletData   Object with direct Leaflet access.
          * @param {Object} leafletEvents Object with direct Leaflet events
          *                               access.
-         * @param {Number} ZOOM_SELECT   Default zoom level for the select map.
          */
-        function($scope, leafletData, leafletEvents, ZOOM_SELECT) {
+        function ($scope, mapServices) {
 
-            $scope.center = {
-                autoDiscover: true,
-                zoom: ZOOM_SELECT
-            };
-            $scope.markers = {
-                gs: {
-                    lat: $scope.center.lat,
-                    lng: $scope.center.lng,
-                    focus: true,
-                    draggable: true,
-                    label: {
-                        message: 'Drag me!',
-                        options: {
-                            noHide: true
-                        }
-                    }
-                }
+            $scope.center = {};
+            $scope.markers = {};
+
+            $scope.init = function () {
+                mapServices.createAddGsMap($scope);
             };
 
         }

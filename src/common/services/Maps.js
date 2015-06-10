@@ -27,10 +27,10 @@ angular.module('snMapServices', [
     .constant('MIN_ZOOM', 2)
     .constant('MAX_ZOOM', 12)
     .constant('ZOOM', 7)
-    .constant('ZOOM_SELECT', 10)
+    .constant('ZOOM_SELECT', 8)
     .service('mapServices', [
         '$q', 'leafletData', 'satnetRPC',
-        'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY',
+        'MIN_ZOOM', 'MAX_ZOOM', 'ZOOM', 'T_OPACITY', 'ZOOM_SELECT',
 
         /**
          * Function to construct the services provided by this module.
@@ -43,11 +43,11 @@ angular.module('snMapServices', [
          * @param   {Number}   MIN_ZOOM    Minimum value for the zoom.
          * @param   {Number}   MAX_ZOOM    Maximum value for the zoom.
          * @param   {Number}   ZOOM        Default value of the zoom over.
-         * @param   {Number} T_OPACITY   Default opacity of the layers.
+         * @param   {Number} T_OPACITY   Default opacity of the layer.
          */
         function (
             $q, leafletData, satnetRPC,
-            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY
+            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY, ZOOM_SELECT
         ) {
 
             'use strict';
@@ -100,6 +100,53 @@ angular.module('snMapServices', [
                     }, 500);
                     return mapInfo;
                 });
+            };
+
+            /**
+             * Creates and configures the map for the add ground station dialog.
+             *
+             * @param   {Object} scope Controller scope.
+             * @returns {Object} Promise like object.
+             */
+            this.createAddGsMap = function (scope) {
+                var self = this;
+                return satnetRPC.getUserLocation().then(function (location) {
+                    self.configureAddGsMap(
+                        scope, location.latitude, location.longitude
+                    );
+                });
+            };
+
+            /**
+             * Configures the given scope to support the map for the add ground
+             * station dialog.
+             *
+             * @param {Object} scope     Controller scope.
+             * @param {Number} latitude  Latitude for centering the map.
+             * @param {Number} longitude Longitude for centering the map.
+             */
+            this.configureAddGsMap = function (scope, latitude, longitude) {
+
+                scope.center = {
+                    lat: latitude,
+                    lng: longitude,
+                    zoom: ZOOM_SELECT,
+                };
+                scope.markers = {
+                    gs: {
+                        lat: latitude,
+                        lng: longitude,
+                        focus: true,
+                        draggable: true,
+                        label: {
+                            message: 'Drag me!',
+                            options: {
+                                noHide: true
+                            }
+                        }
+                    }
+                };
+
             };
 
             /**
