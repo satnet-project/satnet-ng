@@ -232,10 +232,11 @@ angular
              * @returns Promise that returns a { latitude, longitude } object.
              */
             this.getUserLocation = function () {
-                var url = this._getSatNetAddress() + '/configuration/user/geoip';
+                var url = this._getSatNetAddress() +
+                    '/configuration/user/geoip';
                 return $http.get(url).then(function (data) {
                     $log.info('[satnet] user@(' + JSON
-                        .stringify(data.data) + ')');
+                              .stringify(data.data) + ')');
                     return {
                         latitude: parseFloat(data.data.latitude),
                         longitude: parseFloat(data.data.longitude)

@@ -1,0 +1,71 @@
+<md-dialog ng-controller="GsAddCtrl" ng-init="init()" aria-label="Add Ground Station">
+
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span>Add new Ground Station</span>
+        </h2>
+    </md-toolbar>
+
+    <md-content class="add-gs-dialog menu-list">
+
+        <div>
+            <style>
+                .leaflet-control-container { display: none; }
+            </style>
+            <leaflet id="selectMap" class="sn-select-gs-map" center="center" markers="markers" layers="layers"></leaflet>
+        </div>
+
+        <md-divider></md-divider>
+
+        <form name="gsConfiguration">
+
+            <div layout="row">
+                <md-input-container style="width: 50%">
+                    <label>Identifier</label>
+                    <input ng-model="gs.identifier" required>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <label>Entity</label>
+                    <input ng-model="gs.entity" required>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container style="width: 50%">
+                    <label>Latitude</label>
+                    <input ng-model="markers.gs.lat" required>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <label>Longitude</label>
+                    <input ng-model="markers.gs.lng" required>
+                </md-input-container>
+            </div>
+
+        </form>
+
+        <md-divider></md-divider>
+
+        <div layout="row">
+
+            <md-button id="add" ng-click="add()"
+                       aria-label="Add Ground Station"
+                       class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-plus"></i>
+                    <b>add</b>
+                </div>
+            </md-button>
+
+            <md-button id="cancel" ng-click="cancel()"
+                       aria-label="Cancel"
+                       class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-times"></i>
+                    <b>cancel</b>
+                </div>
+            </md-button>
+
+        </div>
+
+    </md-content>
+</md-dialog>

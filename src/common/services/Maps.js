@@ -47,7 +47,7 @@ angular.module('snMapServices', [
          */
         function (
             $q, leafletData, satnetRPC,
-            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY, ZOOM_SELECT
+            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY
         ) {
 
             'use strict';
@@ -100,53 +100,6 @@ angular.module('snMapServices', [
                     }, 500);
                     return mapInfo;
                 });
-            };
-
-            /**
-             * Creates and configures the map for the add ground station dialog.
-             *
-             * @param   {Object} scope Controller scope.
-             * @returns {Object} Promise like object.
-             */
-            this.createAddGsMap = function (scope) {
-                var self = this;
-                return satnetRPC.getUserLocation().then(function (location) {
-                    self.configureAddGsMap(
-                        scope, location.latitude, location.longitude
-                    );
-                });
-            };
-
-            /**
-             * Configures the given scope to support the map for the add ground
-             * station dialog.
-             *
-             * @param {Object} scope     Controller scope.
-             * @param {Number} latitude  Latitude for centering the map.
-             * @param {Number} longitude Longitude for centering the map.
-             */
-            this.configureAddGsMap = function (scope, latitude, longitude) {
-
-                scope.center = {
-                    lat: latitude,
-                    lng: longitude,
-                    zoom: ZOOM_SELECT,
-                };
-                scope.markers = {
-                    gs: {
-                        lat: latitude,
-                        lng: longitude,
-                        focus: true,
-                        draggable: true,
-                        label: {
-                            message: 'Drag me!',
-                            options: {
-                                noHide: true
-                            }
-                        }
-                    }
-                };
-
             };
 
             /**
@@ -271,6 +224,29 @@ angular.module('snMapServices', [
                 };
             };
 
+            /**
+             * Function that returns the base layer for the ESRI maps.
+             * 
+             * @returns {Object} Object with a single element indexed with the
+             *                   key 'esri_baselayer'.
+             */
+            this.getESRIBaseLayer = function () {
+                return {
+                    esri_baselayer: {
+                        name: 'ESRI Base Layer',
+                        type: 'xyz',
+                        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                        }
+                    }
+                };
+            };
+                
             /**
              * Returns the OSM baselayer for Angular Leaflet.
              *

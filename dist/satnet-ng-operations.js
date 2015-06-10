@@ -199,37 +199,9 @@ angular.module('snAboutDirective', ['ngMaterial'])
  * Created by rtubio on 15/05/15.
  */
 
-angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
-    .controller('SelectMapCtrl', [
-        '$scope', 'mapServices',
-
-        /**
-         * Main controller for the map used by the user to pick a given
-         * location. The main usage of this map within the SatNet system will
-         * be enabling the users in placing their ground segments.
-         *
-         * @param {Object} $scope        $scope for the controller.
-         * @param {Object} leafletData   Object with direct Leaflet access.
-         * @param {Object} leafletEvents Object with direct Leaflet events
-         *                               access.
-         */
-        function ($scope, mapServices) {
-
-            $scope.center = {};
-            $scope.markers = {};
-
-            $scope.init = function () {
-                mapServices.createAddGsMap($scope);
-            };
-
-        }
-
-    ])
+angular.module('snMapDirective', ['snMapServices', 'satnetServices'])
     .controller('MapCtrl', [
-        '$log', '$scope',
-        'mapServices',
-        'leafletData', 'leafletEvents',
-        'ZOOM',
+        '$log', '$scope', 'mapServices', 'ZOOM',
 
         /**
          * Main controller for the map directive. It should be in charge of all
@@ -241,7 +213,7 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
          * @param {Object} mapServices Service with the custom functions to
          *                             control the maps object.
          */
-        function ($log, $scope, mapServices, leafletData, leafletEvents, ZOOM) {
+        function ($log, $scope, mapServices, ZOOM) {
 
             $scope.center = {
                 zoom: ZOOM
@@ -250,24 +222,6 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
             $scope.layers = {
                 baselayers: {},
                 overlays: {}
-            };
-            $scope.events = {
-                map: {
-                    enable: ['click'],
-                    logic: 'emit'
-                }
-            };
-            $scope.lastEvent = '';
-
-            /**
-             * Function that register a set of handlers to the required map
-             * events.
-             */
-            $scope.registerMapEvents = function () {
-                $scope.$on('leafletDirectiveMap.click', function (name) {
-                    $scope.lastEvent = name;
-                    console.log('CLICK ON THE MAP!');
-                });
             };
 
             /**
@@ -281,19 +235,10 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
             $scope.init = function () {
                 $scope.map = mapServices.createTerminatorMap(true);
                 mapServices.autocenterMap($scope, ZOOM);
-                $scope.registerMapEvents();
             };
 
         }
     ])
-    .directive('selectMap',
-        function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'common/templates/select-map.html'
-            };
-        }
-    )
     .directive('snMap',
 
         /**
@@ -359,7 +304,7 @@ angular.module('snMapServices', [
          */
         function (
             $q, leafletData, satnetRPC,
-            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY, ZOOM_SELECT
+            MIN_ZOOM, MAX_ZOOM, ZOOM, T_OPACITY
         ) {
 
             'use strict';
@@ -412,53 +357,6 @@ angular.module('snMapServices', [
                     }, 500);
                     return mapInfo;
                 });
-            };
-
-            /**
-             * Creates and configures the map for the add ground station dialog.
-             *
-             * @param   {Object} scope Controller scope.
-             * @returns {Object} Promise like object.
-             */
-            this.createAddGsMap = function (scope) {
-                var self = this;
-                return satnetRPC.getUserLocation().then(function (location) {
-                    self.configureAddGsMap(
-                        scope, location.latitude, location.longitude
-                    );
-                });
-            };
-
-            /**
-             * Configures the given scope to support the map for the add ground
-             * station dialog.
-             *
-             * @param {Object} scope     Controller scope.
-             * @param {Number} latitude  Latitude for centering the map.
-             * @param {Number} longitude Longitude for centering the map.
-             */
-            this.configureAddGsMap = function (scope, latitude, longitude) {
-
-                scope.center = {
-                    lat: latitude,
-                    lng: longitude,
-                    zoom: ZOOM_SELECT,
-                };
-                scope.markers = {
-                    gs: {
-                        lat: latitude,
-                        lng: longitude,
-                        focus: true,
-                        draggable: true,
-                        label: {
-                            message: 'Drag me!',
-                            options: {
-                                noHide: true
-                            }
-                        }
-                    }
-                };
-
             };
 
             /**
@@ -583,6 +481,29 @@ angular.module('snMapServices', [
                 };
             };
 
+            /**
+             * Function that returns the base layer for the ESRI maps.
+             * 
+             * @returns {Object} Object with a single element indexed with the
+             *                   key 'esri_baselayer'.
+             */
+            this.getESRIBaseLayer = function () {
+                return {
+                    esri_baselayer: {
+                        name: 'ESRI Base Layer',
+                        type: 'xyz',
+                        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                        }
+                    }
+                };
+            };
+                
             /**
              * Returns the OSM baselayer for Angular Leaflet.
              *
@@ -926,10 +847,11 @@ angular
              * @returns Promise that returns a { latitude, longitude } object.
              */
             this.getUserLocation = function () {
-                var url = this._getSatNetAddress() + '/configuration/user/geoip';
+                var url = this._getSatNetAddress() +
+                    '/configuration/user/geoip';
                 return $http.get(url).then(function (data) {
                     $log.info('[satnet] user@(' + JSON
-                        .stringify(data.data) + ')');
+                              .stringify(data.data) + ')');
                     return {
                         latitude: parseFloat(data.data.latitude),
                         longitude: parseFloat(data.data.longitude)
@@ -1188,6 +1110,7 @@ angular.module('pushServices').service('satnetPush', [
 var gsCtrlModule = angular.module(
     'gsControllers', [
         'ngMaterial',
+        'snMapServices',
         'toastModule'
     ]
 );
@@ -1214,7 +1137,7 @@ gsCtrlModule.controller('GsListCtrl', [
         $scope.addGsMenu = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gsadd-dialog.html'
+                templateUrl: 'operations/templates/gs-add-dialog.html'
             });
         };
 
@@ -1256,7 +1179,8 @@ gsCtrlModule.controller('GsListCtrl', [
 ]);
 
 gsCtrlModule.controller('GsAddCtrl', [
-    '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
+    '$log', '$scope', '$mdDialog', '$mdToast',
+    'satnetRPC', 'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
 
     /**
      * Controller of the dialog used to add a new Ground Station. This dialog
@@ -1265,9 +1189,36 @@ gsCtrlModule.controller('GsAddCtrl', [
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($log, $scope, $mdDialog, $mdToast, satnetRPC) {
+    function (
+        $log, $scope, $mdDialog, $mdToast,
+        satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT
+    ) {
 
         $scope.configuration = {};
+
+        $scope.center = {
+            lat: LAT, lng: LNG, zoom: ZOOM_SELECT
+        };
+        $scope.markers = {
+            gs: {
+                lat: LAT,
+                lng: LNG,
+                focus: true,
+                draggable: true,
+                message: 'Zoom in/out and drag me!'
+            }
+        };
+        $scope.layers = {
+            baselayers: {}
+        };
+
+        $scope.init = function () {
+            satnetRPC.getUserLocation().then(function (location) {
+                $scope.markers.gs.lat = location.latitude;
+                $scope.markers.gs.lng = location.longitude;
+            });
+            $scope.layers.baselayers =  mapServices.getESRIBaseLayer();
+        };
 
         /**
          * Function that triggers the opening of a window to add a new ground
@@ -1279,7 +1230,7 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gslist-dialog.html'
+                templateUrl: 'operations/templates/gs-list-dialog.html'
             });
         };
 

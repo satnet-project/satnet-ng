@@ -17,6 +17,7 @@
 var gsCtrlModule = angular.module(
     'gsControllers', [
         'ngMaterial',
+        'snMapServices',
         'toastModule'
     ]
 );
@@ -43,7 +44,7 @@ gsCtrlModule.controller('GsListCtrl', [
         $scope.addGsMenu = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gsadd-dialog.html'
+                templateUrl: 'operations/templates/gs-add-dialog.html'
             });
         };
 
@@ -85,7 +86,8 @@ gsCtrlModule.controller('GsListCtrl', [
 ]);
 
 gsCtrlModule.controller('GsAddCtrl', [
-    '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
+    '$log', '$scope', '$mdDialog', '$mdToast',
+    'satnetRPC', 'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
 
     /**
      * Controller of the dialog used to add a new Ground Station. This dialog
@@ -94,9 +96,36 @@ gsCtrlModule.controller('GsAddCtrl', [
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($log, $scope, $mdDialog, $mdToast, satnetRPC) {
+    function (
+        $log, $scope, $mdDialog, $mdToast,
+        satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT
+    ) {
 
         $scope.configuration = {};
+
+        $scope.center = {
+            lat: LAT, lng: LNG, zoom: ZOOM_SELECT
+        };
+        $scope.markers = {
+            gs: {
+                lat: LAT,
+                lng: LNG,
+                focus: true,
+                draggable: true,
+                message: 'Zoom in/out and drag me!'
+            }
+        };
+        $scope.layers = {
+            baselayers: {}
+        };
+
+        $scope.init = function () {
+            satnetRPC.getUserLocation().then(function (location) {
+                $scope.markers.gs.lat = location.latitude;
+                $scope.markers.gs.lng = location.longitude;
+            });
+            $scope.layers.baselayers =  mapServices.getESRIBaseLayer();
+        };
 
         /**
          * Function that triggers the opening of a window to add a new ground
@@ -108,7 +137,7 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gslist-dialog.html'
+                templateUrl: 'operations/templates/gs-list-dialog.html'
             });
         };
 

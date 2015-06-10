@@ -16,37 +16,9 @@
  * Created by rtubio on 15/05/15.
  */
 
-angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
-    .controller('SelectMapCtrl', [
-        '$scope', 'mapServices',
-
-        /**
-         * Main controller for the map used by the user to pick a given
-         * location. The main usage of this map within the SatNet system will
-         * be enabling the users in placing their ground segments.
-         *
-         * @param {Object} $scope        $scope for the controller.
-         * @param {Object} leafletData   Object with direct Leaflet access.
-         * @param {Object} leafletEvents Object with direct Leaflet events
-         *                               access.
-         */
-        function ($scope, mapServices) {
-
-            $scope.center = {};
-            $scope.markers = {};
-
-            $scope.init = function () {
-                mapServices.createAddGsMap($scope);
-            };
-
-        }
-
-    ])
+angular.module('snMapDirective', ['snMapServices', 'satnetServices'])
     .controller('MapCtrl', [
-        '$log', '$scope',
-        'mapServices',
-        'leafletData', 'leafletEvents',
-        'ZOOM',
+        '$log', '$scope', 'mapServices', 'ZOOM',
 
         /**
          * Main controller for the map directive. It should be in charge of all
@@ -58,7 +30,7 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
          * @param {Object} mapServices Service with the custom functions to
          *                             control the maps object.
          */
-        function ($log, $scope, mapServices, leafletData, leafletEvents, ZOOM) {
+        function ($log, $scope, mapServices, ZOOM) {
 
             $scope.center = {
                 zoom: ZOOM
@@ -67,24 +39,6 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
             $scope.layers = {
                 baselayers: {},
                 overlays: {}
-            };
-            $scope.events = {
-                map: {
-                    enable: ['click'],
-                    logic: 'emit'
-                }
-            };
-            $scope.lastEvent = '';
-
-            /**
-             * Function that register a set of handlers to the required map
-             * events.
-             */
-            $scope.registerMapEvents = function () {
-                $scope.$on('leafletDirectiveMap.click', function (name) {
-                    $scope.lastEvent = name;
-                    console.log('CLICK ON THE MAP!');
-                });
             };
 
             /**
@@ -98,19 +52,10 @@ angular.module('snMapDirective', ['leaflet-directive', 'snMapServices'])
             $scope.init = function () {
                 $scope.map = mapServices.createTerminatorMap(true);
                 mapServices.autocenterMap($scope, ZOOM);
-                $scope.registerMapEvents();
             };
 
         }
     ])
-    .directive('selectMap',
-        function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'common/templates/select-map.html'
-            };
-        }
-    )
     .directive('snMap',
 
         /**

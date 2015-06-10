@@ -1,11 +1,6 @@
 angular.module('operationsDirective').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('common/templates/select-map.html',
-    "<div ng-controller=\"SelectMapCtrl\" ng-init=\"init()\"><leaflet id=\"selectMap\" center=\"center\" markers=\"markers\" layers=\"layers\" event-broadcast=\"events\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
-  );
-
-
   $templateCache.put('common/templates/sn-about-dialog.html',
     "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\"><md-content>The SatNet Network</md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
   );
@@ -22,16 +17,16 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('common/templates/sn-map.html',
-    "<div ng-controller=\"MapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" center=\"center\" markers=\"markers\" layers=\"layers\" event-broadcast=\"events\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+    "<div ng-controller=\"MapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" center=\"center\" markers=\"markers\" layers=\"layers\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
   );
 
 
-  $templateCache.put('operations/templates/gsadd-dialog.html',
-    "<md-dialog ng-controller=\"GsAddCtrl\" aria-label=\"Add Ground Station\"><md-content class=\"add-gs-dialog menu-list\"><div><select-map></select-map></div><md-divider></md-divider><div layout=\"row\"><md-button id=\"add\" ng-click=\"add()\" aria-label=\"Add Ground Station\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-plus\"></i> <b>add</b></div></md-button><md-button id=\"cancel\" ng-click=\"cancel()\" aria-label=\"Cancel\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
+  $templateCache.put('operations/templates/gs-add-dialog.html',
+    "<md-dialog ng-controller=\"GsAddCtrl\" ng-init=\"init()\" aria-label=\"Add Ground Station\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Add new Ground Station</span></h2></md-toolbar><md-content class=\"add-gs-dialog menu-list\"><div><style>.leaflet-control-container { display: none; }</style><leaflet id=\"selectMap\" class=\"sn-select-gs-map\" center=\"center\" markers=\"markers\" layers=\"layers\"></leaflet></div><md-divider></md-divider><form name=\"gsConfiguration\"><div layout=\"row\"><md-input-container style=\"width: 50%\"><label>Identifier</label><input ng-model=\"gs.identifier\" required></md-input-container><md-input-container style=\"width: 50%\"><label>Entity</label><input ng-model=\"gs.entity\" required></md-input-container></div><div layout=\"row\"><md-input-container style=\"width: 50%\"><label>Latitude</label><input ng-model=\"markers.gs.lat\" required></md-input-container><md-input-container style=\"width: 50%\"><label>Longitude</label><input ng-model=\"markers.gs.lng\" required></md-input-container></div></form><md-divider></md-divider><div layout=\"row\"><md-button id=\"add\" ng-click=\"add()\" aria-label=\"Add Ground Station\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-plus\"></i> <b>add</b></div></md-button><md-button id=\"cancel\" ng-click=\"cancel()\" aria-label=\"Cancel\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
-  $templateCache.put('operations/templates/gslist-dialog.html',
+  $templateCache.put('operations/templates/gs-list-dialog.html',
     "<md-dialog ng-controller=\"GsListCtrl\" aria-label=\"Ground Stations Menu\"><md-content class=\"menu-list\"><md-button id=\"addGs\" ng-click=\"addGsMenu()\" aria-label=\"add ground station\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>ground station</b></div></md-button><md-divider></md-divider><md-list ng-controller=\"GsListCtrl\" ng-init=\"init()\"><md-list-item ng-repeat=\"gs in groundStations\" ng-click=\"manageGs(gs.id, $event)\"><img alt=\"{{ gs.id }}\" ng-src=\"{{ person.img }}\" class=\"md-avatar\"><p>{{ gs.id }}</p><md-icon md-svg-icon=\"communication:messenger\" ng-click=\"doSecondaryAction($event)\" aria-label=\"Open Chat\" class=\"md-secondary md-hue-3\" ng-class=\"{'md-primary': person.newMessage}\"></md-icon></md-list-item></md-list></md-content></md-dialog>"
   );
 
