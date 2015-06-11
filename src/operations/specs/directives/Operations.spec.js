@@ -164,7 +164,7 @@ describe("Testing Operations Interface", function () {
 
         expect($mdDialog.show)
             .toHaveBeenCalledWith({
-                templateUrl: 'operations/templates/gslist-dialog.html'
+                templateUrl: 'operations/templates/gs-list-dialog.html'
             });
 
     });

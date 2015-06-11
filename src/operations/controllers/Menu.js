@@ -44,7 +44,7 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
          */
         $scope.showGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gslist-dialog.html'
+                templateUrl: 'operations/templates/gs-list-dialog.html'
             });
         };
 

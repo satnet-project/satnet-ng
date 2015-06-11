@@ -12,42 +12,49 @@
             <style>
                 .leaflet-control-container { display: none; }
             </style>
-            <leaflet id="selectMap" class="sn-select-gs-map" center="center" markers="markers" layers="layers"></leaflet>
+            <leaflet id="selectMap" class="sn-select-gs-map" center="center" markers="markers"></leaflet>
         </div>
 
-        <md-divider></md-divider>
-
-        <form name="gsConfiguration">
+        <form name="gsCfg">
 
             <div layout="row">
                 <md-input-container style="width: 50%">
                     <label>Identifier</label>
-                    <input ng-model="gs.identifier" required>
+                    <input name="identifier"
+                           ng-remote-validate="/configuration/groundstations/valid_id"
+                           ng-remote-throttle="200"
+                           ng-remote-method="GET"
+                           ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/"
+                           ng-model="gs.identifier"
+                           required >
                 </md-input-container>
                 <md-input-container style="width: 50%">
-                    <label>Entity</label>
-                    <input ng-model="gs.entity" required>
+                    <label>Callsign</label>
+                    <input name="callsign"
+                           ng-pattern="/^[a-zA-Z0-9]{3,8}$/"
+                           ng-model="gs.callsign"
+                           required >
                 </md-input-container>
             </div>
 
             <div layout="row">
                 <md-input-container style="width: 50%">
                     <label>Latitude</label>
-                    <input ng-model="markers.gs.lat" required>
+                    <input ng-model="markers.gs.lat" required >
                 </md-input-container>
                 <md-input-container style="width: 50%">
                     <label>Longitude</label>
-                    <input ng-model="markers.gs.lng" required>
+                    <input ng-model="markers.gs.lng" required >
                 </md-input-container>
             </div>
 
         </form>
 
-        <md-divider></md-divider>
-
         <div layout="row">
 
-            <md-button id="add" ng-click="add()"
+            <md-button id="add"
+                       ng-click="add()"
+                       ng-disabled="gsCfg.$pristine|| gsCfg.$invalid"
                        aria-label="Add Ground Station"
                        class="md-primary menu-button">
                 <div layout="row">

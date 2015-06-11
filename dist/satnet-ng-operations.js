@@ -1110,6 +1110,7 @@ angular.module('pushServices').service('satnetPush', [
 var gsCtrlModule = angular.module(
     'gsControllers', [
         'ngMaterial',
+        'remoteValidation',
         'snMapServices',
         'toastModule'
     ]
@@ -1195,29 +1196,31 @@ gsCtrlModule.controller('GsAddCtrl', [
     ) {
 
         $scope.configuration = {};
-
-        $scope.center = {
-            lat: LAT, lng: LNG, zoom: ZOOM_SELECT
-        };
-        $scope.markers = {
-            gs: {
-                lat: LAT,
-                lng: LNG,
-                focus: true,
-                draggable: true,
-                message: 'Zoom in/out and drag me!'
+        $scope.uiCtrl = {
+            add: {
+                disabled: true
             }
         };
-        $scope.layers = {
-            baselayers: {}
+
+        $scope.center = {
+            autoDiscover: true, zoom: ZOOM_SELECT
         };
+        $scope.markers = {};
+        /*
+        $scope.layers = {
+            baselayers:  mapServices.getESRIBaseLayer()
+        };
+        */
 
         $scope.init = function () {
             satnetRPC.getUserLocation().then(function (location) {
-                $scope.markers.gs.lat = location.latitude;
-                $scope.markers.gs.lng = location.longitude;
+                $scope.markers.gs = {
+                    lat: location.latitude,
+                    lng: location.longitude,
+                    focus: false,
+                    draggable: true
+                };
             });
-            $scope.layers.baselayers =  mapServices.getESRIBaseLayer();
         };
 
         /**
@@ -1282,7 +1285,7 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
          */
         $scope.showGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gslist-dialog.html'
+                templateUrl: 'operations/templates/gs-list-dialog.html'
             });
         };
 
