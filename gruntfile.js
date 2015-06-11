@@ -185,20 +185,18 @@ module.exports = function (grunt) {
                 }
             },
         },
-        express: {
-            all: {
+        connect: {
+            server: {
                 options: {
-                    bases: ['dist/', 'src/', 'lib/'],
-                    port: 8080,
-                    hostname: "0.0.0.0",
-                    livereload: true
+                    base: ['dist/', 'lib/', 'src/'],
+                    port: 8081,
+                    keepalive: true,
+                    livereload: true,
+                    open: {
+                        target: 'http://localhost:8081/operations/operations-index.html',
+                        appName: 'chromium'
+                    }
                 }
-            }
-        },
-        open: {
-            all: {
-                path: 'http://localhost:8080/operations/operations-index.html',
-                app: 'chromium'
             }
         },
         watch: {
@@ -210,15 +208,6 @@ module.exports = function (grunt) {
                     'src/operations/**/*'
                 ],
                 tasks: ['build']
-            },
-            express: {
-                files: [
-                    'src/operations/operations-index.html',
-                    'dist/**/*'
-                ],
-                options: {
-                    livereload: true
-                }
             },
             test: {
                 files: [
@@ -244,11 +233,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-angular-templates');
-    grunt.loadNpmTasks('grunt-open');
-    grunt.loadNpmTasks('grunt-express');
     grunt.loadNpmTasks('grunt-curl');
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-complexity');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-reload');
 
     // TASKS
     grunt.registerTask(
