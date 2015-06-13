@@ -199,6 +199,14 @@ module.exports = function (grunt) {
                 }
             }
         },
+        reload: {
+            port: 35729,
+            liveReload: {},
+            proxy: {
+                host: "localhost",
+                port: 8081
+            }
+        },
         watch: {
             build: {
                 files: [
@@ -208,6 +216,20 @@ module.exports = function (grunt) {
                     'src/operations/**/*'
                 ],
                 tasks: ['build']
+            },
+            reload: {
+                files: [
+                    '<%= jshint.files %>',
+                    'src/images/**/*',
+                    'src/common/**/*',
+                    'src/operations/**/*'
+                ],
+                options: {
+                    nospawn: true,
+                    interrupt: false,
+                    debounceDelay: 250
+                },
+                tasks: ['reload']
             },
             test: {
                 files: [
@@ -259,14 +281,6 @@ module.exports = function (grunt) {
             'cssmin',
             'uglify',
             'complexity'
-        ]
-    );
-
-    grunt.registerTask(
-        'server', [
-            'express',
-            'open',
-            'watch:express'
         ]
     );
 
