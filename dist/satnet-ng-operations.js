@@ -483,7 +483,7 @@ angular.module('snMapServices', [
 
             /**
              * Function that returns the base layer for the ESRI maps.
-             * 
+             *
              * @returns {Object} Object with a single element indexed with the
              *                   key 'esri_baselayer'.
              */
@@ -503,7 +503,7 @@ angular.module('snMapServices', [
                     }
                 };
             };
-                
+
             /**
              * Returns the OSM baselayer for Angular Leaflet.
              *
@@ -808,7 +808,7 @@ angular
 
             /**
              * Method for calling the remote service through JSON-RPC.
-             * 
+             *
              * @param service The name of the service, as per the internal
              * services name definition.
              * @param params The parameters for the service (as an array).
@@ -851,7 +851,7 @@ angular
                     '/configuration/user/geoip';
                 return $http.get(url).then(function (data) {
                     $log.info('[satnet] user@(' + JSON
-                              .stringify(data.data) + ')');
+                        .stringify(data.data) + ')');
                     return {
                         latitude: parseFloat(data.data.latitude),
                         longitude: parseFloat(data.data.longitude)
@@ -911,7 +911,7 @@ angular
             /**
              * Reads the configuration for all the GroundStations associated
              * with this LEOP cluster.
-             * 
+             *
              * @param leop_id Identifier of the LEOP cluster.
              * @returns {*} { leop_gs_available: [gs_cfg], leop_gs_inuse: [gs_cfg]}
              */

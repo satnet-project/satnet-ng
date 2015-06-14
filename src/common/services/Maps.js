@@ -226,7 +226,7 @@ angular.module('snMapServices', [
 
             /**
              * Function that returns the base layer for the ESRI maps.
-             * 
+             *
              * @returns {Object} Object with a single element indexed with the
              *                   key 'esri_baselayer'.
              */
@@ -246,7 +246,7 @@ angular.module('snMapServices', [
                     }
                 };
             };
-                
+
             /**
              * Returns the OSM baselayer for Angular Leaflet.
              *

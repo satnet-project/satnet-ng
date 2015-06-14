@@ -15,21 +15,18 @@
 */
 
 module.exports = function (grunt) {
-    'use strict';
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
-            dist: 'dist',
+            dist: 'dist/',
             reports: ['.coverage', '.complexity'],
             libs: 'node_modules/libs'
         },
         jshint: {
             files: [
-                '.jshintrc',
-                'gruntfile.js',
-                'src/common/**/*.js',
-                'src/operations/**/*.js'
+                '.jshintrc', 'gruntfile.js',
+                'src/**/*.js'
             ],
             options: {
                 jshintrc: '.jshintrc'
@@ -41,15 +38,15 @@ module.exports = function (grunt) {
                 exclude: ['src/**/*.spec.js'],
                 options: {
                     breakOnErrors: true,
-                    jsLintXML: '.complexity/report.xml', // create XML JSLint-like report 
-                    checkstyleXML: '.complexity/checkstyle.xml', // create checkstyle report 
-                    pmdXML: '.complexity/pmd.xml', // create pmd report 
-                    errorsOnly: false, // show only maintainability errors 
-                    cyclomatic: [20], //[3, 7, 12], // or optionally a single value, like 3 
-                    halstead: [20], //[8, 13, 20], // or optionally a single value, like 8 
+                    jsLintXML: '.complexity/report.xml',
+                    checkstyleXML: '.complexity/style.xml',
+                    pmdXML: '.complexity/pmd.xml',
+                    errorsOnly: false,
+                    cyclomatic: [20], //[3, 7, 12],
+                    halstead: [20], //[8, 13, 20],
                     maintainability: 100,
-                    hideComplexFunctions: false, // only display maintainability 
-                    broadcast: false // broadcast data over event-bus 
+                    hideComplexFunctions: false,
+                    broadcast: false
                 }
             }
         },
@@ -190,21 +187,29 @@ module.exports = function (grunt) {
                 options: {
                     base: ['dist/', 'lib/', 'src/'],
                     port: 8081,
+                    hostname: 'localhost',
                     keepalive: true,
-                    livereload: true,
+                    debug: true,
+                    middleware: function (connect, options, defaultMiddleware) {
+                        var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
+                        return [proxy].concat(defaultMiddleware);
+                    },
                     open: {
                         target: 'http://localhost:8081/operations/operations-index.html',
                         appName: 'chromium'
                     }
-                }
-            }
-        },
-        reload: {
-            port: 35729,
-            liveReload: {},
-            proxy: {
-                host: "localhost",
-                port: 8081
+                },
+                proxies: [
+                    {
+                        context: '/configuration',
+                        host: 'localhost',
+                        port: 8000,
+                        changeOrigin: true,
+                        https: false,
+                        xforward: false,
+                        hideHeaders: ['x-removed-header']
+                    }
+                ]
             }
         },
         watch: {
@@ -215,21 +220,11 @@ module.exports = function (grunt) {
                     'src/common/**/*',
                     'src/operations/**/*'
                 ],
-                tasks: ['build']
-            },
-            reload: {
-                files: [
-                    '<%= jshint.files %>',
-                    'src/images/**/*',
-                    'src/common/**/*',
-                    'src/operations/**/*'
-                ],
                 options: {
-                    nospawn: true,
-                    interrupt: false,
-                    debounceDelay: 250
+                    livereload: true,
+                    reload: true
                 },
-                tasks: ['reload']
+                tasks: ['build']
             },
             test: {
                 files: [
@@ -245,21 +240,21 @@ module.exports = function (grunt) {
     });
 
     // PLUGINS
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-sass');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-angular-templates');
-    grunt.loadNpmTasks('grunt-curl');
-    grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-complexity');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-reload');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-connect-proxy');
+    grunt.loadNpmTasks('grunt-curl');
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-mkdir');
 
     // TASKS
     grunt.registerTask(
@@ -289,6 +284,13 @@ module.exports = function (grunt) {
             'clean:libs',
             'mkdir:libs',
             'curl-dir:libs'
+        ]
+    );
+
+    grunt.registerTask(
+        'server', [
+            'configureProxies:server',
+            'connect:server'
         ]
     );
 
