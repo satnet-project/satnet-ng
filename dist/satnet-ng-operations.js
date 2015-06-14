@@ -1200,7 +1200,11 @@ gsCtrlModule.controller('GsAddCtrl', [
         satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT
     ) {
 
-        $scope.configuration = {};
+        $scope.configuration = {
+            identifier: '',
+            callsign: '',
+            elevation: 0.0
+        };
         $scope.uiCtrl = {
             add: {
                 disabled: true
@@ -1212,11 +1216,6 @@ gsCtrlModule.controller('GsAddCtrl', [
             zoom: ZOOM_SELECT
         };
         $scope.markers = {};
-        /*
-        $scope.layers = {
-            baselayers:  mapServices.getESRIBaseLayer()
-        };
-        */
 
         $scope.init = function () {
             satnetRPC.getUserLocation().then(function (location) {
@@ -1233,7 +1232,29 @@ gsCtrlModule.controller('GsAddCtrl', [
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.add = function () {};
+        $scope.add = function () {
+            var gs_cfg = [
+                $scope.configuration.identifier,
+                $scope.configuration.callsign,
+                $scope.configuration.elevation.toFixed(2),
+                $scope.markers.gs.lat.toFixed(6),
+                $scope.markers.gs.lng.toFixed(6)
+            ];
+            satnetRPC.rCall('gs.add', gs_cfg).then(
+                function (data) {
+                    var gsId = data.groundstation_id;
+                    $log.info('[map-ctrl] GS added, id = ' + gsId);
+                    // TODO : gs.add signal
+                    // broadcaster.gsAdded(gsId);
+                    $mdDialog.hide();
+                    //$mdToast.show();
+                },
+                function (error) {
+                    window.alert(error);
+                }
+            );
+            satnetRPC.rCall('gs.add', []);
+        };
 
         $scope.cancel = function () {
             $mdDialog.hide();
