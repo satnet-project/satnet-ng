@@ -832,6 +832,11 @@ angular
                         if (data.data.name === 'JSONRPCError') {
                             error_fn(service, params, data.code, data.message);
                         }
+                        $log.info(
+                            '[satnetRPC] Invoked service = <' + service + '>' +
+                            ', params = <' + JSON.stringify(params) + '>, ' +
+                            ', result = <' + JSON.stringify(data)
+                        );
                         return data.data;
                     },
                     function (error) {
@@ -1129,7 +1134,7 @@ gsCtrlModule.controller('GsListCtrl', [
      */
     function ($log, $scope, $mdDialog, $mdToast, satnetRPC) {
 
-        $scope.groundStations = [];
+        $scope.gsList = [];
 
         /**
          * Function that triggers the opening of a window to add a new ground
@@ -1148,7 +1153,7 @@ gsCtrlModule.controller('GsListCtrl', [
         $scope.refresh = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 if (results !== null) {
-                    $scope.groundStations = results.slice(0);
+                    $scope.gsList = results.slice(0);
                 }
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
@@ -1203,7 +1208,8 @@ gsCtrlModule.controller('GsAddCtrl', [
         };
 
         $scope.center = {
-            autoDiscover: true, zoom: ZOOM_SELECT
+            autoDiscover: true,
+            zoom: ZOOM_SELECT
         };
         $scope.markers = {};
         /*
@@ -1227,8 +1233,7 @@ gsCtrlModule.controller('GsAddCtrl', [
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.add = function () {
-        };
+        $scope.add = function () {};
 
         $scope.cancel = function () {
             $mdDialog.hide();

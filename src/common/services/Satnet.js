@@ -217,6 +217,11 @@ angular
                         if (data.data.name === 'JSONRPCError') {
                             error_fn(service, params, data.code, data.message);
                         }
+                        $log.info(
+                            '[satnetRPC] Invoked service = <' + service + '>' +
+                            ', params = <' + JSON.stringify(params) + '>, ' +
+                            ', result = <' + JSON.stringify(data)
+                        );
                         return data.data;
                     },
                     function (error) {

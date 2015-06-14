@@ -27,7 +27,11 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('operations/templates/gs-list-dialog.html',
-    "<md-dialog ng-controller=\"GsListCtrl\" aria-label=\"Ground Stations Menu\"><md-content class=\"menu-list\"><md-button id=\"addGs\" ng-click=\"addGsMenu()\" aria-label=\"add ground station\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>ground station</b></div></md-button><md-divider></md-divider><md-list ng-controller=\"GsListCtrl\" ng-init=\"init()\"><md-list-item ng-repeat=\"gs in groundStations\" ng-click=\"manageGs(gs.id, $event)\"><img alt=\"{{ gs.id }}\" ng-src=\"{{ person.img }}\" class=\"md-avatar\"><p>{{ gs.id }}</p><md-icon md-svg-icon=\"communication:messenger\" ng-click=\"doSecondaryAction($event)\" aria-label=\"Open Chat\" class=\"md-secondary md-hue-3\" ng-class=\"{'md-primary': person.newMessage}\"></md-icon></md-list-item></md-list></md-content></md-dialog>"
+    "<md-dialog ng-controller=\"GsListCtrl\" aria-label=\"Ground Stations Menu\"><md-content class=\"menu-list\"><md-button id=\"addGs\" ng-click=\"addGsMenu()\" aria-label=\"add ground station\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>ground station</b></div></md-button><md-divider></md-divider><md-list ng-controller=\"GsListCtrl\" ng-init=\"init()\"><md-list-item ng-repeat=\"gs in gsList\"><md-button id=\"{{ gs }}\" ng-click=\"editGs({{ gs }})\" aria-label=\"edit ground station {{ gs }}\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-wrench\"></i> <b>{{ gs }}</b></div></md-button><!--\n" +
+    "                <img alt=\"{{ gs.id }}\" ng-src=\"{{ person.img }}\" class=\"md-avatar\" />\n" +
+    "                <p>{{ gs.id }}</p>\n" +
+    "                <md-icon md-svg-icon=\"communication:messenger\" ng-click=\"doSecondaryAction($event)\" aria-label=\"Open Chat\" class=\"md-secondary md-hue-3\" ng-class=\"{'md-primary': person.newMessage}\"></md-icon>\n" +
+    "                --></md-list-item></md-list></md-content></md-dialog>"
   );
 
 

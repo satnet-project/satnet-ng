@@ -63,7 +63,7 @@ describe('Testing Ground Station controllers', function () {
 
         $scope.init();
         $rootScope.$digest();
-        expect($scope.groundStations).toEqual(['gs_test_1', 'gs_test_2']);
+        expect($scope.gsList).toEqual(['gs_test_1', 'gs_test_2']);
 
     });
 
