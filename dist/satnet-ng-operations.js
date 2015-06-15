@@ -426,8 +426,9 @@ angular.module('snMapServices', [
                     gs: {
                         lat: latitude,
                         lng: longitude,
-                        focus: true,
+                        focus: false,
                         draggable: false,
+                        message: 'Estimated Location',
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
@@ -1196,25 +1197,12 @@ gsCtrlModule.controller('GsAddCtrl', [
     ) {
 
         var gs_marker = {
-            lat: 0, lng: 0,
-            focus: true, draggable: true,
-            message: 'Drag me to your GS!'
+            lat: 0,
+            lng: 0,
+            focus: true,
+            draggable: true,
+            message: "Drag me to your GS!"
         };
-
-        angular.extend($scope, {
-            center: {
-                lat: 51.505, lng: -0.09, zoom: 8
-            },
-            markers: {
-                gs: angular.copy(gs_marker)
-            },
-            position: {
-                lat: 51, lng: 0
-            },
-            events: {
-                markers: [ 'dragend' ]
-            }
-        });
 
         $scope.configuration = {
             identifier: '',
@@ -1278,18 +1266,23 @@ gsCtrlModule.controller('GsAddCtrl', [
          */
         $scope.init = function () {
             satnetRPC.getUserLocation().then(function (location) {
-                angular.extend($scope.center, {
-                    lat: location.latitude,
-                    lng: location.longitude,
-                    zoom: ZOOM_SELECT
-                });
-                angular.extend($scope.markers, {
-                    gs: {
+                angular.extend($scope, {
+                    center: {
                         lat: location.latitude,
                         lng: location.longitude,
-                        focus: true,
-                        draggable: true,
-                        message: 'Drag me to your GS!'
+                        zoom: ZOOM_SELECT
+                    },
+                    markers: {
+                        gs: {
+                            lat: location.latitude,
+                            lng: location.longitude,
+                            focus: true,
+                            draggable: true,
+                            message: "Drag me to your GS!"
+                        }
+                    },
+                    events: {
+                        markers: [ 'dragend' ]
                     }
                 });
                 console.log('>>> markers = ' + JSON.stringify($scope.markers));

@@ -169,8 +169,9 @@ angular.module('snMapServices', [
                     gs: {
                         lat: latitude,
                         lng: longitude,
-                        focus: true,
+                        focus: false,
                         draggable: false,
+                        message: 'Estimated Location',
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]

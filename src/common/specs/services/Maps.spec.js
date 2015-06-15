@@ -238,8 +238,9 @@ describe('Testing snMapServices Service', function () {
                     gs: {
                         lat: x_lat,
                         lng: x_lng,
-                        focus: true,
+                        focus: false,
                         draggable: false,
+                        message: 'Estimated Location',
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
@@ -279,8 +280,9 @@ describe('Testing snMapServices Service', function () {
                     gs: {
                         lat: x_lat,
                         lng: x_lng,
-                        focus: true,
+                        focus: false,
                         draggable: false,
+                        message: 'Estimated Location',
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
@@ -322,8 +324,9 @@ describe('Testing snMapServices Service', function () {
                     gs: {
                         lat: x_lat,
                         lng: x_lng,
-                        focus: true,
+                        focus: false,
                         draggable: false,
+                        message: 'Estimated Location',
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
