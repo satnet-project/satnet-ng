@@ -1,4 +1,5 @@
-<md-dialog ng-controller="GsAddCtrl" ng-init="init()" aria-label="Add Ground Station">
+<md-dialog ng-controller="GsAddCtrl" ng-init="init()"
+           aria-label="Add Ground Station">
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
@@ -14,7 +15,7 @@
                     display: none;
                 }
             </style>
-            <leaflet id="selectMap" class="sn-select-gs-map" center="center" markers="markers"></leaflet>
+            <leaflet id="addGsMap" class="sn-select-gs-map" center="center" markers="markers"></leaflet>
         </div>
 
         <form name="gsCfg">
@@ -22,26 +23,38 @@
             <div layout="row">
                 <md-input-container style="width: 40%">
                     <label>Identifier</label>
-                    <input name="identifier" ng-remote-validate="/configuration/groundstations/valid_id" ng-remote-throttle="200" ng-remote-method="GET" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" ng-model="gs.identifier" required>
+                    <input name="identifier"
+                           ng-remote-validate="/configuration/groundstations/valid_id"
+                           ng-remote-throttle="200"
+                           ng-remote-method="GET"
+                           ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/"
+                           ng-model="configuration.identifier" required>
                 </md-input-container>
                 <md-input-container style="width: 30%">
                     <label>Callsign</label>
-                    <input name="callsign" ng-pattern="/^[a-zA-Z0-9]{3,8}$/" ng-model="gs.callsign" required>
+                    <input name="callsign"
+                           ng-pattern="/^[a-zA-Z0-9]{3,8}$/"
+                           ng-model="configuration.callsign"
+                           required>
                 </md-input-container>
                 <md-input-container style="width: 30%">
                     <label>Contact (degrees)</label>
-                    <input name="elevation" type="number" step="0.1" min="0" max="90" ng-model="gs.elevation" required>
+                    <input name="elevation"
+                           type="number" step="0.1" min="0" max="90"
+                           ng-model="configuration.elevation" required>
                 </md-input-container>
             </div>
 
             <div layout="row">
                 <md-input-container style="width: 50%">
                     <label>Latitude</label>
-                    <input ng-model="markers.gs.lat" required>
+                    <input name="latitude" type="text"
+                           ng-bind="markers.gs.lat" required>
                 </md-input-container>
                 <md-input-container style="width: 50%">
                     <label>Longitude</label>
-                    <input ng-model="markers.gs.lng" required>
+                    <input name="longitude" type="text"
+                           ng-bind="markers.gs.lng" required>
                 </md-input-container>
             </div>
 
@@ -49,7 +62,7 @@
 
         <div layout="row">
 
-            <md-button id="add" ng-click="add()" ng-disabled="gsCfg.$pristine|| gsCfg.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
+            <md-button id="add" ng-click="add()" ng-disabled="gsCfg.$pristine || gsCfg.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-plus"></i>
                     <b>add</b>

@@ -243,12 +243,6 @@ describe('Testing snMapServices Service', function () {
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
-                        },
-                        label: {
-                            message: 'Drag me!',
-                            options: {
-                                noHide: true
-                            }
                         }
                     }
                 },
@@ -290,12 +284,6 @@ describe('Testing snMapServices Service', function () {
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
-                        },
-                        label: {
-                            message: 'Drag me!',
-                            options: {
-                                noHide: true
-                            }
                         }
                     }
                 },
@@ -339,12 +327,6 @@ describe('Testing snMapServices Service', function () {
                         icon: {
                             iconUrl: '/images/user.png',
                             iconSize: [15, 15]
-                        },
-                        label: {
-                            message: 'Drag me!',
-                            options: {
-                                noHide: true
-                            }
                         }
                     }
                 },

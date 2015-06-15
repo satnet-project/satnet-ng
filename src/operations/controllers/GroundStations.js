@@ -88,7 +88,8 @@ gsCtrlModule.controller('GsListCtrl', [
 
 gsCtrlModule.controller('GsAddCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'satnetRPC', 'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
+    'satnetRPC',
+    'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
 
     /**
      * Controller of the dialog used to add a new Ground Station. This dialog
@@ -102,6 +103,12 @@ gsCtrlModule.controller('GsAddCtrl', [
         satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT
     ) {
 
+        var gs_marker = {
+            lat: 0, lng: 0,
+            focus: true, draggable: true,
+            message: 'Drag me to your GS!'
+        };
+
         $scope.configuration = {
             identifier: '',
             callsign: '',
@@ -113,22 +120,8 @@ gsCtrlModule.controller('GsAddCtrl', [
             }
         };
 
-        $scope.center = {
-            autoDiscover: true,
-            zoom: ZOOM_SELECT
-        };
+        $scope.center = {};
         $scope.markers = {};
-
-        $scope.init = function () {
-            satnetRPC.getUserLocation().then(function (location) {
-                $scope.markers.gs = {
-                    lat: location.latitude,
-                    lng: location.longitude,
-                    focus: false,
-                    draggable: true
-                };
-            });
-        };
 
         /**
          * Function that triggers the opening of a window to add a new ground
@@ -158,10 +151,38 @@ gsCtrlModule.controller('GsAddCtrl', [
             satnetRPC.rCall('gs.add', []);
         };
 
+        /**
+         * Function that handles the behavior of the modal dialog once the user
+         * cancels the operation of adding a new Ground Station.
+         */
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs-list-dialog.html'
+            });
+        };
+
+        /**
+         * Function that initializes this controller by correctly setting up
+         * the markers and the position (lat, lng, zoom) of the map.
+         */
+        $scope.init = function () {
+            satnetRPC.getUserLocation().then(function (location) {
+                angular.extend($scope.center, {
+                    lat: location.latitude,
+                    lng: location.longitude,
+                    zoom: ZOOM_SELECT
+                });
+                angular.extend($scope.markers, {
+                    gs: {
+                        lat: location.latitude,
+                        lng: location.longitude,
+                        focus: true,
+                        draggable: true,
+                        message: 'Drag me to your GS!'
+                    }
+                });
+                console.log('>>> markers = ' + JSON.stringify($scope.markers));
             });
         };
 
