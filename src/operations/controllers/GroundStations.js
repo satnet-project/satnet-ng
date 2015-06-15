@@ -109,6 +109,21 @@ gsCtrlModule.controller('GsAddCtrl', [
             message: 'Drag me to your GS!'
         };
 
+        angular.extend($scope, {
+            center: {
+                lat: 51.505, lng: -0.09, zoom: 8
+            },
+            markers: {
+                gs: angular.copy(gs_marker)
+            },
+            position: {
+                lat: 51, lng: 0
+            },
+            events: {
+                markers: [ 'dragend' ]
+            }
+        });
+
         $scope.configuration = {
             identifier: '',
             callsign: '',
@@ -119,9 +134,6 @@ gsCtrlModule.controller('GsAddCtrl', [
                 disabled: true
             }
         };
-
-        $scope.center = {};
-        $scope.markers = {};
 
         /**
          * Function that triggers the opening of a window to add a new ground
@@ -161,6 +173,12 @@ gsCtrlModule.controller('GsAddCtrl', [
                 templateUrl: 'operations/templates/gs-list-dialog.html'
             });
         };
+
+        $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
+            $scope.position.lat = args.model.lat;
+            $scope.position.lng = args.model.lng;
+            console.log('XXXX');
+        });
 
         /**
          * Function that initializes this controller by correctly setting up

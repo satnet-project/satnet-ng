@@ -15,7 +15,7 @@
                     display: none;
                 }
             </style>
-            <leaflet id="addGsMap" class="sn-select-gs-map" center="center" markers="markers"></leaflet>
+            <leaflet id="addGsMap" class="sn-select-gs-map" event-broadcast="events" center="center" markers="markers"></leaflet>
         </div>
 
         <form name="gsCfg">
@@ -48,12 +48,12 @@
             <div layout="row">
                 <md-input-container style="width: 50%">
                     <label>Latitude</label>
-                    <input name="latitude" type="text"
+                    <input name="latitude" type="number"
                            ng-bind="markers.gs.lat" required>
                 </md-input-container>
                 <md-input-container style="width: 50%">
                     <label>Longitude</label>
-                    <input name="longitude" type="text"
+                    <input name="longitude" type="number"
                            ng-bind="markers.gs.lng" required>
                 </md-input-container>
             </div>
