@@ -1111,6 +1111,7 @@ var gsCtrlModule = angular.module(
     'gsControllers', [
         'ngMaterial',
         'remoteValidation',
+        'leaflet-directive',
         'snMapServices',
         'toastModule'
     ]
@@ -1168,7 +1169,7 @@ gsCtrlModule.controller('GsListCtrl', [
         };
 
         /**
-         * Function that initializes the list of ground stations that is
+         * Function that initializes the list of ground stations that are to be
          * displayed.
          */
         $scope.init = function () {
@@ -1215,6 +1216,10 @@ gsCtrlModule.controller('GsAddCtrl', [
             }
         };
 
+        $scope.center = {};
+        $scope.markers = {};
+        $scope.events = {};
+
         /**
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
@@ -1255,8 +1260,8 @@ gsCtrlModule.controller('GsAddCtrl', [
         };
 
         $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
-            $scope.position.lat = args.model.lat;
-            $scope.position.lng = args.model.lng;
+            $scope.markers.gs.lat = args.model.lat;
+            $scope.markers.gs.lng = args.model.lng;
             console.log('XXXX');
         });
 
@@ -1266,24 +1271,22 @@ gsCtrlModule.controller('GsAddCtrl', [
          */
         $scope.init = function () {
             satnetRPC.getUserLocation().then(function (location) {
-                angular.extend($scope, {
-                    center: {
+                angular.extend($scope.center, {
+                    lat: location.latitude,
+                    lng: location.longitude,
+                    zoom: ZOOM_SELECT
+                });
+                angular.extend($scope.markers, {
+                    gs: {
                         lat: location.latitude,
                         lng: location.longitude,
-                        zoom: ZOOM_SELECT
-                    },
-                    markers: {
-                        gs: {
-                            lat: location.latitude,
-                            lng: location.longitude,
-                            focus: true,
-                            draggable: true,
-                            message: "Drag me to your GS!"
-                        }
-                    },
-                    events: {
-                        markers: [ 'dragend' ]
+                        focus: true,
+                        draggable: true,
+                        message: "Drag me to your GS!"
                     }
+                });
+                angular.extend($scope.events, {
+                    markers: ['dragend']
                 });
                 console.log('>>> markers = ' + JSON.stringify($scope.markers));
             });
