@@ -191,14 +191,27 @@ module.exports = function (grunt) {
                     keepalive: true,
                     livereload: {},
                     debug: true,
-                    //middleware: function (connect, options, defaultMiddleware) {
-                    //    var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
-                    //    return [proxy].concat(defaultMiddleware);
-                    //},
+                    middleware: function (connect, options, defaultMiddleware) {
+                        var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest,
+                            live = require('connect-livereload')();
+                            //mware = [proxy].concat(defaultMiddleware);
+                        // Serve static files.
+                        defaultMiddleware.push(live);
+                        defaultMiddleware.push(proxy);
+                        options.base.forEach(function(base) {
+                            defaultMiddleware.push(connect.static(base));
+                        });
+                        // Make directory browse-able.
+                        var directory = options.directory ||
+                            options.base[options.base.length - 1];
+                        defaultMiddleware.push(connect.directory(directory));
+                        return defaultMiddleware;
+                    },
                     open: {
                         target: 'http://localhost:8081/operations/operations-index.html',
                         appName: 'chromium'
                     },
+                    /*
                     options: {
                         middleware: function (connect, options) {
                             if (!Array.isArray(options.base)) {
@@ -219,6 +232,7 @@ module.exports = function (grunt) {
                             return middlewares;
                         }
                     }
+                    */
                 },
                 proxies: [
                     {

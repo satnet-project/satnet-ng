@@ -104,14 +104,6 @@ gsCtrlModule.controller('GsAddCtrl', [
         satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT
     ) {
 
-        var gs_marker = {
-            lat: 0,
-            lng: 0,
-            focus: true,
-            draggable: true,
-            message: "Drag me to your GS!"
-        };
-
         $scope.configuration = {
             identifier: '',
             callsign: '',
@@ -124,7 +116,15 @@ gsCtrlModule.controller('GsAddCtrl', [
         };
 
         $scope.center = {};
-        $scope.markers = {};
+        $scope.markers = {
+            gs: {
+                lat: 0,
+                lng: 0,
+                message: "Drag me to your GS!",
+                draggable: true,
+                focus: false
+            }
+        };
         $scope.events = {};
 
         /**
@@ -152,7 +152,6 @@ gsCtrlModule.controller('GsAddCtrl', [
                     window.alert(error);
                 }
             );
-            satnetRPC.rCall('gs.add', []);
         };
 
         /**
@@ -166,11 +165,6 @@ gsCtrlModule.controller('GsAddCtrl', [
             });
         };
 
-        $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
-            $scope.markers.gs.lat = args.model.lat;
-            $scope.markers.gs.lng = args.model.lng;
-        });
-
         /**
          * Function that initializes this controller by correctly setting up
          * the markers and the position (lat, lng, zoom) of the map.
@@ -182,20 +176,22 @@ gsCtrlModule.controller('GsAddCtrl', [
                     lng: location.longitude,
                     zoom: ZOOM_SELECT
                 });
-                angular.extend($scope.markers, {
-                    gs: {
-                        lat: location.latitude,
-                        lng: location.longitude,
-                        focus: true,
-                        draggable: true,
-                        message: "Drag me to your GS!"
-                    }
-                });
+
+                $scope.markers.gs.lat = location.latitude;
+                $scope.markers.gs.lng = location.longitude;
+                $scope.markers.gs.focus = true;
+
                 angular.extend($scope.events, {
                     markers: ['dragend']
                 });
-                console.log('>>> markers = ' + JSON.stringify($scope.markers));
+
             });
+
+            $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
+                $scope.markers.gs.lat = args.model.lat;
+                $scope.markers.gs.lng = args.model.lng;
+            });
+
         };
 
     }
