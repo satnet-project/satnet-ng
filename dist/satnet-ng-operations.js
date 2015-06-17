@@ -1262,7 +1262,6 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
             $scope.markers.gs.lat = args.model.lat;
             $scope.markers.gs.lng = args.model.lng;
-            console.log('XXXX');
         });
 
         /**

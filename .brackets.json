@@ -7,7 +7,7 @@
     "styleActiveLine": false,
     "wordWrap": false,
     "linting.enabled": true,
-    "linting.collapsed": true,
+    "linting.collapsed": false,
     "quickview.enabled": true,
     "language": {
         "javascript": {
