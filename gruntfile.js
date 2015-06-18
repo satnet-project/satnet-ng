@@ -189,16 +189,15 @@ module.exports = function (grunt) {
                     port: 8081,
                     hostname: 'localhost',
                     keepalive: true,
-                    livereload: {},
+                    livereload: true,
                     debug: true,
                     middleware: function (connect, options, defaultMiddleware) {
                         var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest,
                             live = require('connect-livereload')();
-                            //mware = [proxy].concat(defaultMiddleware);
                         // Serve static files.
                         defaultMiddleware.push(live);
                         defaultMiddleware.push(proxy);
-                        options.base.forEach(function(base) {
+                        options.base.forEach(function (base) {
                             defaultMiddleware.push(connect.static(base));
                         });
                         // Make directory browse-able.
