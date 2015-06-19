@@ -20,17 +20,17 @@ var toastModule = angular.module(
     ]
 );
 
-toastModule.controller('ErrorToastCtrl', [
-    '$scope', '$mdToast', '$mdDialog', 'error',
+toastModule.controller('ToastCtrl', [
+    '$scope', '$mdToast', '$mdDialog', 'toast',
 
     /**
-     * Controller of the Error Toast toast.
+     * Controller of any simple Toast.
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($scope, $mdToast, $mdDialog, error) {
+    function ($scope, $mdToast, $mdDialog, toast) {
 
-        $scope.message = error.message;
+        $scope.message = toast.message;
 
         /**
          * Handles the closing of the Toast element.
@@ -1143,6 +1143,63 @@ gsCtrlModule.controller('GsListCtrl', [
             });
         };
 
+        // TODO: create gs-edit-dialog template and check edit behavior.
+
+        /**
+         * Controller function that shows the dialog for editing the properties
+         * of a given Ground Station.
+         * 
+         * @param {String} gs_id Identifier of the Ground Station for edition
+         */
+        $scope.editGs = function (gs_id) {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gs-edit-dialog.html',
+                locals: {
+                    gs_id: gs_id
+                }
+            });
+        };
+
+        // TODO : create sn-ok-toast template and check GS removal.
+
+        /**
+         * Controller function that removes the given Ground Station from the
+         * database in the remote server upon user request. It first asks for
+         * confirmation before executing this removal.
+         * 
+         * @param {String} gs_id Identifier of the Ground Station for removal
+         */
+        $scope.removeGs = function (gs_id) {
+            satnetRPC.rCall('gs.remove', [gs_id]).then(function (results) {
+                console.log(
+                    'gs.remove, id = ' + gs_id +
+                    ', results = ' + JSON.stringify(results)
+                );
+                $mdToast.show({
+                    controller: 'ToastCtrl',
+                    templateUrl: 'common/templates/sn-ok-toast.html',
+                    locals: {
+                        message: 'Ground Station removed'
+                    },
+                    hideDelay: 5000,
+                    position: 'bottom'
+                });
+            }).catch(function (cause) {
+                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
+                $mdToast.show({
+                    controller: 'ToastCtrl',
+                    templateUrl: 'common/templates/sn-error-toast.html',
+                    locals: {
+                        message: 'Removal Error'
+                    },
+                    hideDelay: 5000,
+                    position: 'bottom'
+                });
+                $mdDialog.hide();
+            });
+        };
+
         /**
          * Function that refreshes the list of registered ground stations.
          */
@@ -1154,12 +1211,10 @@ gsCtrlModule.controller('GsListCtrl', [
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
                 $mdToast.show({
-                    controller: 'ErrorToastCtrl',
+                    controller: 'ToastCtrl',
                     templateUrl: 'common/templates/sn-error-toast.html',
                     locals: {
-                        error: {
-                            message: 'Network Error'
-                        }
+                        message: 'Network Error'
                     },
                     hideDelay: 5000,
                     position: 'bottom'

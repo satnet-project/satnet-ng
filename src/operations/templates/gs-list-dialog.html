@@ -1,30 +1,46 @@
 <md-dialog ng-controller="GsListCtrl" aria-label="Ground Stations Menu">
     <md-content class="menu-list">
 
-        <md-button id="addGs" ng-click="addGsMenu()" aria-label="add ground station" class="md-primary menu-button">
+        <md-button id="addGs"
+                   ng-click="addGsMenu()"
+                   aria-label="add ground station"
+                   class="md-primary menu-button">
+
             <div layout="row" layout-fill>
                 <i class="fa fa-plus"></i>
                 <b>ground station</b>
             </div>
+
         </md-button>
 
         <md-divider></md-divider>
-
+        
         <md-list ng-controller="GsListCtrl" ng-init="init()">
             <md-list-item ng-repeat="gs in gsList">
 
-                <md-button id="{{ gs }}" ng-click="editGs(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button">
-                    <div layout="row" layout-fill>
-                        <i class="fa fa-wrench"></i>
-                        <b>{{ gs }}</b>
-                    </div>
-                </md-button>
+                <div layout="row">
 
-                <!--
-                <img alt="{{ gs.id }}" ng-src="{{ person.img }}" class="md-avatar" />
-                <p>{{ gs.id }}</p>
-                <md-icon md-svg-icon="communication:messenger" ng-click="doSecondaryAction($event)" aria-label="Open Chat" class="md-secondary md-hue-3" ng-class="{'md-primary': person.newMessage}"></md-icon>
-                -->
+                    <md-button id="{{ gs }}-edit"
+                               ng-click="editGs(gs)"
+                               aria-label="edit ground station {{ gs }}"
+                               class="md-primary menu-button"
+                               style="width:90%; text-align: center">
+                        <div layout="row" layout-fill>
+                            <b>{{ gs }}</b>
+                        </div>
+                    </md-button>
+
+                    <md-button id="{{ gs }}-remove"
+                               ng-click="removeGs(gs)"
+                               aria-label="remove ground station {{ gs }}"
+                               class="md-primary menu-button"
+                               style="width:10%">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-close"></i>
+                        </div>
+                    </md-button>
+
+                </div>
 
             </md-list-item>
         </md-list>

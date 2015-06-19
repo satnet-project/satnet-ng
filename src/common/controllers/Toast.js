@@ -20,17 +20,17 @@ var toastModule = angular.module(
     ]
 );
 
-toastModule.controller('ErrorToastCtrl', [
-    '$scope', '$mdToast', '$mdDialog', 'error',
+toastModule.controller('ToastCtrl', [
+    '$scope', '$mdToast', '$mdDialog', 'toast',
 
     /**
-     * Controller of the Error Toast toast.
+     * Controller of any simple Toast.
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($scope, $mdToast, $mdDialog, error) {
+    function ($scope, $mdToast, $mdDialog, toast) {
 
-        $scope.message = error.message;
+        $scope.message = toast.message;
 
         /**
          * Handles the closing of the Toast element.
