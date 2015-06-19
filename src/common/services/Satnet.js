@@ -303,7 +303,7 @@ angular
              * with this LEOP cluster.
              *
              * @param leop_id Identifier of the LEOP cluster.
-             * @returns {*} { leop_gs_available: [gs_cfg], leop_gs_inuse: [gs_cfg]}
+             * @returns Promise to be resolved with the result.
              */
             this.readAllLEOPGS = function (leop_id) {
                 var self = this;

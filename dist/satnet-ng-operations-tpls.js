@@ -21,11 +21,6 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
   );
 
 
-  $templateCache.put('common/templates/sn-ok-toast.html',
-    "<md-toast><span flex>Success: {{ message }}</span><md-button ng-click=\"hide()\" aria-label=\"Close Toast\"><i class=\"fa fa-close\"></i></md-button></md-toast>"
-  );
-
-
   $templateCache.put('operations/templates/gs-add-dialog.html',
     "<md-dialog ng-controller=\"GsAddCtrl\" ng-init=\"init()\" aria-label=\"Add Ground Station\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Add new Ground Station</span></h2></md-toolbar><md-content class=\"add-gs-dialog menu-list\"><div><style>.leaflet-control-container {\n" +
     "                    display: none;\n" +
@@ -34,7 +29,7 @@ angular.module('operationsDirective').run(['$templateCache', function($templateC
 
 
   $templateCache.put('operations/templates/gs-list-dialog.html',
-    "<md-dialog ng-controller=\"GsListCtrl\" aria-label=\"Ground Stations Menu\"><md-content class=\"menu-list\"><md-button id=\"addGs\" ng-click=\"addGsMenu()\" aria-label=\"add ground station\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>ground station</b></div></md-button><md-divider></md-divider><md-list ng-controller=\"GsListCtrl\" ng-init=\"init()\"><md-list-item ng-repeat=\"gs in gsList\"><div layout=\"row\"><md-button id=\"{{ gs }}-edit\" ng-click=\"editGs(gs)\" aria-label=\"edit ground station {{ gs }}\" class=\"md-primary menu-button\" style=\"width:90%; text-align: center\"><div layout=\"row\" layout-fill><b>{{ gs }}</b></div></md-button><md-button id=\"{{ gs }}-remove\" ng-click=\"removeGs(gs)\" aria-label=\"remove ground station {{ gs }}\" class=\"md-primary menu-button\" style=\"width:10%\"><div layout=\"row\" layout-fill><i class=\"fa fa-close\"></i></div></md-button></div></md-list-item></md-list></md-content></md-dialog>"
+    "<md-dialog ng-controller=\"GsListCtrl\" aria-label=\"Ground Stations Menu\"><md-content class=\"menu-list\"><md-button id=\"addGs\" ng-click=\"addGsMenu()\" aria-label=\"add ground station\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>ground station</b></div></md-button><md-divider></md-divider><md-list ng-controller=\"GsListCtrl\" ng-init=\"init()\"><md-list-item ng-repeat=\"gs in gsList\"><div layout=\"row\"><md-button id=\"{{ gs }}-edit\" ng-click=\"editGs(gs)\" aria-label=\"edit ground station {{ gs }}\" class=\"md-primary menu-button\" style=\"text-align:center; width: 83%\"><div layout=\"row\" layout-fill><b>{{ gs }}</b></div></md-button><md-button id=\"{{ gs }}-remove\" aria-label=\"remove ground station {{ gs }}\" class=\"md-primary menu-button\" flex ng-click=\"removeGs(gs)\"><div layout=\"row\" layout-fill><i class=\"fa fa-close\"></i></div></md-button></div></md-list-item></md-list></md-content></md-dialog>"
   );
 
 

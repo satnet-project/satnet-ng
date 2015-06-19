@@ -913,7 +913,7 @@ angular
              * with this LEOP cluster.
              *
              * @param leop_id Identifier of the LEOP cluster.
-             * @returns {*} { leop_gs_available: [gs_cfg], leop_gs_inuse: [gs_cfg]}
+             * @returns Promise to be resolved with the result.
              */
             this.readAllLEOPGS = function (leop_id) {
                 var self = this;
@@ -1148,7 +1148,7 @@ gsCtrlModule.controller('GsListCtrl', [
         /**
          * Controller function that shows the dialog for editing the properties
          * of a given Ground Station.
-         * 
+         *
          * @param {String} gs_id Identifier of the Ground Station for edition
          */
         $scope.editGs = function (gs_id) {
@@ -1167,24 +1167,16 @@ gsCtrlModule.controller('GsListCtrl', [
          * Controller function that removes the given Ground Station from the
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
-         * 
+         *
          * @param {String} gs_id Identifier of the Ground Station for removal
          */
         $scope.removeGs = function (gs_id) {
-            satnetRPC.rCall('gs.remove', [gs_id]).then(function (results) {
+            satnetRPC.rCall('gs.delete', [gs_id]).then(function (results) {
+                var message = 'gs.delete, id = <' + gs_id + '>';
                 console.log(
-                    'gs.remove, id = ' + gs_id +
-                    ', results = ' + JSON.stringify(results)
+                    message + ', results = ' + JSON.stringify(results)
                 );
-                $mdToast.show({
-                    controller: 'ToastCtrl',
-                    templateUrl: 'common/templates/sn-ok-toast.html',
-                    locals: {
-                        message: 'Ground Station removed'
-                    },
-                    hideDelay: 5000,
-                    position: 'bottom'
-                });
+                $mdToast.show($mdToast.simple().content(message));
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
                 $mdToast.show({
@@ -1335,7 +1327,7 @@ gsCtrlModule.controller('GsAddCtrl', [
 
             });
 
-            $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
+            $scope.$on("leafletDirectiveMarker.dragend", function (event, args) {
                 $scope.markers.gs.lat = args.model.lat;
                 $scope.markers.gs.lng = args.model.lng;
             });
