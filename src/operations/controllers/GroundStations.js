@@ -79,11 +79,10 @@ gsCtrlModule.controller('GsListCtrl', [
          */
         $scope.removeGs = function (gs_id) {
             satnetRPC.rCall('gs.delete', [gs_id]).then(function (results) {
-                var message = 'gs.delete, id = <' + gs_id + '>';
-                console.log(
-                    message + ', results = ' + JSON.stringify(results)
-                );
+                var message = '<' + gs_id + '> succesfully deleted!';
+                $log.info(message, ', result = ' + JSON.stringify(results));
                 $mdToast.show($mdToast.simple().content(message));
+                $scope.refresh();
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
                 $mdToast.show({
