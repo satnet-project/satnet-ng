@@ -15,7 +15,7 @@
         <md-list ng-controller="GsListCtrl" ng-init="init()">
             <md-list-item ng-repeat="gs in gsList">
 
-                <div layout="row">
+                <div layout="row" layout-fill>
 
                     <md-button id="{{ gs }}-edit" ng-click="editGs(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button" style="text-align:center; width: 83%">
                         <div layout="row" layout-fill>

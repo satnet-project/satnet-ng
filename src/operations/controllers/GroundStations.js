@@ -44,13 +44,10 @@ gsCtrlModule.controller('GsListCtrl', [
          * station into the system.
          */
         $scope.addGsMenu = function () {
-            $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs-add-dialog.html'
+                templateUrl: 'operations/templates/gs/add-dialog.html'
             });
         };
-
-        // TODO: create gs-edit-dialog template and check edit behavior.
 
         /**
          * Controller function that shows the dialog for editing the properties
@@ -59,16 +56,13 @@ gsCtrlModule.controller('GsListCtrl', [
          * @param {String} gs_id Identifier of the Ground Station for edition
          */
         $scope.editGs = function (gs_id) {
-            $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs-edit-dialog.html',
+                templateUrl: 'operations/templates/gs/edit-dialog.html',
                 locals: {
                     gs_id: gs_id
                 }
             });
         };
-
-        // TODO : create sn-ok-toast template and check GS removal.
 
         /**
          * Controller function that removes the given Ground Station from the
@@ -186,13 +180,16 @@ gsCtrlModule.controller('GsAddCtrl', [
                 $scope.markers.gs.lng.toFixed(6)
             ];
             satnetRPC.rCall('gs.add', gs_cfg).then(
-                function (data) {
-                    var gsId = data.groundstation_id;
-                    $log.info('[map-ctrl] GS added, id = ' + gsId);
-                    // TODO : gs.add signal
-                    // broadcaster.gsAdded(gsId);
+                function (results) {
+                    var gs_id = results.groundstation_id;
+                    // TODO : broadcaster.gsAdded(gsId);
+                    var message = '<' + gs_id + '> succesfully created!';
+                    $log.info(message, ', result = ' + JSON.stringify(results));
+                    $mdToast.show($mdToast.simple().content(message));
                     $mdDialog.hide();
-                    //$mdToast.show();
+                    $mdDialog.show({
+                        templateUrl: 'operations/templates/gs/list-dialog.html'
+                    });
                 },
                 function (error) {
                     window.alert(error);
@@ -207,7 +204,7 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs-list-dialog.html'
+                templateUrl: 'operations/templates/gs/list-dialog.html'
             });
         };
 
@@ -216,6 +213,7 @@ gsCtrlModule.controller('GsAddCtrl', [
          * the markers and the position (lat, lng, zoom) of the map.
          */
         $scope.init = function () {
+
             satnetRPC.getUserLocation().then(function (location) {
                 angular.extend($scope.center, {
                     lat: location.latitude,

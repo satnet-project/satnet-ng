@@ -32,6 +32,9 @@ angular.module('snMapDirective', ['snMapServices', 'satnetServices'])
          */
         function ($log, $scope, mapServices, ZOOM) {
 
+            $scope.defaults = {
+                zoomControlPosition: 'bottomright'
+            };
             $scope.center = {
                 zoom: ZOOM
             };
