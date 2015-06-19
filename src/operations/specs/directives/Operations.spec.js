@@ -122,7 +122,7 @@ describe("Testing Operations Interface", function () {
     it('should add a unique exit button on the menu with an icon', function () {
 
         var button = $('#menuExit'),
-            icon = $('.fa-power-off'),
+            icon = $('.fa-circle-o-notch'),
             label = $('#menuExit div b');
         expect(button.length).toBe(1);
         expect(icon.length).toBe(1);
@@ -164,7 +164,7 @@ describe("Testing Operations Interface", function () {
 
         expect($mdDialog.show)
             .toHaveBeenCalledWith({
-                templateUrl: 'operations/templates/gs-list-dialog.html'
+                templateUrl: 'operations/templates/gs/list-dialog.html'
             });
 
     });
