@@ -199,9 +199,12 @@ angular.module('snAboutDirective', ['ngMaterial'])
  * Created by rtubio on 15/05/15.
  */
 
-angular.module('snMapDirective', ['snMapServices', 'satnetServices'])
+angular
+    .module('snMapDirective', [
+        'snMapServices', 'snMarkerServices'
+    ])
     .controller('MapCtrl', [
-        '$log', '$scope', 'mapServices', 'ZOOM',
+        '$log', '$scope', 'mapServices', 'markerServices', 'ZOOM',
 
         /**
          * Main controller for the map directive. It should be in charge of all

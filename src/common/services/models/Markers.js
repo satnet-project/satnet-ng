@@ -28,8 +28,8 @@ angular.module('snMarkerServices')
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)
     .service('markerServices', [
-        '$log', 'maps', '_SIM_DAYS', '_GEOLINE_STEPS',
-        function ($log, maps, _SIM_DAYS, _GEOLINE_STEPS) {
+        '$log', 'mapServices', '_SIM_DAYS', '_GEOLINE_STEPS',
+        function ($log, mapServices, _SIM_DAYS, _GEOLINE_STEPS) {
             'use strict';
 
             /******************************************************************/
@@ -68,9 +68,9 @@ angular.module('snMarkerServices')
                 angular.extend(
                     this._mapScope, {
                         center: {
-                            lat: maps.LAT,
-                            lng: maps.LNG,
-                            zoom: maps.ZOOM
+                            lat: mapServices.LAT,
+                            lng: mapServices.LNG,
+                            zoom: mapServices.ZOOM
                         },
                         layers: {
                             baselayers: {},
@@ -83,11 +83,11 @@ angular.module('snMarkerServices')
                 );
                 angular.extend(
                     this._mapScope.layers.baselayers,
-                    maps.getBaseLayers()
+                    mapServices.getBaseLayers()
                 );
                 angular.extend(
                     this._mapScope.layers.overlays,
-                    maps.getOverlays()
+                    mapServices.getOverlays()
                 );
                 angular.extend(
                     this._mapScope.layers.overlays,
@@ -95,10 +95,10 @@ angular.module('snMarkerServices')
                 );
 
                 var mapInfo = this._mapInfo;
-                maps.createMainMap(true).then(function (data) {
+                mapServices.createMainMap(true).then(function (data) {
                     $log.log(
                         '[map-controller] Created map = <' +
-                        maps.asString(data) + '>'
+                        mapServices.asString(data) + '>'
                     );
                     angular.extend(mapInfo, data);
                     return mapInfo;
@@ -228,7 +228,7 @@ angular.module('snMarkerServices')
                     draggable: false,
                     layer: 'network',
                     icon: {
-                        iconUrl: '/static/images/server-icon.svg',
+                        iconUrl: '/images/server-icon.svg',
                         iconSize: [15, 15]
                     },
                     label: {
@@ -313,7 +313,7 @@ angular.module('snMarkerServices')
                 var marker = this.getMarker(groundstation_id),
                     m_ll = new L.LatLng(marker.lat, marker.lng);
 
-                return maps.getMainMap().then(function (mapInfo) {
+                return mapServices.getMainMap().then(function (mapInfo) {
                     mapInfo.map.panTo(m_ll, {
                         animate: true
                     });
@@ -341,7 +341,7 @@ angular.module('snMarkerServices')
                     draggable: false,
                     layer: 'groundstations',
                     icon: {
-                        iconUrl: '/static/images/gs-icon.svg',
+                        iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
                     },
                     label: {
@@ -431,7 +431,7 @@ angular.module('snMarkerServices')
                 autostart: true,
                 draggable: false,
                 icon: L.icon({
-                    iconUrl: '/static/images/sc-icon.svg',
+                    iconUrl: '/images/sc-icon.svg',
                     iconSize: [15, 15]
                 })
             };
@@ -469,7 +469,7 @@ angular.module('snMarkerServices')
                 var sc_marker = this.sc[spacecraft_id],
                     m_ll = sc_marker.marker.getLatLng();
 
-                return maps.getMainMap().then(function (mapInfo) {
+                return mapServices.getMainMap().then(function (mapInfo) {
                     mapInfo.map.panTo(m_ll, {
                         animate: true
                     });
@@ -599,7 +599,7 @@ angular.module('snMarkerServices')
                 this.scLayers.addLayer(m.marker);
                 this.trackLayers.addLayer(m.track);
 
-                return maps.getMainMap().then(function (mapInfo) {
+                return mapServices.getMainMap().then(function (mapInfo) {
                     m.track.addTo(mapInfo.map);
                     m.marker.addTo(mapInfo.map);
                     return id;
@@ -648,7 +648,7 @@ angular.module('snMarkerServices')
                 this.trackLayers.removeLayer(m.track);
                 delete this.sc[id];
 
-                return maps.getMainMap().then(function (mapInfo) {
+                return mapServices.getMainMap().then(function (mapInfo) {
                     mapInfo.map.removeLayer(m.marker);
                     mapInfo.map.removeLayer(m.track);
                     return id;
