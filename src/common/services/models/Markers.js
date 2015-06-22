@@ -95,7 +95,7 @@ angular.module('snMarkerServices')
                 );
 
                 var mapInfo = this._mapInfo;
-                mapServices.createMainMap(true).then(function (data) {
+                mapServices.createTerminatorMap(true).then(function (data) {
                     $log.log(
                         '[map-controller] Created map = <' +
                         mapServices.asString(data) + '>'
@@ -179,7 +179,9 @@ angular.module('snMarkerServices')
             /**
              * Returns the overlays to be included as markerclusters within
              * the map.
-             * @returns {{network: {name: string, type: string, visible: boolean}, groundstations: {name: string, type: string, visible: boolean}}}
+             * 
+             * @return Object Object to configure the overlays of the $scope
+             * with the overlays.
              */
             this.getOverlays = function () {
                 return {
@@ -287,7 +289,8 @@ angular.module('snMarkerServices')
 
                 c_key = this.createMarkerKey(c_id);
                 r[c_key] = {
-                    // TODO BUG: path removal if added as a layer (angular-leaflet)
+                    // TODO BUG: path removal if added as a layer
+                    // (angular-leaflet)
                     // layer: 'network',
                     //color: '#A52A2A',
                     color: 'gray',
@@ -522,11 +525,8 @@ angular.module('snMarkerServices')
             this.readTrack = function (groundtrack) {
 
                 var i, gt_i,
-                    positions = [],
-                    durations = [],
-                    geopoints = [],
-                    first = true,
-                    valid = false,
+                    positions = [], durations = [], geopoints = [],
+                    first = true, valid = false,
                     t0 = Date.now() * 1000,
                     tf = moment().add(
                         _SIM_DAYS,
@@ -538,6 +538,7 @@ angular.module('snMarkerServices')
                 }
 
                 for (i = 0; i < groundtrack.length; i += 1) {
+    
                     gt_i = groundtrack[i];
 
                     if (gt_i.timestamp < t0) {
@@ -573,7 +574,7 @@ angular.module('snMarkerServices')
                 };
 
             };
-
+            
             /**
              * Adds the markers for the new Spacecraft, this is: the marker for
              * the Spacecraft itself (together with its associated label) and

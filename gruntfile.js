@@ -56,13 +56,13 @@ module.exports = function (grunt) {
             },
             operations: {
                 src: [
-                    'src/common/controllers/Toast.js',
                     'src/common/directives/Splash.js',
                     'src/common/directives/About.js',
                     'src/common/directives/Maps.js',
                     'src/common/services/Maps.js',
                     'src/common/services/Satnet.js',
                     'src/common/services/Pusher.js',
+                    'src/common/services/models/Markers.js',
                     'src/operations/controllers/**/*.js',
                     'src/operations/directives/**/*.js'
                 ],

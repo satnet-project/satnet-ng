@@ -33,7 +33,7 @@ angular
          * @param {Object} mapServices Service with the custom functions to
          *                             control the maps object.
          */
-        function ($log, $scope, mapServices, ZOOM) {
+        function ($log, $scope, mapServices, markerServices, ZOOM) {
 
             $scope.defaults = {
                 zoomControlPosition: 'bottomright'
@@ -56,8 +56,9 @@ angular
              *    required callbacks that will handle them.
              */
             $scope.init = function () {
-                $scope.map = mapServices.createTerminatorMap(true);
+                $scope.map = markerServices.configureMapScope($scope);
                 mapServices.autocenterMap($scope, ZOOM);
+                
             };
 
         }

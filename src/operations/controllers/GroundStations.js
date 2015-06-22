@@ -19,8 +19,7 @@ var gsCtrlModule = angular.module(
         'ngMaterial',
         'remoteValidation',
         'leaflet-directive',
-        'snMapServices',
-        'toastModule'
+        'snMapServices'
     ]
 );
 
@@ -78,16 +77,9 @@ gsCtrlModule.controller('GsListCtrl', [
                 $mdToast.show($mdToast.simple().content(message));
                 $scope.refresh();
             }).catch(function (cause) {
+                var message = 'Could not remove GS with id = <' + gs_id + '>';
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show({
-                    controller: 'ToastCtrl',
-                    templateUrl: 'common/templates/sn-error-toast.html',
-                    locals: {
-                        message: 'Removal Error'
-                    },
-                    hideDelay: 5000,
-                    position: 'bottom'
-                });
+                $mdToast.show($mdToast.simple().content(message));
                 $mdDialog.hide();
             });
         };
@@ -102,15 +94,7 @@ gsCtrlModule.controller('GsListCtrl', [
                 }
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show({
-                    controller: 'ToastCtrl',
-                    templateUrl: 'common/templates/sn-error-toast.html',
-                    locals: {
-                        message: 'Network Error'
-                    },
-                    hideDelay: 5000,
-                    position: 'bottom'
-                });
+                    $mdToast.show($mdToast.simple().content('Network Error'));
                 $mdDialog.hide();
             });
         };
@@ -168,8 +152,8 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.events = {};
 
         /**
-         * Function that triggers the opening of a window to add a new ground
-         * station into the system.
+         * Function that triggers the opening of a window to add a new Ground
+         * Station into the system.
          */
         $scope.add = function () {
             var gs_cfg = [
