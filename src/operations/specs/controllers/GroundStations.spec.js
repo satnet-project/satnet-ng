@@ -27,6 +27,7 @@ describe('Testing Ground Station controllers', function () {
                 });
             }
         ),
+        __mock__cookies = {},
         __mock__satnetRPC = {
             rCall: __rCall__fn
         },
@@ -36,6 +37,7 @@ describe('Testing Ground Station controllers', function () {
 
         module('gsControllers');
         module(function ($provide) {
+            $provide.value('$cookies', __mock__cookies);
             $provide.value('satnetRPC', __mock__satnetRPC);
         });
 

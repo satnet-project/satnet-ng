@@ -20,6 +20,7 @@ describe('Testing Maps directive', function () {
 
     var $compile, $rootScope, $scope, $httpBackend,
         mapServices,
+        __mock__cookies = {},
         $directive, $body, html = "<sn-map></sn-map>",
         x_post_geoip = {
             latitude: '40.0', longitude: '50.0'
@@ -27,7 +28,12 @@ describe('Testing Maps directive', function () {
 
     beforeEach(function () {
 
-        module('templates', 'snMapDirective', 'snMapServices');
+        module(
+            'templates', 'snMapDirective', 'snMapServices',
+            function($provide) {
+                $provide.value('$cookies', __mock__cookies);
+            }
+        );
 
         inject(function ($injector) {
 
@@ -45,7 +51,7 @@ describe('Testing Maps directive', function () {
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
         $httpBackend
-            .expectPOST('http://server:80/configuration/hostname/geoip')
+            .expectPOST('http://server:80/jrpc/')
             .respond(x_post_geoip);
 
         $body = $("body");

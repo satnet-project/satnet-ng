@@ -50,7 +50,6 @@ angular.module('snMarkerServices')
          * @returns {Object|String} Object that provides this service
          */
         function ($log, mapServices, _SIM_DAYS, _GEOLINE_STEPS) {
-            'use strict';
 
             /******************************************************************/
             /****************************************************** MAP SCOPE */
@@ -137,6 +136,7 @@ angular.module('snMarkerServices')
              * Dictionary that contains the relation between the identifiers
              * of the objects and the keys for the markers that represent those
              * objects.
+             * 
              * @type {{}}
              */
             this._ids2keys = {};
@@ -144,6 +144,7 @@ angular.module('snMarkerServices')
             /**
              * Creates a new key for the given identifier and adds it to the
              * dictionary of identifiers and keys.
+             * 
              * @param identifier Identifier of the marker.
              * @returns {string} Key for accessing to the marker.
              */
@@ -162,8 +163,9 @@ angular.module('snMarkerServices')
 
             /**
              * Returns the key for the given object that holds a marker.
-             * @param identifier Identifier of the object.
-             * @returns {string} Key for accessing to the marker.
+             * 
+             * @param identifier Identifier of the object
+             * @returns {string} Key for accessing to the marker
              */
             this.getMarkerKey = function (identifier) {
                 return this._ids2keys[identifier];
@@ -173,9 +175,9 @@ angular.module('snMarkerServices')
              * Returns the marker for the server, in case it exists!
              *
              * @param gs_identifier Identifier of the GroundStation object that
-             *                      is bound to the server.
+             *                      is bound to the server
              * @returns {null|*} String with the key for the marker of the
-             *                      server.
+             *                      server
              */
             this.getServerMarker = function (gs_identifier) {
                 if (this._serverMarkerKey === null) {
@@ -189,8 +191,8 @@ angular.module('snMarkerServices')
              * Returns the marker for the object with the given identifier.
              *
              * @param identifier Identifier of the object, which can be either
-             *                      a GroundStation, a Spacecraft or a Server.
-             * @returns {*} Marker object.
+             *                      a GroundStation, a Spacecraft or a Server
+             * @returns {*} Marker object
              */
             this.getMarker = function (identifier) {
                 return this.getScope().markers[this.getMarkerKey(identifier)];
@@ -200,8 +202,8 @@ angular.module('snMarkerServices')
              * Returns the overlays to be included as markerclusters within
              * the map.
              * 
-             * @return Object Object to configure the overlays of the $scope
-             * with the overlays.
+             * @return Object   Object to configure the overlays of the $scope
+             *                      with the overlays
              */
             this.getOverlays = function () {
                 return {
@@ -417,7 +419,8 @@ angular.module('snMarkerServices')
 
             /**
              * Removes the connector for the given gs_marker (if it exists).
-             * @param identifier Identifier of the gs_marker.
+             * 
+             * @param identifier Identifier of the gs_marker
              */
             this.removeGSConnector = function (identifier) {
                 var p_key = this.getMarkerKey(
@@ -434,7 +437,7 @@ angular.module('snMarkerServices')
              * within the servers lists of bounded GroundStations.
              *
              * @param identifier Identifier of the GroundStation whose markers
-             *                      are going to be removed.
+             *                      are going to be removed
              */
             this.removeGSMarker = function (identifier) {
                 var m_key = this.getMarkerKey(identifier);
@@ -509,7 +512,7 @@ angular.module('snMarkerServices')
              * marker for the spacecraft, its associated label and the
              * groundtrack.
              *
-             * @param cfg Configuration object.
+             * @param cfg Configuration object
              * @returns {{marker: L.Marker, track: L.polyline}}
              */
             this.createSCMarkers = function (cfg) {
@@ -539,7 +542,7 @@ angular.module('snMarkerServices')
              * Function that reads the RAW groundtrack from the server and
              * transforms it into a usable one for the JS client.
              *
-             * @param groundtrack RAW groundtrack from the server.
+             * @param groundtrack RAW groundtrack from the server
              * @returns {{durations: Array, positions: Array, geopoints: Array}}
              */
             this.readTrack = function (groundtrack) {
@@ -600,8 +603,8 @@ angular.module('snMarkerServices')
              * the Spacecraft itself (together with its associated label) and
              * associated groundtrack geoline.
              *
-             * @param id Identifier of the Spacecraft.
-             * @param cfg Configuration for the Spacecraft.
+             * @param id Identifier of the Spacecraft
+             * @param cfg Configuration for the Spacecraft
              * @returns {{
              *              id: String,
              *              cfg: Object,

@@ -14,16 +14,14 @@
    limitations under the License.
 */
 
-var gsCtrlModule = angular.module(
+angular.module(
     'gsControllers', [
         'ngMaterial',
         'remoteValidation',
         'leaflet-directive',
         'snMapServices'
     ]
-);
-
-gsCtrlModule.controller('GsListCtrl', [
+).controller('GsListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast', 'satnetRPC',
 
     /**
@@ -94,7 +92,7 @@ gsCtrlModule.controller('GsListCtrl', [
                 }
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                    $mdToast.show($mdToast.simple().content('Network Error'));
+                $mdToast.show($mdToast.simple().content('Network Error'));
                 $mdDialog.hide();
             });
         };
@@ -109,9 +107,7 @@ gsCtrlModule.controller('GsListCtrl', [
 
     }
 
-]);
-
-gsCtrlModule.controller('GsAddCtrl', [
+]).controller('GsAddCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'satnetRPC',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',

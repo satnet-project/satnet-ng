@@ -30,6 +30,7 @@ module.exports = function (config) {
             'node_modules/angular-aria/angular-aria.js',
             'node_modules/angular-cookies/angular-cookies.js',
             'node_modules/angular-material/angular-material.js',
+            'node_modules/angular-resource/angular-resource.js',
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
             'node_modules/libs/*.js',

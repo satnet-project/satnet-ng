@@ -22,6 +22,14 @@ describe("Testing Operations Interface", function () {
         $compile, $directive, $httpBackend,
         satnetRPC,
         $body = $("body"),
+        mock__cookies = {},
+        mock__server= {
+            initStandalone: function () {
+                return {
+                    then: function () { return 'ok'; }
+                };
+            }
+        },
         $rootScope, app_scope, menu_scope,
         appCtrl, menuCtrl,
         simpleHtml = "<operations-app></operations-app>",
@@ -31,7 +39,14 @@ describe("Testing Operations Interface", function () {
 
     beforeEach(function () {
 
-        module('templates', 'operationsDirective', 'satnetServices');
+        module(
+            'templates',
+            'operationsDirective', 'satnetServices',
+            function ($provide) {
+                $provide.value('$cookies', mock__cookies);
+                $provide.value('serverModels', mock__server);
+            }
+        );
 
         inject(function ($injector) {
 
@@ -40,6 +55,7 @@ describe("Testing Operations Interface", function () {
             $controller = $injector.get('$controller');
             $mdSidenav = $injector.get('$mdSidenav');
             $httpBackend = $injector.get('$httpBackend');
+
             satnetRPC = $injector.get('satnetRPC');
 
             app_scope = $rootScope.$new();
@@ -62,10 +78,10 @@ describe("Testing Operations Interface", function () {
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
         $httpBackend
-            .expectPOST('http://server:80/configuration/hostname/geoip')
+            .expectPOST('http://server:80/jrpc')
             .respond(x_post_geoip);
 
-        spyOn(satnetRPC, 'rCall').and.callFake(function () {
+        spyOn(satnetRPC, 'getServerLocation').and.callFake(function () {
             return {
                 then: function () {
                     return ['gs_test_1', 'gs_test_2'];

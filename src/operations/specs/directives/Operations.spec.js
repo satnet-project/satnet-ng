@@ -22,6 +22,7 @@ describe("Testing Operations Interface", function () {
         $compile, $directive, $httpBackend,
         satnetRPC,
         $body = $("body"),
+        mock__cookies = {},
         $rootScope, app_scope, menu_scope,
         appCtrl, menuCtrl,
         simpleHtml = "<operations-app></operations-app>",
@@ -31,7 +32,12 @@ describe("Testing Operations Interface", function () {
 
     beforeEach(function () {
 
-        module('templates', 'operationsDirective', 'satnetServices');
+        module(
+            'templates', 'operationsDirective', 'satnetServices',
+            function ($provide) {
+                $provide.value('$cookies', mock__cookies);
+            }
+        );
 
         inject(function ($injector) {
 
@@ -64,7 +70,7 @@ describe("Testing Operations Interface", function () {
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
         $httpBackend
-            .expectPOST('http://server:80/configuration/hostname/geoip')
+            .expectPOST('http://server:80/jrpc/')
             .respond(x_post_geoip);
 
         $body.append($directive);

@@ -31,6 +31,7 @@ describe('Testing snMapServices Service', function () {
                     return (__mock__terminator);
                 })
         },
+        __mock__cookies = {},
         x_gs_cfg = {
             groundstation_latlon: [40.0, 50.0]
         },
@@ -146,6 +147,7 @@ describe('Testing snMapServices Service', function () {
 
         module(function ($provide) {
             $provide.value('L', __mock__L);
+            $provide.value('$cookies', __mock__cookies);
         });
 
         inject(function ($injector) {

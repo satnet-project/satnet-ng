@@ -43,7 +43,6 @@ angular
      * @param   {Object} markers   Service that handles the markers over the map
      */
     function ($rootScope, $q, broadcaster, satnetRPC, markers) {
-        'use strict';
 
         /**
          * Initializes all the GroundStations reading the information from

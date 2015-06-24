@@ -19,6 +19,7 @@
 describe('Testing SatNet Service', function () {
 
     var satnetServices, $rootScope, $q, $log,
+        __mock__cookies = {},
         __mock__rpc_method = jasmine.createSpy("rpcMethod").and.callFake(
             function () {
                 return $q.when();
@@ -46,6 +47,7 @@ describe('Testing SatNet Service', function () {
 
         module(function ($provide) {
             $provide.value('jsonrpc', __mock__jsonrpc);
+            $provide.value('$cookies', __mock__cookies);
         });
 
         inject(function ($injector) {
