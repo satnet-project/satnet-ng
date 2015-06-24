@@ -17,9 +17,10 @@
     },
     "jwolfe.file-tree-exclude.list": [
         "node_modules",
-        "/lib/",
-        ".git",
+        "lib",
         "dist",
+        ".git",
+        ".complexity",
         ".coverage",
         ".sass-cache"
     ]

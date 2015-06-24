@@ -24,7 +24,10 @@ describe("Testing Operations Interface", function () {
         $body = $("body"),
         $rootScope, app_scope, menu_scope,
         appCtrl, menuCtrl,
-        simpleHtml = "<operations-app></operations-app>";
+        simpleHtml = "<operations-app></operations-app>",
+        x_post_geoip = {
+            latitude: '40.0', longitude: '50.0'
+        };
 
     beforeEach(function () {
 
@@ -57,10 +60,10 @@ describe("Testing Operations Interface", function () {
 
         $httpBackend
             .when('GET', 'http://server:80/configuration/user/geoip')
-            .respond({
-                latitude: '40.0',
-                longitude: '50.0'
-            });
+            .respond(x_post_geoip);
+        $httpBackend
+            .expectPOST('/configuration/hostname/geoip')
+            .respond(x_post_geoip);
 
         spyOn(satnetRPC, 'rCall').and.callFake(function () {
             return {

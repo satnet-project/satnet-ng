@@ -20,7 +20,10 @@ describe('Testing Maps directive', function () {
 
     var $compile, $rootScope, $scope, $httpBackend,
         mapServices,
-        $directive, $body, html = "<sn-map></sn-map>";
+        $directive, $body, html = "<sn-map></sn-map>",
+        x_post_geoip = {
+            latitude: '40.0', longitude: '50.0'
+        };
 
     beforeEach(function () {
 
@@ -40,10 +43,10 @@ describe('Testing Maps directive', function () {
 
         $httpBackend
             .when('GET', 'http://server:80/configuration/user/geoip')
-            .respond({
-                latitude: '40.0',
-                longitude: '50.0'
-            });
+            .respond(x_post_geoip);
+        $httpBackend
+            .expectPOST('/configuration/hostname/geoip')
+            .respond(x_post_geoip);
 
         $body = $("body");
         $body.append($directive);

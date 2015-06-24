@@ -347,7 +347,7 @@ angular.module('snMapServices', [
                     '"center": ' + JSON.stringify(mapInfo.center) + ', ' +
                     '"terminator": ' + mapInfo.terminator + ', ' +
                     '"map": ' + mapInfo.map +
-                    '}';
+                '}';
             };
 
     }

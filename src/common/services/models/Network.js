@@ -17,19 +17,29 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('x-server-models', ['satnet-services', 'marker-models']);
-
-/**
- * eXtended Server models. Services built on top of the satnetRPC service and
- * the markers models. Right now, there is no need for adding the intermediate
- * bussiness logic with the basic models.
- */
-angular.module('x-server-models').service('xserver', [
+angular.module('snNetworkModels', [
+    'satnetServices',
+    'snMarkerServices'
+]).service('serverModels', [
     '$rootScope', '$location', 'broadcaster', 'satnetRPC',  'markers',
+
+    /**
+     * Function that provides the services for handling the markers related to
+     * the elements of the network that must be shown on the map.
+     * 
+     * @param   {Object} $rootScope  Main Angular scope where the map is
+     * @param   {Object} $location   Angular location service
+     * @param   {Object} broadcaster SatNet service to broadcast events
+     * @param   {Object} satnetRPC   SatNet service to access RPC methods
+     * @param   {Object} markers     SatNet service to handle map markers
+     * @returns {Object} Object that offers this service
+     */
     function ($rootScope, $location, broadcaster, satnetRPC, markers) {
 
-        'use strict';
-
+        /**
+         * Function that initializes the listeners that connect this service
+         * with the events happening in other places of the application.
+         */
         this._initListeners = function () {
             $rootScope.$on(
                 broadcaster.KEEP_ALIVE_EVENT,
@@ -42,6 +52,12 @@ angular.module('x-server-models').service('xserver', [
             );
         };
 
+        /**
+         * Function that initializes a marker for a standalone server on the
+         * map.
+         * 
+         * @returns {Object} Returns the object with the just created marker
+         */
         this.initStandalone = function () {
             this._initListeners();
             var identifier = $location.host();

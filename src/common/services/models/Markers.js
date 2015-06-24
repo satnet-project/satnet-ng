@@ -17,7 +17,10 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('snMarkerServices', ['snMapServices']);
+angular
+    .module('snMarkerServices', [
+        'snMapServices'
+    ]);
 
 /**
  * eXtended GroundStation models. Services built on top of the satnetRPC
@@ -27,8 +30,25 @@ angular.module('snMarkerServices')
     .constant('_RATE', 1)
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)
-    .service('markerServices', [
+    .service('markers', [
         '$log', 'mapServices', '_SIM_DAYS', '_GEOLINE_STEPS',
+
+        /**
+         * Service that provides the basic functions for handling the markers
+         * over the Leaflet map. In order to add new markers, update or remove
+         * the ones on the map, the functions provided by this service must be
+         * used. They automatically handle additional features like the
+         * addition of the connection lines among Ground Stations and Servers,
+         * or the labels for each of the markers.
+         * 
+         * @param   {Object}        $log           Angular logging service
+         * @param   {Object}        mapServices    SatNet map services
+         * @param   {Number}        _SIM_DAYS      Number of days for the
+         *                                       simulation
+         * @param   {Number}        _GEOLINE_STEPS Number of steps for each of
+         *                                       the GeoLines
+         * @returns {Object|String} Object that provides this service
+         */
         function ($log, mapServices, _SIM_DAYS, _GEOLINE_STEPS) {
             'use strict';
 

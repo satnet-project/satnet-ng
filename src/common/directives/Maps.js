@@ -16,12 +16,17 @@
  * Created by rtubio on 15/05/15.
  */
 
-angular
-    .module('snMapDirective', [
-        'snMapServices', 'snMarkerServices'
-    ])
-    .controller('MapCtrl', [
-        '$log', '$scope', 'mapServices', 'markerServices', 'ZOOM',
+angular.module('snMapDirective', [
+    'snMapServices',
+    'snMarkerServices',
+    'GroundStationModels',
+    'snNetworkModels'
+])
+     .controller('MapCtrl', [
+        '$log', '$scope',
+        'mapServices', 'markers',
+        'gsModels', 'serverModels',
+        'ZOOM',
 
         /**
          * Main controller for the map directive. It should be in charge of all
@@ -33,7 +38,12 @@ angular
          * @param {Object} mapServices Service with the custom functions to
          *                             control the maps object.
          */
-        function ($log, $scope, mapServices, markerServices, ZOOM) {
+        function (
+            $log, $scope,
+            mapServices, markers,
+            gsModels, serverModels,
+            ZOOM
+        ) {
 
             $scope.defaults = {
                 zoomControlPosition: 'bottomright'
@@ -56,9 +66,20 @@ angular
              *    required callbacks that will handle them.
              */
             $scope.init = function () {
-                $scope.map = markerServices.configureMapScope($scope);
+                $scope.map = markers.configureMapScope($scope);
                 mapServices.autocenterMap($scope, ZOOM);
-                
+                gsModels.initListeners();
+                serverModels.initStandalone().then(function (server) {
+                    $log.log(
+                        '[map-controller] Server =' + JSON.stringify(server)
+                    );
+                    gsModels.initAll().then(function (gss) {
+                        $log.log(
+                            '[map-controller] Ground Station(s) = ' +
+                                JSON.stringify(gss)
+                        );
+                    });
+                });
             };
 
         }

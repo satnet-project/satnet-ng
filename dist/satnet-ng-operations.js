@@ -156,12 +156,17 @@ angular.module('snAboutDirective', ['ngMaterial'])
  * Created by rtubio on 15/05/15.
  */
 
-angular
-    .module('snMapDirective', [
-        'snMapServices', 'snMarkerServices'
-    ])
-    .controller('MapCtrl', [
-        '$log', '$scope', 'mapServices', 'markerServices', 'ZOOM',
+angular.module('snMapDirective', [
+    'snMapServices',
+    'snMarkerServices',
+    'GroundStationModels',
+    'snNetworkModels'
+])
+     .controller('MapCtrl', [
+        '$log', '$scope',
+        'mapServices', 'markers',
+        'gsModels', 'serverModels',
+        'ZOOM',
 
         /**
          * Main controller for the map directive. It should be in charge of all
@@ -173,7 +178,12 @@ angular
          * @param {Object} mapServices Service with the custom functions to
          *                             control the maps object.
          */
-        function ($log, $scope, mapServices, markerServices, ZOOM) {
+        function (
+            $log, $scope,
+            mapServices, markers,
+            gsModels, serverModels,
+            ZOOM
+        ) {
 
             $scope.defaults = {
                 zoomControlPosition: 'bottomright'
@@ -196,9 +206,20 @@ angular
              *    required callbacks that will handle them.
              */
             $scope.init = function () {
-                $scope.map = markerServices.configureMapScope($scope);
+                $scope.map = markers.configureMapScope($scope);
                 mapServices.autocenterMap($scope, ZOOM);
-                
+                gsModels.initListeners();
+                serverModels.initStandalone().then(function (server) {
+                    $log.log(
+                        '[map-controller] Server =' + JSON.stringify(server)
+                    );
+                    gsModels.initAll().then(function (gss) {
+                        $log.log(
+                            '[map-controller] Ground Station(s) = ' +
+                                JSON.stringify(gss)
+                        );
+                    });
+                });
             };
 
         }
@@ -220,6 +241,370 @@ angular
         }
 
     );;/**
+ * Copyright 2014 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 10/24/14.
+ */
+
+/** Module definition (empty array is vital!). */
+angular.module('broadcaster', ['pushServices'])
+.service('broadcaster', [
+    '$rootScope', '$log', 'satnetPush',
+
+    /**
+     * Broadcaster service that enables the sending and reception of messages
+     * among all the modules of this Angular application.
+     * 
+     * @param {Object}   $rootScope Main Angular scope for this service
+     * @param {[[Type]]} $log       $log Angular service
+     * @param {Object}   satnetPush Pusher.com service access
+     */
+    function ($rootScope, $log, satnetPush) {
+
+        'use strict';
+
+        /**********************************************************************/
+        /************************************************* INTERNAL CALLBACKS */
+        /**********************************************************************/
+
+        this.GS_ADDED_EVENT = 'gs.added';
+        this.GS_REMOVED_EVENT = 'gs.removed';
+        this.GS_UPDATED_EVENT = 'gs.updated';
+        this.GS_AVAILABLE_ADDED_EVENT = 'gs.available.added';
+        this.GS_AVAILABLE_REMOVED_EVENT = 'gs.available.removed';
+        this.GS_AVAILABLE_UPDATED_EVENT = 'gs.available.updated';
+        this.PASSES_UPDATED = 'passes.updated';
+        this.LEOP_GSS_UPDATED_EVENT = 'leop.gss.updated';
+        this.LEOP_GS_ASSIGNED_EVENT = 'leop.gs.assigned';
+        this.LEOP_GS_RELEASED_EVENT = 'leop.gs.released';
+        this.LEOP_UPDATED_EVENT = 'leop.updated';
+        this.LEOP_FRAME_RX_EVENT = 'leop.frame.rx';
+        this.KEEP_ALIVE_EVENT = 'KEEP_ALIVE';
+
+        /**
+         * Function that broadcasts the event associated with the creation of a
+         * new GroundStation available for the LEOP cluster.
+         *
+         * @param {String} identifier The identifier of the GroundStation.
+         */
+        this.gsAvailableAddedInternal = function (identifier) {
+            $rootScope.$broadcast('gs.available.added', identifier);
+        };
+
+        /**
+         * Function that broadcasts the event associated with the creation of a
+         * new GroundStation.
+         *
+         * @param {String} identifier The identifier of the GroundStation.
+         */
+        this.gsAdded = function (identifier) {
+            $rootScope.$broadcast(this.GS_ADDED_EVENT, identifier);
+        };
+
+        /**
+         * Function that broadcasts the event associated with the removal of a
+         * new GroundStation.
+         *
+         * @param {String} identifier The identifier of the GroundStation.
+         */
+        this.gsRemoved = function (identifier) {
+            $rootScope.$broadcast(this.GS_REMOVED_EVENT, identifier);
+        };
+
+        /**
+         * Function that broadcasts the event associated with the update of
+         * new GroundStation.
+         *
+         * @param {String} identifier The identifier of the GroundStation.
+         */
+        this.gsUpdated = function (identifier) {
+            $rootScope.$broadcast(this.GS_UPDATED_EVENT, identifier);
+        };
+
+        /**********************************************************************/
+        /************************************************* INTERNAL CALLBACKS */
+        /**********************************************************************/
+
+        this.SC_ADDED_EVENT = 'sc.added';
+        this.SC_REMOVED_EVENT = 'sc.removed';
+        this.SC_UPDATED_EVENT = 'sc.updated';
+
+        /**
+         * Function that broadcasts the event associated with the creation of a
+         * new Spacececraft.
+         *
+         * @param {String} identifier The identifier of the Spacececraft.
+         */
+        this.scAdded = function (identifier) {
+            $rootScope.$broadcast(this.SC_ADDED_EVENT, identifier);
+        };
+
+        /**
+         * Function that broadcasts the event associated with the removal of a
+         * new Spacececraft.
+         *
+         * @param {String} identifier The identifier of the Spacececraft.
+         */
+        this.scRemoved = function (identifier) {
+            $rootScope.$broadcast(this.SC_REMOVED_EVENT, identifier);
+        };
+
+        /**
+         * Function that broadcasts the event associated with the update of
+         * new Spacececraft.
+         *
+         * @param {String} identifier The identifier of the Spacececraft.
+         */
+        this.scUpdated = function (identifier) {
+            $rootScope.$broadcast(this.SC_UPDATED_EVENT, identifier);
+        };
+
+        /**********************************************************************/
+        /***************************************************** PUSH CALLBACKS */
+        /**********************************************************************/
+
+        /**
+         * Broadcasts the event.
+         */
+        this.gsAvailableAdded = function (id_object) {
+            $rootScope.$broadcast('gs.available.added', id_object.identifier);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.gsAvailableRemoved = function (id_object) {
+            $rootScope.$broadcast('gs.available.removed', id_object.identifier);
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.gsAvailableUpdated = function (id_object) {
+            $rootScope.$broadcast('gs.available.updated', id_object.identifier);
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.passesUpdated = function () {
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.scGtUpdated = function (data) {
+            $rootScope.$broadcast('sc.updated', data.identifier);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopGssUpdated = function (leop_id) {
+            if ($rootScope.leop_id !== leop_id.identifier) {
+                return;
+            }
+            $rootScope.$broadcast('leop.gss.updated', leop_id);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopGsAssigned = function (data) {
+            if ($rootScope.leop_id !== data.launch_id) {
+                return;
+            }
+            $rootScope.$broadcast('leop.gs.assigned', data.groundstation_id);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopGsReleased = function (data) {
+            if ($rootScope.leop_id !== data.launch_id) {
+                return;
+            }
+            $rootScope.$broadcast('leop.gs.released', data.groundstation_id);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopUpdated = function (leop_id) {
+            if ($rootScope.leop_id !== leop_id.identifier) {
+                return;
+            }
+            $rootScope.$broadcast('leop.updated', leop_id);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopUfoIdentified = function (data) {
+            if ($rootScope.leop_id !== data.launch_id) {
+                return;
+            }
+            $rootScope.$broadcast('sc.added', data.spacecraft_id);
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopUfoUpdated = function (data) {
+            if ($rootScope.leop_id !== data.launch_id) {
+                return;
+            }
+            $rootScope.$broadcast('sc.updated', data.spacecraft_id);
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopUfoForgot = function (data) {
+            if ($rootScope.leop_id !== data.launch_id) {
+                return;
+            }
+            $rootScope.$broadcast('sc.removed', data.spacecraft_id);
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopSCUpdated = function (data) {
+            if ($rootScope.leop_id !== data.launch_id) {
+                return;
+            }
+            $rootScope.$broadcast('sc.updated', data.launch_sc_id);
+            $rootScope.$broadcast('passes.updated', {});
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.leopFrameReceived = function (data) {
+            $rootScope.$broadcast('leop.frame.rx', data.frame);
+        };
+
+        /**
+         * Broadcasts the event.
+         */
+        this.keepAliveReceived = function (data) {
+            $rootScope.$broadcast('KEEP_ALIVE', {});
+            console.log('ALIVE! data = ' + JSON.stringify(data));
+            $log.log('alive');
+        };
+
+        satnetPush.bind(
+            satnetPush.EVENTS_CHANNEL,
+            satnetPush.GS_ADDED_EVENT,
+            this.gsAvailableAdded,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.EVENTS_CHANNEL,
+            satnetPush.GS_REMOVED_EVENT,
+            this.gsAvailableRemoved,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.EVENTS_CHANNEL,
+            satnetPush.GS_UPDATED_EVENT,
+            this.gsAvailableUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.SIMULATION_CHANNEL,
+            satnetPush.PASSES_UPDATED_EVENT,
+            this.passesUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.SIMULATION_CHANNEL,
+            satnetPush.GT_UPDATED_EVENT,
+            this.scGtUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_UPDATED_EVENT,
+            this.leopUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_GSS_UPDATED_EVENT,
+            this.leopGssUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_GS_ASSIGNED_EVENT,
+            this.leopGsAssigned,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_GS_RELEASED_EVENT,
+            this.leopGsReleased,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_UFO_IDENTIFIED_EVENT,
+            this.leopUfoIdentified,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_UFO_UPDATED_EVENT,
+            this.leopUfoUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_UFO_FORGOTTEN_EVENT,
+            this.leopUfoForgot,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_CHANNEL,
+            satnetPush.LEOP_SC_UPDATED_EVENT,
+            this.leopSCUpdated,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.LEOP_DOWNLINK_CHANNEL,
+            satnetPush.FRAME_EVENT,
+            this.leopFrameReceived,
+            this
+        );
+        satnetPush.bind(
+            satnetPush.NETWORK_EVENTS_CHANNEL,
+            satnetPush.KEEP_ALIVE,
+            this.keepAliveReceived,
+            this
+        );
+
+    }
+]);;/**
  * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -568,7 +953,7 @@ angular.module('snMapServices', [
                     '"center": ' + JSON.stringify(mapInfo.center) + ', ' +
                     '"terminator": ' + mapInfo.terminator + ', ' +
                     '"map": ' + mapInfo.map +
-                    '}';
+                '}';
             };
 
     }
@@ -592,7 +977,9 @@ angular.module('snMapServices', [
 
 /** Module definition (empty array is vital!). */
 angular
-    .module('satnetServices', ['jsonrpc'])
+    .module('satnetServices', [
+        'jsonrpc'
+    ])
     .constant('TEST_PORT', 8000)
     .service('satnetRPC', [
         'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
@@ -930,14 +1317,11 @@ angular
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('pushServices', ['pusher-angular']);
-
-/**
- * Service that defines the basic calls to the services of the SATNET network
- * through JSON RPC. It defines a common error handler for all the errors that
- * can be overriden by users.
- */
-angular.module('pushServices').service('satnetPush', [
+angular
+.module('pushServices', [
+    'pusher-angular'
+])
+.service('satnetPush', [
     '$log', '$pusher',
     function ($log, $pusher) {
         'use strict';
@@ -1073,8 +1457,238 @@ angular.module('pushServices').service('satnetPush', [
  * Created by rtubio on 10/24/14.
  */
 
+/** Module definition . */
+angular
+    .module('GroundStationModels', [
+        'broadcaster',
+        'pushServices',
+        'satnetServices',
+        'snMarkerServices'
+    ])
+    .service('gsModels', [
+        '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
+
+    /**
+     * Service that handles the models for the Ground Stations. All the
+     * information concerning the Ground Stations is temporary stored here in 
+     * this models and should be updated regularly after any change in the
+     * network. The reason is that the main storage for the information is the
+     * database in the central server.
+     * 
+     * @param   {Object} $rootScope  Main Angular scope for the module
+     * @param   {Object} $q          Promises service
+     * @param   {Object} broadcaster Application service for broadcasting
+     *                             events to other modules of the application
+     * @param   {Object} satnetRPC Application service for accessing the RPC
+     *                             methods of the central server
+     * @param   {Object} markers   Service that handles the markers over the map
+     */
+    function ($rootScope, $q, broadcaster, satnetRPC, markers) {
+        'use strict';
+
+        /**
+         * Initializes all the GroundStations reading the information from
+         * the server. Markers are indirectly initialized.
+         * @returns {ng.IPromise<[String]>} Identifier of the read GS.
+         */
+        this.initAll = function () {
+            var self = this;
+            return satnetRPC.rCall('gs.list', []).then(function (gss) {
+                return self._initAll(gss);
+            });
+        };
+
+        /**
+         * Initializes all the GroundStations reading the information from
+         * the server, for all those that are registered for this LEOP cluster.
+         * Markers are indirectly initialized.
+         * 
+         * @returns {Object} Promise that returns the identifier of the Ground
+         *                   Station
+         */
+        this.initAllLEOP = function (leop_id) {
+            var self = this, p = [];
+            return satnetRPC.rCall('leop.gs.list', [leop_id])
+                .then(function (gss) {
+                    angular.forEach(gss.leop_gs_inuse, function (gs) {
+                        p.push(self.addGS(gs));
+                    });
+                    angular.forEach(gss.leop_gs_available, function (gs) {
+                        p.push(self.addUnconnectedGS(gs));
+                    });
+                    return $q.all(p).then(function (gs_ids) {
+                        var ids = [];
+                        angular.forEach(gs_ids, function (id) {
+                            ids.push(id);
+                        });
+                        return ids;
+                    });
+                });
+        };
+
+        /**
+         * Common and private method for GroundStation initializers.
+         * 
+         * @param list The list of identifiers of the GroundStation objects.
+         * @returns {ng.IPromise<[String]>} Identifier of the read GS.
+         * @private
+         */
+        this._initAll = function (list) {
+            var self = this, p = [];
+            angular.forEach(list, function (gs) { p.push(self.addGS(gs)); });
+            return $q.all(p).then(function (gs_ids) {
+                var ids = [];
+                angular.forEach(gs_ids, function (id) { ids.push(id); });
+                return ids;
+            });
+        };
+
+        /**
+         * Adds a new GroundStation together with its marker, using the
+         * configuration object that it retrieves from the server.
+         *
+         * @param identifier Identififer of the GroundStation to be added.
+         * @returns String Identifier of the just-created object.
+         */
+        this.addGS = function (identifier) {
+            return satnetRPC.rCall('gs.get', [identifier]).then(function (data) {
+                return markers.createGSMarker(data);
+            });
+        };
+
+        /**
+         * Adds a new GroundStation together with its marker, using the
+         * configuration object that it retrieves from the server. It does not
+         * include the connection line with the server.
+         *
+         * @param identifier Identififer of the GroundStation to be added.
+         * @returns String Identifier of the just-created object.
+         */
+        this.addUnconnectedGS = function (identifier) {
+            return satnetRPC.rCall('gs.get', [identifier]).then(
+                function (data) {
+                    return markers.createUnconnectedGSMarker(data);
+                }
+            );
+        };
+
+        /**
+         * "Connects" the given groundstation to the server by adding the
+         * necessary line.
+         * @param identifier Identifier of the gs
+         */
+        this.connectGS = function (identifier) {
+            markers.createGSConnector(identifier);
+        };
+
+        /**
+         * "Disconnects" the GS marker by removing the line that binds it to
+         * the server marker.
+         * @param identifier Identifier of the gs
+         */
+        this.disconnectGS = function (identifier) {
+            markers.removeGSConnector(identifier);
+        };
+
+        /**
+         * Updates the markers for the given GroundStation object.
+         * @param identifier Identifier of the GroundStation object.
+         */
+        this.updateGS = function (identifier) {
+            satnetRPC.rCall('gs.get', [identifier]).then(function (data) {
+                return markers.updateGSMarker(data);
+            });
+        };
+
+        /**
+         * Removes the markers for the given GroundStation object.
+         * @param identifier Identifier of the GroundStation object.
+         */
+        this.removeGS = function (identifier) {
+            return markers.removeGSMarker(identifier);
+        };
+
+        /**
+         * Private method that creates the event listeners for this service.
+         */
+        this.initListeners = function () {
+
+            var self = this;
+            $rootScope.$on(broadcaster.GS_ADDED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-added-event, event = ' + event + ', id = ' + id
+                );
+                self.addGS(id);
+            });
+            $rootScope.$on(broadcaster.GS_REMOVED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-removed-event, event = ' + event + ', id = ' + id
+                );
+                self.removeGS(id);
+            });
+            $rootScope.$on(broadcaster.GS_UPDATED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-updated-event, event = ' + event + ', id = ' + id
+                );
+                self.updateGS(id);
+            });
+            $rootScope.$on(broadcaster.LEOP_GS_ASSIGNED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-assigned-event, event = ' + event + ', id = ' + id
+                );
+                self.connectGS(id);
+            });
+            $rootScope.$on(broadcaster.LEOP_GS_RELEASED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-released-event, event = ' + event + ', id = ' + id
+                );
+                self.disconnectGS(id);
+            });
+            $rootScope.$on(broadcaster.GS_AVAILABLE_ADDED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-added-event, event = ' + event + ', id = ' + id
+                );
+                self.addUnconnectedGS(id);
+            });
+            $rootScope.$on(broadcaster.GS_AVAILABLE_REMOVED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-removed-event, event = ' + event + ', id = ' + id
+                );
+                self.removeGS(id);
+            });
+            $rootScope.$on(broadcaster.GS_AVAILABLE_UPDATED_EVENT, function (event, id) {
+                console.log(
+                    '@on-gs-updated-event, event = ' + event + ', id = ' + id
+                );
+                self.updateGS(id);
+            });
+
+        };
+
+    }
+]);;/**
+ * Copyright 2014 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 10/24/14.
+ */
+
 /** Module definition (empty array is vital!). */
-angular.module('snMarkerServices', ['snMapServices']);
+angular
+    .module('snMarkerServices', [
+        'snMapServices'
+    ]);
 
 /**
  * eXtended GroundStation models. Services built on top of the satnetRPC
@@ -1084,8 +1698,25 @@ angular.module('snMarkerServices')
     .constant('_RATE', 1)
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)
-    .service('markerServices', [
+    .service('markers', [
         '$log', 'mapServices', '_SIM_DAYS', '_GEOLINE_STEPS',
+
+        /**
+         * Service that provides the basic functions for handling the markers
+         * over the Leaflet map. In order to add new markers, update or remove
+         * the ones on the map, the functions provided by this service must be
+         * used. They automatically handle additional features like the
+         * addition of the connection lines among Ground Stations and Servers,
+         * or the labels for each of the markers.
+         * 
+         * @param   {Object}        $log           Angular logging service
+         * @param   {Object}        mapServices    SatNet map services
+         * @param   {Number}        _SIM_DAYS      Number of days for the
+         *                                       simulation
+         * @param   {Number}        _GEOLINE_STEPS Number of steps for each of
+         *                                       the GeoLines
+         * @returns {Object|String} Object that provides this service
+         */
         function ($log, mapServices, _SIM_DAYS, _GEOLINE_STEPS) {
             'use strict';
 
@@ -1715,7 +2346,81 @@ angular.module('snMarkerServices')
             };
 
         }
-    ]);;/*
+    ]);;/**
+ * Copyright 2014 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 10/28/14.
+ */
+
+/** Module definition (empty array is vital!). */
+angular.module('snNetworkModels', [
+    'satnetServices',
+    'snMarkerServices'
+]).service('serverModels', [
+    '$rootScope', '$location', 'broadcaster', 'satnetRPC',  'markers',
+
+    /**
+     * Function that provides the services for handling the markers related to
+     * the elements of the network that must be shown on the map.
+     * 
+     * @param   {Object} $rootScope  Main Angular scope where the map is
+     * @param   {Object} $location   Angular location service
+     * @param   {Object} broadcaster SatNet service to broadcast events
+     * @param   {Object} satnetRPC   SatNet service to access RPC methods
+     * @param   {Object} markers     SatNet service to handle map markers
+     * @returns {Object} Object that offers this service
+     */
+    function ($rootScope, $location, broadcaster, satnetRPC, markers) {
+
+        /**
+         * Function that initializes the listeners that connect this service
+         * with the events happening in other places of the application.
+         */
+        this._initListeners = function () {
+            $rootScope.$on(
+                broadcaster.KEEP_ALIVE_EVENT,
+                function (event, message) {
+                    console.log('ev = ' + event + ', msg = ' + message);
+                    satnetRPC.alive().then(function (data) {
+                        console.log('alive! data = ' + JSON.stringify(data));
+                    });
+                }
+            );
+        };
+
+        /**
+         * Function that initializes a marker for a standalone server on the
+         * map.
+         * 
+         * @returns {Object} Returns the object with the just created marker
+         */
+        this.initStandalone = function () {
+            this._initListeners();
+            var identifier = $location.host();
+            return satnetRPC.getServerLocation(identifier)
+                .then(function (data) {
+                    return markers.createServerMarker(
+                        identifier,
+                        data.latitude,
+                        data.longitude
+                    );
+                });
+        };
+
+    }
+]);;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -1916,6 +2621,7 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.init = function () {
 
             satnetRPC.getUserLocation().then(function (location) {
+
                 angular.extend($scope.center, {
                     lat: location.latitude,
                     lng: location.longitude,

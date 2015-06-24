@@ -199,6 +199,7 @@ gsCtrlModule.controller('GsAddCtrl', [
         $scope.init = function () {
 
             satnetRPC.getUserLocation().then(function (location) {
+
                 angular.extend($scope.center, {
                     lat: location.latitude,
                     lng: location.longitude,

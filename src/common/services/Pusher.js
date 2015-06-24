@@ -17,14 +17,11 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('pushServices', ['pusher-angular']);
-
-/**
- * Service that defines the basic calls to the services of the SATNET network
- * through JSON RPC. It defines a common error handler for all the errors that
- * can be overriden by users.
- */
-angular.module('pushServices').service('satnetPush', [
+angular
+.module('pushServices', [
+    'pusher-angular'
+])
+.service('satnetPush', [
     '$log', '$pusher',
     function ($log, $pusher) {
         'use strict';

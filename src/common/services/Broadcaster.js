@@ -17,13 +17,18 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('broadcaster', ['pushServices']);
-
-/**
- * Service used for broadcasting UI events in between controllers.
- */
-angular.module('broadcaster').service('broadcaster', [
+angular.module('broadcaster', ['pushServices'])
+.service('broadcaster', [
     '$rootScope', '$log', 'satnetPush',
+
+    /**
+     * Broadcaster service that enables the sending and reception of messages
+     * among all the modules of this Angular application.
+     * 
+     * @param {Object}   $rootScope Main Angular scope for this service
+     * @param {[[Type]]} $log       $log Angular service
+     * @param {Object}   satnetPush Pusher.com service access
+     */
     function ($rootScope, $log, satnetPush) {
 
         'use strict';

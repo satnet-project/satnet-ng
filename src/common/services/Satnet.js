@@ -18,7 +18,9 @@
 
 /** Module definition (empty array is vital!). */
 angular
-    .module('satnetServices', ['jsonrpc'])
+    .module('satnetServices', [
+        'jsonrpc'
+    ])
     .constant('TEST_PORT', 8000)
     .service('satnetRPC', [
         'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',

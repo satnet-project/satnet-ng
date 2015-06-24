@@ -17,20 +17,31 @@
  */
 
 /** Module definition . */
-angular.module('x-groundstation-models', [
-    'broadcaster',
-    'pushServices',
-    'satnet-services',
-    'pushServices',
-    'marker-models'
-]);
+angular
+    .module('GroundStationModels', [
+        'broadcaster',
+        'pushServices',
+        'satnetServices',
+        'snMarkerServices'
+    ])
+    .service('gsModels', [
+        '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
 
-/**
- * eXtended GroundStation models. Services built on top of the satnetRPC
- * service and the basic GroundStation models.
- */
-angular.module('x-groundstation-models').service('xgs', [
-    '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
+    /**
+     * Service that handles the models for the Ground Stations. All the
+     * information concerning the Ground Stations is temporary stored here in 
+     * this models and should be updated regularly after any change in the
+     * network. The reason is that the main storage for the information is the
+     * database in the central server.
+     * 
+     * @param   {Object} $rootScope  Main Angular scope for the module
+     * @param   {Object} $q          Promises service
+     * @param   {Object} broadcaster Application service for broadcasting
+     *                             events to other modules of the application
+     * @param   {Object} satnetRPC Application service for accessing the RPC
+     *                             methods of the central server
+     * @param   {Object} markers   Service that handles the markers over the map
+     */
     function ($rootScope, $q, broadcaster, satnetRPC, markers) {
         'use strict';
 
@@ -50,7 +61,9 @@ angular.module('x-groundstation-models').service('xgs', [
          * Initializes all the GroundStations reading the information from
          * the server, for all those that are registered for this LEOP cluster.
          * Markers are indirectly initialized.
-         * @returns {ng.IPromise<[String]>} Identifier of the read GS.
+         * 
+         * @returns {Object} Promise that returns the identifier of the Ground
+         *                   Station
          */
         this.initAllLEOP = function (leop_id) {
             var self = this, p = [];
@@ -74,6 +87,7 @@ angular.module('x-groundstation-models').service('xgs', [
 
         /**
          * Common and private method for GroundStation initializers.
+         * 
          * @param list The list of identifiers of the GroundStation objects.
          * @returns {ng.IPromise<[String]>} Identifier of the read GS.
          * @private
