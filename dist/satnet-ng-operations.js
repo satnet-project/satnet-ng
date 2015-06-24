@@ -978,7 +978,13 @@ angular.module('snMapServices', [
 /** Module definition (empty array is vital!). */
 angular
     .module('satnetServices', [
-        'jsonrpc'
+        'jsonrpc', 'ngCookies'
+    ])
+    .run([
+        '$http', '$cookies', function ($http, $cookies) {
+            // For CSRF token compatibility with Django
+            $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+        }
     ])
     .constant('TEST_PORT', 8000)
     .service('satnetRPC', [
@@ -1126,7 +1132,9 @@ angular
                     .createMethod('getMessages'),
                 // NETWORK services
                 'net.alive': this._network
-                    .createMethod('keepAlive')
+                    .createMethod('keepAlive'),
+                'net.geoip': this._network
+                    .createMethod('geoip')
             };
 
             /**
@@ -1215,12 +1223,11 @@ angular
              * service.
              *
              * @returns Promise that returns a { latitude, longitude } object.
-             */
             this.getServerLocation = function (hostname) {
+                var url = this._getSatNetAddress() +
+                    '/configuration/hostname/geoip';
                 return $http
-                    .post('/configuration/hostname/geoip', {
-                        'hostname': hostname
-                    })
+                    .post(url, { 'hostname': hostname })
                     .then(function (data) {
                         $log.info(
                             '[satnet] server name = ' + hostname + '@(' + JSON
@@ -1230,6 +1237,13 @@ angular
                             latitude: parseFloat(data.data.latitude),
                             longitude: parseFloat(data.data.longitude)
                         };
+                    });
+            };
+            */
+            this.getServerLocation = function (hostname) {
+                return this.rCall('net.geoip', [hostname])
+                    .then(function (location) {
+                        return location;
                     });
             };
 
@@ -1883,7 +1897,7 @@ angular.module('snMarkerServices')
                         type: 'markercluster',
                         visible: true
                     }
-                    /*, TODO Native angular-leaflet support for MovingMarker
+                    /* TODO Native angular-leaflet support for MovingMarker
                     spacecraft: {
                         name: 'Spacecraft',
                         type: 'markercluster',
@@ -1916,9 +1930,9 @@ angular.module('snMarkerServices')
                     lng: longitude,
                     focus: true,
                     draggable: false,
-                    layer: 'network',
+                    //layer: 'network',
                     icon: {
-                        iconUrl: '/images/server-icon.svg',
+                        iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
                     },
                     label: {
@@ -1977,7 +1991,7 @@ angular.module('snMarkerServices')
 
                 c_key = this.createMarkerKey(c_id);
                 r[c_key] = {
-                    // TODO BUG: path removal if added as a layer
+                    // FIXME Path removal if added as a layer
                     // (angular-leaflet)
                     // layer: 'network',
                     //color: '#A52A2A',
@@ -2030,7 +2044,7 @@ angular.module('snMarkerServices')
                     lng: cfg.groundstation_latlon[1],
                     focus: true,
                     draggable: false,
-                    layer: 'groundstations',
+                    //layer: 'groundstations',
                     icon: {
                         iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
@@ -2588,7 +2602,7 @@ gsCtrlModule.controller('GsAddCtrl', [
             satnetRPC.rCall('gs.add', gs_cfg).then(
                 function (results) {
                     var gs_id = results.groundstation_id;
-                    // TODO : broadcaster.gsAdded(gsId);
+                    // TODO broadcaster.gsAdded(gsId);
                     var message = '<' + gs_id + '> succesfully created!';
                     $log.info(message, ', result = ' + JSON.stringify(results));
                     $mdToast.show($mdToast.simple().content(message));
@@ -2638,10 +2652,12 @@ gsCtrlModule.controller('GsAddCtrl', [
 
             });
 
-            $scope.$on("leafletDirectiveMarker.dragend", function (event, args) {
-                $scope.markers.gs.lat = args.model.lat;
-                $scope.markers.gs.lng = args.model.lng;
-            });
+            $scope.$on("leafletDirectiveMarker.dragend",
+                function (event, args) {
+                    $scope.markers.gs.lat = args.model.lat;
+                    $scope.markers.gs.lng = args.model.lng;
+                }
+            );
 
         };
 

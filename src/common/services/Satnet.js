@@ -19,7 +19,13 @@
 /** Module definition (empty array is vital!). */
 angular
     .module('satnetServices', [
-        'jsonrpc'
+        'jsonrpc', 'ngCookies'
+    ])
+    .run([
+        '$http', '$cookies', function ($http, $cookies) {
+            // For CSRF token compatibility with Django
+            $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+        }
     ])
     .constant('TEST_PORT', 8000)
     .service('satnetRPC', [
@@ -167,7 +173,9 @@ angular
                     .createMethod('getMessages'),
                 // NETWORK services
                 'net.alive': this._network
-                    .createMethod('keepAlive')
+                    .createMethod('keepAlive'),
+                'net.geoip': this._network
+                    .createMethod('geoip')
             };
 
             /**
@@ -256,12 +264,11 @@ angular
              * service.
              *
              * @returns Promise that returns a { latitude, longitude } object.
-             */
             this.getServerLocation = function (hostname) {
+                var url = this._getSatNetAddress() +
+                    '/configuration/hostname/geoip';
                 return $http
-                    .post('/configuration/hostname/geoip', {
-                        'hostname': hostname
-                    })
+                    .post(url, { 'hostname': hostname })
                     .then(function (data) {
                         $log.info(
                             '[satnet] server name = ' + hostname + '@(' + JSON
@@ -271,6 +278,13 @@ angular
                             latitude: parseFloat(data.data.latitude),
                             longitude: parseFloat(data.data.longitude)
                         };
+                    });
+            };
+            */
+            this.getServerLocation = function (hostname) {
+                return this.rCall('net.geoip', [hostname])
+                    .then(function (location) {
+                        return location;
                     });
             };
 

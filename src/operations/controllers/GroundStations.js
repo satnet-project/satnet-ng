@@ -166,7 +166,7 @@ gsCtrlModule.controller('GsAddCtrl', [
             satnetRPC.rCall('gs.add', gs_cfg).then(
                 function (results) {
                     var gs_id = results.groundstation_id;
-                    // TODO : broadcaster.gsAdded(gsId);
+                    // TODO broadcaster.gsAdded(gsId);
                     var message = '<' + gs_id + '> succesfully created!';
                     $log.info(message, ', result = ' + JSON.stringify(results));
                     $mdToast.show($mdToast.simple().content(message));
@@ -216,10 +216,12 @@ gsCtrlModule.controller('GsAddCtrl', [
 
             });
 
-            $scope.$on("leafletDirectiveMarker.dragend", function (event, args) {
-                $scope.markers.gs.lat = args.model.lat;
-                $scope.markers.gs.lng = args.model.lng;
-            });
+            $scope.$on("leafletDirectiveMarker.dragend",
+                function (event, args) {
+                    $scope.markers.gs.lat = args.model.lat;
+                    $scope.markers.gs.lng = args.model.lng;
+                }
+            );
 
         };
 

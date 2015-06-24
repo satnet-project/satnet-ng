@@ -64,7 +64,7 @@ describe("Testing Operations Interface", function () {
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
         $httpBackend
-            .expectPOST('/configuration/hostname/geoip')
+            .expectPOST('http://server:80/configuration/hostname/geoip')
             .respond(x_post_geoip);
 
         $body.append($directive);

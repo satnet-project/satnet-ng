@@ -215,7 +215,7 @@ angular.module('snMarkerServices')
                         type: 'markercluster',
                         visible: true
                     }
-                    /*, TODO Native angular-leaflet support for MovingMarker
+                    /* TODO Native angular-leaflet support for MovingMarker
                     spacecraft: {
                         name: 'Spacecraft',
                         type: 'markercluster',
@@ -248,9 +248,9 @@ angular.module('snMarkerServices')
                     lng: longitude,
                     focus: true,
                     draggable: false,
-                    layer: 'network',
+                    //layer: 'network',
                     icon: {
-                        iconUrl: '/images/server-icon.svg',
+                        iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
                     },
                     label: {
@@ -309,7 +309,7 @@ angular.module('snMarkerServices')
 
                 c_key = this.createMarkerKey(c_id);
                 r[c_key] = {
-                    // TODO BUG: path removal if added as a layer
+                    // FIXME Path removal if added as a layer
                     // (angular-leaflet)
                     // layer: 'network',
                     //color: '#A52A2A',
@@ -362,7 +362,7 @@ angular.module('snMarkerServices')
                     lng: cfg.groundstation_latlon[1],
                     focus: true,
                     draggable: false,
-                    layer: 'groundstations',
+                    //layer: 'groundstations',
                     icon: {
                         iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
