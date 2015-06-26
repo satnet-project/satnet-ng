@@ -1711,7 +1711,9 @@ angular.module('snMarkerServices')
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)
     .service('markers', [
-        '$log', 'mapServices', '_SIM_DAYS', '_GEOLINE_STEPS',
+        '$log',
+        'mapServices', 'LAT', 'LNG', 'ZOOM',
+        '_SIM_DAYS', '_GEOLINE_STEPS',
 
         /**
          * Service that provides the basic functions for handling the markers
@@ -1729,7 +1731,7 @@ angular.module('snMarkerServices')
          *                                       the GeoLines
          * @returns {Object|String} Object that provides this service
          */
-        function ($log, mapServices, _SIM_DAYS, _GEOLINE_STEPS) {
+        function ($log, mapServices, LAT, LNG, ZOOM, _SIM_DAYS, _GEOLINE_STEPS) {
 
             /******************************************************************/
             /****************************************************** MAP SCOPE */
@@ -1766,11 +1768,7 @@ angular.module('snMarkerServices')
 
                 angular.extend(
                     this._mapScope, {
-                        center: {
-                            lat: mapServices.LAT,
-                            lng: mapServices.LNG,
-                            zoom: mapServices.ZOOM
-                        },
+                        center: { lat: LAT, lng: LNG, zoom: ZOOM },
                         layers: {
                             baselayers: {},
                             overlays: {}
