@@ -59,7 +59,7 @@ angular.module('snMarkerServices')
             // associated structures.
             this._mapInfo = {};
             // Scope where the leaflet angular pluing has its variables.
-            this._mapScope = {};
+            this._mapScope = null;
 
             /**
              * Returns the current scope to which this markers service is bound

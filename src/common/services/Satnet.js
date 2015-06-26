@@ -213,8 +213,7 @@ angular
                 var error_fn = this._generateError;
 
                 if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '[satnetRPC] service not found, id = <' +
-                    service + '>';
+                    throw '[satnetRPC] service not found, id = <' + service + '>';
                 }
                 $log.info(
                     '[satnetRPC] Invoked service = <' + service + '>' +

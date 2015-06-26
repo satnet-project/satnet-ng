@@ -19,12 +19,13 @@
 describe('Testing Markers Service', function () {
 
     var markers, $rootScope, $q, $log,
+        mapServices,
         mock__cookies = {},
         _RATE, _SIM_DAYS, _GEOLINE_STEPS;
 
     beforeEach(function () {
 
-        module('snMarkerServices',
+        module('snMarkerServices', 'snMapServices',
             function ($provide) {
                 $provide.value('$cookies', mock__cookies);
             }
@@ -32,6 +33,7 @@ describe('Testing Markers Service', function () {
 
         inject(function ($injector) {
             markers = $injector.get('markers');
+            mapServices = $injector.get('mapServices');
             $rootScope = $injector.get('$rootScope');
             $q = $injector.get('$q');
             $log = $injector.get('$log');
@@ -53,7 +55,46 @@ describe('Testing Markers Service', function () {
 
     });
 
-    it('should ', function () {
+    it('should allow access to the $scope where the map is', function () {
+
+        var $fake_scope = $rootScope.$new();
+
+        expect(function () {
+            markers.getScope();
+        }).toThrow('<_mapScope> has not been set.');
+
+        markers.configureMapScope($fake_scope);
+        expect(markers.getScope()).not.toBeNull();
+
+    });
+
+    
+    it('should configure the given $scope with the map variables', function () {
+
+        /*
+        var $fake_scope = $rootScope.$new(),
+            x_scope = $rootScope.$new();
+        */
+        var $fake_scope = {}, x_scope = {};
+
+        /**/
+        x_scope = {
+            center: {
+                lat: mapServices.LAT,
+                lng: mapServices.LNG,
+                zoom: mapServices.ZOOM
+            },
+            layers: {
+                baselayers: mapServices.getBaseLayers(),
+                overlays: mapServices.getOverlays()
+            },
+            markers: {}
+        };
+        /**/
+
+        markers.configureMapScope($fake_scope);
+        expect($fake_scope).toBe(x_scope);
+
     });
     
 });

@@ -1172,8 +1172,7 @@ angular
                 var error_fn = this._generateError;
 
                 if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '[satnetRPC] service not found, id = <' +
-                    service + '>';
+                    throw '[satnetRPC] service not found, id = <' + service + '>';
                 }
                 $log.info(
                     '[satnetRPC] Invoked service = <' + service + '>' +
@@ -1740,7 +1739,7 @@ angular.module('snMarkerServices')
             // associated structures.
             this._mapInfo = {};
             // Scope where the leaflet angular pluing has its variables.
-            this._mapScope = {};
+            this._mapScope = null;
 
             /**
              * Returns the current scope to which this markers service is bound
