@@ -234,7 +234,6 @@ describe('Testing Markers Service', function () {
 
     });
 
-    /*
     it('should pan to a given GS location', function () {
 
         var $fake_scope = $rootScope.$new(),
@@ -256,12 +255,11 @@ describe('Testing Markers Service', function () {
 
         expect(function () {
             markers.createGSMarker(gs_cfg);
-        }).toThrow('No server has been defined for <undefined>');
-        
+        }).toThrow('No identifier provided');
+
         //expect(markers.createGSMarker(gs_cfg)).toEqual('MK0');
         //markers.panToGSMarker(gs_id_1);
 
     });
-    */
 
 });
