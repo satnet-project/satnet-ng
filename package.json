@@ -71,6 +71,7 @@
   },
   "devDependencies": {
     "connect-livereload": "^0.5.3",
+    "diff": "^1.4.0",
     "grunt-connect-proxy": "^0.2.0",
     "grunt-contrib-connect": "^0.10.1",
     "grunt-reload": "^0.2.0"

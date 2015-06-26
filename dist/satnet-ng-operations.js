@@ -1846,6 +1846,9 @@ angular.module('snMarkerServices')
              * @returns {string} Key for accessing to the marker
              */
             this.getMarkerKey = function (identifier) {
+                if ( this._ids2keys.hasOwnProperty(identifier) === false ) {
+                    throw 'No key for marker <' + identifier + '>';
+                }
                 return this._ids2keys[identifier];
             };
 
@@ -1857,11 +1860,11 @@ angular.module('snMarkerServices')
              * @returns {null|*} String with the key for the marker of the
              *                      server
              */
-            this.getServerMarker = function (gs_identifier) {
+            this.getServerMarker = function (gs_id) {
                 if (this._serverMarkerKey === null) {
-                    throw 'No server has been defined';
+                    throw 'No server has been defined for <' + gs_id + '>';
                 }
-                console.log('gs_id = ' + gs_identifier);
+                console.log('@getServerMarker: gs_id = ' + gs_id);
                 return this.getScope().markers[this._serverMarkerKey];
             };
 
@@ -1957,9 +1960,20 @@ angular.module('snMarkerServices')
              * @returns {string} Identifier for the connector.
              */
             this.createConnectorIdentifier = function (gs_identifier) {
+                if (!gs_identifier) { throw 'No identifier provided'; }
                 return 'connect:' + gs_identifier + '_2_' +
                     this.getServerMarker(gs_identifier).identifier;
             };
+            
+            /* TODO The structure for modelling what server owns each
+             * GroundStation has already started to be implemented. In the
+             * 'this.servers' dictionary, each entry has a field called
+             * 'groundstations' that enables the correct modelling of the
+             * network. Right now, the first server is always chosen and all
+             * the GroundStations are bound to it. In the future, each time a
+             * GroundStation is added, the server that it belongs to should be
+             * specified and used accordingly.
+             */
 
             /**
              * This function creates a connection line object to be draw on the
@@ -1969,17 +1983,9 @@ angular.module('snMarkerServices')
              * @param {Object} gs_identifier Identifier of the GroundStation
              *                                  object.
              * @returns {*} L.polyline object
-             *
-             * TODO The structure for modelling what server owns each
-             * TODO GroundStation has already started to be implemented. In the
-             * TODO 'this.servers' dictionary, each entry has a field called
-             * TODO 'groundstations' that enables the correct modelling of the
-             * TODO network. Right now, the first server is always chosen and
-             * TODO all the GroundStations are bound to it. In the future, each
-             * TODO time a GroundStation is added, the server that it belongs
-             * TODO to should be specified and used accordingly.
              */
             this.createGSConnector = function (gs_identifier) {
+                if (!gs_identifier) { throw 'No identifier provided'; }
 
                 var s_marker = this.getServerMarker(gs_identifier),
                     g_marker = this.getMarker(gs_identifier),
@@ -2012,7 +2018,8 @@ angular.module('snMarkerServices')
              * @param groundstation_id Identifier of the groundstation
              */
             this.panToGSMarker = function (groundstation_id) {
-
+                if (!groundstation_id) { throw 'No identifier provided'; }
+    
                 var marker = this.getMarker(groundstation_id),
                     m_ll = new L.LatLng(marker.lat, marker.lng);
 
