@@ -42,7 +42,7 @@ angular.module('snMarkerServices')
          * used. They automatically handle additional features like the
          * addition of the connection lines among Ground Stations and Servers,
          * or the labels for each of the markers.
-         * 
+         *
          * @param   {Object}        $log           Angular logging service
          * @param   {Object}        mapServices    SatNet map services
          * @param   {Number}        _SIM_DAYS      Number of days for the
@@ -88,7 +88,11 @@ angular.module('snMarkerServices')
 
                 angular.extend(
                     this._mapScope, {
-                        center: { lat: LAT, lng: LNG, zoom: ZOOM },
+                        center: {
+                            lat: LAT,
+                            lng: LNG,
+                            zoom: ZOOM
+                        },
                         layers: {
                             baselayers: {},
                             overlays: {}
@@ -134,7 +138,7 @@ angular.module('snMarkerServices')
              * Dictionary that contains the relation between the identifiers
              * of the objects and the keys for the markers that represent those
              * objects.
-             * 
+             *
              * @type {{}}
              */
             this._ids2keys = {};
@@ -142,7 +146,7 @@ angular.module('snMarkerServices')
             /**
              * Creates a new key for the given identifier and adds it to the
              * dictionary of identifiers and keys.
-             * 
+             *
              * @param identifier Identifier of the marker.
              * @returns {string} Key for accessing to the marker.
              */
@@ -161,12 +165,12 @@ angular.module('snMarkerServices')
 
             /**
              * Returns the key for the given object that holds a marker.
-             * 
+             *
              * @param identifier Identifier of the object
              * @returns {string} Key for accessing to the marker
              */
             this.getMarkerKey = function (identifier) {
-                if ( this._ids2keys.hasOwnProperty(identifier) === false ) {
+                if (this._ids2keys.hasOwnProperty(identifier) === false) {
                     throw 'No key for marker <' + identifier + '>';
                 }
                 return this._ids2keys[identifier];
@@ -182,9 +186,9 @@ angular.module('snMarkerServices')
              */
             this.getServerMarker = function (gs_id) {
                 if (this._serverMarkerKey === null) {
-                    throw 'No server has been defined for <' + gs_id + '>';
+                    throw '@getServerMarker: no server defined for <' + gs_id +
+                        '>';
                 }
-                console.log('@getServerMarker: gs_id = ' + gs_id);
                 return this.getScope().markers[this._serverMarkerKey];
             };
 
@@ -202,7 +206,7 @@ angular.module('snMarkerServices')
             /**
              * Returns the overlays to be included as markerclusters within
              * the map.
-             * 
+             *
              * @return Object   Object to configure the overlays of the $scope
              *                      with the overlays
              */
@@ -280,11 +284,13 @@ angular.module('snMarkerServices')
              * @returns {string} Identifier for the connector.
              */
             this.createConnectorIdentifier = function (gs_identifier) {
-                if (!gs_identifier) { throw 'No identifier provided'; }
+                if (!gs_identifier) {
+                    throw 'No identifier provided';
+                }
                 return 'connect:' + gs_identifier + '_2_' +
                     this.getServerMarker(gs_identifier).identifier;
             };
-            
+
             /* TODO The structure for modelling what server owns each
              * GroundStation has already started to be implemented. In the
              * 'this.servers' dictionary, each entry has a field called
@@ -305,7 +311,9 @@ angular.module('snMarkerServices')
              * @returns {*} L.polyline object
              */
             this.createGSConnector = function (gs_identifier) {
-                if (!gs_identifier) { throw 'No identifier provided'; }
+                if (!gs_identifier) {
+                    throw '@createGSConnector: no GS identifier provided';
+                }
 
                 var s_marker = this.getServerMarker(gs_identifier),
                     g_marker = this.getMarker(gs_identifier),
@@ -333,13 +341,16 @@ angular.module('snMarkerServices')
             };
 
             /**
-             * Pans the current view of the map to the coordinates of the marker
-             * for the given groundstation.
+             * Pans the current view of the map to the coordinates of the
+             * marker for the given groundstation.
+             *
              * @param groundstation_id Identifier of the groundstation
              */
             this.panToGSMarker = function (groundstation_id) {
-                if (!groundstation_id) { throw 'No identifier provided'; }
-    
+                if (!groundstation_id) {
+                    throw '@panToGSMarker: no GS identifier provided';
+                }
+
                 var marker = this.getMarker(groundstation_id),
                     m_ll = new L.LatLng(marker.lat, marker.lng);
 
@@ -424,7 +435,7 @@ angular.module('snMarkerServices')
 
             /**
              * Removes the connector for the given gs_marker (if it exists).
-             * 
+             *
              * @param identifier Identifier of the gs_marker
              */
             this.removeGSConnector = function (identifier) {
@@ -553,8 +564,11 @@ angular.module('snMarkerServices')
             this.readTrack = function (groundtrack) {
 
                 var i, gt_i,
-                    positions = [], durations = [], geopoints = [],
-                    first = true, valid = false,
+                    positions = [],
+                    durations = [],
+                    geopoints = [],
+                    first = true,
+                    valid = false,
                     t0 = Date.now() * 1000,
                     tf = moment().add(
                         _SIM_DAYS,
@@ -566,7 +580,7 @@ angular.module('snMarkerServices')
                 }
 
                 for (i = 0; i < groundtrack.length; i += 1) {
-    
+
                     gt_i = groundtrack[i];
 
                     if (gt_i.timestamp < t0) {
@@ -602,7 +616,7 @@ angular.module('snMarkerServices')
                 };
 
             };
-            
+
             /**
              * Adds the markers for the new Spacecraft, this is: the marker for
              * the Spacecraft itself (together with its associated label) and

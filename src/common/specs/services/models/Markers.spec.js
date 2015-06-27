@@ -18,7 +18,7 @@
 
 describe('Testing Markers Service', function () {
 
-    var markers, $rootScope, $q, $log,
+    var markers, $rootScope, $q,
         mapServices, LAT, LNG, ZOOM,
         mock__cookies = {},
         _RATE, _SIM_DAYS, _GEOLINE_STEPS;
@@ -39,7 +39,6 @@ describe('Testing Markers Service', function () {
             ZOOM = $injector.get('ZOOM');
             $rootScope = $injector.get('$rootScope');
             $q = $injector.get('$q');
-            $log = $injector.get('$log');
             _RATE = $injector.get('_RATE');
             _SIM_DAYS = $injector.get('_SIM_DAYS');
             _GEOLINE_STEPS = $injector.get('_GEOLINE_STEPS');
@@ -73,11 +72,14 @@ describe('Testing Markers Service', function () {
 
     it('should set the map configuration in the given $scope', function () {
 
-        var $fake_scope = {}, x_scope = {};
+        var $fake_scope = {},
+            x_scope = {};
 
         x_scope = {
             center: {
-                lat: LAT, lng: LNG, zoom: ZOOM
+                lat: LAT,
+                lng: LNG,
+                zoom: ZOOM
             },
             layers: {
                 baselayers: mapServices.getBaseLayers(),
@@ -89,15 +91,19 @@ describe('Testing Markers Service', function () {
         };
 
         x_scope.layers.overlays.network = {
-            name: 'Network', type: 'markercluster', visible: true
+            name: 'Network',
+            type: 'markercluster',
+            visible: true
         };
         x_scope.layers.overlays.groundstations = {
-            name: 'Ground Stations', type: 'markercluster', visible: true
+            name: 'Ground Stations',
+            type: 'markercluster',
+            visible: true
         };
 
         expect(markers.getOverlays())
             .toEqual({
-                network : {
+                network: {
                     name: 'Network',
                     type: 'markercluster',
                     visible: true
@@ -116,8 +122,12 @@ describe('Testing Markers Service', function () {
 
     it('should manage the keys for the markers', function () {
 
-        var test_id_1 = 'id_1', test_id_2 = 'id_2', test_id_3 = 'id_3',
-            server_id = 'server_0', server_lat = '1.0', server_lng = '2.0',
+        var test_id_1 = 'id_1',
+            test_id_2 = 'id_2',
+            test_id_3 = 'id_3',
+            server_id = 'server_0',
+            server_lat = '1.0',
+            server_lng = '2.0',
             connector_1_id = '',
             $fake_scope = $rootScope.$new();
 
@@ -129,11 +139,17 @@ describe('Testing Markers Service', function () {
         expect(markers.getMarkerKey(test_id_1)).toEqual('MK0');
         expect(markers.getMarkerKey(test_id_2)).toEqual('MK1');
 
-        expect(function () { markers.getMarkerKey(test_id_3); })
+        expect(function () {
+                markers.getMarkerKey(test_id_3);
+            })
             .toThrow('No key for marker <id_3>');
 
-        expect(function () { markers.getServerMarker(test_id_1); })
-            .toThrow('No server has been defined for <id_1>');
+        expect(function () {
+                markers.getServerMarker(test_id_1);
+            })
+            .toThrow(
+                '@getServerMarker: no server defined for <' + test_id_1 + '>'
+            );
 
         markers.configureMapScope($fake_scope);
 
@@ -142,13 +158,19 @@ describe('Testing Markers Service', function () {
             .toEqual(server_id);
         expect(markers._serverMarkerKey).toEqual('MK2');
         expect(markers.getScope().markers.MK2).toEqual({
-            lat: server_lat, lng: server_lng,
-            focus: true, draggable: false,
+            lat: server_lat,
+            lng: server_lng,
+            focus: true,
+            draggable: false,
             icon: {
-                iconUrl: '/images/gs-icon.svg', iconSize: [15, 15]
+                iconUrl: '/images/gs-icon.svg',
+                iconSize: [15, 15]
             },
             label: {
-                message: server_id, options: { noHide: true }
+                message: server_id,
+                options: {
+                    noHide: true
+                }
             },
             groundstations: [],
             identifier: server_id
@@ -169,12 +191,15 @@ describe('Testing Markers Service', function () {
 
         expect(function () {
             markers.createGSConnector();
-        }).toThrow('No identifier provided');
+        }).toThrow('@createGSConnector: no GS identifier provided');
 
         expect(markers.createGSConnector(test_id_1)).toEqual(connector_1_id);
         expect(markers.getMarkerKey(connector_1_id)).toEqual('MK3');
         expect(markers.getScope().paths.MK3).toEqual({
-            color: 'gray', type: 'polyline', weight: 3, opacity: 0.25,
+            color: 'gray',
+            type: 'polyline',
+            weight: 3,
+            opacity: 0.25,
             latlngs: [
                 markers.getScope().markers.MK2,
                 markers.getScope().markers.MK0
@@ -187,9 +212,14 @@ describe('Testing Markers Service', function () {
     it('should create GS markers', function () {
 
         var $fake_scope = $rootScope.$new(),
-            server_id = 'server_0', server_lat = '1.0', server_lng = '2.0',
-            gs_id_1 = 'gs_id_1', gs_lat = 1.0, gs_lng = 2.0,
-            conn_gs_1 = '', conn_gs_1_key ='',
+            server_id = 'server_0',
+            server_lat = '1.0',
+            server_lng = '2.0',
+            gs_id_1 = 'gs_id_1',
+            gs_lat = 1.0,
+            gs_lng = 2.0,
+            conn_gs_1 = '',
+            conn_gs_1_key = '',
             gs_cfg = {
                 groundstation_id: gs_id_1,
                 groundstation_latlon: [gs_lat, gs_lng]
@@ -205,17 +235,24 @@ describe('Testing Markers Service', function () {
         expect($fake_scope.markers.MK0).toEqual({
             lat: gs_cfg.groundstation_latlon[0],
             lng: gs_cfg.groundstation_latlon[1],
-            focus: true, draggable: false,
-            icon: { iconUrl: '/images/gs-icon.svg', iconSize: [15, 15] },
+            focus: true,
+            draggable: false,
+            icon: {
+                iconUrl: '/images/gs-icon.svg',
+                iconSize: [15, 15]
+            },
             label: {
-                message: gs_cfg.groundstation_id, options: { noHide: true }
+                message: gs_cfg.groundstation_id,
+                options: {
+                    noHide: true
+                }
             },
             identifier: gs_id_1
         });
 
         expect(function () {
             markers.createGSConnector(gs_id_1);
-        }).toThrow('No server has been defined for <' + gs_id_1 + '>');
+        }).toThrow('@getServerMarker: no server defined for <' + gs_id_1 + '>');
 
         expect(markers.createServerMarker(server_id, server_lat, server_lng))
             .toEqual(server_id);
@@ -224,7 +261,10 @@ describe('Testing Markers Service', function () {
         conn_gs_1_key = markers.createMarkerKey(conn_gs_1);
 
         expect($fake_scope.paths[conn_gs_1_key]).toEqual({
-            color: 'gray', type: 'polyline', weight: 3, opacity: 0.25,
+            color: 'gray',
+            type: 'polyline',
+            weight: 3,
+            opacity: 0.25,
             latlngs: [
                 $fake_scope.markers[markers._serverMarkerKey],
                 $fake_scope.markers.MK0
@@ -237,10 +277,24 @@ describe('Testing Markers Service', function () {
     it('should pan to a given GS location', function () {
 
         var $fake_scope = $rootScope.$new(),
-            gs_id_1 = 'gs_id_1', gs_lat = 1.0, gs_lng = 2.0,
+            server_id = 'server_0',
+            server_lat = '1.0',
+            server_lng = '2.0',
+            gs_id_1 = 'gs_id_1',
+            gs_lat = 1.0,
+            gs_lng = 2.0,
             gs_cfg = {
-                id: gs_id_1,
                 groundstation_latlon: [gs_lat, gs_lng]
+            },
+            __getMainMap = function () {
+                return {
+                    then: function () {
+                        return {
+                            latitude: gs_lat,
+                            longitude: gs_lng
+                        };
+                    }
+                };
             };
 
         expect(function () {
@@ -255,10 +309,19 @@ describe('Testing Markers Service', function () {
 
         expect(function () {
             markers.createGSMarker(gs_cfg);
-        }).toThrow('No identifier provided');
+        }).toThrow('@createGSConnector: no GS identifier provided');
 
-        //expect(markers.createGSMarker(gs_cfg)).toEqual('MK0');
-        //markers.panToGSMarker(gs_id_1);
+        gs_cfg.groundstation_id = gs_id_1;
+        expect(function () {
+            markers.createGSMarker(gs_cfg);
+        }).toThrow('@getServerMarker: no server defined for <' + gs_id_1 + '>');
+
+        spyOn(mapServices, 'getMainMap').and.callFake(__getMainMap);
+        markers.panToGSMarker(gs_id_1);
+
+        expect(markers.createServerMarker(server_id, server_lat, server_lng))
+            .toEqual(server_id);
+        expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
 
     });
 
