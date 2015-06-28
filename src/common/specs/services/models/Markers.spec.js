@@ -142,7 +142,7 @@ describe('Testing Markers Service', function () {
         expect(function () {
                 markers.getMarkerKey(test_id_3);
             })
-            .toThrow('No key for marker <id_3>');
+            .toThrow('@getMarkerKey: No key for <' + test_id_3 + '>');
 
         expect(function () {
                 markers.getServerMarker(test_id_1);
@@ -298,6 +298,9 @@ describe('Testing Markers Service', function () {
             };
 
         expect(function () {
+            markers.panToGSMarker();
+        }).toThrow('@panToGSMarker: no GS identifier provided');
+        expect(function () {
             markers.panToGSMarker(gs_id_1);
         }).toThrow('<_mapScope> has not been set.');
 
@@ -305,7 +308,7 @@ describe('Testing Markers Service', function () {
 
         expect(function () {
             markers.panToGSMarker(gs_id_1);
-        }).toThrow('No key for marker <gs_id_1>');
+        }).toThrow('@getMarkerKey: No key for <' + gs_id_1 + '>');
 
         expect(function () {
             markers.createGSMarker(gs_cfg);
@@ -318,10 +321,86 @@ describe('Testing Markers Service', function () {
 
         spyOn(mapServices, 'getMainMap').and.callFake(__getMainMap);
         markers.panToGSMarker(gs_id_1);
+        $rootScope.$digest();
 
         expect(markers.createServerMarker(server_id, server_lat, server_lng))
             .toEqual(server_id);
         expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
+
+    });
+
+    it('should manage (CRUD) GS marker operations', function () {
+
+        var $fake_scope = $rootScope.$new(),
+            server_id = 'server_0',
+            server_lat = 1.0,
+            server_lng = 2.0,
+            gs_id_1 = 'gs_id_1',
+            gs_lat = 1.0,
+            gs_lng = 2.0,
+            conn_gs_1 = '', conn_gs_1_key = '',
+            gs_cfg = {
+                groundstation_id: gs_id_1,
+                groundstation_latlon: [gs_lat, gs_lng]
+            },
+            new_gs_lat = 3.0, new_gs_lng = 4.0,
+            new_gs_cfg = {
+                groundstation_id: gs_id_1,
+                groundstation_latlon: [new_gs_lat, new_gs_lng]
+            };
+
+        markers.configureMapScope($fake_scope);
+        expect(markers.createServerMarker(server_id, server_lat, server_lng))
+            .toEqual(server_id);
+        expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
+        conn_gs_1 = markers.createGSConnector(gs_id_1);
+        conn_gs_1_key = markers.createMarkerKey(conn_gs_1);
+
+        expect(function () {
+            markers.updateGSMarker(null);
+        }).toThrow('@updateGSMarker, wrong <cfg>');
+
+        expect(markers.updateGSMarker(new_gs_cfg)).toEqual(gs_id_1);
+        expect($fake_scope.markers.MK1).toEqual({
+            lat: new_gs_lat, lng: new_gs_lng,
+            focus: true, draggable: false,
+            icon: {
+                iconUrl: '/images/gs-icon.svg', iconSize: [15, 15]
+            },
+            label: {
+                message: new_gs_cfg.groundstation_id,
+                options: { noHide: true }
+            },
+            identifier: gs_id_1
+        });
+
+        expect(function () {
+            markers.removeGSMarker();
+        }).toThrow('@getMarkerKey: No key for <undefined>');
+
+        expect($fake_scope.markers.hasOwnProperty('MK1')).toBeTruthy();
+        expect($fake_scope.paths.hasOwnProperty(conn_gs_1_key)).toBeTruthy();
+        markers.removeGSMarker(gs_id_1);
+        expect($fake_scope.markers.hasOwnProperty('MK1')).toBeFalsy();
+        expect($fake_scope.paths.hasOwnProperty(conn_gs_1_key)).toBeFalsy();
+
+    });
+
+    
+    it('should manage (CRUD) SC marker operations', function () {
+
+        var $fake_scope = $rootScope.$new(),
+            sc_id = 'sc-1';
+
+        markers.configureMapScope($fake_scope);
+
+        expect(function () {
+            markers.addSC('', {});
+        }).toThrow('@addSC: wrong id');
+
+        expect(function () {
+            markers.addSC(sc_id, {});
+        }).toThrow('@createSCMarkers: wrong cfg, no <spacecraft_id>');
 
     });
 

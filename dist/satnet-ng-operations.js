@@ -1851,7 +1851,7 @@ angular.module('snMarkerServices')
              */
             this.getMarkerKey = function (identifier) {
                 if (this._ids2keys.hasOwnProperty(identifier) === false) {
-                    throw 'No key for marker <' + identifier + '>';
+                    throw '@getMarkerKey: No key for <' + identifier + '>';
                 }
                 return this._ids2keys[identifier];
             };
@@ -2101,16 +2101,23 @@ angular.module('snMarkerServices')
              * @returns {cfg.groundstation_id|*} Identifier.
              */
             this.updateGSMarker = function (cfg) {
+                if  (cfg === null) {
+                    throw '@updateGSMarker, wrong <cfg>';
+                }
+
                 var new_lat = cfg.groundstation_latlon[0],
                     new_lng = cfg.groundstation_latlon[1],
                     marker = this.getMarker(cfg.groundstation_id);
+    
                 if (marker.lat !== new_lat) {
                     marker.lat = new_lat;
                 }
                 if (marker.lng !== new_lng) {
                     marker.lng = new_lng;
                 }
+
                 return cfg.groundstation_id;
+
             };
 
             /**
@@ -2203,36 +2210,6 @@ angular.module('snMarkerServices')
 
             };
 
-            /**
-             * For a given Spacecraft configuration object, it creates the
-             * marker for the spacecraft, its associated label and the
-             * groundtrack.
-             *
-             * @param cfg Configuration object
-             * @returns {{marker: L.Marker, track: L.polyline}}
-             */
-            this.createSCMarkers = function (cfg) {
-
-                var id = cfg.spacecraft_id,
-                    gt,
-                    mo = this.scStyle,
-                    color = this.colors[this.color_n % this.colors.length];
-                this.color_n += 1;
-                this.trackStyle.color = color;
-                gt = this.readTrack(cfg.groundtrack);
-
-                return {
-                    marker: L.Marker.movingMarker(
-                        gt.positions,
-                        gt.durations,
-                        mo
-                    ).bindLabel(id, {
-                        noHide: true
-                    }),
-                    track: L.geodesic([gt.geopoints], this.trackStyle)
-                };
-
-            };
 
             /**
              * Function that reads the RAW groundtrack from the server and
@@ -2298,6 +2275,42 @@ angular.module('snMarkerServices')
             };
 
             /**
+             * For a given Spacecraft configuration object, it creates the
+             * marker for the spacecraft, its associated label and the
+             * groundtrack.
+             *
+             * @param cfg Configuration object
+             * @returns {{marker: L.Marker, track: L.polyline}}
+             */
+            this.createSCMarkers = function (cfg) {
+
+                //if (!cfg.hasOwnProperty('spacecraft_id')) {
+                if (!cfg) {
+                    throw '@createSCMarkers: wrong cfg, no <spacecraft_id>';
+                }
+    
+                var id = cfg.spacecraft_id,
+                    gt,
+                    mo = this.scStyle,
+                    color = this.colors[this.color_n % this.colors.length];
+                this.color_n += 1;
+                this.trackStyle.color = color;
+                gt = this.readTrack(cfg.groundtrack);
+
+                return {
+                    marker: L.Marker.movingMarker(
+                        gt.positions,
+                        gt.durations,
+                        mo
+                    ).bindLabel(id, {
+                        noHide: true
+                    }),
+                    track: L.geodesic([gt.geopoints], this.trackStyle)
+                };
+
+            };
+
+            /**
              * Adds the markers for the new Spacecraft, this is: the marker for
              * the Spacecraft itself (together with its associated label) and
              * associated groundtrack geoline.
@@ -2313,8 +2326,11 @@ angular.module('snMarkerServices')
              */
             this.addSC = function (id, cfg) {
 
+                if (!id) {
+                    throw '@addSC: wrong id';
+                }
                 if (this.sc.hasOwnProperty(id)) {
-                    throw '[markers] SC Marker already exists, id = ' + id;
+                    throw '@addSC: SC Marker already exists, id = ' + id;
                 }
 
                 var m = this.createSCMarkers(cfg);
