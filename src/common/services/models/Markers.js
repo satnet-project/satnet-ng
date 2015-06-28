@@ -232,6 +232,29 @@ angular.module('snMarkerServices')
                 };
             };
 
+            /**
+             * This function pans the map to the point given by the provided
+             * latitude and longitude.
+             *
+             * @param   {Object} latlng Leaflet LatLng object type
+             * @returns {Object} $promise that returns the given Leaflet LatLNg
+             *                   object where the map has been panned to, once
+             *                   the panning process is over
+             */
+            this.panTo = function (latlng) {
+                if (!latlng) {
+                    throw '@panTo: no LatLng object provided';
+                }
+
+                return mapServices.getMainMap().then(function (mapInfo) {
+                    mapInfo.map.panTo(latlng, {
+                        animate: true
+                    });
+                    return latlng;
+                });
+
+            };
+
             /******************************************************************/
             /***************************************** NETWORK SERVER MARKERS */
             /******************************************************************/
@@ -353,17 +376,7 @@ angular.module('snMarkerServices')
 
                 var marker = this.getMarker(groundstation_id),
                     m_ll = new L.LatLng(marker.lat, marker.lng);
-
-                return mapServices.getMainMap().then(function (mapInfo) {
-                    mapInfo.map.panTo(m_ll, {
-                        animate: true
-                    });
-                    return {
-                        latitude: marker.lat,
-                        longitude: marker.lng
-                    };
-                });
-
+                return this.panTo(m_ll);
             };
 
             /**
@@ -421,14 +434,14 @@ angular.module('snMarkerServices')
              * @returns {cfg.groundstation_id|*} Identifier.
              */
             this.updateGSMarker = function (cfg) {
-                if  (cfg === null) {
+                if (cfg === null) {
                     throw '@updateGSMarker, wrong <cfg>';
                 }
 
                 var new_lat = cfg.groundstation_latlon[0],
                     new_lng = cfg.groundstation_latlon[1],
                     marker = this.getMarker(cfg.groundstation_id);
-    
+
                 if (marker.lat !== new_lat) {
                     marker.lat = new_lat;
                 }
@@ -510,23 +523,13 @@ angular.module('snMarkerServices')
              */
             this.panToSCMarker = function (spacecraft_id) {
 
-                if (!this.sc.hasOwnProperty(spacecraft_id)) {
-                    throw '[markers] Spacecraft does not exist, id = ' +
-                    spacecraft_id;
+                if (!spacecraft_id) {
+                    throw '@panToGSMarker: no SC identifier provided';
                 }
 
                 var sc_marker = this.sc[spacecraft_id],
                     m_ll = sc_marker.marker.getLatLng();
-
-                return mapServices.getMainMap().then(function (mapInfo) {
-                    mapInfo.map.panTo(m_ll, {
-                        animate: true
-                    });
-                    return {
-                        lat: m_ll.lat,
-                        lng: m_ll.lng
-                    };
-                });
+                return this.panTo(m_ll);
 
             };
 
@@ -553,7 +556,7 @@ angular.module('snMarkerServices')
                     ).toDate().getTime() * 1000;
 
                 if ((groundtrack === null) || (groundtrack.length === 0)) {
-                    throw 'Groundtrack is empty!';
+                    throw '@readTrack: empty groundtrack';
                 }
 
                 for (i = 0; i < groundtrack.length; i += 1) {
@@ -583,7 +586,7 @@ angular.module('snMarkerServices')
                 }
 
                 if (valid === false) {
-                    throw 'No valid points in the groundtrack';
+                    throw '@readTrack: invalid groundtrack';
                 }
 
                 return {
@@ -604,11 +607,10 @@ angular.module('snMarkerServices')
              */
             this.createSCMarkers = function (cfg) {
 
-                //if (!cfg.hasOwnProperty('spacecraft_id')) {
-                if (!cfg) {
+                if (!cfg || !Object.keys(cfg).length) {
                     throw '@createSCMarkers: wrong cfg, no <spacecraft_id>';
                 }
-    
+
                 var id = cfg.spacecraft_id,
                     gt,
                     mo = this.scStyle,
@@ -645,7 +647,6 @@ angular.module('snMarkerServices')
              *          }}
              */
             this.addSC = function (id, cfg) {
-
                 if (!id) {
                     throw '@addSC: wrong id';
                 }
@@ -676,13 +677,13 @@ angular.module('snMarkerServices')
             this.updateSC = function (id, cfg) {
                 var self = this;
                 if (!this.sc.hasOwnProperty(id)) {
-                    throw '[markers] SC Marker does not exist! id = ' + id;
+                    throw '@updateSC: marker <' + id + '> does not exist';
                 }
 
                 this.removeSC(id).then(function (data) {
-                    console.log('[markers] SC removed, id = ' + data);
+                    $log.log('@updateSC: marker <' + data + '> removed');
                     self.addSC(id, cfg).then(function (data) {
-                        console.log('[markers] SC added, id = ' + data);
+                        $log.log('@updateSC: marker <' + data + '> added');
                     });
                 });
 

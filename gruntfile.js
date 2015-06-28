@@ -128,6 +128,9 @@ module.exports = function (grunt) {
                     'https://rawgit.com/ajsd/angular-jsonrpc/master/src/jsonrpc.js',
                     'https://rawgit.com/pusher/pusher-angular/master/lib/pusher-angular.js',
                     'https://rawgit.com/webadvanced/ng-remote-validate/master/release/ngRemoteValidate.0.6.1.min.js',
+                    'https://rawgit.com/Leaflet/Leaflet.label/master/dist/leaflet.label.js',
+                    'https://rawgit.com/ewoken/Leaflet.MovingMarker/master/MovingMarker.js',
+                    'https://rawgit.com/henrythasler/Leaflet.Geodesic/master/Leaflet.Geodesic.min.js',
                     'https://rawgit.com/pusher/pusher-js-test-stub/master/build/bin/pusher-test-stub.js'
                 ],
                 dest: 'node_modules/libs'

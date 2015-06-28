@@ -338,12 +338,14 @@ describe('Testing Markers Service', function () {
             gs_id_1 = 'gs_id_1',
             gs_lat = 1.0,
             gs_lng = 2.0,
-            conn_gs_1 = '', conn_gs_1_key = '',
+            conn_gs_1 = '',
+            conn_gs_1_key = '',
             gs_cfg = {
                 groundstation_id: gs_id_1,
                 groundstation_latlon: [gs_lat, gs_lng]
             },
-            new_gs_lat = 3.0, new_gs_lng = 4.0,
+            new_gs_lat = 3.0,
+            new_gs_lng = 4.0,
             new_gs_cfg = {
                 groundstation_id: gs_id_1,
                 groundstation_latlon: [new_gs_lat, new_gs_lng]
@@ -362,14 +364,19 @@ describe('Testing Markers Service', function () {
 
         expect(markers.updateGSMarker(new_gs_cfg)).toEqual(gs_id_1);
         expect($fake_scope.markers.MK1).toEqual({
-            lat: new_gs_lat, lng: new_gs_lng,
-            focus: true, draggable: false,
+            lat: new_gs_lat,
+            lng: new_gs_lng,
+            focus: true,
+            draggable: false,
             icon: {
-                iconUrl: '/images/gs-icon.svg', iconSize: [15, 15]
+                iconUrl: '/images/gs-icon.svg',
+                iconSize: [15, 15]
             },
             label: {
                 message: new_gs_cfg.groundstation_id,
-                options: { noHide: true }
+                options: {
+                    noHide: true
+                }
             },
             identifier: gs_id_1
         });
@@ -386,21 +393,37 @@ describe('Testing Markers Service', function () {
 
     });
 
-    
     it('should manage (CRUD) SC marker operations', function () {
 
         var $fake_scope = $rootScope.$new(),
-            sc_id = 'sc-1';
+            sc_id = 'sc-1',
+            sc_cfg = {
+                spacecraft_id: sc_id,
+                groundtrack: []
+            };
 
         markers.configureMapScope($fake_scope);
 
         expect(function () {
             markers.addSC('', {});
         }).toThrow('@addSC: wrong id');
-
         expect(function () {
             markers.addSC(sc_id, {});
         }).toThrow('@createSCMarkers: wrong cfg, no <spacecraft_id>');
+        expect(function () {
+            markers.addSC(sc_id, sc_cfg);
+        }).toThrow('@readTrack: empty groundtrack');
+
+        sc_cfg.groundtrack = [{
+            timestamp: Date.now() * 1000 + 1000,
+            latitude: 5.0,
+            longitude: 6.0
+        }, {
+            timestamp: Date.now() * 1000 + 1001,
+            latitude: 6.0,
+            longitude: 7.0
+        }];
+        markers.addSC(sc_id, sc_cfg);
 
     });
 
