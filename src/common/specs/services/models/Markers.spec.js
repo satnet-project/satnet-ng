@@ -428,7 +428,7 @@ describe('Testing Markers Service', function () {
         markers.addSC(sc_id, sc_cfg);
         expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
 
-        // TODO Update SC is quite hard to properly test due to the dependencies
+        // TODO Update SC is quite hard to properly test due to dependencies
         // markers.updateSC(sc_id, new_sc_cfg);
 
         expect(function () {
