@@ -1,0 +1,158 @@
+/* Copyright 2013, 2014 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. */
+/* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. */
+body {
+  position: relative; }
+
+/* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. */
+md-content md-divider {
+  margin: 10px; }
+md-content .md-button {
+  margin: 5px 0 5px 0; }
+
+.menu-button {
+  width: 100%; }
+  .menu-button b {
+    margin: 3px 0 0 10%;
+    vertical-align: middle; }
+  .menu-button i {
+    width: 15%;
+    font-size: 150%; }
+
+.menu-logo {
+  width: 100%; }
+
+/*
+   Copyright 2013, 2014 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+.loading-spinner {
+  margin: 10px 0 0 0;
+  font-size: 150%; }
+
+div.m-app-loading {
+  position: fixed; }
+
+div.m-app-loading div.animated-container {
+  background-color: #607D8B;
+  bottom: 0px;
+  left: 0px;
+  opacity: 1.0;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  z-index: 999999; }
+
+/* Used to initialize the ng-leave animation state. */
+div.m-app-loading div.animated-container.ng-leave {
+  opacity: 1.0;
+  transition: all linear 200ms;
+  -webkit-transition: all linear 200ms; }
+
+/* Used to set the end properties of the ng-leave animation state. */
+div.m-app-loading div.animated-container.ng-leave-active {
+  opacity: 0; }
+
+div.m-app-loading div.messaging {
+  color: #FFFFFF;
+  font-family: RobotoDraft;
+  left: 0px;
+  margin-top: -37px;
+  position: absolute;
+  right: 0px;
+  text-align: center;
+  top: 50%; }
+
+div.m-app-loading h1 {
+  font-size: 26px;
+  line-height: 35px;
+  margin: 0px 0px 20px 0px; }
+
+div.m-app-loading p {
+  font-size: 18px;
+  line-height: 14px;
+  margin: 20px 0px 0px 0px; }
+
+/* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. */
+.menu-list {
+  width: 300px; }
+
+/* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. */
+.add-gs-dialog {
+  width: 600px; }
+
+.sn-select-gs-map {
+  height: 250px;
+  width: 550px; }
+
+/*# sourceMappingURL=satnet-ng-operations.css.map */
