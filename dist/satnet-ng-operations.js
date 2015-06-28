@@ -1953,6 +1953,7 @@ angular.module('snMarkerServices')
              */
             this.createServerMarker = function (id, latitude, longitude) {
                 this._serverMarkerKey = this.createMarkerKey(id);
+                console.log('ZZZZZ@@@@111, smk = ' + this._serverMarkerKey);
                 this.getScope().markers[this._serverMarkerKey] = {
                     lat: latitude,
                     lng: longitude,
@@ -1972,6 +1973,7 @@ angular.module('snMarkerServices')
                     groundstations: [],
                     identifier: id
                 };
+                console.log('ZZZZZ, createServerMarker, id = ' + id);
                 return id;
             };
 
@@ -1990,8 +1992,11 @@ angular.module('snMarkerServices')
                 if (!gs_identifier) {
                     throw 'No identifier provided';
                 }
+                var server_marker = this.getServerMarker(gs_identifier);
+                console.log('server_marker = ' + JSON.stringify(server_marker));
+                console.log('server_marker.id = ' + server_marker.identifier);
                 return 'connect:' + gs_identifier + '_2_' +
-                    this.getServerMarker(gs_identifier).identifier;
+                    server_marker.identifier;
             };
 
             /* TODO The structure for modelling what server owns each
@@ -2027,9 +2032,8 @@ angular.module('snMarkerServices')
                 c_key = this.createMarkerKey(c_id);
                 r[c_key] = {
                     // FIXME Path removal if added as a layer
-                    // (angular-leaflet)
                     // layer: 'network',
-                    //color: '#A52A2A',
+                    // color: '#A52A2A',
                     color: 'gray',
                     type: 'polyline',
                     weight: 3,
@@ -2066,9 +2070,12 @@ angular.module('snMarkerServices')
              * @returns Angular leaflet marker.
              */
             this.createUnconnectedGSMarker = function (cfg) {
-                var id = cfg.groundstation_id;
+                var id = cfg.groundstation_id,
+                    marker_key = this.createMarkerKey(id);
 
-                this.getScope().markers[this.createMarkerKey(id)] = {
+                console.log('gsmk = ' + marker_key);
+
+                this.getScope().markers[marker_key] = {
                     lat: cfg.groundstation_latlon[0],
                     lng: cfg.groundstation_latlon[1],
                     focus: true,
@@ -2088,6 +2095,7 @@ angular.module('snMarkerServices')
                 };
 
                 return id;
+
             };
 
             /**
@@ -2099,9 +2107,13 @@ angular.module('snMarkerServices')
              */
             this.createGSMarker = function (cfg) {
 
+                console.log('XXXXX@@@@@1111');
                 var id = cfg.groundstation_id;
+                console.log('XXXXX@@@@@2222');
                 this.createUnconnectedGSMarker(cfg);
+                console.log('XXXXX@@@@@3333');
                 this.createGSConnector(id);
+                console.log('XXXXX@@@@@4444');
                 return id;
 
             };
