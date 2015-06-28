@@ -675,11 +675,14 @@ angular.module('snMarkerServices')
              * @returns {String} Identifier of the just-updated Spacecraft.
              */
             this.updateSC = function (id, cfg) {
-                var self = this;
+                if (!id) {
+                    throw '@removeSC: no id provided';
+                }
                 if (!this.sc.hasOwnProperty(id)) {
                     throw '@updateSC: marker <' + id + '> does not exist';
                 }
 
+                var self = this;
                 this.removeSC(id).then(function (data) {
                     $log.log('@updateSC: marker <' + data + '> removed');
                     self.addSC(id, cfg).then(function (data) {
@@ -698,9 +701,11 @@ angular.module('snMarkerServices')
              * @returns {String} Spacecraft identifier.
              */
             this.removeSC = function (id) {
-
+                if (!id) {
+                    throw '@removeSC: no id provided';
+                }
                 if (!this.sc.hasOwnProperty(id)) {
-                    throw '[x-maps] Marker does NOT exist, id = ' + id;
+                    throw '@removeSC: marker <' + id + '> does not exist';
                 }
 
                 var m = this.sc[id];

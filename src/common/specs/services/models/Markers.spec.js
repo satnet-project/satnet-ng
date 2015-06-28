@@ -423,7 +423,24 @@ describe('Testing Markers Service', function () {
             latitude: 6.0,
             longitude: 7.0
         }];
+
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeFalsy();
         markers.addSC(sc_id, sc_cfg);
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
+
+        // TODO Update SC is quite hard to properly test due to the dependencies
+        // markers.updateSC(sc_id, new_sc_cfg);
+
+        expect(function () {
+            markers.removeSC();
+        }).toThrow('@removeSC: no id provided');
+        expect(function () {
+            markers.removeSC('XXXX');
+        }).toThrow('@removeSC: marker <XXXX> does not exist');
+
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
+        markers.removeSC(sc_id);
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeFalsy();
 
     });
 

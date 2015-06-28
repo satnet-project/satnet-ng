@@ -20,7 +20,7 @@ module.exports = function (config) {
     config.set({
 
         basePath: '.',
-        frameworks: ['jasmine'],
+        frameworks: ['jasmine', 'jasmine-diff-print'],
 
         files: [
             'node_modules/jquery/dist/jquery.js',
