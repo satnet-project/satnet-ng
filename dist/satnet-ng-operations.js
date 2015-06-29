@@ -2799,6 +2799,7 @@ angular.module('operationsDirective', [
 
         /**
          * Main controller for the Operations application.
+         * 
          * @param   {Object}   $scope       Controller execution scope.
          * @param   {Object}   $mdSidenav   Side mane service from Angular
          *                                  Material.
