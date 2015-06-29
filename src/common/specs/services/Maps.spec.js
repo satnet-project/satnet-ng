@@ -139,6 +139,20 @@ describe('Testing snMapServices Service', function () {
                     attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
                 }
             }
+        },
+        x_esrilayer = {
+            esri_baselayer: {
+                name: 'ESRI Base Layer',
+                type: 'xyz',
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                layerOptions: {
+                    noWrap: false,
+                    continuousWorld: false,
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                }
+            }
         };
 
     beforeEach(function () {
@@ -193,6 +207,10 @@ describe('Testing snMapServices Service', function () {
 
     it('should return the overlay objects', function () {
         expect(mapServices.getOverlays()).toEqual(x_overlays);
+    });
+
+    it('should return the default ESRI base layer object', function () {
+        expect(mapServices.getESRIBaseLayer()).toEqual(x_esrilayer);
     });
 
     it('should create a map with a terminator', function () {
