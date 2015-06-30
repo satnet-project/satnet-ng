@@ -332,6 +332,16 @@ angular.module('snMapServices', [
                             maxZoom: MAX_ZOOM,
                             attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
                         }
+                    },
+                    network: {
+                        name: 'Network',
+                        type: 'markercluster',
+                        visible: true
+                    },
+                    groundstations: {
+                        name: 'Ground Stations',
+                        type: 'markercluster',
+                        visible: true
                     }
                 };
             };

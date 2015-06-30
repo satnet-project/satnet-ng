@@ -66,10 +66,8 @@ angular.module('snMapDirective', [
              *    required callbacks that will handle them.
              */
             $scope.init = function () {
+
                 $scope.map = markers.configureMapScope($scope);
-                console.log(
-                    '>>> $scope = ' + JSON.stringify($scope.layers.overlays, null, "    ")
-                );
                 mapServices.autocenterMap($scope, ZOOM).then(function () {
                     gsModels.initListeners();
                     serverModels.initStandalone().then(function (server) {
@@ -84,6 +82,7 @@ angular.module('snMapDirective', [
                         });
                     });
                 });
+
             };
 
         }

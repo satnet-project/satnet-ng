@@ -138,6 +138,16 @@ describe('Testing snMapServices Service', function () {
                     maxZoom: expected_MAX_ZOOM,
                     attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
                 }
+            },
+            network: {
+                name: 'Network',
+                type: 'markercluster',
+                visible: true
+            },
+            groundstations: {
+                name: 'Ground Stations',
+                type: 'markercluster',
+                visible: true
             }
         },
         x_esrilayer = {
@@ -203,10 +213,6 @@ describe('Testing snMapServices Service', function () {
 
     it('should return the set of available base layers', function () {
         expect(mapServices.getBaseLayers()).toEqual(x_baselayers);
-    });
-
-    it('should return the overlay objects', function () {
-        expect(mapServices.getOverlays()).toEqual(x_overlays);
     });
 
     it('should return the default ESRI base layer object', function () {

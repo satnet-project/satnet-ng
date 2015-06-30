@@ -101,20 +101,6 @@ describe('Testing Markers Service', function () {
             visible: true
         };
 
-        expect(markers.getOverlays())
-            .toEqual({
-                network: {
-                    name: 'Network',
-                    type: 'markercluster',
-                    visible: true
-                },
-                groundstations: {
-                    name: 'Ground Stations',
-                    type: 'markercluster',
-                    visible: true
-                }
-            });
-
         markers.configureMapScope($fake_scope);
         expect($fake_scope).toEqual(x_scope);
 
@@ -148,7 +134,7 @@ describe('Testing Markers Service', function () {
                 markers.getServerMarker(test_id_1);
             })
             .toThrow(
-                '@getServerMarker: no server defined for <' + test_id_1 + '>'
+                '@getServerMarker: no server for <' + test_id_1 + '>'
             );
 
         markers.configureMapScope($fake_scope);
@@ -162,6 +148,7 @@ describe('Testing Markers Service', function () {
             lng: server_lng,
             focus: true,
             draggable: false,
+            layer: "network",
             icon: {
                 iconUrl: '/images/server-icon-3.svg',
                 iconSize: [15, 15]
@@ -253,7 +240,7 @@ describe('Testing Markers Service', function () {
 
         expect(function () {
             markers.createGSConnector(gs_id_1);
-        }).toThrow('@getServerMarker: no server defined for <' + gs_id_1 + '>');
+        }).toThrow('@getServerMarker: no server for <' + gs_id_1 + '>');
 
         expect(markers.createServerMarker(server_id, server_lat, server_lng))
             .toEqual(server_id);
@@ -318,7 +305,7 @@ describe('Testing Markers Service', function () {
         gs_cfg.groundstation_id = gs_id_1;
         expect(function () {
             markers.createGSMarker(gs_cfg);
-        }).toThrow('@getServerMarker: no server defined for <' + gs_id_1 + '>');
+        }).toThrow('@getServerMarker: no server for <' + gs_id_1 + '>');
 
         spyOn(mapServices, 'getMainMap').and.callFake(__getMainMap);
         markers.panToGSMarker(gs_id_1);

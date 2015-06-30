@@ -110,10 +110,6 @@ angular.module('snMarkerServices')
                     this._mapScope.layers.overlays,
                     mapServices.getOverlays()
                 );
-                angular.extend(
-                    this._mapScope.layers.overlays,
-                    this.getOverlays()
-                );
 
                 var mapInfo = this._mapInfo;
                 mapServices.createTerminatorMap(true).then(function (data) {
@@ -186,8 +182,7 @@ angular.module('snMarkerServices')
              */
             this.getServerMarker = function (gs_id) {
                 if (this._serverMarkerKey === null) {
-                    throw '@getServerMarker: no server defined for <' + gs_id +
-                        '>';
+                    throw '@getServerMarker: no server for <' + gs_id + '>';
                 }
                 return this.getScope().markers[this._serverMarkerKey];
             };
@@ -201,35 +196,6 @@ angular.module('snMarkerServices')
              */
             this.getMarker = function (identifier) {
                 return this.getScope().markers[this.getMarkerKey(identifier)];
-            };
-
-            /**
-             * Returns the overlays to be included as markerclusters within
-             * the map.
-             *
-             * @return Object   Object to configure the overlays of the $scope
-             *                      with the overlays
-             */
-            this.getOverlays = function () {
-                return {
-                    network: {
-                        name: 'Network',
-                        type: 'markercluster',
-                        visible: true
-                    },
-                    groundstations: {
-                        name: 'Ground Stations',
-                        type: 'markercluster',
-                        visible: true
-                    }
-                    /* TODO Native angular-leaflet support for MovingMarker
-                    spacecraft: {
-                        name: 'Spacecraft',
-                        type: 'markercluster',
-                        visible: true
-                    }
-                    */
-                };
             };
 
             /**
@@ -278,7 +244,7 @@ angular.module('snMarkerServices')
                     lng: longitude,
                     focus: true,
                     draggable: false,
-                    layer: 'network',
+                    layer: "network",
                     icon: {
                         iconUrl: '/images/server-icon-3.svg',
                         iconSize: [15, 15]
@@ -394,7 +360,7 @@ angular.module('snMarkerServices')
                     lng: cfg.groundstation_latlon[1],
                     focus: true,
                     draggable: false,
-                    layer: 'groundstations',
+                    layer: "groundstations",
                     icon: {
                         iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
