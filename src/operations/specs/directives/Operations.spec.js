@@ -23,6 +23,13 @@ describe("Testing Operations Interface", function () {
         satnetRPC,
         $body = $("body"),
         mock__cookies = {},
+        mock__server= {
+            initStandalone: function () {
+                return {
+                    then: function () { return 'ok'; }
+                };
+            }
+        },
         $rootScope, app_scope, menu_scope,
         appCtrl, menuCtrl,
         simpleHtml = "<operations-app></operations-app>",
@@ -33,9 +40,11 @@ describe("Testing Operations Interface", function () {
     beforeEach(function () {
 
         module(
-            'templates', 'operationsDirective', 'satnetServices',
+            'templates',
+            'operationsDirective', 'satnetServices',
             function ($provide) {
                 $provide.value('$cookies', mock__cookies);
+                $provide.value('serverModels', mock__server);
             }
         );
 
@@ -47,6 +56,7 @@ describe("Testing Operations Interface", function () {
             $mdSidenav = $injector.get('$mdSidenav');
             $mdDialog = $injector.get('$mdDialog');
             $httpBackend = $injector.get('$httpBackend');
+
             satnetRPC = $injector.get('satnetRPC');
 
             app_scope = $rootScope.$new();
@@ -62,16 +72,23 @@ describe("Testing Operations Interface", function () {
         });
         menuCtrl = $controller("OperationsMenuCtrl", {
             $scope: menu_scope,
-            $mdSidenav: $mdSidenav,
-            $mdDialog: $mdDialog
+            $mdSidenav: $mdSidenav
         });
 
         $httpBackend
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
         $httpBackend
-            .expectPOST('http://server:80/jrpc/')
+            .expectPOST('http://server:80/jrpc')
             .respond(x_post_geoip);
+
+        spyOn(satnetRPC, 'getServerLocation').and.callFake(function () {
+            return {
+                then: function () {
+                    return ['gs_test_1', 'gs_test_2'];
+                }
+            };
+        });
 
         $body.append($directive);
         $rootScope.$digest();
@@ -93,6 +110,16 @@ describe("Testing Operations Interface", function () {
 
     });
 
+    /* FIXME Problem with the .catch() statement from SatnetRPC
+    it('MenuCtrl should show the GS menu', function () {
+
+        var button = $('#menuGS');
+        button.click();
+        $rootScope.$digest();
+
+    });
+    */
+
     it('MenuCtrl should close itself', function () {
 
         var button = $("#menuExit").eq(0);
@@ -105,43 +132,34 @@ describe("Testing Operations Interface", function () {
     });
 
     it("should render the directive within the DOM", function () {
-
         var $ops_main = $('.operations-main');
         expect($ops_main).toBeDefined();
         expect($ops_main.length).toEqual(1);
-
     });
 
     it('should render a map within the content', function () {
-
         var map = $('#mainMap');
         expect(map.length).toBe(1);
-
     });
 
     it('should add a unique toggle menu button with an icon', function () {
-
         var button = $('#toggleMenu'),
             icon = $('.fa-bars');
         expect(button.length).toBe(1);
         expect(icon.length).toBe(1);
-
     });
 
     it('should add a unique exit button on the menu with an icon', function () {
-
         var button = $('#menuExit'),
-            icon = $('.fa-circle-o-notch'),
+            icon = $('.fa-power-off'),
             label = $('#menuExit div b');
         expect(button.length).toBe(1);
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
         expect(label.text()).toBe('exit');
-
     });
 
     it('should add a unique GS button on the menu with an icon', function () {
-
         var button = $('#menuGS'),
             icon = $('.fa-home'),
             label = $('#menuGS div b');
@@ -149,11 +167,9 @@ describe("Testing Operations Interface", function () {
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
         expect(label.text()).toBe('ground stations');
-
     });
 
     it('should add a unique SC button on the menu with an icon', function () {
-
         var button = $('#menuSC'),
             icon = $('.fa-space-shuttle'),
             label = $('#menuSC div b');
@@ -161,7 +177,6 @@ describe("Testing Operations Interface", function () {
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
         expect(label.text()).toBe('spacecraft');
-
     });
 
     it('should show the GS Menu', function () {

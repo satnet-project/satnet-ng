@@ -273,7 +273,6 @@ angular.module('snMarkerServices')
              */
             this.createServerMarker = function (id, latitude, longitude) {
                 this._serverMarkerKey = this.createMarkerKey(id);
-                console.log('ZZZZZ@@@@111, smk = ' + this._serverMarkerKey);
                 this.getScope().markers[this._serverMarkerKey] = {
                     lat: latitude,
                     lng: longitude,
@@ -293,7 +292,6 @@ angular.module('snMarkerServices')
                     groundstations: [],
                     identifier: id
                 };
-                console.log('ZZZZZ, createServerMarker, id = ' + id);
                 return id;
             };
 
@@ -313,8 +311,6 @@ angular.module('snMarkerServices')
                     throw 'No identifier provided';
                 }
                 var server_marker = this.getServerMarker(gs_identifier);
-                console.log('server_marker = ' + JSON.stringify(server_marker));
-                console.log('server_marker.id = ' + server_marker.identifier);
                 return 'connect:' + gs_identifier + '_2_' +
                     server_marker.identifier;
             };
@@ -393,8 +389,6 @@ angular.module('snMarkerServices')
                 var id = cfg.groundstation_id,
                     marker_key = this.createMarkerKey(id);
 
-                console.log('gsmk = ' + marker_key);
-
                 this.getScope().markers[marker_key] = {
                     lat: cfg.groundstation_latlon[0],
                     lng: cfg.groundstation_latlon[1],
@@ -427,13 +421,9 @@ angular.module('snMarkerServices')
              */
             this.createGSMarker = function (cfg) {
 
-                console.log('XXXXX@@@@@1111');
                 var id = cfg.groundstation_id;
-                console.log('XXXXX@@@@@2222');
                 this.createUnconnectedGSMarker(cfg);
-                console.log('XXXXX@@@@@3333');
                 this.createGSConnector(id);
-                console.log('XXXXX@@@@@4444');
                 return id;
 
             };
