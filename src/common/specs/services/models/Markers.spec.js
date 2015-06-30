@@ -163,7 +163,7 @@ describe('Testing Markers Service', function () {
             focus: true,
             draggable: false,
             icon: {
-                iconUrl: '/images/gs-icon.svg',
+                iconUrl: '/images/server-icon-3.svg',
                 iconSize: [15, 15]
             },
             label: {
@@ -199,7 +199,7 @@ describe('Testing Markers Service', function () {
             color: 'gray',
             type: 'polyline',
             weight: 3,
-            opacity: 0.25,
+            opacity: 0.5,
             latlngs: [
                 markers.getScope().markers.MK2,
                 markers.getScope().markers.MK0
@@ -237,6 +237,7 @@ describe('Testing Markers Service', function () {
             lng: gs_cfg.groundstation_latlon[1],
             focus: true,
             draggable: false,
+            layer: 'groundstations',
             icon: {
                 iconUrl: '/images/gs-icon.svg',
                 iconSize: [15, 15]
@@ -264,7 +265,7 @@ describe('Testing Markers Service', function () {
             color: 'gray',
             type: 'polyline',
             weight: 3,
-            opacity: 0.25,
+            opacity: 0.5,
             latlngs: [
                 $fake_scope.markers[markers._serverMarkerKey],
                 $fake_scope.markers.MK0
@@ -368,6 +369,7 @@ describe('Testing Markers Service', function () {
             lng: new_gs_lng,
             focus: true,
             draggable: false,
+            layer: 'groundstations',
             icon: {
                 iconUrl: '/images/gs-icon.svg',
                 iconSize: [15, 15]

@@ -278,9 +278,9 @@ angular.module('snMarkerServices')
                     lng: longitude,
                     focus: true,
                     draggable: false,
-                    //layer: 'network',
+                    layer: 'network',
                     icon: {
-                        iconUrl: '/images/gs-icon.svg',
+                        iconUrl: '/images/server-icon-3.svg',
                         iconSize: [15, 15]
                     },
                     label: {
@@ -353,7 +353,7 @@ angular.module('snMarkerServices')
                     color: 'gray',
                     type: 'polyline',
                     weight: 3,
-                    opacity: 0.25,
+                    opacity: 0.5,
                     latlngs: [s_marker, g_marker],
                     identifier: c_id
                 };
@@ -394,7 +394,7 @@ angular.module('snMarkerServices')
                     lng: cfg.groundstation_latlon[1],
                     focus: true,
                     draggable: false,
-                    //layer: 'groundstations',
+                    layer: 'groundstations',
                     icon: {
                         iconUrl: '/images/gs-icon.svg',
                         iconSize: [15, 15]
