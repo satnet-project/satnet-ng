@@ -235,6 +235,7 @@ module.exports = function (grunt) {
             build: {
                 files: [
                     '<%= jshint.files %>',
+                    'lib/dist/angular-leaflet-directive.js',
                     'src/images/**/*',
                     'src/common/**/*',
                     'src/operations/**/*'

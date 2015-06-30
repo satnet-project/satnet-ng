@@ -118,7 +118,7 @@ angular.module('snMarkerServices')
                 var mapInfo = this._mapInfo;
                 mapServices.createTerminatorMap(true).then(function (data) {
                     $log.log(
-                        '[map-controller] Created map = <' +
+                        'markers.js@configureMapScope: Created map = <' +
                         mapServices.asString(data) + '>'
                     );
                     angular.extend(mapInfo, data);

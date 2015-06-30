@@ -162,7 +162,7 @@ angular.module('snMapDirective', [
     'GroundStationModels',
     'snNetworkModels'
 ])
-     .controller('MapCtrl', [
+    .controller('MapCtrl', [
         '$log', '$scope',
         'mapServices', 'markers',
         'gsModels', 'serverModels',
@@ -207,17 +207,18 @@ angular.module('snMapDirective', [
              */
             $scope.init = function () {
                 $scope.map = markers.configureMapScope($scope);
-                mapServices.autocenterMap($scope, ZOOM);
-                gsModels.initListeners();
-                serverModels.initStandalone().then(function (server) {
-                    $log.log(
-                        '[map-controller] Server =' + JSON.stringify(server)
-                    );
-                    gsModels.initAll().then(function (gss) {
+                mapServices.autocenterMap($scope, ZOOM).then(function () {
+                    gsModels.initListeners();
+                    serverModels.initStandalone().then(function (server) {
                         $log.log(
-                            '[map-controller] Ground Station(s) = ' +
-                                JSON.stringify(gss)
+                            'maps.js@init: Server =' + JSON.stringify(server)
                         );
+                        gsModels.initAll().then(function (gss) {
+                            $log.log(
+                                'maps.js@init: Ground Station(s) = ' +
+                                JSON.stringify(gss)
+                            );
+                        });
                     });
                 });
             };
@@ -1798,7 +1799,7 @@ angular.module('snMarkerServices')
                 var mapInfo = this._mapInfo;
                 mapServices.createTerminatorMap(true).then(function (data) {
                     $log.log(
-                        '[map-controller] Created map = <' +
+                        'markers.js@configureMapScope: Created map = <' +
                         mapServices.asString(data) + '>'
                     );
                     angular.extend(mapInfo, data);
@@ -2799,7 +2800,7 @@ angular.module('operationsDirective', [
 
         /**
          * Main controller for the Operations application.
-         * 
+         *
          * @param   {Object}   $scope       Controller execution scope.
          * @param   {Object}   $mdSidenav   Side mane service from Angular
          *                                  Material.
