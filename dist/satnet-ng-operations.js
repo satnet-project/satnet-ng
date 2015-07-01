@@ -1170,7 +1170,7 @@ angular
              */
             this._generateError = function (service, params, code, message) {
 
-                var msg = '[satnetRPC] Error invoking = <' + service +
+                var msg = 'Satnet.js@_generateError: invoking = <' + service +
                     '>, with params = <' + JSON.stringify(params) +
                     '>, code = <' + JSON.stringify(code) +
                     '>, description = <' + JSON.stringify(message) + '>';
@@ -1191,10 +1191,10 @@ angular
                 var error_fn = this._generateError;
 
                 if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '[satnetRPC] service not found, id = <' + service + '>';
+                    throw '@rCall: service not found, id = <' + service + '>';
                 }
                 $log.info(
-                    '[satnetRPC] Invoked service = <' + service + '>' +
+                    '@rCall: Invoked service = <' + service + '>' +
                     ', params = ' + JSON.stringify(params)
                 );
                 return this._services[service](params).then(
@@ -1205,7 +1205,7 @@ angular
                             error_fn(service, params, data.code, data.message);
                         }
                         $log.info(
-                            '[satnetRPC] Invoked service = <' + service + '>' +
+                            '@rCall: Invoked service = <' + service + '>' +
                             ', params = <' + JSON.stringify(params) + '>, ' +
                             ', result = <' + JSON.stringify(data)
                         );
@@ -1227,7 +1227,7 @@ angular
                 var url = this._getSatNetAddress() +
                     '/configuration/user/geoip';
                 return $http.get(url).then(function (data) {
-                    $log.info('[satnet] user@(' + JSON
+                    $log.info('Satnet.js@getUserLocation: user@(' + JSON
                         .stringify(data.data) + ')');
                     return {
                         latitude: parseFloat(data.data.latitude),
@@ -2683,8 +2683,10 @@ angular.module(
 
             var cfg = {
                 'groundstation_id': identifier,
-                'groundstation_callsign': $scope.gs.callsign,
-                'groundstation_elevation': $scope.gs.elevation.toFixed(2),
+                'groundstation_callsign':
+                    $scope.configuration.callsign,
+                'groundstation_elevation':
+                    $scope.configuration.elevation.toFixed(2),
                 'groundstation_latlon': [
                     $scope.markers.gs.lat.toFixed(6),
                     $scope.markers.gs.lng.toFixed(6)
@@ -2776,17 +2778,22 @@ angular.module(
          * Function that initializes this controller by correctly setting up
          * the markers and the position (lat, lng, zoom) of the map. It loads
          * all the configuration for the Ground Station from the remote server.
-         * Therefore, this initialization function must be used to initialize
-         * a Ground Station dialog for editing the configuration of an existant
+         * Therefore, this initialization function must be used to initialize a
+         * Ground Station dialog for editing the configuration of an existant
          * Ground Station.
          */
         $scope.loadConfiguration = function () {
 
             mapServices.centerAtGs($scope, identifier, 8).then(function (gs) {
+
                 $scope.configuration.identifier = gs.groundstation_id;
                 $scope.configuration.callsign = gs.groundstation_callsign;
                 $scope.configuration.elevation = gs.groundstation_elevation;
-                $log.info('@loadConfiguration: GS Modal dialog loaded.');
+
+                $scope.markers.gs.focus = true;
+                $scope.markers.gs.message = "Drag me to your GS!";
+                $scope.markers.gs.draggable = true;
+
             });
 
         };

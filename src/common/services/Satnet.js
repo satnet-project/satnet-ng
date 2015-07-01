@@ -192,7 +192,7 @@ angular
              */
             this._generateError = function (service, params, code, message) {
 
-                var msg = '[satnetRPC] Error invoking = <' + service +
+                var msg = 'Satnet.js@_generateError: invoking = <' + service +
                     '>, with params = <' + JSON.stringify(params) +
                     '>, code = <' + JSON.stringify(code) +
                     '>, description = <' + JSON.stringify(message) + '>';
@@ -213,10 +213,10 @@ angular
                 var error_fn = this._generateError;
 
                 if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '[satnetRPC] service not found, id = <' + service + '>';
+                    throw '@rCall: service not found, id = <' + service + '>';
                 }
                 $log.info(
-                    '[satnetRPC] Invoked service = <' + service + '>' +
+                    '@rCall: Invoked service = <' + service + '>' +
                     ', params = ' + JSON.stringify(params)
                 );
                 return this._services[service](params).then(
@@ -227,7 +227,7 @@ angular
                             error_fn(service, params, data.code, data.message);
                         }
                         $log.info(
-                            '[satnetRPC] Invoked service = <' + service + '>' +
+                            '@rCall: Invoked service = <' + service + '>' +
                             ', params = <' + JSON.stringify(params) + '>, ' +
                             ', result = <' + JSON.stringify(data)
                         );
@@ -249,7 +249,7 @@ angular
                 var url = this._getSatNetAddress() +
                     '/configuration/user/geoip';
                 return $http.get(url).then(function (data) {
-                    $log.info('[satnet] user@(' + JSON
+                    $log.info('Satnet.js@getUserLocation: user@(' + JSON
                         .stringify(data.data) + ')');
                     return {
                         latitude: parseFloat(data.data.latitude),

@@ -158,11 +158,11 @@ describe('Testing SatNet Service', function () {
 
         expect(function () {
             satnetServices.rCall('xxxx', []);
-        }).toThrow('[satnetRPC] service not found, id = <xxxx>');
+        }).toThrow('@rCall: service not found, id = <xxxx>');
 
         satnetServices.rCall('gs.list', ['param_1']);
         expect($log.info).toHaveBeenCalledWith(
-            '[satnetRPC] Invoked service = <gs.list>, params = [\"param_1\"]'
+            '@rCall: Invoked service = <gs.list>, params = [\"param_1\"]'
         );
 
     });
@@ -173,7 +173,7 @@ describe('Testing SatNet Service', function () {
             x_param = ['p1'],
             x_code = 'c',
             x_msg = 'm',
-            x_th_msg = '[satnetRPC] Error invoking = <' + x_service +
+            x_th_msg = 'Satnet.js@_generateError: invoking = <' + x_service +
             '>, with params = <' + JSON.stringify(x_param) +
             '>, code = <' + JSON.stringify(x_code) +
             '>, description = <' + JSON.stringify(x_msg) + '>';
