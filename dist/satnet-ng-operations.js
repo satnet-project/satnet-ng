@@ -2352,7 +2352,7 @@ angular.module('snMarkerServices')
              */
             this.updateSC = function (id, cfg) {
                 if (!id) {
-                    throw '@removeSC: no id provided';
+                    throw '@updateSC: no id provided';
                 }
                 if (!this.sc.hasOwnProperty(id)) {
                     throw '@updateSC: marker <' + id + '> does not exist';

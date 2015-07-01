@@ -262,6 +262,132 @@ describe('Testing Markers Service', function () {
 
     });
 
+    it('should manage (CRUD) GS marker operations', function () {
+
+        var $fake_scope = $rootScope.$new(),
+            server_id = 'server_0',
+            server_lat = 1.0,
+            server_lng = 2.0,
+            gs_id_1 = 'gs_id_1',
+            gs_lat = 1.0,
+            gs_lng = 2.0,
+            conn_gs_1 = '',
+            conn_gs_1_key = '',
+            gs_cfg = {
+                groundstation_id: gs_id_1,
+                groundstation_latlon: [gs_lat, gs_lng]
+            },
+            new_gs_lat = 3.0,
+            new_gs_lng = 4.0,
+            new_gs_cfg = {
+                groundstation_id: gs_id_1,
+                groundstation_latlon: [new_gs_lat, new_gs_lng]
+            };
+
+        markers.configureMapScope($fake_scope);
+        expect(markers.createServerMarker(server_id, server_lat, server_lng))
+            .toEqual(server_id);
+        expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
+        conn_gs_1 = markers.createGSConnector(gs_id_1);
+        conn_gs_1_key = markers.createMarkerKey(conn_gs_1);
+
+        expect(function () {
+            markers.updateGSMarker(null);
+        }).toThrow('@updateGSMarker, wrong <cfg>');
+
+        expect(markers.updateGSMarker(new_gs_cfg)).toEqual(gs_id_1);
+        expect($fake_scope.markers.MK1).toEqual({
+            lat: new_gs_lat,
+            lng: new_gs_lng,
+            focus: true,
+            draggable: false,
+            layer: 'groundstations',
+            icon: {
+                iconUrl: '/images/gs-icon.svg',
+                iconSize: [15, 15]
+            },
+            label: {
+                message: new_gs_cfg.groundstation_id,
+                options: {
+                    noHide: true
+                }
+            },
+            identifier: gs_id_1
+        });
+
+        expect(function () {
+            markers.removeGSMarker();
+        }).toThrow('@getMarkerKey: No key for <undefined>');
+
+        expect($fake_scope.markers.hasOwnProperty('MK1')).toBeTruthy();
+        expect($fake_scope.paths.hasOwnProperty(conn_gs_1_key)).toBeTruthy();
+        markers.removeGSMarker(gs_id_1);
+        expect($fake_scope.markers.hasOwnProperty('MK1')).toBeFalsy();
+        expect($fake_scope.paths.hasOwnProperty(conn_gs_1_key)).toBeFalsy();
+
+    });
+
+    it('should manage (CRUD) SC marker operations', function () {
+
+        var $fake_scope = $rootScope.$new(),
+            sc_id = 'sc-1', wrong_sc_id = 'sc-2',
+            sc_cfg = {
+                spacecraft_id: sc_id,
+                groundtrack: []
+            };
+
+        markers.configureMapScope($fake_scope);
+
+        expect(function () {
+            markers.addSC('', {});
+        }).toThrow('@addSC: wrong id');
+        expect(function () {
+            markers.addSC(sc_id, {});
+        }).toThrow('@createSCMarkers: wrong cfg, no <spacecraft_id>');
+        expect(function () {
+            markers.addSC(sc_id, sc_cfg);
+        }).toThrow('@readTrack: empty groundtrack');
+
+        sc_cfg.groundtrack = [{
+            timestamp: Date.now() * 1000 + 1000,
+            latitude: 5.0,
+            longitude: 6.0
+        }, {
+            timestamp: Date.now() * 1000 + 1001,
+            latitude: 6.0,
+            longitude: 7.0
+        }];
+
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeFalsy();
+        markers.addSC(sc_id, sc_cfg);
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
+
+        expect(function () {
+            markers.addSC(sc_id, {});
+        }).toThrow('@addSC: SC Marker already exists, id = ' + sc_id);
+
+        expect(function () {
+            markers.updateSC('', {});
+        }).toThrow('@updateSC: no id provided');
+        expect(function () {
+            markers.updateSC(wrong_sc_id, {});
+        }).toThrow('@updateSC: marker <' + wrong_sc_id + '> does not exist');
+
+        //expect(markers.updateSC(sc_id, sc_cfg)).toEqual(sc_id);
+
+        expect(function () {
+            markers.removeSC();
+        }).toThrow('@removeSC: no id provided');
+        expect(function () {
+            markers.removeSC('XXXX');
+        }).toThrow('@removeSC: marker <XXXX> does not exist');
+
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
+        markers.removeSC(sc_id);
+        expect(markers.sc.hasOwnProperty(sc_id)).toBeFalsy();
+
+    });
+
     it('should pan to a given location', function () {
 
         var gs_lat = 1.0, gs_lng = 2.0, latlng = {
@@ -373,122 +499,6 @@ describe('Testing Markers Service', function () {
         expect(markers.createServerMarker(server_id, server_lat, server_lng))
             .toEqual(server_id);
         expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
-
-    });
-
-    it('should manage (CRUD) GS marker operations', function () {
-
-        var $fake_scope = $rootScope.$new(),
-            server_id = 'server_0',
-            server_lat = 1.0,
-            server_lng = 2.0,
-            gs_id_1 = 'gs_id_1',
-            gs_lat = 1.0,
-            gs_lng = 2.0,
-            conn_gs_1 = '',
-            conn_gs_1_key = '',
-            gs_cfg = {
-                groundstation_id: gs_id_1,
-                groundstation_latlon: [gs_lat, gs_lng]
-            },
-            new_gs_lat = 3.0,
-            new_gs_lng = 4.0,
-            new_gs_cfg = {
-                groundstation_id: gs_id_1,
-                groundstation_latlon: [new_gs_lat, new_gs_lng]
-            };
-
-        markers.configureMapScope($fake_scope);
-        expect(markers.createServerMarker(server_id, server_lat, server_lng))
-            .toEqual(server_id);
-        expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
-        conn_gs_1 = markers.createGSConnector(gs_id_1);
-        conn_gs_1_key = markers.createMarkerKey(conn_gs_1);
-
-        expect(function () {
-            markers.updateGSMarker(null);
-        }).toThrow('@updateGSMarker, wrong <cfg>');
-
-        expect(markers.updateGSMarker(new_gs_cfg)).toEqual(gs_id_1);
-        expect($fake_scope.markers.MK1).toEqual({
-            lat: new_gs_lat,
-            lng: new_gs_lng,
-            focus: true,
-            draggable: false,
-            layer: 'groundstations',
-            icon: {
-                iconUrl: '/images/gs-icon.svg',
-                iconSize: [15, 15]
-            },
-            label: {
-                message: new_gs_cfg.groundstation_id,
-                options: {
-                    noHide: true
-                }
-            },
-            identifier: gs_id_1
-        });
-
-        expect(function () {
-            markers.removeGSMarker();
-        }).toThrow('@getMarkerKey: No key for <undefined>');
-
-        expect($fake_scope.markers.hasOwnProperty('MK1')).toBeTruthy();
-        expect($fake_scope.paths.hasOwnProperty(conn_gs_1_key)).toBeTruthy();
-        markers.removeGSMarker(gs_id_1);
-        expect($fake_scope.markers.hasOwnProperty('MK1')).toBeFalsy();
-        expect($fake_scope.paths.hasOwnProperty(conn_gs_1_key)).toBeFalsy();
-
-    });
-
-    it('should manage (CRUD) SC marker operations', function () {
-
-        var $fake_scope = $rootScope.$new(),
-            sc_id = 'sc-1',
-            sc_cfg = {
-                spacecraft_id: sc_id,
-                groundtrack: []
-            };
-
-        markers.configureMapScope($fake_scope);
-
-        expect(function () {
-            markers.addSC('', {});
-        }).toThrow('@addSC: wrong id');
-        expect(function () {
-            markers.addSC(sc_id, {});
-        }).toThrow('@createSCMarkers: wrong cfg, no <spacecraft_id>');
-        expect(function () {
-            markers.addSC(sc_id, sc_cfg);
-        }).toThrow('@readTrack: empty groundtrack');
-
-        sc_cfg.groundtrack = [{
-            timestamp: Date.now() * 1000 + 1000,
-            latitude: 5.0,
-            longitude: 6.0
-        }, {
-            timestamp: Date.now() * 1000 + 1001,
-            latitude: 6.0,
-            longitude: 7.0
-        }];
-
-        expect(markers.sc.hasOwnProperty(sc_id)).toBeFalsy();
-        markers.addSC(sc_id, sc_cfg);
-        expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
-
-        // TODO Update SC is quite hard to properly test due to dependencies
-        // markers.updateSC(sc_id, new_sc_cfg);
-
-        expect(function () {
-            markers.removeSC();
-        }).toThrow('@removeSC: no id provided');
-        expect(function () {
-            markers.removeSC('XXXX');
-        }).toThrow('@removeSC: marker <XXXX> does not exist');
-
-        expect(markers.sc.hasOwnProperty(sc_id)).toBeTruthy();
-        markers.removeSC(sc_id);
-        expect(markers.sc.hasOwnProperty(sc_id)).toBeFalsy();
 
     });
 
