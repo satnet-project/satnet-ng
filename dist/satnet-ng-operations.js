@@ -788,8 +788,14 @@ angular.module('snMapServices', [
                     }
                 };
 
-                scope.layers.baselayers = this.getBaseLayers();
-                scope.layers.overlays = this.getOverlays();
+                if ('layers' in scope) {
+                    if ('baselayers' in scope.layers) {
+                        scope.layers.baselayers = this.getBaseLayers();
+                    }
+                    if ('overlays' in scope.layers) {
+                        scope.layers.overlays = this.getOverlays();
+                    }
+                }
 
             };
 
@@ -966,7 +972,7 @@ angular.module('snMapServices', [
                     '"center": ' + JSON.stringify(mapInfo.center) + ', ' +
                     '"terminator": ' + mapInfo.terminator + ', ' +
                     '"map": ' + mapInfo.map +
-                '}';
+                    '}';
             };
 
     }
@@ -2501,7 +2507,8 @@ angular.module(
          */
         $scope.addGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/add-dialog.html'
+                templateUrl: 'operations/templates/gs/add-dialog.html',
+                controller: 'GsAddCtrl'
             });
         };
 
@@ -2509,13 +2516,14 @@ angular.module(
          * Controller function that shows the dialog for editing the properties
          * of a given Ground Station.
          *
-         * @param {String} gs_id Identifier of the Ground Station for edition
+         * @param {String} identifier Identifier of the Ground Station
          */
-        $scope.editGs = function (gs_id) {
+        $scope.editGs = function (identifier) {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/edit-dialog.html',
+                templateUrl: 'operations/templates/gs/add-dialog.html',
+                controller: 'GsEditCtrl',
                 locals: {
-                    gs_id: gs_id
+                    identifier: identifier
                 }
             });
         };
@@ -2566,10 +2574,11 @@ angular.module(
 
     }
 
-]).controller('GsAddCtrl', [
+]).controller('GsDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'satnetRPC',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
+    'identifier', 'editing',
 
     /**
      * Controller of the dialog used to add a new Ground Station. This dialog
@@ -2580,18 +2589,27 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT
+        satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT,
+        identifier, editing
     ) {
 
+        if (!identifier) {
+            identifier = '';
+        }
+        if (!editing) {
+            editing = false;
+        }
+
         $scope.configuration = {
-            identifier: '',
+            identifier: identifier,
             callsign: '',
             elevation: 0.0
         };
         $scope.uiCtrl = {
             add: {
                 disabled: true
-            }
+            },
+            editing: editing
         };
 
         $scope.center = {};
@@ -2648,10 +2666,71 @@ angular.module(
         };
 
         /**
-         * Function that initializes this controller by correctly setting up
-         * the markers and the position (lat, lng, zoom) of the map.
+         * Function that saves the just edited ground station object within
+         * the remote server.
+         */
+        $scope.update = function () {
+            var cfg = {
+                'groundstation_id': identifier,
+                'groundstation_callsign': $scope.gs.callsign,
+                'groundstation_elevation': $scope.gs.elevation.toFixed(2),
+                'groundstation_latlon': [
+                    $scope.markers.gs.lat.toFixed(6),
+                    $scope.markers.gs.lng.toFixed(6)
+                ]
+            };
+            satnetRPC.rCall('gs.update', [identifier, cfg]).then(
+                function (results) {
+                    // TODO broadcaster.gsUpdated(groundstation_id);
+                    var message = '<' + identifier + '> succesfully created!';
+                    $log.info(message, ', result = ' + JSON.stringify(results));
+                    $mdToast.show($mdToast.simple().content(message));
+                    $mdDialog.hide();
+                    $mdDialog.show({
+                        templateUrl: 'operations/templates/gs/list-dialog.html'
+                    });
+                },
+                function (error) {
+                    window.alert(error);
+                }
+            );
+        };
+
+        /**
+         * Generic method that initializes the Ground Station dialog discerning
+         * whether this is going to be used either for adding a new Ground
+         * Station or for editing an existing one. It also carries out all the
+         * common initialization tasks that have to be executed for both.
          */
         $scope.init = function () {
+
+            angular.extend($scope.events, {
+                markers: ['dragend']
+            });
+
+            $scope.$on("leafletDirectiveMarker.dragend",
+                function (event, args) {
+                    $scope.markers.gs.lat = args.model.lat;
+                    $scope.markers.gs.lng = args.model.lng;
+                }
+            );
+
+            if (!editing) {
+                $scope.loadConfiguration();
+            } else {
+                $scope.initConfiguration();
+            }
+
+        };
+
+        /**
+         * Function that initializes this controller by correctly setting up
+         * the markers and the position (lat, lng, zoom) of the map. This init
+         * method must be invoked only when creating a dialog that requires the
+         * user to input all the information about the Ground Station; this is,
+         * a dialog for adding a "new" Ground Station.
+         */
+        $scope.initConfiguration = function () {
 
             satnetRPC.getUserLocation().then(function (location) {
 
@@ -2665,19 +2744,113 @@ angular.module(
                 $scope.markers.gs.lng = location.longitude;
                 $scope.markers.gs.focus = true;
 
-                angular.extend($scope.events, {
-                    markers: ['dragend']
-                });
-
             });
 
-            $scope.$on("leafletDirectiveMarker.dragend",
-                function (event, args) {
-                    $scope.markers.gs.lat = args.model.lat;
-                    $scope.markers.gs.lng = args.model.lng;
+        };
+
+        /**
+         * Function that initializes this controller by correctly setting up
+         * the markers and the position (lat, lng, zoom) of the map. It loads
+         * all the configuration for the Ground Station from the remote server.
+         * Therefore, this initialization function must be used to initialize
+         * a Ground Station dialog for editing the configuration of an existant
+         * Ground Station.
+         */
+        $scope.loadConfiguration = function () {
+
+            mapServices.centerAtGs($scope, identifier, 8).then(function (gs) {
+                $scope.configuration.identifier = gs.groundstation_id;
+                $scope.configuration.callsign = gs.groundstation_callsign;
+                $scope.configuration.elevation = gs.groundstation_elevation;
+                $log.info('@loadConfiguration: GS Modal dialog loaded.');
+            });
+
+        };
+
+    }
+
+]).controller('GsEditCtrl', [
+    '$log', '$scope', '$mdDialog', '$mdToast',
+    'satnetRPC',
+    'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
+    'identifier',
+
+    /**
+     * Controller of the dialog used to add a new Ground Station. This dialog
+     * provides all the required controls as for gathering all the information
+     * about the new element for the database.
+     *
+     * @param {Object} $scope Controller execution scope.
+     */
+    function (
+        $log, $scope, $mdDialog, $mdToast,
+        satnetRPC, mapServices, LAT, LNG, ZOOM_SELECT,
+        identifier
+    ) {
+
+        $scope.configuration = {
+            identifier: identifier,
+            callsign: '',
+            elevation: 0.0
+        };
+        $scope.uiCtrl = {
+            add: {
+                disabled: true
+            },
+            editing: true
+        };
+
+        $scope.center = {};
+        $scope.markers = {
+            gs: {
+                lat: 0,
+                lng: 0,
+                message: "Drag me to your GS!",
+                draggable: true,
+                focus: false
+            }
+        };
+        $scope.events = {};
+
+        /**
+         * Function that saves the just created ground station object within
+         * the remote server.
+         */
+        $scope.add = function () {
+            var gs_cfg = [
+                $scope.configuration.identifier,
+                $scope.configuration.callsign,
+                $scope.configuration.elevation.toFixed(2),
+                $scope.markers.gs.lat.toFixed(6),
+                $scope.markers.gs.lng.toFixed(6)
+            ];
+            satnetRPC.rCall('gs.add', gs_cfg).then(
+                function (results) {
+                    var gs_id = results.groundstation_id;
+                    // TODO broadcaster.gsAdded(gsId);
+                    var message = '<' + gs_id + '> succesfully created!';
+                    $log.info(message, ', result = ' + JSON.stringify(results));
+                    $mdToast.show($mdToast.simple().content(message));
+                    $mdDialog.hide();
+                    $mdDialog.show({
+                        templateUrl: 'operations/templates/gs/list-dialog.html'
+                    });
+                },
+                function (error) {
+                    window.alert(error);
                 }
             );
+        };
 
+        /**
+         * Function that handles the behavior of the modal dialog once the user
+         * cancels the operation of adding a new Ground Station.
+         */
+        $scope.cancel = function () {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/gs/list-dialog.html'
+            });
         };
 
     }

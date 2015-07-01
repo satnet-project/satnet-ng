@@ -179,8 +179,14 @@ angular.module('snMapServices', [
                     }
                 };
 
-                scope.layers.baselayers = this.getBaseLayers();
-                scope.layers.overlays = this.getOverlays();
+                if ('layers' in scope) {
+                    if ('baselayers' in scope.layers) {
+                        scope.layers.baselayers = this.getBaseLayers();
+                    }
+                    if ('overlays' in scope.layers) {
+                        scope.layers.overlays = this.getOverlays();
+                    }
+                }
 
             };
 
@@ -357,7 +363,7 @@ angular.module('snMapServices', [
                     '"center": ' + JSON.stringify(mapInfo.center) + ', ' +
                     '"terminator": ' + mapInfo.terminator + ', ' +
                     '"map": ' + mapInfo.map +
-                '}';
+                    '}';
             };
 
     }
