@@ -262,7 +262,66 @@ describe('Testing Markers Service', function () {
 
     });
 
-    it('should pan to a given GS location', function () {
+    it('should pan to a given location', function () {
+
+        var gs_lat = 1.0, gs_lng = 2.0, latlng = {
+                latitude: gs_lat, longitude: gs_lng
+            },
+            __getMainMap = function () {
+                return {
+                    then: function () {
+                        return {
+                            latitude: gs_lat,
+                            longitude: gs_lng
+                        };
+                    }
+                };
+            };
+
+        expect(function () {
+            markers.panTo();
+        }).toThrow('@panTo: no LatLng object provided');
+
+        spyOn(mapServices, 'getMainMap').and.callFake(__getMainMap);
+        markers.panTo(latlng);
+        /* TODO Evaluate properly the call to this promises
+        .then(function (result) {
+            console.log('AAA result = ' + JSON.stringify(result));
+        });
+        */
+
+    });
+
+    it('should pan to a given SC', function () {
+
+        var sc_id = 'sc_id_1',
+            sc_cfg = {
+                spacecraft_id: sc_id,
+                groundtrack: [{
+                    timestamp: Date.now() * 1000 + 1000,
+                    latitude: 5.0,
+                    longitude: 6.0
+                }, {
+                    timestamp: Date.now() * 1000 + 1001,
+                    latitude: 6.0,
+                    longitude: 7.0
+                }]
+            };
+
+        expect(function () {
+            markers.panToSCMarker();
+        }).toThrow('@panToSCMarker: no SC identifier provided');
+
+        expect(function () {
+            markers.panToSCMarker(sc_id);
+        }).toThrow('@panToSCMarker: no SC marker for <' + sc_id + '>');
+
+        markers.addSC(sc_id, sc_cfg);
+        markers.panToSCMarker(sc_id);
+
+    });
+
+    it('should pan to a given GS', function () {
 
         var $fake_scope = $rootScope.$new(),
             server_id = 'server_0',

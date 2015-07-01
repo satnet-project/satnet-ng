@@ -1916,7 +1916,6 @@ angular.module('snMarkerServices')
                 if (!latlng) {
                     throw '@panTo: no LatLng object provided';
                 }
-
                 return mapServices.getMainMap().then(function (mapInfo) {
                     mapInfo.map.panTo(latlng, {
                         animate: true
@@ -2192,15 +2191,19 @@ angular.module('snMarkerServices')
             /**
              * Pans the current view of the map to the coordinates of the marker
              * for the given spacecraft.
+             * 
              * @param spacecraft_id Identifier of the spacecraft
              */
-            this.panToSCMarker = function (spacecraft_id) {
+            this.panToSCMarker = function (sc_id) {
 
-                if (!spacecraft_id) {
-                    throw '@panToGSMarker: no SC identifier provided';
+                if (!sc_id) {
+                    throw '@panToSCMarker: no SC identifier provided';
+                }
+                if (!(sc_id in this.sc)) {
+                    throw '@panToSCMarker: no SC marker for <' + sc_id + '>';
                 }
 
-                var sc_marker = this.sc[spacecraft_id],
+                var sc_marker = this.sc[sc_id],
                     m_ll = sc_marker.marker.getLatLng();
                 return this.panTo(m_ll);
 

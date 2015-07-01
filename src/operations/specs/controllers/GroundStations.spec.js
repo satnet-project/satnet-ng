@@ -103,4 +103,48 @@ describe('Testing Ground Station controllers', function () {
 
     });
 
+    it('should create the Dialog Controller for edition', function () {
+
+        var $scope = $rootScope.$new(),
+            test_id = 'gs-id-1',
+            test_lat = 35.0, test_lng = 36.0,
+            test_cfg = {
+                groundstation_altitude: 231.551239013672,
+                groundstation_callsign: "asfdasd",
+                groundstation_elevation: 12,
+                groundstation_id: test_id,
+                groundstation_latlon: [test_lat, test_lng]
+            },
+            x_cfg = {
+                callsign: test_cfg.groundstation_callsign,
+                elevation: test_cfg.groundstation_elevation,
+                identifier: test_cfg.groundstation_id
+            },
+            __fn__get_gs = function () {
+                return $q.when().then(function () {
+                    return test_cfg;
+                });
+            };
+
+        $controller("GsDialogCtrl", {
+            $scope: $scope,
+            $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC,
+            identifier: test_id,
+            editing: true
+        });
+
+        __mock__satnetRPC.rCall =
+            jasmine.createSpy('rCall').and.callFake(__fn__get_gs);
+
+        $scope.init();
+        $rootScope.$digest();
+
+        expect($scope.center).toEqual({
+            lat: test_lat, lng: test_lng, zoom: 8
+        });
+        expect($scope.configuration).toEqual(x_cfg);
+
+    });
+
 });
