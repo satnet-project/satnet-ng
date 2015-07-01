@@ -21,9 +21,9 @@
         <form name="gsCfg">
 
             <div layout="row">
-                <md-input-container style="width: 40%" ng-disabled="uiCtrl.editing">
+                <md-input-container style="width: 40%">
                     <label>Identifier</label>
-                    <input name="identifier" ng-remote-validate="/configuration/groundstations/valid_id" ng-remote-throttle="200" ng-remote-method="GET" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" ng-model="configuration.identifier" required>
+                    <input name="identifier" ng-disabled="uiCtrl.editing" ng-remote-validate="/configuration/groundstations/valid_id" ng-remote-throttle="200" ng-remote-method="GET" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" ng-model="configuration.identifier" required>
                 </md-input-container>
                 <md-input-container style="width: 30%">
                     <label>Callsign</label>
@@ -50,14 +50,14 @@
 
         <div layout="row">
 
-            <md-button id="add" ng-show="uiCtrl.editing" ng-click="add()" ng-disabled="gsCfg.$pristine || gsCfg.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
+            <md-button id="add" ng-show="!uiCtrl.editing" ng-click="add()" ng-disabled="gsCfg.$pristine || gsCfg.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-plus"></i>
                     <b>add</b>
                 </div>
             </md-button>
 
-            <md-button id="edit" ng-show="!(uiCtrl.editing)" ng-click="edit()" ng-disabled="gsCfg.$pristine || gsCfg.$invalid" aria-label="Edit Ground Station" class="md-primary menu-button">
+            <md-button id="edit" ng-show="uiCtrl.editing" ng-click="edit()" ng-disabled="gsCfg.$pristine || gsCfg.$invalid" aria-label="Edit Ground Station" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-floppy-o"></i>
                     <b>save</b>
