@@ -18,18 +18,10 @@
 
 describe('Testing Ground Station controllers', function () {
 
-    var $rootScope, $scope, $controller, $mdDialog, $q,
-        gsListCtrl,
-        __rCall__fn = jasmine.createSpy('rCall').and.callFake(
-            function () {
-                return $q.when().then(function () {
-                    return ['gs_test_1', 'gs_test_2'];
-                });
-            }
-        ),
+    var $rootScope, $controller, $mdDialog, $q,
         __mock__cookies = {},
         __mock__satnetRPC = {
-            rCall: __rCall__fn
+            rCall: function () {}
         },
         satnetRPC;
 
@@ -44,28 +36,70 @@ describe('Testing Ground Station controllers', function () {
         inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
-            $scope = $rootScope.$new();
-            $q = $injector.get('$q');
             $controller = $injector.get('$controller');
             $mdDialog = $injector.get('$mdDialog');
+            $q = $injector.get('$q');
 
             satnetRPC = $injector.get('satnetRPC');
 
         });
 
-        gsListCtrl = $controller("GsListCtrl", {
+    });
+
+    it('should create the List Controller', function () {
+
+        var $scope = $rootScope.$new(),
+            __fn_list = function () {
+                return $q.when().then(function () {
+                    return ['gs_test_1', 'gs_test_2'];
+                });
+            };
+
+        __mock__satnetRPC.rCall =
+            jasmine.createSpy('rCall').and.callFake(__fn_list);
+
+        $controller("GsListCtrl", {
             $scope: $scope,
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC
         });
 
+        $scope.init();
+        $rootScope.$digest();
+
+        expect($scope.gsList).toEqual(['gs_test_1', 'gs_test_2']);
+
     });
 
-    it('should compile the directive', function () {
+    it('should create the Dialog Controller for creation', function () {
+
+        var $scope = $rootScope.$new(),
+            test_id = 'gs-id-1',
+            __fn_get_user_location = function () {
+                return $q.when().then(function () {
+                    return {
+                        groundstation_latlon: ['40.0', '50.0']
+                    };
+                });
+            };
+
+        $controller("GsDialogCtrl", {
+            $scope: $scope,
+            $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC,
+            identifier: test_id,
+            editing: true
+        });
+
+        __mock__satnetRPC.rCall =
+            jasmine.createSpy('rCall').and.callFake(__fn_get_user_location);
 
         $scope.init();
         $rootScope.$digest();
-        expect($scope.gsList).toEqual(['gs_test_1', 'gs_test_2']);
+
+        expect($scope.center).toEqual({
+            lat: '40.0', lng: '50.0', zoom: 8
+        });
 
     });
 

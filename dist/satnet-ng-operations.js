@@ -2615,25 +2615,18 @@ angular.module(
         }
 
         $scope.configuration = {
-            identifier: identifier,
-            callsign: '',
-            elevation: 0.0
+            identifier: identifier, callsign: '', elevation: 0.0
         };
         $scope.uiCtrl = {
-            add: {
-                disabled: true
-            },
-            editing: editing
+            add: { disabled: true }, editing: editing
         };
 
         $scope.center = {};
         $scope.markers = {
             gs: {
-                lat: 0,
-                lng: 0,
+                lat: 0, lng: 0,
                 message: "Drag me to your GS!",
-                draggable: true,
-                focus: false
+                draggable: true, focus: false
             }
         };
         $scope.events = {};
