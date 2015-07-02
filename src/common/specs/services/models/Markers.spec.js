@@ -533,16 +533,6 @@ describe('Testing Markers Service', function () {
         expect(function () {
             markers.readTrack(groundtrack);
         }).toThrow('@readTrack: invalid groundtrack');
-        /*
-        console.log(
-            '>>> groundtrack = ' +
-                JSON.stringify(groundtrack)
-                    .replace(/\[/g, '[\n')
-                    .replace(/\]/g, '\n]')
-                    .replace(/\}\,/g, '},\n')
-                    .replace(/\{/g, '    {')
-        );
-        */
 
     });
 
