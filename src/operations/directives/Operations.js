@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-angular.module('operationsDirective', [
+angular.module('snOperationsDirective', [
         'ngMaterial',
         'ngAnimate',
         'leaflet-directive',
@@ -28,7 +28,7 @@ angular.module('operationsDirective', [
             .primaryPalette('blue-grey')
             .accentPalette('grey');
     })
-    .controller('OperationsAppCtrl',
+    .controller('operationsAppCtrl',
 
         /**
          * Main controller for the Operations application.

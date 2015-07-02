@@ -41,7 +41,7 @@ describe("Testing Operations Interface", function () {
 
         module(
             'templates',
-            'operationsDirective',
+            'snOperationsDirective',
             'snJRPCServices',
             function ($provide) {
                 $provide.value('$cookies', mock__cookies);
@@ -67,7 +67,7 @@ describe("Testing Operations Interface", function () {
 
         });
 
-        appCtrl = $controller("OperationsAppCtrl", {
+        appCtrl = $controller("operationsAppCtrl", {
             $scope: app_scope,
             $mdSidenav: $mdSidenav
         });
