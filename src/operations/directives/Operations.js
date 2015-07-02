@@ -20,7 +20,7 @@ angular.module('operationsDirective', [
         'leaflet-directive',
         'splashDirective',
         'snAboutDirective',
-        'snMapDirective',
+        'snOperationsMap',
         'operationsMenuControllers',
         'gsControllers'
     ]).config(function ($mdThemingProvider) {
@@ -64,7 +64,7 @@ angular.module('operationsDirective', [
 
             return {
                 restrict: 'E',
-                templateUrl: 'operations/templates/operations-app.html'
+                templateUrl: 'operations/templates/app.html'
             };
 
         }
