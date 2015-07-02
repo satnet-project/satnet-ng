@@ -1,4 +1,4 @@
-angular.module('operationsDirective').run(['$templateCache', function($templateCache) {
+angular.module('snOperationsDirective').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('common/templates/sn-about-dialog.html',

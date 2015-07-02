@@ -100,7 +100,7 @@ module.exports = function (grunt) {
                 ],
                 dest: 'dist/<%= pkg.name %>-operations-tpls.js',
                 options: {
-                    module: 'operationsDirective',
+                    module: 'snOperationsDirective',
                     htmlmin: {
                         collapseWhitespace: true,
                         collapseBooleanAttributes: true
