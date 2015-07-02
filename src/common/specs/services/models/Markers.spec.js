@@ -25,7 +25,7 @@ describe('Testing Markers Service', function () {
 
     beforeEach(function () {
 
-        module('snMarkerServices', 'snMapServices',
+        module('snMarkerModels', 'snMapServices',
             function ($provide) {
                 $provide.value('$cookies', mock__cookies);
             }
@@ -499,6 +499,92 @@ describe('Testing Markers Service', function () {
         expect(markers.createServerMarker(server_id, server_lat, server_lng))
             .toEqual(server_id);
         expect(markers.createGSMarker(gs_cfg)).toEqual(gs_id_1);
+
+    });
+
+    it('basic readTrack tests', function () {
+
+        var groundtrack = [],
+            nowUs = Date.now() * 1000,
+            tomorrowUs = moment().add(1, "days").toDate().getTime() * 1000;
+
+        expect(function () {
+            markers.readTrack(null);
+        }).toThrow('@readTrack: empty groundtrack');
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: empty groundtrack');
+
+        groundtrack = [
+            { timestamp: nowUs - 10000, latitude: 12.00, longitude: 145.00 }
+        ];
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: invalid groundtrack');
+
+        groundtrack = [ { timestamp: 0, latitude: 11.00, longitude: 144.00 } ];
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: invalid groundtrack');
+
+        groundtrack = [
+            { timestamp: tomorrowUs + 1000000, latitude: 12.00, longitude: 145.00 }
+        ];
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: invalid groundtrack');
+        /*
+        console.log(
+            '>>> groundtrack = ' +
+                JSON.stringify(groundtrack)
+                    .replace(/\[/g, '[\n')
+                    .replace(/\]/g, '\n]')
+                    .replace(/\}\,/g, '},\n')
+                    .replace(/\{/g, '    {')
+        );
+        */
+
+    });
+
+    it('extended readTrack tests', function () {
+
+        var _result, groundtrack = [],
+            nowUs = Date.now() * 1000;
+
+        groundtrack.push(
+            { timestamp:  nowUs - 10000, latitude: 12.00, longitude: 145.00 }
+        );
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: invalid groundtrack');
+
+        groundtrack.push(
+            { timestamp:  nowUs - 100000, latitude: 13.00, longitude: 146.00 }
+        );
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: invalid groundtrack');
+
+        groundtrack.push(
+            { timestamp: nowUs + 40000000000, latitude: 14.00, longitude: 147.00 }
+        );
+        expect(function () {
+            markers.readTrack(groundtrack);
+        }).toThrow('@readTrack: invalid groundtrack');
+
+        groundtrack.push(
+            { timestamp: nowUs + 50000000000, latitude: 15.00, longitude: 148.00 }
+        );
+        _result = markers.readTrack(groundtrack);
+        expect(_result.durations).toEqual([10000000]);
+        expect(_result.positions).toEqual([[14, 147], [15, 148]]);
+
+        groundtrack.push(
+            { timestamp: nowUs + 400000000000, latitude: 16.00, longitude: 149.00 }
+        );
+        _result = markers.readTrack(groundtrack);
+        expect(_result.durations).toEqual([10000000]);
+        expect(_result.positions).toEqual([[14, 147], [15, 148]]);
 
     });
 

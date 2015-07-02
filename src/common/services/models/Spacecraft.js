@@ -17,15 +17,12 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('x-spacecraft-models', [
-    'broadcaster', 'satnet-services', 'marker-models'
-]);
-
-/**
- * eXtended GroundStation models. Services built on top of the satnetRPC
- * service and the basic Spacecraft models.
- */
-angular.module('x-spacecraft-models').service('xsc', [
+angular.module('snSpacecraftModels', [
+    'snBroadcasterServices',
+    'snSatnetServices',
+    'snMarkerModels'
+])
+.service('scModels', [
     '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
     function ($rootScope, $q, broadcaster, satnetRPC, markers) {
 

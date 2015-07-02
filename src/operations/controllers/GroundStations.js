@@ -15,14 +15,14 @@
 */
 
 angular.module(
-    'gsControllers', [
+    'snGsControllers', [
         'ngMaterial',
         'remoteValidation',
         'leaflet-directive',
-        'broadcaster',
+        'snBroadcasterServices',
         'snMapServices'
     ]
-).controller('GsListCtrl', [
+).controller('gsListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast', 'broadcaster', 'satnetRPC',
 
     /**
@@ -44,7 +44,7 @@ angular.module(
         $scope.addGsMenu = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
-                controller: 'GsDialogCtrl',
+                controller: 'gsDialogCtrl',
                 locals: {
                     identifier: '',
                     editing: false
@@ -61,7 +61,7 @@ angular.module(
         $scope.editGs = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
-                controller: 'GsDialogCtrl',
+                controller: 'gsDialogCtrl',
                 locals: {
                     identifier: identifier,
                     editing: true
@@ -116,7 +116,7 @@ angular.module(
 
     }
 
-]).controller('GsDialogCtrl', [
+]).controller('gsDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',

@@ -18,11 +18,11 @@ angular.module('operationsDirective', [
         'ngMaterial',
         'ngAnimate',
         'leaflet-directive',
-        'splashDirective',
+        'snSplashDirective',
         'snAboutDirective',
         'snOperationsMap',
-        'operationsMenuControllers',
-        'gsControllers'
+        'snOperationsMenuControllers',
+        'snGsControllers'
     ]).config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue-grey')

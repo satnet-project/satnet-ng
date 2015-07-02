@@ -17,7 +17,9 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('broadcaster', ['pushServices'])
+angular.module('snBroadcasterServices', [
+    'snPushServices'
+])
 .service('broadcaster', [
     '$rootScope', '$log', 'satnetPush',
 
@@ -30,8 +32,6 @@ angular.module('broadcaster', ['pushServices'])
      * @param {Object}   satnetPush Pusher.com service access
      */
     function ($rootScope, $log, satnetPush) {
-
-        'use strict';
 
         /**********************************************************************/
         /************************************************* INTERNAL CALLBACKS */

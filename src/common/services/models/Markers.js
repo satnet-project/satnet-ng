@@ -17,16 +17,9 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular
-    .module('snMarkerServices', [
+angular.module('snMarkerModels', [
         'snMapServices'
-    ]);
-
-/**
- * eXtended GroundStation models. Services built on top of the satnetRPC
- * service and the basic GroundStation models.
- */
-angular.module('snMarkerServices')
+    ])
     .constant('_RATE', 1)
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)

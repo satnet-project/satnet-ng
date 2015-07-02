@@ -21,7 +21,7 @@ describe('Testing Broadcaster Service', function () {
     var broadcaster, $rootScope;
 
     beforeEach(function () {
-        module('broadcaster');
+        module('snBroadcasterServices');
 
         module(function ($provide) {
             $provide.value('satnetPush', {

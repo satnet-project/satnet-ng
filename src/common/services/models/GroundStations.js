@@ -18,11 +18,11 @@
 
 /** Module definition . */
 angular
-    .module('GroundStationModels', [
-        'broadcaster',
-        'pushServices',
-        'satnetServices',
-        'snMarkerServices'
+    .module('snGroundStationModels', [
+        'snBroadcasterServices',
+        'snPushServices',
+        'snJRPCServices',
+        'snMarkerModels'
     ])
     .service('gsModels', [
         '$rootScope', '$q', '$log', 'broadcaster', 'satnetRPC', 'markers',

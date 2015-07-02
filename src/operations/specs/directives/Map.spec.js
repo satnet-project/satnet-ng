@@ -16,45 +16,49 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe('Testing Splash directive', function () {
+describe('Testing Maps directive', function () {
 
-    var $rootScope, $scope, $q,
-        $compile,
-        $directive,
-        $body = $("body"),
-        mock__animate = {
-            leave: function () {
-                return $q.when();
-            }
-        },
-        html =
-        "<div class='m-app-loading' ng-animate-children>" +
-        "   <div class='animated-container'>" +
-        "       <div class='messaging'>" +
-        "           <h2>Operations Interface</h2>" +
-        "       </div>" +
-        "   </div>" +
-        "</div>";
+    var $compile, $rootScope, $scope, $httpBackend,
+        mapServices,
+        __mock__cookies = {},
+        $directive, $body, html = "<sn-map></sn-map>",
+        x_post_geoip = {
+            latitude: '40.0', longitude: '50.0'
+        };
 
     beforeEach(function () {
 
-        module('snSplashDirective', function ($provide) {
-            $provide.value('$animate', mock__animate);
-        });
+        module(
+            'templates', 'snOperationsMap', 'snMapServices',
+            function($provide) {
+                $provide.value('$cookies', __mock__cookies);
+            }
+        );
 
         inject(function ($injector) {
 
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
-            $q = $injector.get('$q');
+            $httpBackend = $injector.get('$httpBackend');
+            mapServices = $injector.get('mapServices');
 
             $scope = $rootScope.$new();
             $directive = $compile(angular.element(html))($scope);
 
         });
 
+        $httpBackend
+            .when('GET', 'http://server:80/configuration/user/geoip')
+            .respond(x_post_geoip);
+        $httpBackend
+            .expectPOST('http://server:80/jrpc/')
+            .respond(x_post_geoip);
+
+        $body = $("body");
         $body.append($directive);
         $rootScope.$digest();
+
+        expect(mapServices).toBeDefined();
 
     });
 
@@ -62,11 +66,9 @@ describe('Testing Splash directive', function () {
         $body.empty();
     });
 
-    it('should compile the directive', function () {
-        $body = $("body");
-        $body.append($directive);
-        var div_directive = $("div.m-app-loading");
-        expect(div_directive.length).toBe(1);
+    it('should create a Leaflet map', function () {
+        var map = $('#mainMap').eq(0);
+        expect(map.length).toBe(1);
     });
 
 });

@@ -27,7 +27,7 @@ describe('Testing Ground Station controllers', function () {
 
     beforeEach(function () {
 
-        module('gsControllers');
+        module('snGsControllers');
         module(function ($provide) {
             $provide.value('$cookies', __mock__cookies);
             $provide.value('satnetRPC', __mock__satnetRPC);
@@ -58,7 +58,7 @@ describe('Testing Ground Station controllers', function () {
         __mock__satnetRPC.rCall =
             jasmine.createSpy('rCall').and.callFake(__fn_list);
 
-        $controller("GsListCtrl", {
+        $controller("gsListCtrl", {
             $scope: $scope,
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC
@@ -83,7 +83,7 @@ describe('Testing Ground Station controllers', function () {
                 });
             };
 
-        $controller("GsDialogCtrl", {
+        $controller("gsDialogCtrl", {
             $scope: $scope,
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC,
@@ -126,7 +126,7 @@ describe('Testing Ground Station controllers', function () {
                 });
             };
 
-        $controller("GsDialogCtrl", {
+        $controller("gsDialogCtrl", {
             $scope: $scope,
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC,

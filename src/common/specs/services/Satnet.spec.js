@@ -43,7 +43,7 @@ describe('Testing SatNet Service', function () {
         };
 
     beforeEach(function () {
-        module('satnetServices');
+        module('snJRPCServices');
 
         module(function ($provide) {
             $provide.value('jsonrpc', __mock__jsonrpc);

@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-angular.module('splashDirective', [])
-    .directive('mAppLoading', ['$animate',
+angular.module('snSplashDirective', [])
+.directive('mAppLoading', ['$animate',
 
     /**
      * This function implements the controller.
@@ -79,7 +79,9 @@ angular.module('splashDirective', [])
    limitations under the License.
 */
 
-angular.module('snAboutDirective', ['ngMaterial'])
+angular.module('snAboutDirective', [
+    'ngMaterial'
+])
     .controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
 
         /**
@@ -157,7 +159,9 @@ angular.module('snAboutDirective', ['ngMaterial'])
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('broadcaster', ['pushServices'])
+angular.module('snBroadcasterServices', [
+    'snPushServices'
+])
 .service('broadcaster', [
     '$rootScope', '$log', 'satnetPush',
 
@@ -170,8 +174,6 @@ angular.module('broadcaster', ['pushServices'])
      * @param {Object}   satnetPush Pusher.com service access
      */
     function ($rootScope, $log, satnetPush) {
-
-        'use strict';
 
         /**********************************************************************/
         /************************************************* INTERNAL CALLBACKS */
@@ -522,7 +524,7 @@ angular.module('broadcaster', ['pushServices'])
 
 /** Module definition (empty array is vital!). */
 angular.module('snMapServices', [
-    'satnetServices',
+    'snJRPCServices',
     'leaflet-directive'
 ])
     .constant('T_OPACITY', 0.125)
@@ -891,7 +893,7 @@ angular.module('snMapServices', [
 
 /** Module definition (empty array is vital!). */
 angular
-    .module('satnetServices', [
+    .module('snJRPCServices', [
         'jsonrpc', 'ngCookies'
     ])
     .run([
@@ -1245,7 +1247,7 @@ angular
 
 /** Module definition (empty array is vital!). */
 angular
-.module('pushServices', [
+.module('snPushServices', [
     'pusher-angular'
 ])
 .service('satnetPush', [
@@ -1386,11 +1388,11 @@ angular
 
 /** Module definition . */
 angular
-    .module('GroundStationModels', [
-        'broadcaster',
-        'pushServices',
-        'satnetServices',
-        'snMarkerServices'
+    .module('snGroundStationModels', [
+        'snBroadcasterServices',
+        'snPushServices',
+        'snJRPCServices',
+        'snMarkerModels'
     ])
     .service('gsModels', [
         '$rootScope', '$q', '$log', 'broadcaster', 'satnetRPC', 'markers',
@@ -1617,16 +1619,9 @@ angular
  */
 
 /** Module definition (empty array is vital!). */
-angular
-    .module('snMarkerServices', [
+angular.module('snMarkerModels', [
         'snMapServices'
-    ]);
-
-/**
- * eXtended GroundStation models. Services built on top of the satnetRPC
- * service and the basic GroundStation models.
- */
-angular.module('snMarkerServices')
+    ])
     .constant('_RATE', 1)
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)
@@ -2313,8 +2308,8 @@ angular.module('snMarkerServices')
 
 /** Module definition (empty array is vital!). */
 angular.module('snNetworkModels', [
-    'satnetServices',
-    'snMarkerServices'
+    'snJRPCServices',
+    'snMarkerModels'
 ]).service('serverModels', [
     '$rootScope', '$location', 'broadcaster', 'satnetRPC',  'markers',
 
@@ -2384,14 +2379,14 @@ angular.module('snNetworkModels', [
 */
 
 angular.module(
-    'gsControllers', [
+    'snGsControllers', [
         'ngMaterial',
         'remoteValidation',
         'leaflet-directive',
-        'broadcaster',
+        'snBroadcasterServices',
         'snMapServices'
     ]
-).controller('GsListCtrl', [
+).controller('gsListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast', 'broadcaster', 'satnetRPC',
 
     /**
@@ -2413,7 +2408,7 @@ angular.module(
         $scope.addGsMenu = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
-                controller: 'GsDialogCtrl',
+                controller: 'gsDialogCtrl',
                 locals: {
                     identifier: '',
                     editing: false
@@ -2430,7 +2425,7 @@ angular.module(
         $scope.editGs = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
-                controller: 'GsDialogCtrl',
+                controller: 'gsDialogCtrl',
                 locals: {
                     identifier: identifier,
                     editing: true
@@ -2485,7 +2480,7 @@ angular.module(
 
     }
 
-]).controller('GsDialogCtrl', [
+]).controller('gsDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
@@ -2707,11 +2702,10 @@ angular.module(
    limitations under the License.
 */
 
-var opsMenuCtrlModule = angular.module(
-    'operationsMenuControllers', ['ngMaterial']
-);
-
-opsMenuCtrlModule.controller('OperationsMenuCtrl', [
+angular.module('snOperationsMenuControllers', [
+    'ngMaterial'
+])
+.controller('operationsMenuCtrl', [
     '$scope', '$mdSidenav', '$mdDialog',
 
     /**
@@ -2737,7 +2731,7 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
          */
         $scope.showGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/list-dialog.html'
+                templateUrl: 'operations/templates/gs/list.html'
             });
         };
 
@@ -2763,11 +2757,11 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
 
 angular.module('snOperationsMap', [
     'snMapServices',
-    'snMarkerServices',
-    'GroundStationModels',
+    'snMarkerModels',
+    'snGroundStationModels',
     'snNetworkModels'
 ])
-    .controller('MapCtrl', [
+    .controller('mapCtrl', [
         '$log', '$scope',
         'mapServices', 'markers',
         'gsModels', 'serverModels',
@@ -2868,11 +2862,11 @@ angular.module('operationsDirective', [
         'ngMaterial',
         'ngAnimate',
         'leaflet-directive',
-        'splashDirective',
+        'snSplashDirective',
         'snAboutDirective',
         'snOperationsMap',
-        'operationsMenuControllers',
-        'gsControllers'
+        'snOperationsMenuControllers',
+        'snGsControllers'
     ]).config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue-grey')

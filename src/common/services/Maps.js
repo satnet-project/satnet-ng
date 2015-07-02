@@ -18,7 +18,7 @@
 
 /** Module definition (empty array is vital!). */
 angular.module('snMapServices', [
-    'satnetServices',
+    'snJRPCServices',
     'leaflet-directive'
 ])
     .constant('T_OPACITY', 0.125)

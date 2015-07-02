@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-angular.module('splashDirective', [])
-    .directive('mAppLoading', ['$animate',
+angular.module('snSplashDirective', [])
+.directive('mAppLoading', ['$animate',
 
     /**
      * This function implements the controller.

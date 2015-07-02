@@ -14,11 +14,10 @@
    limitations under the License.
 */
 
-var opsMenuCtrlModule = angular.module(
-    'operationsMenuControllers', ['ngMaterial']
-);
-
-opsMenuCtrlModule.controller('OperationsMenuCtrl', [
+angular.module('snOperationsMenuControllers', [
+    'ngMaterial'
+])
+.controller('operationsMenuCtrl', [
     '$scope', '$mdSidenav', '$mdDialog',
 
     /**
@@ -44,7 +43,7 @@ opsMenuCtrlModule.controller('OperationsMenuCtrl', [
          */
         $scope.showGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/list-dialog.html'
+                templateUrl: 'operations/templates/gs/list.html'
             });
         };
 

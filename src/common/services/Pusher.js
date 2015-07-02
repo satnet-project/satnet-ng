@@ -18,7 +18,7 @@
 
 /** Module definition (empty array is vital!). */
 angular
-.module('pushServices', [
+.module('snPushServices', [
     'pusher-angular'
 ])
 .service('satnetPush', [

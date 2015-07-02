@@ -18,8 +18,8 @@
 
 /** Module definition (empty array is vital!). */
 angular.module('snNetworkModels', [
-    'satnetServices',
-    'snMarkerServices'
+    'snJRPCServices',
+    'snMarkerModels'
 ]).service('serverModels', [
     '$rootScope', '$location', 'broadcaster', 'satnetRPC',  'markers',
 

@@ -18,7 +18,7 @@
 
 /** Module definition (empty array is vital!). */
 angular
-    .module('satnetServices', [
+    .module('snJRPCServices', [
         'jsonrpc', 'ngCookies'
     ])
     .run([

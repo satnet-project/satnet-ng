@@ -14,7 +14,9 @@
    limitations under the License.
 */
 
-angular.module('snAboutDirective', ['ngMaterial'])
+angular.module('snAboutDirective', [
+    'ngMaterial'
+])
     .controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
 
         /**

@@ -41,7 +41,8 @@ describe("Testing Operations Interface", function () {
 
         module(
             'templates',
-            'operationsDirective', 'satnetServices',
+            'operationsDirective',
+            'snJRPCServices',
             function ($provide) {
                 $provide.value('$cookies', mock__cookies);
                 $provide.value('serverModels', mock__server);
@@ -70,7 +71,7 @@ describe("Testing Operations Interface", function () {
             $scope: app_scope,
             $mdSidenav: $mdSidenav
         });
-        menuCtrl = $controller("OperationsMenuCtrl", {
+        menuCtrl = $controller("operationsMenuCtrl", {
             $scope: menu_scope,
             $mdSidenav: $mdSidenav
         });
@@ -188,7 +189,7 @@ describe("Testing Operations Interface", function () {
 
         expect($mdDialog.show)
             .toHaveBeenCalledWith({
-                templateUrl: 'operations/templates/gs/list-dialog.html'
+                templateUrl: 'operations/templates/gs/list.html'
             });
 
     });
