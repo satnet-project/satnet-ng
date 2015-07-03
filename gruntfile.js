@@ -60,6 +60,7 @@ module.exports = function (grunt) {
                     'src/common/directives/About.js',
                     'src/common/directives/Maps.js',
                     'src/common/services/Broadcaster.js',
+                    'src/common/services/Celestrak.js',
                     'src/common/services/Maps.js',
                     'src/common/services/Satnet.js',
                     'src/common/services/Pusher.js',

@@ -20,7 +20,8 @@ angular.module(
         'remoteValidation',
         'leaflet-directive',
         'snBroadcasterServices',
-        'snMapServices'
+        'snMapServices',
+        'snCelestrakServices'
     ]
 ).controller('scListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast', 'broadcaster', 'satnetRPC',
@@ -119,7 +120,7 @@ angular.module(
 
 ]).controller('scDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC',
+    'broadcaster', 'satnetRPC', 'celestrak',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
     'identifier', 'editing',
 
@@ -132,7 +133,7 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        broadcaster, satnetRPC,
+        broadcaster, satnetRPC, celestrak,
         mapServices, LAT, LNG, ZOOM_SELECT,
         identifier, editing
     ) {
@@ -145,21 +146,14 @@ angular.module(
         }
 
         $scope.configuration = {
-            identifier: identifier, callsign: ''
+            identifier: identifier, callsign: '',
+            tle_group: '', tle_id: ''
         };
         $scope.uiCtrl = {
-            add: { disabled: true }, editing: editing
+            add: { disabled: true }, editing: editing,
+            tle_groups: celestrak.CELCELESTRAK_SELECT_SECTIONS,
+            tles: []
         };
-
-        $scope.center = {};
-        $scope.markers = {
-            gs: {
-                lat: 0, lng: 0,
-                message: "Drag me to your GS!",
-                draggable: true, focus: false
-            }
-        };
-        $scope.events = {};
 
         /**
          * Function that triggers the opening of a window to add a new Ground
@@ -204,34 +198,6 @@ angular.module(
          */
         $scope.update = function () {
 
-            var cfg = {
-                'groundstation_id': identifier,
-                'groundstation_callsign':
-                    $scope.configuration.callsign,
-                'groundstation_elevation':
-                    $scope.configuration.elevation.toFixed(2),
-                'groundstation_latlon': [
-                    $scope.markers.gs.lat.toFixed(6),
-                    $scope.markers.gs.lng.toFixed(6)
-                ]
-            };
-
-            satnetRPC.rCall('gs.update', [identifier, cfg]).then(
-                function (results) {
-                    // TODO broadcaster.gsUpdated(groundstation_id);
-                    var message = '<' + identifier + '> succesfully created!';
-                    $log.info(message, ', result = ' + JSON.stringify(results));
-                    $mdToast.show($mdToast.simple().content(message));
-                    $mdDialog.hide();
-                    $mdDialog.show({
-                        templateUrl: 'operations/templates/sc/list.html'
-                    });
-                },
-                function (error) {
-                    window.alert(error);
-                }
-            );
-
         };
 
         /**
@@ -246,23 +212,12 @@ angular.module(
         };
 
         /**
-         * Generic method that initializes the Ground Station dialog discerning
-         * whether this is going to be used either for adding a new Ground
-         * Station or for editing an existing one. It also carries out all the
-         * common initialization tasks that have to be executed for both.
+         * Generic method that initializes the Spacecraft dialog discerning
+         * whether this is going to be used either for adding a new Spacecraft
+         * or for editing an existing one. It also carries out all the common
+         * initialization tasks that have to be executed for both.
          */
         $scope.init = function () {
-
-            angular.extend($scope.events, {
-                markers: ['dragend']
-            });
-
-            $scope.$on("leafletDirectiveMarker.dragend",
-                function (event, args) {
-                    $scope.markers.gs.lat = args.model.lat;
-                    $scope.markers.gs.lng = args.model.lng;
-                }
-            );
 
             if (editing) {
                 $scope.loadConfiguration();
@@ -276,8 +231,8 @@ angular.module(
          * Function that initializes this controller by correctly setting up
          * the markers and the position (lat, lng, zoom) of the map. This init
          * method must be invoked only when creating a dialog that requires the
-         * user to input all the information about the Ground Station; this is,
-         * a dialog for adding a "new" Ground Station.
+         * user to input all the information about the Spacecraft; this is,
+         * a dialog for adding a "new" Spacecraft.
          */
         $scope.initConfiguration = function () {
             // TODO Initi whatever configuration it is necessary
