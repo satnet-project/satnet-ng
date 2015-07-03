@@ -22,7 +22,8 @@ angular.module('snOperationsDirective', [
         'snAboutDirective',
         'snOperationsMap',
         'snOperationsMenuControllers',
-        'snGsControllers'
+        'snGsControllers',
+        'snScControllers'
     ]).config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue-grey')

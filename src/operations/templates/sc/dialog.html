@@ -1,0 +1,56 @@
+<md-dialog ng-init="init()" aria-label="Add Spacecraft">
+
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span ng-show="!uiCtrl.editing">Add new Spacecraft</span>
+            <span ng-show="uiCtrl.editing">Edit Spacecraft</span>
+        </h2>
+    </md-toolbar>
+
+    <md-content class="add-sc-dialog menu-list">
+
+        <form name="scCfg">
+
+            <div layout="row">
+                <md-input-container style="width: 50%">
+                    <label>Identifier</label>
+                    <input name="identifier" ng-disabled="uiCtrl.editing" ng-remote-validate="/configuration/spacecraft/valid_id" ng-remote-throttle="200" ng-remote-method="GET" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" ng-model="configuration.identifier" required>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <label>Callsign</label>
+                    <input name="callsign" ng-pattern="/^[a-zA-Z0-9]{3,8}$/" ng-model="configuration.callsign" required>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+            </div>
+
+        </form>
+
+        <div layout="row">
+
+            <md-button id="add" ng-show="!uiCtrl.editing" ng-click="add()" ng-disabled="scCfg.$pristine || scCfg.$invalid" aria-label="Add Spacecraft" class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-plus"></i>
+                    <b>add</b>
+                </div>
+            </md-button>
+
+            <md-button id="edit" ng-show="uiCtrl.editing" ng-click="update()" ng-disabled="scCfg.$pristine || scCfg.$invalid" aria-label="Edit Spacecraft" class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-floppy-o"></i>
+                    <b>save</b>
+                </div>
+            </md-button>
+
+            <md-button id="cancel" ng-click="cancel()" aria-label="Cancel" class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-times"></i>
+                    <b>cancel</b>
+                </div>
+            </md-button>
+
+        </div>
+
+    </md-content>
+</md-dialog>

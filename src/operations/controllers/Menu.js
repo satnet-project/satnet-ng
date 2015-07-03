@@ -47,6 +47,15 @@ angular.module('snOperationsMenuControllers', [
             });
         };
 
+        /**
+         * Handler to open the dialog for managing the spacecraft.
+         */
+        $scope.showScMenu = function () {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/sc/list.html'
+            });
+        };
+
     }
 
 ]);

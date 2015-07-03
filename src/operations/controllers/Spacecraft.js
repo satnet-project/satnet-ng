@@ -1,5 +1,5 @@
 /*
-   Copyright 2014 Ricardo Tubio-Pardavila
+   Copyright 2015 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 */
 
 angular.module(
-    'snGsControllers', [
+    'snScControllers', [
         'ngMaterial',
         'remoteValidation',
         'leaflet-directive',
         'snBroadcasterServices',
         'snMapServices'
     ]
-).controller('gsListCtrl', [
+).controller('scListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast', 'broadcaster', 'satnetRPC',
 
     /**
@@ -35,16 +35,16 @@ angular.module(
      */
     function ($log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC) {
 
-        $scope.gsList = [];
+        $scope.scList = [];
 
         /**
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addGsMenu = function () {
+        $scope.addScMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/dialog.html',
-                controller: 'gsDialogCtrl',
+                templateUrl: 'operations/templates/sc/dialog.html',
+                controller: 'scDialogCtrl',
                 locals: {
                     identifier: '',
                     editing: false
@@ -54,14 +54,14 @@ angular.module(
 
         /**
          * Controller function that shows the dialog for editing the properties
-         * of a given Ground Station.
+         * of a given Spacecraft.
          *
-         * @param {String} identifier Identifier of the Ground Station
+         * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.editGs = function (identifier) {
+        $scope.editSc = function (identifier) {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/dialog.html',
-                controller: 'gsDialogCtrl',
+                templateUrl: 'operations/templates/sc/dialog.html',
+                controller: 'scDialogCtrl',
                 locals: {
                     identifier: identifier,
                     editing: true
@@ -70,21 +70,22 @@ angular.module(
         };
 
         /**
-         * Controller function that removes the given Ground Station from the
+         * Controller function that removes the given Spacecraft from the
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
          *
-         * @param {String} gs_id Identifier of the Ground Station for removal
+         * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.removeGs = function (gs_id) {
-            satnetRPC.rCall('gs.delete', [gs_id]).then(function (results) {
-                var message = '<' + gs_id + '> succesfully deleted!';
-                broadcaster.gsRemoved(gs_id);
+        $scope.removeSc = function (identifier) {
+            satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
+                var message = '<' + identifier + '> succesfully deleted!';
+                broadcaster.gsRemoved(identifier);
                 $log.info(message, ', result = ' + JSON.stringify(results));
                 $mdToast.show($mdToast.simple().content(message));
                 $scope.refresh();
             }).catch(function (cause) {
-                var message = 'Could not remove GS with id = <' + gs_id + '>';
+                var message = 'Could not remove GS with id = <' +
+                    identifier + '>';
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
                 $mdToast.show($mdToast.simple().content(message));
                 $mdDialog.hide();
@@ -92,10 +93,10 @@ angular.module(
         };
 
         /**
-         * Function that refreshes the list of registered ground stations.
+         * Function that refreshes the list of registered spacecraft.
          */
         $scope.refresh = function () {
-            satnetRPC.rCall('gs.list', []).then(function (results) {
+            satnetRPC.rCall('sc.list', []).then(function (results) {
                 if (results !== null) {
                     $scope.gsList = results.slice(0);
                 }
@@ -116,7 +117,7 @@ angular.module(
 
     }
 
-]).controller('gsDialogCtrl', [
+]).controller('scDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
@@ -144,7 +145,7 @@ angular.module(
         }
 
         $scope.configuration = {
-            identifier: identifier, callsign: '', elevation: 0.0
+            identifier: identifier, callsign: ''
         };
         $scope.uiCtrl = {
             add: { disabled: true }, editing: editing
@@ -186,7 +187,7 @@ angular.module(
                     $mdToast.show($mdToast.simple().content(message));
                     $mdDialog.hide();
                     $mdDialog.show({
-                        templateUrl: 'operations/templates/gs/list.html'
+                        templateUrl: 'operations/templates/sc/list.html'
                     });
 
                 },
@@ -223,7 +224,7 @@ angular.module(
                     $mdToast.show($mdToast.simple().content(message));
                     $mdDialog.hide();
                     $mdDialog.show({
-                        templateUrl: 'operations/templates/gs/list.html'
+                        templateUrl: 'operations/templates/sc/list.html'
                     });
                 },
                 function (error) {
@@ -240,7 +241,7 @@ angular.module(
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/list.html'
+                templateUrl: 'operations/templates/sc/list.html'
             });
         };
 
@@ -279,21 +280,7 @@ angular.module(
          * a dialog for adding a "new" Ground Station.
          */
         $scope.initConfiguration = function () {
-
-            satnetRPC.getUserLocation().then(function (location) {
-
-                angular.extend($scope.center, {
-                    lat: location.latitude,
-                    lng: location.longitude,
-                    zoom: ZOOM_SELECT
-                });
-
-                $scope.markers.gs.lat = location.latitude;
-                $scope.markers.gs.lng = location.longitude;
-                $scope.markers.gs.focus = true;
-
-            });
-
+            // TODO Initi whatever configuration it is necessary
         };
 
         /**
