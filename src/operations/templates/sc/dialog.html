@@ -1,4 +1,4 @@
-<md-dialog ng-init="init()" aria-label="Add Spacecraft">
+<md-dialog ng-init="init()" aria-label="Spacecraft Dialog" style="width: 350px">
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
@@ -7,7 +7,7 @@
         </h2>
     </md-toolbar>
 
-    <md-content class="add-sc-dialog menu-list">
+    <md-content class="add-sc-dialog menu-list" style="width: 100%">
 
         <form name="scCfg">
 
@@ -23,6 +23,14 @@
             </div>
 
             <div layout="row">
+                <md-select ng-model="configuration.tle_group" ng-change="updateTles()" style="width: 50%" required>
+                    <md-select-label>{{ configuration.tle_group ? configuration.tle_group.subsection : 'Select Group' }}</md-select-label>
+                    <md-option ng-value="group" ng-repeat="group in uiCtrl.tle_groups">{{group.subsection}}</md-option>
+                </md-select>
+                <md-select ng-model="configuration.tle" ng-change="updateTles()" style="width: 50%" required>
+                    <md-select-label>{{ configuration.tle ? configuration.tle.spacecraft_tle_id : 'Select TLE' }}</md-select-label>
+                    <md-option ng-value="tle" ng-repeat="tle in uiCtrl.tles">{{tle.spacecraft_tle_id}}</md-option>
+                </md-select>
             </div>
 
         </form>

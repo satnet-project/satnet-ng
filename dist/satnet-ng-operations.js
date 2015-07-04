@@ -2861,7 +2861,8 @@ angular.module(
         'snCelestrakServices'
     ]
 ).controller('scListCtrl', [
-    '$log', '$scope', '$mdDialog', '$mdToast', 'broadcaster', 'satnetRPC',
+    '$log', '$scope', '$mdDialog', '$mdToast',
+    'broadcaster', 'satnetRPC',
 
     /**
      * Controller of the list with the Ground Stations registered for a given
@@ -2915,6 +2916,7 @@ angular.module(
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.removeSc = function (identifier) {
+
             satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
                 var message = '<' + identifier + '> succesfully deleted!';
                 broadcaster.gsRemoved(identifier);
@@ -2928,6 +2930,7 @@ angular.module(
                 $mdToast.show($mdToast.simple().content(message));
                 $mdDialog.hide();
             });
+
         };
 
         /**
@@ -2936,7 +2939,7 @@ angular.module(
         $scope.refresh = function () {
             satnetRPC.rCall('sc.list', []).then(function (results) {
                 if (results !== null) {
-                    $scope.gsList = results.slice(0);
+                    $scope.scList = results.slice(0);
                 }
             }).catch(function (cause) {
                 $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
@@ -2983,13 +2986,34 @@ angular.module(
         }
 
         $scope.configuration = {
-            identifier: identifier, callsign: '',
-            tle_group: '', tle_id: ''
+            identifier: identifier,
+            callsign: '',
+            tle_group: '',
+            tle: ''
         };
         $scope.uiCtrl = {
-            add: { disabled: true }, editing: editing,
-            tle_groups: celestrak.CELCELESTRAK_SELECT_SECTIONS,
+            add: {
+                disabled: true
+            },
+            editing: editing,
+            tle_groups: celestrak.CELESTRAK_SELECT_SECTIONS,
             tles: []
+        };
+
+        /**
+         * Function that updates the list of selectable TLE's once the group
+         * has changed in the other select control.
+         */
+        $scope.updateTles = function () {
+            if (!$scope.configuration.tle_group) {
+                return;
+            }
+            satnetRPC.rCall('tle.celestrak.getResource', [
+                $scope.configuration.tle_group.subsection
+            ])
+                .then(function (tles) {
+                    $scope.uiCtrl.tles = tles.tle_list.slice(0);
+                });
         };
 
         /**
@@ -3001,18 +3025,16 @@ angular.module(
             var gs_cfg = [
                 $scope.configuration.identifier,
                 $scope.configuration.callsign,
-                $scope.configuration.elevation.toFixed(2),
-                $scope.markers.gs.lat.toFixed(6),
-                $scope.markers.gs.lng.toFixed(6)
+                $scope.configuration.tle.spacecraft_tle_id
             ];
 
-            satnetRPC.rCall('gs.add', gs_cfg).then(
+            satnetRPC.rCall('sc.add', gs_cfg).then(
                 function (results) {
 
-                    var gs_id = results.groundstation_id,
-                        message = '<' + gs_id + '> succesfully created!';
+                    var id = results.spacecraft_id,
+                        message = '<' + id + '> succesfully created!';
 
-                    broadcaster.gsAdded(gs_id);
+                    broadcaster.scAdded(id);
 
                     $log.info(message, ', result = ' + JSON.stringify(results));
                     $mdToast.show($mdToast.simple().content(message));
