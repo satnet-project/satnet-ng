@@ -3010,25 +3010,24 @@ angular.module(
             }
             satnetRPC.rCall('tle.celestrak.getResource', [
                 $scope.configuration.tle_group.subsection
-            ])
-                .then(function (tles) {
-                    $scope.uiCtrl.tles = tles.tle_list.slice(0);
-                });
+            ]).then(function (tles) {
+                $scope.uiCtrl.tles = tles.tle_list.slice(0);
+            });
         };
 
         /**
-         * Function that triggers the opening of a window to add a new Ground
-         * Station into the system.
+         * Function that triggers the opening of a window to add a new
+         * Spacecraft into the system.
          */
         $scope.add = function () {
 
-            var gs_cfg = [
+            var cfg = [
                 $scope.configuration.identifier,
                 $scope.configuration.callsign,
                 $scope.configuration.tle.spacecraft_tle_id
             ];
 
-            satnetRPC.rCall('sc.add', gs_cfg).then(
+            satnetRPC.rCall('sc.add', cfg).then(
                 function (results) {
 
                     var id = results.spacecraft_id,
