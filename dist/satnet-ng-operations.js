@@ -3134,28 +3134,40 @@ angular.module(
         };
 
         /**
+         * Private function that is used to notify a success in an operation
+         * within this Dialog.
+         * 
+         * @param {String} identifier Identifier of the spacecraft
+         * @param {Object} results    Response from the server
+         */
+        $scope._notifySuccess = function(identifier, results) {
+            var message = '<' + identifier + '> succesfully updated!';
+            $log.info(message, ', response = ' + JSON.stringify(results));
+            $mdToast.show($mdToast.simple().content(message));
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: 'operations/templates/sc/list.html'
+            });
+        };
+
+        /**
          * Function that triggers the opening of a window to add a new
          * Spacecraft into the system.
          */
         $scope.add = function () {
 
-            var cfg = [
-                $scope.configuration.identifier,
-                $scope.configuration.callsign,
-                $scope.configuration.tle.spacecraft_tle_id
-            ];
+            var self = this,
+                cfg = [
+                    $scope.configuration.identifier,
+                    $scope.configuration.callsign,
+                    $scope.configuration.tle.spacecraft_tle_id
+                ];
 
             satnetRPC.rCall('sc.add', cfg).then(
                 function (results) {
-                    var id = results.spacecraft_id,
-                        message = '<' + id + '> succesfully created!';
+                    var id = results.spacecraft_id;
                     broadcaster.scAdded(id);
-                    $log.info(message, ', result = ' + JSON.stringify(results));
-                    $mdToast.show($mdToast.simple().content(message));
-                    $mdDialog.hide();
-                    $mdDialog.show({
-                        templateUrl: 'operations/templates/sc/list.html'
-                    });
+                    self._notifySuccess(id, results);
                 },
                 function (error) {
                     window.alert(error);
@@ -3169,6 +3181,25 @@ angular.module(
          * server.
          */
         $scope.update = function () {
+
+            var self = this,
+                cfg = {
+                    'spacecraft_id': identifier,
+                    'spacecraft_callsign':
+                        $scope.configuration.callsign,
+                    'spacecraft_tle_id':
+                        $scope.configuration.tle.spacecraft_tle_id
+                };
+
+            satnetRPC.rCall('sc.update', [identifier, cfg]).then(
+                function (identifier) {
+                    broadcaster.scUpdated(identifier);
+                    self._notifySuccess(identifier, identifier);
+                },
+                function (error) {
+                    window.alert(error);
+                }
+            );
 
         };
 
@@ -3192,45 +3223,12 @@ angular.module(
         $scope.init = function () {
 
             if (editing) {
-                $scope.loadConfiguration();
-            } else {
-                $scope.initConfiguration();
+                satnetRPC.rCall('sc.get', [identifier]).then(function (data) {
+                    $scope.configuration.identifier = identifier;
+                    $scope.configuration.callsign = data.spacecraft_callsign;
+                    $scope.configuration.savedTleId = data.spacecraft_tle_id;
+                });
             }
-
-        };
-
-        /**
-         * Function that initializes this controller by correctly setting up
-         * the markers and the position (lat, lng, zoom) of the map. This init
-         * method must be invoked only when creating a dialog that requires the
-         * user to input all the information about the Spacecraft; this is,
-         * a dialog for adding a "new" Spacecraft.
-         */
-        $scope.initConfiguration = function () {
-            // TODO Init whatever configuration it is necessary
-        };
-
-        /**
-         * Function that initializes this controller by correctly setting up
-         * the markers and the position (lat, lng, zoom) of the map. It loads
-         * all the configuration for the Ground Station from the remote server.
-         * Therefore, this initialization function must be used to initialize a
-         * Ground Station dialog for editing the configuration of an existant
-         * Ground Station.
-         */
-        $scope.loadConfiguration = function () {
-
-            mapServices.centerAtGs($scope, identifier, 8).then(function (gs) {
-
-                $scope.configuration.identifier = gs.groundstation_id;
-                $scope.configuration.callsign = gs.groundstation_callsign;
-                $scope.configuration.elevation = gs.groundstation_elevation;
-
-                $scope.markers.gs.focus = true;
-                $scope.markers.gs.message = "Drag me to your GS!";
-                $scope.markers.gs.draggable = true;
-
-            });
 
         };
 
