@@ -215,8 +215,8 @@ angular.module(
         };
 
         /**
-         * Function that saves the just edited ground station object within
-         * the remote server.
+         * Function that saves the just edited spacecraft object in the remote
+         * server.
          */
         $scope.update = function () {
 
@@ -257,7 +257,7 @@ angular.module(
          * a dialog for adding a "new" Spacecraft.
          */
         $scope.initConfiguration = function () {
-            // TODO Initi whatever configuration it is necessary
+            // TODO Init whatever configuration it is necessary
         };
 
         /**

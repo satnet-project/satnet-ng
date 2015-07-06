@@ -92,7 +92,7 @@ describe('Testing Spacecraft controllers', function () {
             identifier: '',
             callsign: '',
             tle_group: '',
-            tle_id: ''
+            tle: ''
         });
         expect($scope.uiCtrl).toEqual({
             add: {
