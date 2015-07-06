@@ -186,26 +186,26 @@ div.m-app-loading p {
 .marker-cluster-large div {
   background-color: #900000; }
 
-/* IE 6-8 fallback colors
+/* IE 6-8 fallback colors */
 .leaflet-oldie .marker-cluster-small {
-    background-color: rgb(181, 226, 140);
-}
+  background-color: #b5e28c; }
+
 .leaflet-oldie .marker-cluster-small div {
-    background-color: rgb(110, 204, 57);
-}
+  background-color: #6ecc39; }
+
 .leaflet-oldie .marker-cluster-medium {
-    background-color: rgb(241, 211, 87);
-}
+  background-color: #f1d357; }
+
 .leaflet-oldie .marker-cluster-medium div {
-    background-color: rgb(240, 194, 12);
-}
+  background-color: #f0c20c; }
+
 .leaflet-oldie .marker-cluster-large {
-    background-color: rgb(253, 156, 115);
-}
+  background-color: #fd9c73; }
+
 .leaflet-oldie .marker-cluster-large div {
-    background-color: rgb(241, 128, 23);
-}
- */
+  background-color: #f18017; }
+
+/* */
 .marker-cluster {
   background-clip: padding-box;
   border-radius: 20px; }
