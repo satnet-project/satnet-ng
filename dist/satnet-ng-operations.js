@@ -1972,7 +1972,7 @@ angular.module('snMarkerModels', [
                 autostart: true,
                 draggable: false,
                 icon: L.icon({
-                    iconUrl: '/images/sc-icon.svg',
+                    iconUrl: '/images/sc-icon-2.svg',
                     iconSize: [15, 15]
                 })
             };
@@ -1986,7 +1986,8 @@ angular.module('snMarkerModels', [
             this.colors = [
                 //'#57EF1E', '#47DE2D', '#37CD3C', '#27BC4B', '#17AB5A'
                 //'#00DFFC', '#00B4CC', '#008C9E', '#005F6B',
-                '#00ABAF', '#74FF60', '#499F3C', '#2C6024'
+                //'#00ABAF', '#74FF60', '#499F3C', '#2C6024'
+                '#003366'
                 /*
                 '#000033', '#003333', '#006633', '#009933', '#00CC33',
                 '#00FF33', '#000066', '#003366', '#006666', '#009966',
