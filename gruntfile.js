@@ -56,22 +56,11 @@ module.exports = function (grunt) {
             },
             operations: {
                 src: [
-                    'src/common/directives/Splash.js',
-                    'src/common/directives/About.js',
-                    'src/common/directives/Maps.js',
-                    'src/common/services/Broadcaster.js',
-                    'src/common/services/Celestrak.js',
-                    'src/common/services/Maps.js',
-                    'src/common/services/Satnet.js',
-                    'src/common/services/Pusher.js',
-                    'src/common/services/models/Markers.js',
-                    'src/common/services/models/GroundStations.js',
-                    'src/common/services/models/Network.js',
-                    'src/common/services/models/Spacecraft.js',
-                    'src/operations/controllers/GroundStations.js',
-                    'src/operations/controllers/Spacecraft.js',
-                    'src/operations/controllers/Menu.js',
-                    'src/operations/directives/**/*.js'
+                    'src/common/directives/*.js',
+                    'src/common/services/*.js',
+                    'src/common/models/*.js',
+                    'src/operations/controllers/*.js',
+                    'src/operations/directives/*.js'
                 ],
                 dest: 'dist/<%= pkg.name %>-operations.js'
             }
