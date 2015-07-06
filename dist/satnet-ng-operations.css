@@ -218,7 +218,7 @@ div.m-app-loading p {
   text-align: center;
   border-radius: 15px;
   color: white;
-  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif; }
+  font: 12px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
 
 .marker-cluster span {
   line-height: 30px; }

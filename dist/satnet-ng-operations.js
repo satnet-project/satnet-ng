@@ -14,8 +14,7 @@
    limitations under the License.
 */
 
-angular.module('snSplashDirective', [])
-.directive('mAppLoading', ['$animate',
+angular.module('snSplashDirective', []).directive('mAppLoading', ['$animate',
 
     /**
      * This function implements the controller.
@@ -28,40 +27,39 @@ angular.module('snSplashDirective', [])
      * @returns {Object} Object with the description of the directive.
      */
     function ($animate) {
-            'use strict';
 
-            /**
-             * This function links the just created CSS class-like directive in
-             * order to control the end of the animation. Once the animation is
-             * over, it removes itself from the DOM tree.
-             *
-             * Due to the way AngularJS prevents animation during the bootstrap
-             * of the application, we can't animate the top-level container;
-             * but, since we added "ngAnimateChildren", we can animated the
-             * inner container during this phase.
-             * --
-             * NOTE: Am using .eq(1) so that we don't animate the Style block.
-             *
-             * @param {Object} scope      The scope for this directive.
-             * @param {Object} element    The parent element from the DOM tree.
-             * @param {Object} attributes Object with the attributes of the
-             *                            element.
-             */
-            var link = function (scope, element, attributes) {
+        /**
+         * This function links the just created CSS class-like directive in
+         * order to control the end of the animation. Once the animation is
+         * over, it removes itself from the DOM tree.
+         *
+         * Due to the way AngularJS prevents animation during the bootstrap
+         * of the application, we can't animate the top-level container;
+         * but, since we added "ngAnimateChildren", we can animated the
+         * inner container during this phase.
+         * --
+         * NOTE: Am using .eq(1) so that we don't animate the Style block.
+         *
+         * @param {Object} scope      The scope for this directive.
+         * @param {Object} element    The parent element from the DOM tree.
+         * @param {Object} attributes Object with the attributes of the
+         *                            element.
+         */
+         var link = function (scope, element, attributes) {
 
-                $animate.leave(element.children().eq(1)).then(
-                    function cleanupAfterAnimation() {
-                        element.remove();
-                        scope = element = attributes = null;
-                    }
-                );
+            $animate.leave(element.children().eq(1)).then(
+                function cleanupAfterAnimation() {
+                    element.remove();
+                    scope = element = attributes = null;
+                }
+            );
 
-            };
+        };
 
-            return ({
-                link: link,
-                restrict: "C"
-            });
+        return ({
+            link: link,
+            restrict: "C"
+        });
 
     }]);;/*
    Copyright 2015 Ricardo Tubio-Pardavila
@@ -2501,14 +2499,13 @@ angular.module('snNetworkModels', [
         this.initStandalone = function () {
             this._initListeners();
             var identifier = $location.host();
-            return satnetRPC.getServerLocation(identifier)
-                .then(function (data) {
+            return satnetRPC.getServerLocation(identifier).then(
+                function (data) {
                     return markers.createServerMarker(
-                        identifier,
-                        data.latitude,
-                        data.longitude
+                        identifier, data.latitude, data.longitude
                     );
-                });
+                }
+            );
         };
 
     }

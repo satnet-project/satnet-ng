@@ -61,14 +61,13 @@ angular.module('snNetworkModels', [
         this.initStandalone = function () {
             this._initListeners();
             var identifier = $location.host();
-            return satnetRPC.getServerLocation(identifier)
-                .then(function (data) {
+            return satnetRPC.getServerLocation(identifier).then(
+                function (data) {
                     return markers.createServerMarker(
-                        identifier,
-                        data.latitude,
-                        data.longitude
+                        identifier, data.latitude, data.longitude
                     );
-                });
+                }
+            );
         };
 
     }

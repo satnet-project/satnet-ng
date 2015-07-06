@@ -80,7 +80,7 @@ describe("Testing Operations Interface", function () {
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
         $httpBackend
-            .expectPOST('http://server:80/jrpc')
+            .expectPOST('http://server:80/jrpc/')
             .respond(x_post_geoip);
 
         spyOn(satnetRPC, 'getServerLocation').and.callFake(function () {
