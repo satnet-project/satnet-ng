@@ -20,12 +20,12 @@ angular.module('snOperationsMap', [
     'snMapServices',
     'snMarkerModels',
     'snGroundStationModels',
+    'snSpacecraftModels',
     'snNetworkModels'
 ])
     .controller('mapCtrl', [
         '$log', '$scope',
-        'mapServices', 'markers',
-        'gsModels', 'serverModels',
+        'mapServices', 'markers', 'gsModels', 'scModels', 'serverModels',
         'ZOOM',
 
         /**
@@ -40,8 +40,7 @@ angular.module('snOperationsMap', [
          */
         function (
             $log, $scope,
-            mapServices, markers,
-            gsModels, serverModels,
+            mapServices, markers, gsModels, scModels, serverModels,
             ZOOM
         ) {
 
@@ -69,7 +68,6 @@ angular.module('snOperationsMap', [
 
                 $scope.map = markers.configureMapScope($scope);
                 mapServices.autocenterMap($scope, ZOOM).then(function () {
-                    gsModels.initListeners();
                     serverModels.initStandalone().then(function (server) {
                         $log.log(
                             'maps.js@init: Server =' + JSON.stringify(server)
@@ -82,6 +80,13 @@ angular.module('snOperationsMap', [
                         });
                     });
                 });
+                scModels.initAll().then(function (scs) {
+                    $log.log(
+                        'maps.js@init: Spacecraft = ' + JSON.stringify(scs)
+                    );
+                });
+                gsModels.initListeners();
+                scModels.initListeners();
 
             };
 

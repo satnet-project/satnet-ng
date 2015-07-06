@@ -43,7 +43,7 @@ angular.module(
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addScMenu = function () {
+        $scope.addScDialog = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/sc/dialog.html',
                 controller: 'scDialogCtrl',
@@ -60,7 +60,7 @@ angular.module(
          *
          * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.editSc = function (identifier) {
+        $scope.editScDialog = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/sc/dialog.html',
                 controller: 'scDialogCtrl',
@@ -78,11 +78,11 @@ angular.module(
          *
          * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.removeSc = function (identifier) {
+        $scope.remove = function (identifier) {
 
             satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
                 var message = '<' + identifier + '> succesfully deleted!';
-                broadcaster.gsRemoved(identifier);
+                broadcaster.scRemoved(identifier);
                 $log.info(message, ', result = ' + JSON.stringify(results));
                 $mdToast.show($mdToast.simple().content(message));
                 $scope.refresh();
@@ -192,19 +192,15 @@ angular.module(
 
             satnetRPC.rCall('sc.add', cfg).then(
                 function (results) {
-
                     var id = results.spacecraft_id,
                         message = '<' + id + '> succesfully created!';
-
                     broadcaster.scAdded(id);
-
                     $log.info(message, ', result = ' + JSON.stringify(results));
                     $mdToast.show($mdToast.simple().content(message));
                     $mdDialog.hide();
                     $mdDialog.show({
                         templateUrl: 'operations/templates/sc/list.html'
                     });
-
                 },
                 function (error) {
                     window.alert(error);

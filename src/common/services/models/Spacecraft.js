@@ -19,14 +19,12 @@
 /** Module definition (empty array is vital!). */
 angular.module('snSpacecraftModels', [
     'snBroadcasterServices',
-    'snSatnetServices',
+    'snJRPCServices',
     'snMarkerModels'
 ])
 .service('scModels', [
     '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
     function ($rootScope, $q, broadcaster, satnetRPC, markers) {
-
-        'use strict';
 
         /**
          * Initializes all the configuration objects for the available
