@@ -55,7 +55,7 @@ angular.module('snOperationsMenuControllers', [
                 templateUrl: 'operations/templates/sc/list.html'
             });
         };
-
+        
     }
 
 ]);

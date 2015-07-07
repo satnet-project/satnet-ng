@@ -17,9 +17,43 @@
 angular.module(
     'snRuleControllers', [
         'ngMaterial',
-        'snControllers',
-        'snJRPCServices'
+        'snJRPCServices',
+        'snControllers'
     ]
-).controller('rulesDialogCtrl', [
+).controller('ruleListCtrl', [
+    '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
+    
+    function($scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
+
+        $scope.gsId = identifier;
+        $scope.ruleList = [];
+        $scope.ruleDlgTplUrl = 'operations/templates/rules/dialog.html';
+
+        /**
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            satnetRPC.rCall('rules.list', [$scope.gsId]).then(
+                function (results) {
+                    if (results !== null) {
+                        $scope.ruleList = results.slice(0);
+                    }
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception('rules.list', '-', cause);
+                }
+            );
+        };
+
+        /**
+         * Function that initializes the list of ground stations that are to be
+         * displayed.
+         */
+        $scope.init = function () {
+            $scope.refresh();
+        };
+
+    }
 
 ]);

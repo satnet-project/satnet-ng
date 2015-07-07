@@ -20,7 +20,9 @@ angular.module(
         'remoteValidation',
         'leaflet-directive',
         'snBroadcasterServices',
+        'snJRPCServices',
         'snControllers',
+        'snRuleControllers',
         'snMapServices'
     ]
 ).controller('gsListCtrl', [
@@ -62,8 +64,7 @@ angular.module(
          * 
          * @param {String} identifier Identifier of the Ground Station
          */
-        $scope.showRulesDialog = function (identifier) {
-            console.log('>>> identifier = ' + identifier);
+        $scope.showRuleList = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/rules/list.html',
                 controller: 'ruleListCtrl',
@@ -323,98 +324,6 @@ angular.module(
 
             });
 
-        };
-
-    }
-
-]).controller('ruleListCtrl', [
-    '$log', '$scope', '$mdDialog', '$mdToast',
-    'satnetRPC', 'snDialog', 'identifier',
-
-    /**
-     * Function that implements the controller for the list of the availability
-     * rules.
-     * 
-     * @param {Object} $log       Angular JS $log service
-     * @param {Object} $scope     $scope for this controller
-     * @param {Object} $mdDialog  Angular Material $mdDialog service
-     * @param {Object} $mdToast   Angular Material $mdToast service
-     * @param {Object} satnetRPC  Satnet RPC service
-     * @param {Object} snDialog   Satnet Dialog services (helpers)
-     * @param {String} identifier Identifier of the Ground Station to which this
-     *                            rule belongs
-     */
-    function(
-        $log, $scope, $mdDialog, $mdToast, satnetRPC, snDialog, identifier
-    ) {
-
-        console.log('aaaa, identifier = ' + identifier);
-        $scope.gsId = identifier;
-        $scope.ruleList = [];
-
-        $scope.ruleDlgTplUrl = 'operations/templates/rules/dialog.html';
-
-        /**
-         * Controller function that shows the dialog for editing the properties
-         * of a given Availability Rule.
-         *
-         * @param {String} ruleId Identifier of the Availability Rule
-        $scope.showRuleEditDialog = function (ruleId) {
-            $mdDialog.show({
-                templateUrl: $scope.ruleDlgTplUrl,
-                controller: 'rulesDialogCtrl',
-                locals: {
-                    identifier: $scope.gsId,
-                    ruleId: ruleId,
-                    editing: true
-                }
-            });
-        };
-
-        /**
-         * Controller function that removes the given Ground Station from the
-         * database in the remote server upon user request. It first asks for
-         * confirmation before executing this removal.
-         *
-         * @param {String} gs_id Identifier of the Ground Station for removal
-        $scope.delete = function (rule_id) {
-            satnetRPC.rCall('rule.delete', [rule_id]).then(
-                function (response) {
-                    //broadcaster.gsRemoved(gs_id);
-                    snDialog.success('rule.delete', rule_id, response, null);
-                    $scope.refresh();
-                }
-            ).catch(
-                function (cause) {
-                    snDialog.exception('rule.delete', identifier, cause);
-                }
-            );
-        };
-        */
-
-        /**
-         * Function that refreshes the list of registered ground stations.
-         */
-        $scope.refresh = function () {
-            satnetRPC.rCall('rule.list', []).then(
-                function (results) {
-                    if (results !== null) {
-                        $scope.ruleList = results.slice(0);
-                    }
-                }
-            ).catch(
-                function (cause) {
-                    snDialog.exception('rule.list', '-', cause);
-                }
-            );
-        };
-
-        /**
-         * Function that initializes the list of ground stations that are to be
-         * displayed.
-         */
-        $scope.init = function () {
-            $scope.refresh();
         };
 
     }
