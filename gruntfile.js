@@ -217,7 +217,6 @@ module.exports = function (grunt) {
                         target: 'http://localhost:8081/operations/operations-index.html',
                         appName: 'chromium'
                     }
-
                 },
                 proxies: [
                     {

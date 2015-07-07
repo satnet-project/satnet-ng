@@ -58,7 +58,7 @@ describe('Testing Ground Station controllers', function () {
         __mock__satnetRPC.rCall =
             jasmine.createSpy('rCall').and.callFake(__fn_list);
 
-        $controller("gsListCtrl", {
+        $controller('gsListCtrl', {
             $scope: $scope,
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC
@@ -68,6 +68,32 @@ describe('Testing Ground Station controllers', function () {
         $rootScope.$digest();
 
         expect($scope.gsList).toEqual(['gs_test_1', 'gs_test_2']);
+
+    });
+
+    it('should create the Rules List Controller', function () {
+
+        var $scope = $rootScope.$new(),
+            __fn_list = function () {
+                return $q.when().then(function () {
+                    return ['rule_1', 'rule_2'];
+                });
+            };
+
+        __mock__satnetRPC.rCall =
+            jasmine.createSpy('rCall').and.callFake(__fn_list);
+
+        $controller('ruleListCtrl', {
+            $scope: $scope,
+            $mdDialog: $mdDialog,
+            identifier: 'test_gs',
+            satnetRPC: satnetRPC
+        });
+
+        $scope.init();
+        $rootScope.$digest();
+
+        expect($scope.ruleList).toEqual(['rule_1', 'rule_2']);
 
     });
 

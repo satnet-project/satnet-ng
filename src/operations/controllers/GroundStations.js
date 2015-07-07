@@ -45,7 +45,7 @@ angular.module(
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addGsMenu = function () {
+        $scope.showGsDialog = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
                 controller: 'gsDialogCtrl',
@@ -57,12 +57,29 @@ angular.module(
         };
 
         /**
+         * Function that triggers the opening of a window to add a new
+         * Availability Rule to this Ground Station.
+         * 
+         * @param {String} identifier Identifier of the Ground Station
+         */
+        $scope.showRulesDialog = function (identifier) {
+            console.log('>>> identifier = ' + identifier);
+            $mdDialog.show({
+                templateUrl: 'operations/templates/rules/list.html',
+                controller: 'ruleListCtrl',
+                locals: {
+                    identifier: identifier
+                }
+            });
+        };
+
+        /**
          * Controller function that shows the dialog for editing the properties
          * of a given Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
          */
-        $scope.editGs = function (identifier) {
+        $scope.edit = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
                 controller: 'gsDialogCtrl',
@@ -80,7 +97,7 @@ angular.module(
          *
          * @param {String} gs_id Identifier of the Ground Station for removal
          */
-        $scope.removeGs = function (gs_id) {
+        $scope.delete = function (gs_id) {
             satnetRPC.rCall('gs.delete', [gs_id]).then(function (results) {
                 broadcaster.gsRemoved(gs_id);
                 snDialog.success('gs.delete', gs_id, results, null);
@@ -164,7 +181,7 @@ angular.module(
         };
         $scope.events = {};
 
-        $scope._listTemplateUrl = 'operations/templates/gs/list.html';
+        $scope.listTplUrl = 'operations/templates/gs/list.html';
 
         /**
          * Function that triggers the opening of a window to add a new Ground
@@ -184,7 +201,7 @@ angular.module(
                 function (results) {
                     var gs_id = results.groundstation_id;
                     broadcaster.gsAdded(gs_id);
-                    snDialog.success(gs_id, results, $scope._listTemplateUrl);
+                    snDialog.success(gs_id, results, $scope.listTplUrl);
                 },
                 function (cause) {
                     snDialog.exception('gs.add', '-', cause);
@@ -212,7 +229,7 @@ angular.module(
             satnetRPC.rCall('gs.update', [identifier, cfg]).then(
                 function (gs_id) {
                     broadcaster.gsUpdated(gs_id);
-                    snDialog.success(gs_id, gs_id, $scope._listTemplateUrl);
+                    snDialog.success(gs_id, gs_id, $scope.listTplUrl);
                 },
                 function (cause) {
                     snDialog.exception('gs.update', '-', cause);
@@ -228,7 +245,7 @@ angular.module(
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/list.html'
+                templateUrl: $scope.listTplUrl
             });
         };
 
@@ -306,6 +323,98 @@ angular.module(
 
             });
 
+        };
+
+    }
+
+]).controller('ruleListCtrl', [
+    '$log', '$scope', '$mdDialog', '$mdToast',
+    'satnetRPC', 'snDialog', 'identifier',
+
+    /**
+     * Function that implements the controller for the list of the availability
+     * rules.
+     * 
+     * @param {Object} $log       Angular JS $log service
+     * @param {Object} $scope     $scope for this controller
+     * @param {Object} $mdDialog  Angular Material $mdDialog service
+     * @param {Object} $mdToast   Angular Material $mdToast service
+     * @param {Object} satnetRPC  Satnet RPC service
+     * @param {Object} snDialog   Satnet Dialog services (helpers)
+     * @param {String} identifier Identifier of the Ground Station to which this
+     *                            rule belongs
+     */
+    function(
+        $log, $scope, $mdDialog, $mdToast, satnetRPC, snDialog, identifier
+    ) {
+
+        console.log('aaaa, identifier = ' + identifier);
+        $scope.gsId = identifier;
+        $scope.ruleList = [];
+
+        $scope.ruleDlgTplUrl = 'operations/templates/rules/dialog.html';
+
+        /**
+         * Controller function that shows the dialog for editing the properties
+         * of a given Availability Rule.
+         *
+         * @param {String} ruleId Identifier of the Availability Rule
+        $scope.showRuleEditDialog = function (ruleId) {
+            $mdDialog.show({
+                templateUrl: $scope.ruleDlgTplUrl,
+                controller: 'rulesDialogCtrl',
+                locals: {
+                    identifier: $scope.gsId,
+                    ruleId: ruleId,
+                    editing: true
+                }
+            });
+        };
+
+        /**
+         * Controller function that removes the given Ground Station from the
+         * database in the remote server upon user request. It first asks for
+         * confirmation before executing this removal.
+         *
+         * @param {String} gs_id Identifier of the Ground Station for removal
+        $scope.delete = function (rule_id) {
+            satnetRPC.rCall('rule.delete', [rule_id]).then(
+                function (response) {
+                    //broadcaster.gsRemoved(gs_id);
+                    snDialog.success('rule.delete', rule_id, response, null);
+                    $scope.refresh();
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception('rule.delete', identifier, cause);
+                }
+            );
+        };
+        */
+
+        /**
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            satnetRPC.rCall('rule.list', []).then(
+                function (results) {
+                    if (results !== null) {
+                        $scope.ruleList = results.slice(0);
+                    }
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception('rule.list', '-', cause);
+                }
+            );
+        };
+
+        /**
+         * Function that initializes the list of ground stations that are to be
+         * displayed.
+         */
+        $scope.init = function () {
+            $scope.refresh();
         };
 
     }
