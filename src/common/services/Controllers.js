@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-angular.module('snControllers', ['ngMaterial']).service('snDialogs', [
+angular.module('snControllers', ['ngMaterial']).service('snDialog', [
     '$log', '$mdDialog', '$mdToast',
 
     /**
@@ -28,22 +28,49 @@ angular.module('snControllers', ['ngMaterial']).service('snDialogs', [
 
         /**
          * Function that is used to notify a success in an operation
-         * within this Dialog.
+         * within this Dialog. If no templateUrl is provided, then the original
+         * dialog is not closed and no different dialog gets opened.
          *
-         * @param {String} identifier Identifier of the spacecraft
-         * @param {Object} results    Response from the server
+         * @param {String} operation  Descriptive name of the operation
+         * @param {String} identifier Identifier of the object
+         * @param {Object} response    Response from the server
          * @param {String} templateUrl URL with the template to load after
          *                             closing the dialog.
          */
-        this.success = function (identifier, results, templateUrl) {
-            var message = '<' + identifier + '> succesfully updated!';
-            $log.info(message, ', response = ' + JSON.stringify(results));
-            console.log('>>> templateUrl = ' + templateUrl);
+        this.success = function (operation, identifier, response, templateUrl) {
+
+            var message = 'Succesfull operation <' + operation +
+                '> over id = <' + identifier + '>';
+            $log.info(message + ', response = ' + JSON.stringify(response));
+            $mdToast.show($mdToast.simple().content(message));
+
+            if (templateUrl) {
+                $mdDialog.hide();
+                $mdDialog.show({
+                    templateUrl: templateUrl
+                });
+            }
+
+        };
+
+        /**
+         * Function that displays an error associated to a given attempted
+         * operation over the specified element. The cause thrown by the
+         * underlaying service that could not complete the operation has to be
+         * given as a paramter as well.
+         *
+         * @param {String} operation  Descriptive name of the operation
+         * @param {String} identifier Identifier of the object
+         * @param {Object} cause      Object with the cause of the exception
+         */
+        this.exception = function (operation, identifier, cause) {
+
+            var message = 'Error while doing operation <' + operation +
+                '> over id = <' + identifier + '>';
+            $log.error('@exception, cause: ' + JSON.stringify(cause));
             $mdToast.show($mdToast.simple().content(message));
             $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: templateUrl
-            });
+
         };
 
     }

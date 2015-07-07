@@ -527,7 +527,7 @@ angular.module('snCelestrakServices', [])
    limitations under the License.
 */
 
-angular.module('snControllers', ['ngMaterial']).service('snDialogs', [
+angular.module('snControllers', ['ngMaterial']).service('snDialog', [
     '$log', '$mdDialog', '$mdToast',
 
     /**
@@ -541,22 +541,49 @@ angular.module('snControllers', ['ngMaterial']).service('snDialogs', [
 
         /**
          * Function that is used to notify a success in an operation
-         * within this Dialog.
+         * within this Dialog. If no templateUrl is provided, then the original
+         * dialog is not closed and no different dialog gets opened.
          *
-         * @param {String} identifier Identifier of the spacecraft
-         * @param {Object} results    Response from the server
+         * @param {String} operation  Descriptive name of the operation
+         * @param {String} identifier Identifier of the object
+         * @param {Object} response    Response from the server
          * @param {String} templateUrl URL with the template to load after
          *                             closing the dialog.
          */
-        this.success = function (identifier, results, templateUrl) {
-            var message = '<' + identifier + '> succesfully updated!';
-            $log.info(message, ', response = ' + JSON.stringify(results));
-            console.log('>>> templateUrl = ' + templateUrl);
+        this.success = function (operation, identifier, response, templateUrl) {
+
+            var message = 'Succesfull operation <' + operation +
+                '> over id = <' + identifier + '>';
+            $log.info(message + ', response = ' + JSON.stringify(response));
+            $mdToast.show($mdToast.simple().content(message));
+
+            if (templateUrl) {
+                $mdDialog.hide();
+                $mdDialog.show({
+                    templateUrl: templateUrl
+                });
+            }
+
+        };
+
+        /**
+         * Function that displays an error associated to a given attempted
+         * operation over the specified element. The cause thrown by the
+         * underlaying service that could not complete the operation has to be
+         * given as a paramter as well.
+         *
+         * @param {String} operation  Descriptive name of the operation
+         * @param {String} identifier Identifier of the object
+         * @param {Object} cause      Object with the cause of the exception
+         */
+        this.exception = function (operation, identifier, cause) {
+
+            var message = 'Error while doing operation <' + operation +
+                '> over id = <' + identifier + '>';
+            $log.error('@exception, cause: ' + JSON.stringify(cause));
             $mdToast.show($mdToast.simple().content(message));
             $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: templateUrl
-            });
+
         };
 
     }
@@ -2698,10 +2725,12 @@ angular.module(
         'remoteValidation',
         'leaflet-directive',
         'snBroadcasterServices',
+        'snControllers',
         'snMapServices'
     ]
 ).controller('gsListCtrl', [
-    '$log', '$scope', '$mdDialog', '$mdToast', 'broadcaster', 'satnetRPC',
+    '$log', '$scope', '$mdDialog', '$mdToast',
+    'broadcaster', 'satnetRPC', 'snDialog',
 
     /**
      * Controller of the list with the Ground Stations registered for a given
@@ -2711,7 +2740,9 @@ angular.module(
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC) {
+    function (
+        $log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC, snDialog
+    ) {
 
         $scope.gsList = [];
 
@@ -2756,16 +2787,11 @@ angular.module(
          */
         $scope.removeGs = function (gs_id) {
             satnetRPC.rCall('gs.delete', [gs_id]).then(function (results) {
-                var message = '<' + gs_id + '> succesfully deleted!';
                 broadcaster.gsRemoved(gs_id);
-                $log.info(message, ', result = ' + JSON.stringify(results));
-                $mdToast.show($mdToast.simple().content(message));
+                snDialog.success('gs.delete', gs_id, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
-                var message = 'Could not remove GS with id = <' + gs_id + '>';
-                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show($mdToast.simple().content(message));
-                $mdDialog.hide();
+                snDialog.exception('gs.delete', gs_id, cause);
             });
         };
 
@@ -2778,9 +2804,7 @@ angular.module(
                     $scope.gsList = results.slice(0);
                 }
             }).catch(function (cause) {
-                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show($mdToast.simple().content('Network Error'));
-                $mdDialog.hide();
+                snDialog.exception('gs.list', '-', cause);
             });
         };
 
@@ -2796,7 +2820,7 @@ angular.module(
 
 ]).controller('gsDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC',
+    'broadcaster', 'satnetRPC', 'snDialog',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
     'identifier', 'editing',
 
@@ -2809,7 +2833,7 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        broadcaster, satnetRPC,
+        broadcaster, satnetRPC, snDialog,
         mapServices, LAT, LNG, ZOOM_SELECT,
         identifier, editing
     ) {
@@ -2822,21 +2846,30 @@ angular.module(
         }
 
         $scope.configuration = {
-            identifier: identifier, callsign: '', elevation: 0.0
+            identifier: identifier,
+            callsign: '',
+            elevation: 0.0
         };
         $scope.uiCtrl = {
-            add: { disabled: true }, editing: editing
+            add: {
+                disabled: true
+            },
+            editing: editing
         };
 
         $scope.center = {};
         $scope.markers = {
             gs: {
-                lat: 0, lng: 0,
+                lat: 0,
+                lng: 0,
                 message: "Drag me to your GS!",
-                draggable: true, focus: false
+                draggable: true,
+                focus: false
             }
         };
         $scope.events = {};
+
+        $scope._listTemplateUrl = 'operations/templates/gs/list.html';
 
         /**
          * Function that triggers the opening of a window to add a new Ground
@@ -2854,22 +2887,12 @@ angular.module(
 
             satnetRPC.rCall('gs.add', gs_cfg).then(
                 function (results) {
-
-                    var gs_id = results.groundstation_id,
-                        message = '<' + gs_id + '> succesfully created!';
-
+                    var gs_id = results.groundstation_id;
                     broadcaster.gsAdded(gs_id);
-
-                    $log.info(message, ', result = ' + JSON.stringify(results));
-                    $mdToast.show($mdToast.simple().content(message));
-                    $mdDialog.hide();
-                    $mdDialog.show({
-                        templateUrl: 'operations/templates/gs/list.html'
-                    });
-
+                    snDialog.success(gs_id, results, $scope._listTemplateUrl);
                 },
-                function (error) {
-                    window.alert(error);
+                function (cause) {
+                    snDialog.exception('gs.add', '-', cause);
                 }
             );
 
@@ -2882,30 +2905,22 @@ angular.module(
         $scope.update = function () {
 
             var cfg = {
-                'groundstation_id': identifier,
-                'groundstation_callsign':
-                    $scope.configuration.callsign,
-                'groundstation_elevation':
-                    $scope.configuration.elevation.toFixed(2),
-                'groundstation_latlon': [
+                groundstation_id: identifier,
+                groundstation_callsign: $scope.configuration.callsign,
+                groundstation_elevation: $scope.configuration.elevation.toFixed(2),
+                groundstation_latlon: [
                     $scope.markers.gs.lat.toFixed(6),
                     $scope.markers.gs.lng.toFixed(6)
                 ]
             };
 
             satnetRPC.rCall('gs.update', [identifier, cfg]).then(
-                function (results) {
-                    // TODO broadcaster.gsUpdated(groundstation_id);
-                    var message = '<' + identifier + '> succesfully created!';
-                    $log.info(message, ', result = ' + JSON.stringify(results));
-                    $mdToast.show($mdToast.simple().content(message));
-                    $mdDialog.hide();
-                    $mdDialog.show({
-                        templateUrl: 'operations/templates/gs/list.html'
-                    });
+                function (gs_id) {
+                    broadcaster.gsUpdated(gs_id);
+                    snDialog.success(gs_id, gs_id, $scope._listTemplateUrl);
                 },
-                function (error) {
-                    window.alert(error);
+                function (cause) {
+                    snDialog.exception('gs.update', '-', cause);
                 }
             );
 
@@ -3088,7 +3103,7 @@ angular.module(
     ]
 ).controller('scListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC',
+    'broadcaster', 'satnetRPC', 'snDialog',
 
     /**
      * Controller of the list with the Ground Stations registered for a given
@@ -3098,7 +3113,9 @@ angular.module(
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC) {
+    function (
+        $log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC, snDialog
+    ) {
 
         $scope.scList = [];
 
@@ -3139,22 +3156,16 @@ angular.module(
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
          *
-         * @param {String} identifier Identifier of the Spacecraft
+         * @param {String} sc_id Identifier of the Spacecraft
          */
-        $scope.remove = function (identifier) {
+        $scope.remove = function (sc_id) {
 
-            satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
-                var message = '<' + identifier + '> succesfully deleted!';
-                broadcaster.scRemoved(identifier);
-                $log.info(message, ', result = ' + JSON.stringify(results));
-                $mdToast.show($mdToast.simple().content(message));
+            satnetRPC.rCall('sc.delete', [sc_id]).then(function (results) {
+                broadcaster.scRemoved(sc_id);
+                snDialog.success('sc.delete', sc_id, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
-                var message = 'Could not remove GS with id = <' +
-                    identifier + '>';
-                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show($mdToast.simple().content(message));
-                $mdDialog.hide();
+                snDialog.exception('sc.delete', sc_id, cause);
             });
 
         };
@@ -3168,9 +3179,7 @@ angular.module(
                     $scope.scList = results.slice(0);
                 }
             }).catch(function (cause) {
-                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show($mdToast.simple().content('Network Error'));
-                $mdDialog.hide();
+                snDialog.exception('sc.list', '-', cause);
             });
         };
 
@@ -3186,7 +3195,7 @@ angular.module(
 
 ]).controller('scDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC', 'celestrak', 'snDialogs',
+    'broadcaster', 'satnetRPC', 'celestrak', 'snDialog',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
     'identifier', 'editing',
 
@@ -3199,7 +3208,7 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        broadcaster, satnetRPC, celestrak, snDialogs,
+        broadcaster, satnetRPC, celestrak, snDialog,
         mapServices, LAT, LNG, ZOOM_SELECT,
         identifier, editing
     ) {
@@ -3256,15 +3265,15 @@ angular.module(
             ];
 
             satnetRPC.rCall('sc.add', cfg).then(
-                function (results) {
-                    var id = results.spacecraft_id;
+                function (response) {
+                    var id = response.spacecraft_id;
                     broadcaster.scAdded(id);
-                    snDialogs.success(
-                        identifier, identifier, $scope.listTemplateUrl
+                    snDialog.success(
+                        'sc.add', id, response, $scope.listTemplateUrl
                     );
                 },
-                function (error) {
-                    window.alert(error);
+                function (cause) {
+                    snDialog.exception('sc.add', '-', cause);
                 }
             );
 
@@ -3283,14 +3292,14 @@ angular.module(
             };
 
             satnetRPC.rCall('sc.update', [identifier, cfg]).then(
-                function (identifier) {
-                    broadcaster.scUpdated(identifier);
-                    snDialogs.success(
-                        identifier, identifier, $scope.listTemplateUrl
+                function (response) {
+                    broadcaster.scUpdated(response);
+                    snDialog.success(
+                        'sc.update', response, response, $scope.listTemplateUrl
                     );
                 },
-                function (error) {
-                    window.alert(error);
+                function (cause) {
+                    snDialog.exception('sc.update', '-', cause);
                 }
             );
 

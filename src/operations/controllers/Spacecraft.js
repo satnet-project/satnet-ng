@@ -26,7 +26,7 @@ angular.module(
     ]
 ).controller('scListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC',
+    'broadcaster', 'satnetRPC', 'snDialog',
 
     /**
      * Controller of the list with the Ground Stations registered for a given
@@ -36,7 +36,9 @@ angular.module(
      *
      * @param {Object} $scope Controller execution scope.
      */
-    function ($log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC) {
+    function (
+        $log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC, snDialog
+    ) {
 
         $scope.scList = [];
 
@@ -77,22 +79,16 @@ angular.module(
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
          *
-         * @param {String} identifier Identifier of the Spacecraft
+         * @param {String} sc_id Identifier of the Spacecraft
          */
-        $scope.remove = function (identifier) {
+        $scope.remove = function (sc_id) {
 
-            satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
-                var message = '<' + identifier + '> succesfully deleted!';
-                broadcaster.scRemoved(identifier);
-                $log.info(message, ', result = ' + JSON.stringify(results));
-                $mdToast.show($mdToast.simple().content(message));
+            satnetRPC.rCall('sc.delete', [sc_id]).then(function (results) {
+                broadcaster.scRemoved(sc_id);
+                snDialog.success('sc.delete', sc_id, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
-                var message = 'Could not remove GS with id = <' +
-                    identifier + '>';
-                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show($mdToast.simple().content(message));
-                $mdDialog.hide();
+                snDialog.exception('sc.delete', sc_id, cause);
             });
 
         };
@@ -106,9 +102,7 @@ angular.module(
                     $scope.scList = results.slice(0);
                 }
             }).catch(function (cause) {
-                $log.error('[satnet] ERROR, cause = ' + JSON.stringify(cause));
-                $mdToast.show($mdToast.simple().content('Network Error'));
-                $mdDialog.hide();
+                snDialog.exception('sc.list', '-', cause);
             });
         };
 
@@ -124,7 +118,7 @@ angular.module(
 
 ]).controller('scDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC', 'celestrak', 'snDialogs',
+    'broadcaster', 'satnetRPC', 'celestrak', 'snDialog',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
     'identifier', 'editing',
 
@@ -137,7 +131,7 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        broadcaster, satnetRPC, celestrak, snDialogs,
+        broadcaster, satnetRPC, celestrak, snDialog,
         mapServices, LAT, LNG, ZOOM_SELECT,
         identifier, editing
     ) {
@@ -194,15 +188,15 @@ angular.module(
             ];
 
             satnetRPC.rCall('sc.add', cfg).then(
-                function (results) {
-                    var id = results.spacecraft_id;
+                function (response) {
+                    var id = response.spacecraft_id;
                     broadcaster.scAdded(id);
-                    snDialogs.success(
-                        identifier, identifier, $scope.listTemplateUrl
+                    snDialog.success(
+                        'sc.add', id, response, $scope.listTemplateUrl
                     );
                 },
-                function (error) {
-                    window.alert(error);
+                function (cause) {
+                    snDialog.exception('sc.add', '-', cause);
                 }
             );
 
@@ -221,14 +215,14 @@ angular.module(
             };
 
             satnetRPC.rCall('sc.update', [identifier, cfg]).then(
-                function (identifier) {
-                    broadcaster.scUpdated(identifier);
-                    snDialogs.success(
-                        identifier, identifier, $scope.listTemplateUrl
+                function (response) {
+                    broadcaster.scUpdated(response);
+                    snDialog.success(
+                        'sc.update', response, response, $scope.listTemplateUrl
                     );
                 },
-                function (error) {
-                    window.alert(error);
+                function (cause) {
+                    snDialog.exception('sc.update', '-', cause);
                 }
             );
 
