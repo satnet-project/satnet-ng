@@ -223,16 +223,28 @@ angular
                 return this._services[service](params).then(
 
                     function (data) {
+
                         // TODO Workaround for the JSON-RPC library.
                         if (data.data.name === 'JSONRPCError') {
                             error_fn(service, params, data.code, data.message);
                         }
+
+                        // NOTICE GroundTracks are not displayed completely...
+                        var result_msg = ', result = <';
+                        if (service === 'sc.getGroundtrack') {
+                            result_msg += '$GT_TOO_LONG$';
+                        } else {
+                            result_msg += JSON.stringify(data) + '>';
+                        }
+
                         $log.info(
                             '@rCall: Invoked service = <' + service + '>' +
                             ', params = <' + JSON.stringify(params) + '>, ' +
-                            ', result = <' + JSON.stringify(data)
+                            ', result = <' + result_msg
                         );
+
                         return data.data;
+
                     },
                     function (error) {
                         error_fn(service, params, 'NONE', error);

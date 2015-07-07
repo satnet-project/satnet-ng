@@ -41,7 +41,10 @@ angular.module('snControllers', ['ngMaterial']).service('snDialog', [
 
             var message = 'Succesfull operation <' + operation +
                 '> over id = <' + identifier + '>';
-            $log.info(message + ', response = ' + JSON.stringify(response));
+            $log.info(
+                '@success, message = ' + message +
+                ', response = ' + JSON.stringify(response)
+            );
             $mdToast.show($mdToast.simple().content(message));
 
             if (templateUrl) {
