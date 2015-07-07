@@ -17,9 +17,15 @@
 
                 <div layout="row" layout-fill>
 
-                    <md-button id="{{ sc }}-edit" ng-click="editScDialog(sc)" aria-label="edit spacecraft {{ sc }}" class="md-primary menu-button" style="text-align:center; width: 83%">
+                    <md-button id="{{ sc }}-edit" ng-click="editScDialog(sc)" aria-label="edit spacecraft {{ sc }}" class="md-primary menu-button" style="text-align:center; width: 70%">
                         <div layout="row" layout-fill>
                             <b>{{ sc }}</b>
+                        </div>
+                    </md-button>
+
+                    <md-button id="{{ sc }}-channels" aria-label="spacecraft channels {{ sc }}" class="md-primary menu-button" flex ng-click="showChannelsDialog(sc)">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-rss"></i>
                         </div>
                     </md-button>
 
