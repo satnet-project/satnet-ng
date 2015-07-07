@@ -17,9 +17,21 @@
 
                 <div layout="row" layout-fill>
 
-                    <md-button id="{{ gs }}-edit" ng-click="editGs(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button" style="text-align:center; width: 83%">
+                    <md-button id="{{ gs }}-edit" ng-click="editGs(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button" style="text-align:center; width: 58%">
                         <div layout="row" layout-fill>
                             <b>{{ gs }}</b>
+                        </div>
+                    </md-button>
+
+                    <md-button id="{{ gs }}-availability" aria-label="define availability {{ gs }}" class="md-primary menu-button" flex ng-click="showARulesDialog(gs)">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-clock-o"></i>
+                        </div>
+                    </md-button>
+
+                    <md-button id="{{ gs }}-channels" aria-label="define channels {{ gs }}" class="md-primary menu-button" flex ng-click="showChannelsDialog(gs)">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-rss"></i>
                         </div>
                     </md-button>
 
