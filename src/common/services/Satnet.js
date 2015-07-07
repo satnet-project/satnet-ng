@@ -22,7 +22,8 @@ angular
         'jsonrpc', 'ngCookies'
     ])
     .run([
-        '$http', '$cookies', function ($http, $cookies) {
+        '$http', '$cookies',
+        function ($http, $cookies) {
             // For CSRF token compatibility with Django
             $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
         }
@@ -241,6 +242,18 @@ angular
             };
 
             /**
+             * Simple convenience method for invoking the remote keep alive of the
+             * network sevice.
+             *
+             * @returns {*} Promise that returns True.
+             */
+            this.alive = function () {
+                return this.rCall('net.alive', []).then(function () {
+                    return true;
+                });
+            };
+
+            /**
              * Retrieves the user location using an available Internet service.
              *
              * @returns Promise that returns a { latitude, longitude } object.
@@ -263,23 +276,7 @@ angular
              * service.
              *
              * @returns Promise that returns a { latitude, longitude } object.
-            this.getServerLocation = function (hostname) {
-                var url = this._getSatNetAddress() +
-                    '/configuration/hostname/geoip';
-                return $http
-                    .post(url, { 'hostname': hostname })
-                    .then(function (data) {
-                        $log.info(
-                            '[satnet] server name = ' + hostname + '@(' + JSON
-                            .stringify(data.data) + ')'
-                        );
-                        return {
-                            latitude: parseFloat(data.data.latitude),
-                            longitude: parseFloat(data.data.longitude)
-                        };
-                    });
-            };
-            */
+             */
             this.getServerLocation = function (hostname) {
                 return this.rCall('net.geoip', [hostname])
                     .then(function (location) {

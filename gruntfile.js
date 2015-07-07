@@ -56,9 +56,17 @@ module.exports = function (grunt) {
             },
             operations: {
                 src: [
+                    'src/common/services/Broadcaster.js',
+                    'src/common/services/Celestrak.js',
+                    'src/common/services/Controllers.js',
+                    'src/common/services/Pusher.js',
+                    'src/common/services/Satnet.js',
+                    'src/common/services/Maps.js',
+                    'src/common/models/Markers.js',
+                    'src/common/models/Network.js',
+                    'src/common/models/GroundStations.js',
+                    'src/common/models/Spacecraft.js',
                     'src/common/directives/*.js',
-                    'src/common/services/*.js',
-                    'src/common/models/*.js',
                     'src/operations/controllers/*.js',
                     'src/operations/directives/*.js'
                 ],

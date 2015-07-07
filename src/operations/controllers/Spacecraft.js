@@ -21,6 +21,7 @@ angular.module(
         'leaflet-directive',
         'snBroadcasterServices',
         'snMapServices',
+        'snControllers',
         'snCelestrakServices'
     ]
 ).controller('scListCtrl', [
@@ -123,7 +124,7 @@ angular.module(
 
 ]).controller('scDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC', 'celestrak',
+    'broadcaster', 'satnetRPC', 'celestrak', 'snDialogs',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
     'identifier', 'editing',
 
@@ -136,7 +137,7 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        broadcaster, satnetRPC, celestrak,
+        broadcaster, satnetRPC, celestrak, snDialogs,
         mapServices, LAT, LNG, ZOOM_SELECT,
         identifier, editing
     ) {
@@ -163,6 +164,8 @@ angular.module(
             tles: []
         };
 
+        $scope.listTemplateUrl = 'operations/templates/sc/list.html';
+
         /**
          * Function that updates the list of selectable TLE's once the group
          * has changed in the other select control.
@@ -179,40 +182,24 @@ angular.module(
         };
 
         /**
-         * Private function that is used to notify a success in an operation
-         * within this Dialog.
-         * 
-         * @param {String} identifier Identifier of the spacecraft
-         * @param {Object} results    Response from the server
-         */
-        $scope._notifySuccess = function(identifier, results) {
-            var message = '<' + identifier + '> succesfully updated!';
-            $log.info(message, ', response = ' + JSON.stringify(results));
-            $mdToast.show($mdToast.simple().content(message));
-            $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: 'operations/templates/sc/list.html'
-            });
-        };
-
-        /**
          * Function that triggers the opening of a window to add a new
          * Spacecraft into the system.
          */
         $scope.add = function () {
 
-            var self = this,
-                cfg = [
-                    $scope.configuration.identifier,
-                    $scope.configuration.callsign,
-                    $scope.configuration.tle.spacecraft_tle_id
-                ];
+            var cfg = [
+                $scope.configuration.identifier,
+                $scope.configuration.callsign,
+                $scope.configuration.tle.spacecraft_tle_id
+            ];
 
             satnetRPC.rCall('sc.add', cfg).then(
                 function (results) {
                     var id = results.spacecraft_id;
                     broadcaster.scAdded(id);
-                    self._notifySuccess(id, results);
+                    snDialogs.success(
+                        identifier, identifier, $scope.listTemplateUrl
+                    );
                 },
                 function (error) {
                     window.alert(error);
@@ -227,19 +214,18 @@ angular.module(
          */
         $scope.update = function () {
 
-            var self = this,
-                cfg = {
-                    'spacecraft_id': identifier,
-                    'spacecraft_callsign':
-                        $scope.configuration.callsign,
-                    'spacecraft_tle_id':
-                        $scope.configuration.tle.spacecraft_tle_id
-                };
+            var cfg = {
+                'spacecraft_id': identifier,
+                'spacecraft_callsign': $scope.configuration.callsign,
+                'spacecraft_tle_id': $scope.configuration.tle.spacecraft_tle_id
+            };
 
             satnetRPC.rCall('sc.update', [identifier, cfg]).then(
                 function (identifier) {
                     broadcaster.scUpdated(identifier);
-                    self._notifySuccess(identifier, identifier);
+                    snDialogs.success(
+                        identifier, identifier, $scope.listTemplateUrl
+                    );
                 },
                 function (error) {
                     window.alert(error);
@@ -255,7 +241,7 @@ angular.module(
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/sc/list.html'
+                templateUrl: $scope.listTemplateUrl
             });
         };
 

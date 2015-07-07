@@ -1,144 +1,4 @@
-/*
-   Copyright 2015 Ricardo Tubio-Pardavila
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
-angular.module('snAboutDirective', [
-    'ngMaterial'
-])
-    .controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
-
-        /**
-         * Controller function for handling the SatNet about dialog itself.
-         *
-         * @param {Object} $scope $scope for the controller.
-         */
-        function ($scope, $mdDialog) {
-
-            /**
-             * Function that closes the dialog.
-             */
-            $scope.closeDialog = function () {
-                $mdDialog.hide();
-            };
-
-        }
-
-    ])
-    .controller('snAboutCtrl', ['$scope', '$mdDialog',
-
-        /**
-         * Controller function for opening the SatNet About dialog.
-         *
-         * @param {Object} $scope    $scope for the controller.
-         * @param {Object} $mdDialog Angular material Dialog service.
-         */
-        function ($scope, $mdDialog) {
-
-            /**
-             * Function that opens the dialog when the snAbout button is
-             * clicked.
-             */
-            $scope.openSnAbout = function () {
-                $mdDialog.show({
-                    templateUrl: 'common/templates/sn-about-dialog.html'
-                });
-            };
-
-        }
-
-    ])
-    .directive('snAbout',
-
-        /**
-         * Function that creates the directive itself returning the object
-         * required by Angular.
-         *
-         * @returns {Object} Object directive required by Angular, with
-         *                   restrict and templateUrl.
-         */
-        function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'common/templates/sn-about.html'
-            };
-        }
-
-    );;/*
-   Copyright 2014 Ricardo Tubio-Pardavila
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
-angular.module('snSplashDirective', []).directive('mAppLoading', ['$animate',
-
-    /**
-     * This function implements the controller.
-     *
-     * This CSS class-based directive controls the pre-bootstrap loading screen.
-     * By default, it is visible on the screen; but, once the application loads,
-     * we'll fade it out and remove it from the DOM.
-     *
-     * @param   {Object} $animate $animate service.
-     * @returns {Object} Object with the description of the directive.
-     */
-    function ($animate) {
-
-        /**
-         * This function links the just created CSS class-like directive in
-         * order to control the end of the animation. Once the animation is
-         * over, it removes itself from the DOM tree.
-         *
-         * Due to the way AngularJS prevents animation during the bootstrap
-         * of the application, we can't animate the top-level container;
-         * but, since we added "ngAnimateChildren", we can animated the
-         * inner container during this phase.
-         * --
-         * NOTE: Am using .eq(1) so that we don't animate the Style block.
-         *
-         * @param {Object} scope      The scope for this directive.
-         * @param {Object} element    The parent element from the DOM tree.
-         * @param {Object} attributes Object with the attributes of the
-         *                            element.
-         */
-         var link = function (scope, element, attributes) {
-
-            $animate.leave(element.children().eq(1)).then(
-                function cleanupAfterAnimation() {
-                    element.remove();
-                    scope = element = attributes = null;
-                }
-            );
-
-        };
-
-        return ({
-            link: link,
-            restrict: "C"
-        });
-
-    }]);;/**
+/**
  * Copyright 2014 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -651,7 +511,549 @@ angular.module('snCelestrakServices', [])
         { 'section': this.CELESTRAK_SECTION_5, 'subsection': 'Other' }
     ];
 
-}]);;/**
+}]);;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snControllers', ['ngMaterial']).service('snDialogs', [
+    '$log', '$mdDialog', '$mdToast',
+
+    /**
+     * Set of helpers for the SatNet dialogs.
+     *
+     * @param {Object} $log      Angular JS $log service
+     * @param {Object} $mdDialog Angular Material $mdDialog service
+     * @param {Object} $mdToast  Angular Material $mdToast service
+     */
+    function ($log, $mdDialog, $mdToast) {
+
+        /**
+         * Function that is used to notify a success in an operation
+         * within this Dialog.
+         *
+         * @param {String} identifier Identifier of the spacecraft
+         * @param {Object} results    Response from the server
+         * @param {String} templateUrl URL with the template to load after
+         *                             closing the dialog.
+         */
+        this.success = function (identifier, results, templateUrl) {
+            var message = '<' + identifier + '> succesfully updated!';
+            $log.info(message, ', response = ' + JSON.stringify(results));
+            console.log('>>> templateUrl = ' + templateUrl);
+            $mdToast.show($mdToast.simple().content(message));
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: templateUrl
+            });
+        };
+
+    }
+
+]);;/**
+ * Copyright 2014 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 10/24/14.
+ */
+
+/** Module definition (empty array is vital!). */
+angular
+.module('snPushServices', [
+    'pusher-angular'
+])
+.service('satnetPush', [
+    '$log', '$pusher',
+    function ($log, $pusher) {
+        'use strict';
+
+        this._API_KEY = '79bee37791b6c60f3e56';
+
+        this._client = null;
+        this._service = null;
+
+        // Names of the channels for subscription
+        this.LEOP_DOWNLINK_CHANNEL = 'leop.downlink.ch';
+        this.EVENTS_CHANNEL = 'configuration.events.ch';
+        this.NETWORK_EVENTS_CHANNEL = 'network.events.ch';
+        this.SIMULATION_CHANNEL = 'simulation.events.ch';
+        this.LEOP_CHANNEL = 'leop.events.ch';
+        // List of events that an application can get bound to.
+        this.KEEP_ALIVE = 'keep_alive';
+        this.FRAME_EVENT = 'frameEv';
+        this.GS_ADDED_EVENT = 'gsAddedEv';
+        this.GS_REMOVED_EVENT = 'gsRemovedEv';
+        this.GS_UPDATED_EVENT = 'gsUpdatedEv';
+        this.PASSES_UPDATED_EVENT = 'passesUpdatedEv';
+        this.GT_UPDATED_EVENT = 'groundtrackUpdatedEv';
+        this.LEOP_GSS_UPDATED_EVENT = 'leopGSsUpdatedEv';
+        this.LEOP_GS_ASSIGNED_EVENT = 'leopGSAssignedEv';
+        this.LEOP_GS_RELEASED_EVENT = 'leopGSReleasedEv';
+        this.LEOP_UPDATED_EVENT = 'leopUpdatedEv';
+        this.LEOP_UFO_IDENTIFIED_EVENT = 'leopUFOIdentifiedEv';
+        this.LEOP_UFO_FORGOTTEN_EVENT = 'leopUFOForgottenEv';
+        this.LEOP_SC_UPDATED_EVENT = 'leopSCUpdatedEv';
+
+        // List of channels that the service automatically subscribes to.
+        this._channel_names = [
+            this.LEOP_DOWNLINK_CHANNEL,
+            this.EVENTS_CHANNEL,
+            this.SIMULATION_CHANNEL,
+            this.NETWORK_EVENTS_CHANNEL,
+            this.LEOP_CHANNEL
+        ];
+
+        /**
+         * Initializes the pusher service.
+         */
+        this._initData = function () {
+
+            this._client = new Pusher(this._API_KEY, {
+                encrypted: true
+            });
+            this._service = $pusher(this._client);
+            this._service.connection.bind('state_change', this._logConnection);
+            $log.info('[push] pusher.com service initialized!');
+
+            this._subscribeChannels();
+
+        };
+
+        /**
+         * Logs changes in the connection state for the pusher service.
+         *
+         * @param {Array} states Array with the former and current state of the
+         *                       connection.
+         */
+        this._logConnection = function (states) {
+            $log.warn(
+                '[push] State connection change, states = ' +
+                JSON.stringify(states)
+            );
+        };
+
+        /**
+         * Subscribe this service to all the channels whose names are part of
+         * the "_channel_names_ array.
+         */
+        this._subscribeChannels = function () {
+            var self = this;
+            angular.forEach(this._channel_names, function (name) {
+                self._service.subscribe(name);
+                $log.info('[push] Subscribed to channel <' + name + '>');
+            });
+        };
+
+        /**
+         * Method that binds the given function to the events triggered by
+         * that channel.
+         *
+         * @param {String} channel_name Name of the channel
+         * @param {String} event_name Name of the event
+         * @param {Function} callback_fn Function to be executed when that
+         *                               event happens
+         */
+        this.bind = function (channel_name, event_name, callback_fn) {
+            if (!this._service.allChannels().hasOwnProperty(channel_name)) {
+                throw 'Not subscribed to this channel, ' +
+                'name = <' + channel_name + '>';
+            }
+            this._service.channel(channel_name).bind(event_name, callback_fn);
+        };
+
+        /**
+         * Binds the given callback function to the reception of any event
+         * frames on the downlink channel.
+         *
+         * @param {Object} callback_fn Callback function to be bound
+         */
+        this.bindFrameReceived = function (callback_fn) {
+            this.bind(
+                this.LEOP_DOWNLINK_CHANNEL,
+                this.FRAME_EVENT,
+                callback_fn,
+                this
+            );
+        };
+
+        this._initData();
+
+    }
+
+]);;/**
+ * Copyright 2015 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Created by rtubio on 10/24/14.
+ */
+
+/** Module definition (empty array is vital!). */
+angular
+    .module('snJRPCServices', [
+        'jsonrpc', 'ngCookies'
+    ])
+    .run([
+        '$http', '$cookies',
+        function ($http, $cookies) {
+            // For CSRF token compatibility with Django
+            $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+        }
+    ])
+    .constant('TEST_PORT', 8000)
+    .service('satnetRPC', [
+        'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
+
+        /**
+         * Service that defines the basic calls to the services of the SATNET
+         * network through JSON RPC. It defines a common error handler for all
+         * the errors that can be overriden by users.
+         *
+         * @param   {Object} jsonrpc   JSON RPC service.
+         * @param   {Object} $location $location service.
+         * @param   {Object} $log      $log service.
+         * @param   {Object} $q        $q service.
+         * @param   {Object} $http     $http service.
+         */
+        function (jsonrpc, $location, $log, $q, $http, TEST_PORT) {
+            'use strict';
+
+            /**
+             * PRIVATE METHOD
+             *
+             * Returns the complete address to connect to the sever where the
+             * SatNet services are running. This can be use as the base for any
+             * of the offered services, regardless of whether they are offered
+             * over JRPC or over HTTP (AJAX requests).
+             *
+             * If the current connection address is "localhost", it assumes
+             * debug mode and the URL that it returns has the port changed so
+             * that it re-routes the calls to the port 8000. At that port, the
+             * code for the SatNet server is supposed to be running.
+             *
+             * The latter policy for automatic test detection might incurr in
+             * further Cross-Reference connection problems.
+             *
+             * @returns {String} Corrected address for the remote SatNet server.
+             */
+            this._getSatNetAddress = function () {
+
+                var protocol = $location.protocol(),
+                    hostname = $location.host(),
+                    port = $location.port();
+
+                if (hostname === 'localhost') {
+                    port = TEST_PORT;
+                }
+
+                return '' + protocol + '://' + hostname + ':' + port;
+
+            };
+
+            /**
+             * PRIVATE METHOD
+             *
+             * Returns the complete address to connect with the remote server
+             * that implements the remote SATNET API over JRPC.
+             *
+             * If the current connection address is "localhost", it assumes
+             * debug mode and the URL that it returns has the port changed so
+             * that it re-routes the calls to the port 8000. At that port, the
+             * code for the SatNet server is supposed to be running.
+             *
+             * The latter policy for automatic test detection might incurr in
+             * further Cross-Reference connection problems.
+             *
+             * @returns {String} Corrected address for the remote SatNet server.
+             */
+            this._getRPCAddress = function () {
+                return this._getSatNetAddress() + '/jrpc/';
+            };
+
+            var _rpc = this._getRPCAddress();
+
+            this._configuration = jsonrpc.newService('configuration', _rpc);
+            this._simulation = jsonrpc.newService('simulation', _rpc);
+            this._leop = jsonrpc.newService('leop', _rpc);
+            this._network = jsonrpc.newService('network', _rpc);
+
+            this._services = {
+                // Configuration methods (Ground Stations)
+                'gs.list': this._configuration
+                    .createMethod('gs.list'),
+                'gs.add': this
+                    ._configuration.createMethod('gs.create'),
+                'gs.get': this._configuration
+                    .createMethod('gs.getConfiguration'),
+                'gs.update': this._configuration
+                    .createMethod('gs.setConfiguration'),
+                'gs.delete': this._configuration
+                    .createMethod('gs.delete'),
+                // Configuration methods (Spacecraft)
+                'sc.list': this._configuration
+                    .createMethod('sc.list'),
+                'sc.add': this._configuration
+                    .createMethod('sc.create'),
+                'sc.get': this._configuration
+                    .createMethod('sc.getConfiguration'),
+                'sc.update': this._configuration
+                    .createMethod('sc.setConfiguration'),
+                'sc.delete': this._configuration
+                    .createMethod('sc.delete'),
+                // User configuration
+                'user.getLocation': this._configuration
+                    .createMethod('user.getLocation'),
+                // TLE methods
+                'tle.celestrak.getSections': this._configuration
+                    .createMethod('tle.celestrak.getSections'),
+                'tle.celestrak.getResource': this._configuration
+                    .createMethod('tle.celestrak.getResource'),
+                'tle.celestrak.getTle': this._configuration
+                    .createMethod('tle.celestrak.getTle'),
+                // Simulation methods
+                'sc.getGroundtrack': this._simulation
+                    .createMethod('spacecraft.getGroundtrack'),
+                'sc.getPasses': this._simulation
+                    .createMethod('spacecraft.getPasses'),
+                'gs.getPasses': this._simulation
+                    .createMethod('groundstation.getPasses'),
+                // LEOP services
+                'leop.getCfg': this._leop
+                    .createMethod('getConfiguration'),
+                'leop.setCfg': this._leop
+                    .createMethod('setConfiguration'),
+                'leop.getPasses': this._leop
+                    .createMethod('getPasses'),
+                'leop.gs.list': this._leop
+                    .createMethod('gs.list'),
+                'leop.sc.list': this._leop
+                    .createMethod('sc.list'),
+                'leop.gs.add': this._leop
+                    .createMethod('gs.add'),
+                'leop.gs.remove': this._leop
+                    .createMethod('gs.remove'),
+                'leop.ufo.add': this._leop
+                    .createMethod('launch.addUnknown'),
+                'leop.ufo.remove': this._leop
+                    .createMethod('launch.removeUnknown'),
+                'leop.ufo.identify': this._leop
+                    .createMethod('launch.identify'),
+                'leop.ufo.forget': this._leop
+                    .createMethod('launch.forget'),
+                'leop.ufo.update': this._leop
+                    .createMethod('launch.update'),
+                'leop.getMessages': this._leop
+                    .createMethod('getMessages'),
+                // NETWORK services
+                'net.alive': this._network
+                    .createMethod('keepAlive'),
+                'net.geoip': this._network
+                    .createMethod('geoip')
+            };
+
+            /**
+             * PRIVATE function that is used only by this service in order to
+             * generate in the same way all possible errors produced by the
+             * remote invokation of the SatNet services.
+             *
+             * @param {String} service Name of the SatNet JRPC service that
+             *                         has just been invoked.
+             * @param {Array}  params  Array with the parameters for the
+             *                         service to be invoked.
+             * @param {String} code    Error code.
+             * @param {String} message Messsage description.
+             */
+            this._generateError = function (service, params, code, message) {
+
+                var msg = 'Satnet.js@_generateError: invoking = <' + service +
+                    '>, with params = <' + JSON.stringify(params) +
+                    '>, code = <' + JSON.stringify(code) +
+                    '>, description = <' + JSON.stringify(message) + '>';
+                $log.warn(msg);
+                throw msg;
+
+            };
+
+            /**
+             * Method for calling the remote service through JSON-RPC.
+             *
+             * @param service The name of the service, as per the internal
+             * services name definition.
+             * @param params The parameters for the service (as an array).
+             * @returns {*}
+             */
+            this.rCall = function (service, params) {
+                var error_fn = this._generateError;
+
+                if ((this._services.hasOwnProperty(service)) === false) {
+                    throw '@rCall: service not found, id = <' + service + '>';
+                }
+                $log.info(
+                    '@rCall: Invoked service = <' + service + '>' +
+                    ', params = ' + JSON.stringify(params)
+                );
+                return this._services[service](params).then(
+
+                    function (data) {
+                        // TODO Workaround for the JSON-RPC library.
+                        if (data.data.name === 'JSONRPCError') {
+                            error_fn(service, params, data.code, data.message);
+                        }
+                        $log.info(
+                            '@rCall: Invoked service = <' + service + '>' +
+                            ', params = <' + JSON.stringify(params) + '>, ' +
+                            ', result = <' + JSON.stringify(data)
+                        );
+                        return data.data;
+                    },
+                    function (error) {
+                        error_fn(service, params, 'NONE', error);
+                    }
+
+                );
+            };
+
+            /**
+             * Simple convenience method for invoking the remote keep alive of the
+             * network sevice.
+             *
+             * @returns {*} Promise that returns True.
+             */
+            this.alive = function () {
+                return this.rCall('net.alive', []).then(function () {
+                    return true;
+                });
+            };
+
+            /**
+             * Retrieves the user location using an available Internet service.
+             *
+             * @returns Promise that returns a { latitude, longitude } object.
+             */
+            this.getUserLocation = function () {
+                var url = this._getSatNetAddress() +
+                    '/configuration/user/geoip';
+                return $http.get(url).then(function (data) {
+                    $log.info('Satnet.js@getUserLocation: user@(' + JSON
+                        .stringify(data.data) + ')');
+                    return {
+                        latitude: parseFloat(data.data.latitude),
+                        longitude: parseFloat(data.data.longitude)
+                    };
+                });
+            };
+
+            /**
+             * Retrieves the server location using an available Internet
+             * service.
+             *
+             * @returns Promise that returns a { latitude, longitude } object.
+             */
+            this.getServerLocation = function (hostname) {
+                return this.rCall('net.geoip', [hostname])
+                    .then(function (location) {
+                        return location;
+                    });
+            };
+
+            /**
+             * Reads the configuration for a given spacecraft, including the
+             * estimated groundtrack.
+             *
+             * @param scId The identifier of the spacecraft.
+             * @returns Promise that resturns the Spacecraft configuration
+             * object.
+             */
+            this.readSCCfg = function (scId) {
+                var cfg = {},
+                    p = [
+                    this.rCall('sc.get', [scId]),
+                    this.rCall('sc.getGroundtrack', [scId]),
+                    this.rCall('tle.celestrak.getTle', [scId])
+                ];
+                return $q.all(p).then(function (results) {
+                    cfg = results[0];
+                    cfg.groundtrack = results[1];
+                    cfg.tle = results[2];
+                    angular.extend(cfg, results[0]);
+                    angular.extend(cfg.groundtrack, results[1]);
+                    angular.extend(cfg.tle, results[2]);
+                    return cfg;
+                });
+            };
+
+            /**
+             * Reads the configuration for all the GroundStations associated
+             * with this LEOP cluster.
+             *
+             * @param leop_id Identifier of the LEOP cluster.
+             * @returns Promise to be resolved with the result.
+             */
+            this.readAllLEOPGS = function (leop_id) {
+                var self = this;
+                return this.rCall('leop.gs.list', [leop_id])
+                    .then(function (gss) {
+                        var p = [];
+                        angular.forEach(gss.leop_gs_available, function (gs) {
+                            p.push(self.rCall('gs.get', [gs]));
+                        });
+                        angular.forEach(gss.leop_gs_inuse, function (gs) {
+                            p.push(self.rCall('gs.get', [gs]));
+                        });
+                        return $q.all(p).then(function (results) {
+                            var a_cfgs = [],
+                                u_cfgs = [],
+                                j, r_j, r_j_id;
+                            for (j = 0; j < results.length; j += 1) {
+                                r_j = results[j];
+                                r_j_id = r_j.groundstation_id;
+                                if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
+                                    a_cfgs.push(r_j);
+                                } else {
+                                    u_cfgs.push(r_j);
+                                }
+                            }
+                            return {
+                                leop_gs_available: a_cfgs,
+                                leop_gs_inuse: u_cfgs
+                            };
+                        });
+                    });
+            };
+
+    }]);;/**
  * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1017,733 +1419,6 @@ angular.module('snMapServices', [
                     '"terminator": ' + mapInfo.terminator + ', ' +
                     '"map": ' + mapInfo.map +
                     '}';
-            };
-
-    }
-]);;/**
- * Copyright 2014 Ricardo Tubio-Pardavila
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Created by rtubio on 10/24/14.
- */
-
-/** Module definition (empty array is vital!). */
-angular
-.module('snPushServices', [
-    'pusher-angular'
-])
-.service('satnetPush', [
-    '$log', '$pusher',
-    function ($log, $pusher) {
-        'use strict';
-
-        this._API_KEY = '79bee37791b6c60f3e56';
-
-        this._client = null;
-        this._service = null;
-
-        // Names of the channels for subscription
-        this.LEOP_DOWNLINK_CHANNEL = 'leop.downlink.ch';
-        this.EVENTS_CHANNEL = 'configuration.events.ch';
-        this.NETWORK_EVENTS_CHANNEL = 'network.events.ch';
-        this.SIMULATION_CHANNEL = 'simulation.events.ch';
-        this.LEOP_CHANNEL = 'leop.events.ch';
-        // List of events that an application can get bound to.
-        this.KEEP_ALIVE = 'keep_alive';
-        this.FRAME_EVENT = 'frameEv';
-        this.GS_ADDED_EVENT = 'gsAddedEv';
-        this.GS_REMOVED_EVENT = 'gsRemovedEv';
-        this.GS_UPDATED_EVENT = 'gsUpdatedEv';
-        this.PASSES_UPDATED_EVENT = 'passesUpdatedEv';
-        this.GT_UPDATED_EVENT = 'groundtrackUpdatedEv';
-        this.LEOP_GSS_UPDATED_EVENT = 'leopGSsUpdatedEv';
-        this.LEOP_GS_ASSIGNED_EVENT = 'leopGSAssignedEv';
-        this.LEOP_GS_RELEASED_EVENT = 'leopGSReleasedEv';
-        this.LEOP_UPDATED_EVENT = 'leopUpdatedEv';
-        this.LEOP_UFO_IDENTIFIED_EVENT = 'leopUFOIdentifiedEv';
-        this.LEOP_UFO_FORGOTTEN_EVENT = 'leopUFOForgottenEv';
-        this.LEOP_SC_UPDATED_EVENT = 'leopSCUpdatedEv';
-
-        // List of channels that the service automatically subscribes to.
-        this._channel_names = [
-            this.LEOP_DOWNLINK_CHANNEL,
-            this.EVENTS_CHANNEL,
-            this.SIMULATION_CHANNEL,
-            this.NETWORK_EVENTS_CHANNEL,
-            this.LEOP_CHANNEL
-        ];
-
-        /**
-         * Initializes the pusher service.
-         */
-        this._initData = function () {
-
-            this._client = new Pusher(this._API_KEY, {
-                encrypted: true
-            });
-            this._service = $pusher(this._client);
-            this._service.connection.bind('state_change', this._logConnection);
-            $log.info('[push] pusher.com service initialized!');
-
-            this._subscribeChannels();
-
-        };
-
-        /**
-         * Logs changes in the connection state for the pusher service.
-         *
-         * @param {Array} states Array with the former and current state of the
-         *                       connection.
-         */
-        this._logConnection = function (states) {
-            $log.warn(
-                '[push] State connection change, states = ' +
-                JSON.stringify(states)
-            );
-        };
-
-        /**
-         * Subscribe this service to all the channels whose names are part of
-         * the "_channel_names_ array.
-         */
-        this._subscribeChannels = function () {
-            var self = this;
-            angular.forEach(this._channel_names, function (name) {
-                self._service.subscribe(name);
-                $log.info('[push] Subscribed to channel <' + name + '>');
-            });
-        };
-
-        /**
-         * Method that binds the given function to the events triggered by
-         * that channel.
-         *
-         * @param {String} channel_name Name of the channel
-         * @param {String} event_name Name of the event
-         * @param {Function} callback_fn Function to be executed when that
-         *                               event happens
-         */
-        this.bind = function (channel_name, event_name, callback_fn) {
-            if (!this._service.allChannels().hasOwnProperty(channel_name)) {
-                throw 'Not subscribed to this channel, ' +
-                'name = <' + channel_name + '>';
-            }
-            this._service.channel(channel_name).bind(event_name, callback_fn);
-        };
-
-        /**
-         * Binds the given callback function to the reception of any event
-         * frames on the downlink channel.
-         *
-         * @param {Object} callback_fn Callback function to be bound
-         */
-        this.bindFrameReceived = function (callback_fn) {
-            this.bind(
-                this.LEOP_DOWNLINK_CHANNEL,
-                this.FRAME_EVENT,
-                callback_fn,
-                this
-            );
-        };
-
-        this._initData();
-
-    }
-
-]);;/**
- * Copyright 2015 Ricardo Tubio-Pardavila
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Created by rtubio on 10/24/14.
- */
-
-/** Module definition (empty array is vital!). */
-angular
-    .module('snJRPCServices', [
-        'jsonrpc', 'ngCookies'
-    ])
-    .run([
-        '$http', '$cookies', function ($http, $cookies) {
-            // For CSRF token compatibility with Django
-            $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
-        }
-    ])
-    .constant('TEST_PORT', 8000)
-    .service('satnetRPC', [
-        'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
-
-        /**
-         * Service that defines the basic calls to the services of the SATNET
-         * network through JSON RPC. It defines a common error handler for all
-         * the errors that can be overriden by users.
-         *
-         * @param   {Object} jsonrpc   JSON RPC service.
-         * @param   {Object} $location $location service.
-         * @param   {Object} $log      $log service.
-         * @param   {Object} $q        $q service.
-         * @param   {Object} $http     $http service.
-         */
-        function (jsonrpc, $location, $log, $q, $http, TEST_PORT) {
-            'use strict';
-
-            /**
-             * PRIVATE METHOD
-             *
-             * Returns the complete address to connect to the sever where the
-             * SatNet services are running. This can be use as the base for any
-             * of the offered services, regardless of whether they are offered
-             * over JRPC or over HTTP (AJAX requests).
-             *
-             * If the current connection address is "localhost", it assumes
-             * debug mode and the URL that it returns has the port changed so
-             * that it re-routes the calls to the port 8000. At that port, the
-             * code for the SatNet server is supposed to be running.
-             *
-             * The latter policy for automatic test detection might incurr in
-             * further Cross-Reference connection problems.
-             *
-             * @returns {String} Corrected address for the remote SatNet server.
-             */
-            this._getSatNetAddress = function () {
-
-                var protocol = $location.protocol(),
-                    hostname = $location.host(),
-                    port = $location.port();
-
-                if (hostname === 'localhost') {
-                    port = TEST_PORT;
-                }
-
-                return '' + protocol + '://' + hostname + ':' + port;
-
-            };
-
-            /**
-             * PRIVATE METHOD
-             *
-             * Returns the complete address to connect with the remote server
-             * that implements the remote SATNET API over JRPC.
-             *
-             * If the current connection address is "localhost", it assumes
-             * debug mode and the URL that it returns has the port changed so
-             * that it re-routes the calls to the port 8000. At that port, the
-             * code for the SatNet server is supposed to be running.
-             *
-             * The latter policy for automatic test detection might incurr in
-             * further Cross-Reference connection problems.
-             *
-             * @returns {String} Corrected address for the remote SatNet server.
-             */
-            this._getRPCAddress = function () {
-                return this._getSatNetAddress() + '/jrpc/';
-            };
-
-            var _rpc = this._getRPCAddress();
-
-            this._configuration = jsonrpc.newService('configuration', _rpc);
-            this._simulation = jsonrpc.newService('simulation', _rpc);
-            this._leop = jsonrpc.newService('leop', _rpc);
-            this._network = jsonrpc.newService('network', _rpc);
-
-            this._services = {
-                // Configuration methods (Ground Stations)
-                'gs.list': this._configuration
-                    .createMethod('gs.list'),
-                'gs.add': this
-                    ._configuration.createMethod('gs.create'),
-                'gs.get': this._configuration
-                    .createMethod('gs.getConfiguration'),
-                'gs.update': this._configuration
-                    .createMethod('gs.setConfiguration'),
-                'gs.delete': this._configuration
-                    .createMethod('gs.delete'),
-                // Configuration methods (Spacecraft)
-                'sc.list': this._configuration
-                    .createMethod('sc.list'),
-                'sc.add': this._configuration
-                    .createMethod('sc.create'),
-                'sc.get': this._configuration
-                    .createMethod('sc.getConfiguration'),
-                'sc.update': this._configuration
-                    .createMethod('sc.setConfiguration'),
-                'sc.delete': this._configuration
-                    .createMethod('sc.delete'),
-                // User configuration
-                'user.getLocation': this._configuration
-                    .createMethod('user.getLocation'),
-                // TLE methods
-                'tle.celestrak.getSections': this._configuration
-                    .createMethod('tle.celestrak.getSections'),
-                'tle.celestrak.getResource': this._configuration
-                    .createMethod('tle.celestrak.getResource'),
-                'tle.celestrak.getTle': this._configuration
-                    .createMethod('tle.celestrak.getTle'),
-                // Simulation methods
-                'sc.getGroundtrack': this._simulation
-                    .createMethod('spacecraft.getGroundtrack'),
-                'sc.getPasses': this._simulation
-                    .createMethod('spacecraft.getPasses'),
-                'gs.getPasses': this._simulation
-                    .createMethod('groundstation.getPasses'),
-                // LEOP services
-                'leop.getCfg': this._leop
-                    .createMethod('getConfiguration'),
-                'leop.setCfg': this._leop
-                    .createMethod('setConfiguration'),
-                'leop.getPasses': this._leop
-                    .createMethod('getPasses'),
-                'leop.gs.list': this._leop
-                    .createMethod('gs.list'),
-                'leop.sc.list': this._leop
-                    .createMethod('sc.list'),
-                'leop.gs.add': this._leop
-                    .createMethod('gs.add'),
-                'leop.gs.remove': this._leop
-                    .createMethod('gs.remove'),
-                'leop.ufo.add': this._leop
-                    .createMethod('launch.addUnknown'),
-                'leop.ufo.remove': this._leop
-                    .createMethod('launch.removeUnknown'),
-                'leop.ufo.identify': this._leop
-                    .createMethod('launch.identify'),
-                'leop.ufo.forget': this._leop
-                    .createMethod('launch.forget'),
-                'leop.ufo.update': this._leop
-                    .createMethod('launch.update'),
-                'leop.getMessages': this._leop
-                    .createMethod('getMessages'),
-                // NETWORK services
-                'net.alive': this._network
-                    .createMethod('keepAlive'),
-                'net.geoip': this._network
-                    .createMethod('geoip')
-            };
-
-            /**
-             * PRIVATE function that is used only by this service in order to
-             * generate in the same way all possible errors produced by the
-             * remote invokation of the SatNet services.
-             *
-             * @param {String} service Name of the SatNet JRPC service that
-             *                         has just been invoked.
-             * @param {Array}  params  Array with the parameters for the
-             *                         service to be invoked.
-             * @param {String} code    Error code.
-             * @param {String} message Messsage description.
-             */
-            this._generateError = function (service, params, code, message) {
-
-                var msg = 'Satnet.js@_generateError: invoking = <' + service +
-                    '>, with params = <' + JSON.stringify(params) +
-                    '>, code = <' + JSON.stringify(code) +
-                    '>, description = <' + JSON.stringify(message) + '>';
-                $log.warn(msg);
-                throw msg;
-
-            };
-
-            /**
-             * Method for calling the remote service through JSON-RPC.
-             *
-             * @param service The name of the service, as per the internal
-             * services name definition.
-             * @param params The parameters for the service (as an array).
-             * @returns {*}
-             */
-            this.rCall = function (service, params) {
-                var error_fn = this._generateError;
-
-                if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '@rCall: service not found, id = <' + service + '>';
-                }
-                $log.info(
-                    '@rCall: Invoked service = <' + service + '>' +
-                    ', params = ' + JSON.stringify(params)
-                );
-                return this._services[service](params).then(
-
-                    function (data) {
-                        // TODO Workaround for the JSON-RPC library.
-                        if (data.data.name === 'JSONRPCError') {
-                            error_fn(service, params, data.code, data.message);
-                        }
-                        $log.info(
-                            '@rCall: Invoked service = <' + service + '>' +
-                            ', params = <' + JSON.stringify(params) + '>, ' +
-                            ', result = <' + JSON.stringify(data)
-                        );
-                        return data.data;
-                    },
-                    function (error) {
-                        error_fn(service, params, 'NONE', error);
-                    }
-
-                );
-            };
-
-            /**
-             * Retrieves the user location using an available Internet service.
-             *
-             * @returns Promise that returns a { latitude, longitude } object.
-             */
-            this.getUserLocation = function () {
-                var url = this._getSatNetAddress() +
-                    '/configuration/user/geoip';
-                return $http.get(url).then(function (data) {
-                    $log.info('Satnet.js@getUserLocation: user@(' + JSON
-                        .stringify(data.data) + ')');
-                    return {
-                        latitude: parseFloat(data.data.latitude),
-                        longitude: parseFloat(data.data.longitude)
-                    };
-                });
-            };
-
-            /**
-             * Retrieves the server location using an available Internet
-             * service.
-             *
-             * @returns Promise that returns a { latitude, longitude } object.
-            this.getServerLocation = function (hostname) {
-                var url = this._getSatNetAddress() +
-                    '/configuration/hostname/geoip';
-                return $http
-                    .post(url, { 'hostname': hostname })
-                    .then(function (data) {
-                        $log.info(
-                            '[satnet] server name = ' + hostname + '@(' + JSON
-                            .stringify(data.data) + ')'
-                        );
-                        return {
-                            latitude: parseFloat(data.data.latitude),
-                            longitude: parseFloat(data.data.longitude)
-                        };
-                    });
-            };
-            */
-            this.getServerLocation = function (hostname) {
-                return this.rCall('net.geoip', [hostname])
-                    .then(function (location) {
-                        return location;
-                    });
-            };
-
-            /**
-             * Reads the configuration for a given spacecraft, including the
-             * estimated groundtrack.
-             *
-             * @param scId The identifier of the spacecraft.
-             * @returns Promise that resturns the Spacecraft configuration
-             * object.
-             */
-            this.readSCCfg = function (scId) {
-                var cfg = {},
-                    p = [
-                    this.rCall('sc.get', [scId]),
-                    this.rCall('sc.getGroundtrack', [scId]),
-                    this.rCall('tle.celestrak.getTle', [scId])
-                ];
-                return $q.all(p).then(function (results) {
-                    cfg = results[0];
-                    cfg.groundtrack = results[1];
-                    cfg.tle = results[2];
-                    angular.extend(cfg, results[0]);
-                    angular.extend(cfg.groundtrack, results[1]);
-                    angular.extend(cfg.tle, results[2]);
-                    return cfg;
-                });
-            };
-
-            /**
-             * Reads the configuration for all the GroundStations associated
-             * with this LEOP cluster.
-             *
-             * @param leop_id Identifier of the LEOP cluster.
-             * @returns Promise to be resolved with the result.
-             */
-            this.readAllLEOPGS = function (leop_id) {
-                var self = this;
-                return this.rCall('leop.gs.list', [leop_id])
-                    .then(function (gss) {
-                        var p = [];
-                        angular.forEach(gss.leop_gs_available, function (gs) {
-                            p.push(self.rCall('gs.get', [gs]));
-                        });
-                        angular.forEach(gss.leop_gs_inuse, function (gs) {
-                            p.push(self.rCall('gs.get', [gs]));
-                        });
-                        return $q.all(p).then(function (results) {
-                            var a_cfgs = [],
-                                u_cfgs = [],
-                                j, r_j, r_j_id;
-                            for (j = 0; j < results.length; j += 1) {
-                                r_j = results[j];
-                                r_j_id = r_j.groundstation_id;
-                                if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
-                                    a_cfgs.push(r_j);
-                                } else {
-                                    u_cfgs.push(r_j);
-                                }
-                            }
-                            return {
-                                leop_gs_available: a_cfgs,
-                                leop_gs_inuse: u_cfgs
-                            };
-                        });
-                    });
-            };
-
-    }]);;/**
- * Copyright 2014 Ricardo Tubio-Pardavila
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Created by rtubio on 10/24/14.
- */
-
-/** Module definition . */
-angular
-    .module('snGroundStationModels', [
-        'snBroadcasterServices',
-        'snPushServices',
-        'snJRPCServices',
-        'snMarkerModels'
-    ])
-    .service('gsModels', [
-        '$rootScope', '$q', '$log', 'broadcaster', 'satnetRPC', 'markers',
-
-    /**
-     * Service that handles the models for the Ground Stations. All the
-     * information concerning the Ground Stations is temporary stored here in
-     * this models and should be updated regularly after any change in the
-     * network. The reason is that the main storage for the information is the
-     * database in the central server.
-     *
-     * @param   {Object} $rootScope  Main Angular scope for the module
-     * @param   {Object} $q          Promises service
-     * @param   {Object} broadcaster Application service for broadcasting
-     *                             events to other modules of the application
-     * @param   {Object} satnetRPC Application service for accessing the RPC
-     *                             methods of the central server
-     * @param   {Object} markers   Service that handles the markers over the map
-     */
-    function ($rootScope, $q, $log, broadcaster, satnetRPC, markers) {
-
-            /**
-             * Initializes all the GroundStations reading the information from
-             * the server. Markers are indirectly initialized.
-             * @returns {ng.IPromise<[String]>} Identifier of the read GS.
-             */
-            this.initAll = function () {
-                var self = this;
-                return satnetRPC.rCall('gs.list', []).then(function (gss) {
-                    return self._initAll(gss);
-                });
-            };
-
-            /**
-             * Initializes all the GroundStations reading the information from
-             * the server, for all those that are registered for this LEOP cluster.
-             * Markers are indirectly initialized.
-             *
-             * @returns {Object} Promise that returns the identifier of the Ground
-             *                   Station
-             */
-            this.initAllLEOP = function (leop_id) {
-                var self = this,
-                    p = [];
-                return satnetRPC.rCall('leop.gs.list', [leop_id])
-                    .then(function (gss) {
-                        angular.forEach(gss.leop_gs_inuse, function (gs) {
-                            p.push(self.addGS(gs));
-                        });
-                        angular.forEach(gss.leop_gs_available, function (gs) {
-                            p.push(self.addUnconnectedGS(gs));
-                        });
-                        return $q.all(p).then(function (gs_ids) {
-                            var ids = [];
-                            angular.forEach(gs_ids, function (id) {
-                                ids.push(id);
-                            });
-                            return ids;
-                        });
-                    });
-            };
-
-            /**
-             * Common and private method for GroundStation initializers.
-             *
-             * @param list The list of identifiers of the GroundStation objects.
-             * @returns {ng.IPromise<[String]>} Identifier of the read GS.
-             * @private
-             */
-            this._initAll = function (list) {
-                var self = this,
-                    p = [];
-                angular.forEach(list, function (gs) {
-                    p.push(self.addGS(gs));
-                });
-                return $q.all(p).then(function (gs_ids) {
-                    var ids = [];
-                    angular.forEach(gs_ids, function (id) {
-                        ids.push(id);
-                    });
-                    return ids;
-                });
-            };
-
-            /**
-             * Adds a new GroundStation together with its marker, using the
-             * configuration object that it retrieves from the server.
-             *
-             * @param identifier Identififer of the GroundStation to be added.
-             * @returns String Identifier of the just-created object.
-             */
-            this.addGS = function (identifier) {
-                return satnetRPC.rCall('gs.get', [identifier]).then(function (data) {
-                    return markers.createGSMarker(data);
-                });
-            };
-
-            /**
-             * Adds a new GroundStation together with its marker, using the
-             * configuration object that it retrieves from the server. It does not
-             * include the connection line with the server.
-             *
-             * @param identifier Identififer of the GroundStation to be added.
-             * @returns String Identifier of the just-created object.
-             */
-            this.addUnconnectedGS = function (identifier) {
-                return satnetRPC.rCall('gs.get', [identifier]).then(
-                    function (data) {
-                        return markers.createUnconnectedGSMarker(data);
-                    }
-                );
-            };
-
-            /**
-             * "Connects" the given groundstation to the server by adding the
-             * necessary line.
-             * @param identifier Identifier of the gs
-             */
-            this.connectGS = function (identifier) {
-                markers.createGSConnector(identifier);
-            };
-
-            /**
-             * "Disconnects" the GS marker by removing the line that binds it to
-             * the server marker.
-             * @param identifier Identifier of the gs
-             */
-            this.disconnectGS = function (identifier) {
-                markers.removeGSConnector(identifier);
-            };
-
-            /**
-             * Updates the markers for the given GroundStation object.
-             * @param identifier Identifier of the GroundStation object.
-             */
-            this.updateGS = function (identifier) {
-                satnetRPC.rCall('gs.get', [identifier]).then(function (data) {
-                    return markers.updateGSMarker(data);
-                });
-            };
-
-            /**
-             * Removes the markers for the given GroundStation object.
-             * @param identifier Identifier of the GroundStation object.
-             */
-            this.removeGS = function (identifier) {
-                return markers.removeGSMarker(identifier);
-            };
-
-            /**
-             * Private method that creates the event listeners for this service.
-             */
-            this.initListeners = function () {
-
-                var self = this;
-                $rootScope.$on(broadcaster.GS_ADDED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-added-event, event = ' + event + ', id = ' + id
-                    );
-                    self.addGS(id);
-                });
-                $rootScope.$on(broadcaster.GS_REMOVED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-removed-event, event = ' + event + ', id = ' + id
-                    );
-                    self.removeGS(id);
-                });
-                $rootScope.$on(broadcaster.GS_UPDATED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-updated-event, event = ' + event + ', id = ' + id
-                    );
-                    self.updateGS(id);
-                });
-                $rootScope.$on(broadcaster.LEOP_GS_ASSIGNED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-assigned-event, event = ' + event + ', id = ' + id
-                    );
-                    self.connectGS(id);
-                });
-                $rootScope.$on(broadcaster.LEOP_GS_RELEASED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-released-event, event = ' + event + ', id = ' + id
-                    );
-                    self.disconnectGS(id);
-                });
-                $rootScope.$on(broadcaster.GS_AVAILABLE_ADDED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-added-event, event = ' + event + ', id = ' + id
-                    );
-                    self.addUnconnectedGS(id);
-                });
-                $rootScope.$on(broadcaster.GS_AVAILABLE_REMOVED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-removed-event, event = ' + event + ', id = ' + id
-                    );
-                    self.removeGS(id);
-                });
-                $rootScope.$on(broadcaster.GS_AVAILABLE_UPDATED_EVENT, function (event, id) {
-                    $log.log(
-                        '@on-gs-updated-event, event = ' + event + ', id = ' + id
-                    );
-                    self.updateGS(id);
-                });
-
             };
 
     }
@@ -2524,6 +2199,238 @@ angular.module('snNetworkModels', [
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * Created by rtubio on 10/24/14.
+ */
+
+/** Module definition . */
+angular
+    .module('snGroundStationModels', [
+        'snBroadcasterServices',
+        'snPushServices',
+        'snJRPCServices',
+        'snMarkerModels'
+    ])
+    .service('gsModels', [
+        '$rootScope', '$q', '$log', 'broadcaster', 'satnetRPC', 'markers',
+
+    /**
+     * Service that handles the models for the Ground Stations. All the
+     * information concerning the Ground Stations is temporary stored here in
+     * this models and should be updated regularly after any change in the
+     * network. The reason is that the main storage for the information is the
+     * database in the central server.
+     *
+     * @param   {Object} $rootScope  Main Angular scope for the module
+     * @param   {Object} $q          Promises service
+     * @param   {Object} broadcaster Application service for broadcasting
+     *                             events to other modules of the application
+     * @param   {Object} satnetRPC Application service for accessing the RPC
+     *                             methods of the central server
+     * @param   {Object} markers   Service that handles the markers over the map
+     */
+    function ($rootScope, $q, $log, broadcaster, satnetRPC, markers) {
+
+            /**
+             * Initializes all the GroundStations reading the information from
+             * the server. Markers are indirectly initialized.
+             * @returns {ng.IPromise<[String]>} Identifier of the read GS.
+             */
+            this.initAll = function () {
+                var self = this;
+                return satnetRPC.rCall('gs.list', []).then(function (gss) {
+                    return self._initAll(gss);
+                });
+            };
+
+            /**
+             * Initializes all the GroundStations reading the information from
+             * the server, for all those that are registered for this LEOP cluster.
+             * Markers are indirectly initialized.
+             *
+             * @returns {Object} Promise that returns the identifier of the Ground
+             *                   Station
+             */
+            this.initAllLEOP = function (leop_id) {
+                var self = this,
+                    p = [];
+                return satnetRPC.rCall('leop.gs.list', [leop_id])
+                    .then(function (gss) {
+                        angular.forEach(gss.leop_gs_inuse, function (gs) {
+                            p.push(self.addGS(gs));
+                        });
+                        angular.forEach(gss.leop_gs_available, function (gs) {
+                            p.push(self.addUnconnectedGS(gs));
+                        });
+                        return $q.all(p).then(function (gs_ids) {
+                            var ids = [];
+                            angular.forEach(gs_ids, function (id) {
+                                ids.push(id);
+                            });
+                            return ids;
+                        });
+                    });
+            };
+
+            /**
+             * Common and private method for GroundStation initializers.
+             *
+             * @param list The list of identifiers of the GroundStation objects.
+             * @returns {ng.IPromise<[String]>} Identifier of the read GS.
+             * @private
+             */
+            this._initAll = function (list) {
+                var self = this,
+                    p = [];
+                angular.forEach(list, function (gs) {
+                    p.push(self.addGS(gs));
+                });
+                return $q.all(p).then(function (gs_ids) {
+                    var ids = [];
+                    angular.forEach(gs_ids, function (id) {
+                        ids.push(id);
+                    });
+                    return ids;
+                });
+            };
+
+            /**
+             * Adds a new GroundStation together with its marker, using the
+             * configuration object that it retrieves from the server.
+             *
+             * @param identifier Identififer of the GroundStation to be added.
+             * @returns String Identifier of the just-created object.
+             */
+            this.addGS = function (identifier) {
+                return satnetRPC.rCall('gs.get', [identifier]).then(function (data) {
+                    return markers.createGSMarker(data);
+                });
+            };
+
+            /**
+             * Adds a new GroundStation together with its marker, using the
+             * configuration object that it retrieves from the server. It does not
+             * include the connection line with the server.
+             *
+             * @param identifier Identififer of the GroundStation to be added.
+             * @returns String Identifier of the just-created object.
+             */
+            this.addUnconnectedGS = function (identifier) {
+                return satnetRPC.rCall('gs.get', [identifier]).then(
+                    function (data) {
+                        return markers.createUnconnectedGSMarker(data);
+                    }
+                );
+            };
+
+            /**
+             * "Connects" the given groundstation to the server by adding the
+             * necessary line.
+             * @param identifier Identifier of the gs
+             */
+            this.connectGS = function (identifier) {
+                markers.createGSConnector(identifier);
+            };
+
+            /**
+             * "Disconnects" the GS marker by removing the line that binds it to
+             * the server marker.
+             * @param identifier Identifier of the gs
+             */
+            this.disconnectGS = function (identifier) {
+                markers.removeGSConnector(identifier);
+            };
+
+            /**
+             * Updates the markers for the given GroundStation object.
+             * @param identifier Identifier of the GroundStation object.
+             */
+            this.updateGS = function (identifier) {
+                satnetRPC.rCall('gs.get', [identifier]).then(function (data) {
+                    return markers.updateGSMarker(data);
+                });
+            };
+
+            /**
+             * Removes the markers for the given GroundStation object.
+             * @param identifier Identifier of the GroundStation object.
+             */
+            this.removeGS = function (identifier) {
+                return markers.removeGSMarker(identifier);
+            };
+
+            /**
+             * Private method that creates the event listeners for this service.
+             */
+            this.initListeners = function () {
+
+                var self = this;
+                $rootScope.$on(broadcaster.GS_ADDED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-added-event, event = ' + event + ', id = ' + id
+                    );
+                    self.addGS(id);
+                });
+                $rootScope.$on(broadcaster.GS_REMOVED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-removed-event, event = ' + event + ', id = ' + id
+                    );
+                    self.removeGS(id);
+                });
+                $rootScope.$on(broadcaster.GS_UPDATED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-updated-event, event = ' + event + ', id = ' + id
+                    );
+                    self.updateGS(id);
+                });
+                $rootScope.$on(broadcaster.LEOP_GS_ASSIGNED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-assigned-event, event = ' + event + ', id = ' + id
+                    );
+                    self.connectGS(id);
+                });
+                $rootScope.$on(broadcaster.LEOP_GS_RELEASED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-released-event, event = ' + event + ', id = ' + id
+                    );
+                    self.disconnectGS(id);
+                });
+                $rootScope.$on(broadcaster.GS_AVAILABLE_ADDED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-added-event, event = ' + event + ', id = ' + id
+                    );
+                    self.addUnconnectedGS(id);
+                });
+                $rootScope.$on(broadcaster.GS_AVAILABLE_REMOVED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-removed-event, event = ' + event + ', id = ' + id
+                    );
+                    self.removeGS(id);
+                });
+                $rootScope.$on(broadcaster.GS_AVAILABLE_UPDATED_EVENT, function (event, id) {
+                    $log.log(
+                        '@on-gs-updated-event, event = ' + event + ', id = ' + id
+                    );
+                    self.updateGS(id);
+                });
+
+            };
+
+    }
+]);;/**
+ * Copyright 2014 Ricardo Tubio-Pardavila
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  * Created by rtubio on 10/28/14.
  */
 
@@ -2630,6 +2537,146 @@ angular.module('snSpacecraftModels', [
 
     }
 ]);;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snAboutDirective', [
+    'ngMaterial'
+])
+    .controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
+
+        /**
+         * Controller function for handling the SatNet about dialog itself.
+         *
+         * @param {Object} $scope $scope for the controller.
+         */
+        function ($scope, $mdDialog) {
+
+            /**
+             * Function that closes the dialog.
+             */
+            $scope.closeDialog = function () {
+                $mdDialog.hide();
+            };
+
+        }
+
+    ])
+    .controller('snAboutCtrl', ['$scope', '$mdDialog',
+
+        /**
+         * Controller function for opening the SatNet About dialog.
+         *
+         * @param {Object} $scope    $scope for the controller.
+         * @param {Object} $mdDialog Angular material Dialog service.
+         */
+        function ($scope, $mdDialog) {
+
+            /**
+             * Function that opens the dialog when the snAbout button is
+             * clicked.
+             */
+            $scope.openSnAbout = function () {
+                $mdDialog.show({
+                    templateUrl: 'common/templates/sn-about-dialog.html'
+                });
+            };
+
+        }
+
+    ])
+    .directive('snAbout',
+
+        /**
+         * Function that creates the directive itself returning the object
+         * required by Angular.
+         *
+         * @returns {Object} Object directive required by Angular, with
+         *                   restrict and templateUrl.
+         */
+        function () {
+            return {
+                restrict: 'E',
+                templateUrl: 'common/templates/sn-about.html'
+            };
+        }
+
+    );;/*
+   Copyright 2014 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snSplashDirective', []).directive('mAppLoading', ['$animate',
+
+    /**
+     * This function implements the controller.
+     *
+     * This CSS class-based directive controls the pre-bootstrap loading screen.
+     * By default, it is visible on the screen; but, once the application loads,
+     * we'll fade it out and remove it from the DOM.
+     *
+     * @param   {Object} $animate $animate service.
+     * @returns {Object} Object with the description of the directive.
+     */
+    function ($animate) {
+
+        /**
+         * This function links the just created CSS class-like directive in
+         * order to control the end of the animation. Once the animation is
+         * over, it removes itself from the DOM tree.
+         *
+         * Due to the way AngularJS prevents animation during the bootstrap
+         * of the application, we can't animate the top-level container;
+         * but, since we added "ngAnimateChildren", we can animated the
+         * inner container during this phase.
+         * --
+         * NOTE: Am using .eq(1) so that we don't animate the Style block.
+         *
+         * @param {Object} scope      The scope for this directive.
+         * @param {Object} element    The parent element from the DOM tree.
+         * @param {Object} attributes Object with the attributes of the
+         *                            element.
+         */
+         var link = function (scope, element, attributes) {
+
+            $animate.leave(element.children().eq(1)).then(
+                function cleanupAfterAnimation() {
+                    element.remove();
+                    scope = element = attributes = null;
+                }
+            );
+
+        };
+
+        return ({
+            link: link,
+            restrict: "C"
+        });
+
+    }]);;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -3036,6 +3083,7 @@ angular.module(
         'leaflet-directive',
         'snBroadcasterServices',
         'snMapServices',
+        'snControllers',
         'snCelestrakServices'
     ]
 ).controller('scListCtrl', [
@@ -3138,7 +3186,7 @@ angular.module(
 
 ]).controller('scDialogCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
-    'broadcaster', 'satnetRPC', 'celestrak',
+    'broadcaster', 'satnetRPC', 'celestrak', 'snDialogs',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
     'identifier', 'editing',
 
@@ -3151,7 +3199,7 @@ angular.module(
      */
     function (
         $log, $scope, $mdDialog, $mdToast,
-        broadcaster, satnetRPC, celestrak,
+        broadcaster, satnetRPC, celestrak, snDialogs,
         mapServices, LAT, LNG, ZOOM_SELECT,
         identifier, editing
     ) {
@@ -3178,6 +3226,8 @@ angular.module(
             tles: []
         };
 
+        $scope.listTemplateUrl = 'operations/templates/sc/list.html';
+
         /**
          * Function that updates the list of selectable TLE's once the group
          * has changed in the other select control.
@@ -3194,40 +3244,24 @@ angular.module(
         };
 
         /**
-         * Private function that is used to notify a success in an operation
-         * within this Dialog.
-         * 
-         * @param {String} identifier Identifier of the spacecraft
-         * @param {Object} results    Response from the server
-         */
-        $scope._notifySuccess = function(identifier, results) {
-            var message = '<' + identifier + '> succesfully updated!';
-            $log.info(message, ', response = ' + JSON.stringify(results));
-            $mdToast.show($mdToast.simple().content(message));
-            $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: 'operations/templates/sc/list.html'
-            });
-        };
-
-        /**
          * Function that triggers the opening of a window to add a new
          * Spacecraft into the system.
          */
         $scope.add = function () {
 
-            var self = this,
-                cfg = [
-                    $scope.configuration.identifier,
-                    $scope.configuration.callsign,
-                    $scope.configuration.tle.spacecraft_tle_id
-                ];
+            var cfg = [
+                $scope.configuration.identifier,
+                $scope.configuration.callsign,
+                $scope.configuration.tle.spacecraft_tle_id
+            ];
 
             satnetRPC.rCall('sc.add', cfg).then(
                 function (results) {
                     var id = results.spacecraft_id;
                     broadcaster.scAdded(id);
-                    self._notifySuccess(id, results);
+                    snDialogs.success(
+                        identifier, identifier, $scope.listTemplateUrl
+                    );
                 },
                 function (error) {
                     window.alert(error);
@@ -3242,19 +3276,18 @@ angular.module(
          */
         $scope.update = function () {
 
-            var self = this,
-                cfg = {
-                    'spacecraft_id': identifier,
-                    'spacecraft_callsign':
-                        $scope.configuration.callsign,
-                    'spacecraft_tle_id':
-                        $scope.configuration.tle.spacecraft_tle_id
-                };
+            var cfg = {
+                'spacecraft_id': identifier,
+                'spacecraft_callsign': $scope.configuration.callsign,
+                'spacecraft_tle_id': $scope.configuration.tle.spacecraft_tle_id
+            };
 
             satnetRPC.rCall('sc.update', [identifier, cfg]).then(
                 function (identifier) {
                     broadcaster.scUpdated(identifier);
-                    self._notifySuccess(identifier, identifier);
+                    snDialogs.success(
+                        identifier, identifier, $scope.listTemplateUrl
+                    );
                 },
                 function (error) {
                     window.alert(error);
@@ -3270,7 +3303,7 @@ angular.module(
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: 'operations/templates/sc/list.html'
+                templateUrl: $scope.listTemplateUrl
             });
         };
 
