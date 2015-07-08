@@ -1,4 +1,4 @@
-<md-dialog ng-controller="scListCtrl" aria-label="Spacecraft Menu">
+<md-dialog ng-controller="scListCtrl" ng-init="init()" aria-label="Spacecraft Menu">
     <md-content class="menu-list">
 
         <md-button id="addSc" ng-click="addScDialog()" aria-label="add spacecraft" class="md-primary menu-button">
@@ -12,9 +12,11 @@
 
         <md-divider></md-divider>
 
-        <md-list ng-controller="scListCtrl" ng-init="init()">
+        <md-list>
+            <li ng-hide="scList.length" class="sn-no-item">
+                (no spacecraft)
+            </li>
             <md-list-item ng-repeat="sc in scList">
-
                 <div layout="row" layout-fill>
 
                     <md-button id="{{ sc }}-edit" ng-click="editScDialog(sc)" aria-label="edit spacecraft {{ sc }}" class="md-primary menu-button" style="text-align:center; width: 70%">

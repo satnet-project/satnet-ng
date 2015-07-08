@@ -135,6 +135,12 @@ div.m-app-loading p {
 .menu-list {
   width: 300px; }
 
+.sn-no-item {
+  margin-top: 20px;
+  text-align: center;
+  font-style: italic;
+  list-style-type: none; }
+
 /* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
