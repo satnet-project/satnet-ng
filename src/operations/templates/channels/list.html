@@ -1,8 +1,14 @@
 <md-dialog ng-init="init()" aria-label="Channels Menu">
 
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span>{{ segmentId }} Channels</span>
+        </h2>
+    </md-toolbar>
+
     <md-content class="menu-list">
 
-        <md-button id="addChannel" ng-click="showChannelDialog()" aria-label="add channel" class="md-primary menu-button">
+        <md-button id="addChannel" ng-click="showAddDialog()" aria-label="add channel" class="md-primary menu-button">
 
             <div layout="row" layout-fill>
                 <i class="fa fa-plus"></i>

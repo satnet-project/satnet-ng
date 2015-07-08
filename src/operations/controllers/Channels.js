@@ -39,8 +39,8 @@ angular.module(
      */
     function(
         $scope, $log, $mdDialog,
-         satnetRPC, snDialog,
-         segmentId, isSpacecraft
+        satnetRPC, snDialog,
+        segmentId, isSpacecraft
     ) {
 
         $scope.segmentId = segmentId;

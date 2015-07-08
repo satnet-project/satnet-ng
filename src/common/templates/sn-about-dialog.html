@@ -1,6 +1,18 @@
 <md-dialog ng-controller="snAboutDlgCtrl" aria-label="About Dialog">
-    <md-content>The SatNet Network</md-content>
+
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span>The SatNet Network</span>
+        </h2>
+    </md-toolbar>
+
+    <md-content>
+        <p>The SatNet Network is a cooperative Open Source project hosted at
+        GitHub (github.com/satnet-project).</p>
+    </md-content>
+
     <div class="md-actions">
         <md-button id="closeAbout" ng-click="closeDialog()">Close</md-button>
     </div>
+
 </md-dialog>

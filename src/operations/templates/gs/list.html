@@ -1,7 +1,14 @@
 <md-dialog ng-controller="gsListCtrl" ng-init="init()" aria-label="Ground Stations Menu">
+
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span>Registered Ground Stations</span>
+        </h2>
+    </md-toolbar>
+
     <md-content class="menu-list">
 
-        <md-button id="addGs" ng-click="showGsDialog()" aria-label="add ground station" class="md-primary menu-button">
+        <md-button id="addGs" ng-click="showAddDialog()" aria-label="add ground station" class="md-primary menu-button">
 
             <div layout="row" layout-fill>
                 <i class="fa fa-plus"></i>
@@ -17,7 +24,6 @@
                 (no ground stations)
             </li>
             <md-list-item ng-repeat="gs in gsList">
-
                 <div layout="row" layout-fill>
 
                     <md-button id="{{ gs }}-edit" ng-click="showEditDialog(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button" style="text-align:center; width: 70%">
@@ -32,14 +38,13 @@
                         </div>
                     </md-button>
 
-                    <md-button id="{{ gs }}-remove" ng-click="delete(gs)" aria-label="remove ground station {{ gs }}" class="md-primary menu-button" flex>
+                    <md-button id="{{ gs }}-delete" ng-click="delete(gs)" aria-label="delete ground station {{ gs }}" class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-close"></i>
                         </div>
                     </md-button>
 
                 </div>
-
             </md-list-item>
         </md-list>
 

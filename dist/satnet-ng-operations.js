@@ -2763,8 +2763,8 @@ angular.module(
      */
     function(
         $scope, $log, $mdDialog,
-         satnetRPC, snDialog,
-         segmentId, isSpacecraft
+        satnetRPC, snDialog,
+        segmentId, isSpacecraft
     ) {
 
         $scope.segmentId = segmentId;
@@ -2917,30 +2917,13 @@ angular.module(
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.showGsDialog = function () {
+        $scope.showAddDialog = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
                 controller: 'gsDialogCtrl',
                 locals: {
                     identifier: '',
                     editing: false
-                }
-            });
-        };
-
-        /**
-         * Function that triggers the opening of a window to add a new
-         * Availability Rule to this Ground Station.
-         * 
-         * @param {String} identifier Identifier of the Ground Station
-         */
-        $scope.showChannelList = function (gsId) {
-            $mdDialog.show({
-                templateUrl: 'operations/templates/channels/list.html',
-                controller: 'channelListCtrl',
-                locals: {
-                    segmentId: gsId,
-                    isSpacecraft: false
                 }
             });
         };
@@ -2963,19 +2946,36 @@ angular.module(
         };
 
         /**
+         * Function that triggers the opening of a window to add a new
+         * Availability Rule to this Ground Station.
+         * 
+         * @param {String} identifier Identifier of the Ground Station
+         */
+        $scope.showChannelList = function (identifier) {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/channels/list.html',
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: identifier,
+                    isSpacecraft: false
+                }
+            });
+        };
+
+        /**
          * Controller function that removes the given Ground Station from the
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
          *
-         * @param {String} gs_id Identifier of the Ground Station for removal
+         * @param {String} identifier Identifier of the Ground Station
          */
-        $scope.delete = function (gs_id) {
-            satnetRPC.rCall('gs.delete', [gs_id]).then(function (results) {
-                broadcaster.gsRemoved(gs_id);
-                snDialog.success('gs.delete', gs_id, results, null);
+        $scope.delete = function (identifier) {
+            satnetRPC.rCall('gs.delete', [identifier]).then(function (results) {
+                broadcaster.gsRemoved(identifier);
+                snDialog.success('gs.delete', identifier, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
-                snDialog.exception('gs.delete', gs_id, cause);
+                snDialog.exception('gs.delete', identifier, cause);
             });
         };
 
@@ -3365,7 +3365,7 @@ angular.module(
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addScDialog = function () {
+        $scope.showAddDialog = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/sc/dialog.html',
                 controller: 'scDialogCtrl',
@@ -3382,7 +3382,7 @@ angular.module(
          *
          * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.editScDialog = function (identifier) {
+        $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/sc/dialog.html',
                 controller: 'scDialogCtrl',
@@ -3394,20 +3394,37 @@ angular.module(
         };
 
         /**
+         * Function that triggers the opening of a window to add a new
+         * Availability Rule to this Spacecraft.
+         * 
+         * @param {String} identifier Identifier of the Spacecraft
+         */
+        $scope.showChannelList = function (identifier) {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/channels/list.html',
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: identifier,
+                    isSpacecraft: true
+                }
+            });
+        };
+
+        /**
          * Controller function that removes the given Spacecraft from the
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
          *
-         * @param {String} sc_id Identifier of the Spacecraft
+         * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.remove = function (sc_id) {
+        $scope.delete = function (identifier) {
 
-            satnetRPC.rCall('sc.delete', [sc_id]).then(function (results) {
-                broadcaster.scRemoved(sc_id);
-                snDialog.success('sc.delete', sc_id, results, null);
+            satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
+                broadcaster.scRemoved(identifier);
+                snDialog.success('sc.delete', identifier, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
-                snDialog.exception('sc.delete', sc_id, cause);
+                snDialog.exception('sc.delete', identifier, cause);
             });
 
         };

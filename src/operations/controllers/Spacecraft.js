@@ -46,7 +46,7 @@ angular.module(
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
          */
-        $scope.addScDialog = function () {
+        $scope.showAddDialog = function () {
             $mdDialog.show({
                 templateUrl: 'operations/templates/sc/dialog.html',
                 controller: 'scDialogCtrl',
@@ -63,7 +63,7 @@ angular.module(
          *
          * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.editScDialog = function (identifier) {
+        $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/sc/dialog.html',
                 controller: 'scDialogCtrl',
@@ -75,20 +75,37 @@ angular.module(
         };
 
         /**
+         * Function that triggers the opening of a window to add a new
+         * Availability Rule to this Spacecraft.
+         * 
+         * @param {String} identifier Identifier of the Spacecraft
+         */
+        $scope.showChannelList = function (identifier) {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/channels/list.html',
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: identifier,
+                    isSpacecraft: true
+                }
+            });
+        };
+
+        /**
          * Controller function that removes the given Spacecraft from the
          * database in the remote server upon user request. It first asks for
          * confirmation before executing this removal.
          *
-         * @param {String} sc_id Identifier of the Spacecraft
+         * @param {String} identifier Identifier of the Spacecraft
          */
-        $scope.remove = function (sc_id) {
+        $scope.delete = function (identifier) {
 
-            satnetRPC.rCall('sc.delete', [sc_id]).then(function (results) {
-                broadcaster.scRemoved(sc_id);
-                snDialog.success('sc.delete', sc_id, results, null);
+            satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
+                broadcaster.scRemoved(identifier);
+                snDialog.success('sc.delete', identifier, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
-                snDialog.exception('sc.delete', sc_id, cause);
+                snDialog.exception('sc.delete', identifier, cause);
             });
 
         };
