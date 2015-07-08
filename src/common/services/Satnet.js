@@ -117,6 +117,8 @@ angular
                     .createMethod('gs.setConfiguration'),
                 'gs.delete': this._configuration
                     .createMethod('gs.delete'),
+                'gs.channel.list': this._configuration
+                    .createMethod('gs.channel.list'),
                 // Configuration methods (Spacecraft)
                 'sc.list': this._configuration
                     .createMethod('sc.list'),
@@ -128,6 +130,8 @@ angular
                     .createMethod('sc.setConfiguration'),
                 'sc.delete': this._configuration
                     .createMethod('sc.delete'),
+                'sc.channel.list': this._configuration
+                    .createMethod('sc.channel.list'),
                 // User configuration
                 'user.getLocation': this._configuration
                     .createMethod('user.getLocation'),

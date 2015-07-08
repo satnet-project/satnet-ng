@@ -22,7 +22,7 @@ angular.module(
         'snBroadcasterServices',
         'snJRPCServices',
         'snControllers',
-        'snRuleControllers',
+        'snChannelControllers',
         'snMapServices'
     ]
 ).controller('gsListCtrl', [
@@ -62,23 +62,6 @@ angular.module(
          * Function that triggers the opening of a window to add a new
          * Availability Rule to this Ground Station.
          * 
-         * @param {String} gsId Identifier of the Ground Station
-         *
-        $scope.showRuleList = function (gsId) {
-            $mdDialog.show({
-                templateUrl: 'operations/templates/rules/list.html',
-                controller: 'ruleListCtrl',
-                locals: {
-                    gsId: gsId
-                }
-            });
-        };
-        */
-
-        /**
-         * Function that triggers the opening of a window to add a new
-         * Availability Rule to this Ground Station.
-         * 
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.showChannelList = function (gsId) {
@@ -86,7 +69,8 @@ angular.module(
                 templateUrl: 'operations/templates/channels/list.html',
                 controller: 'channelListCtrl',
                 locals: {
-                    gsId: gsId
+                    segmentId: gsId,
+                    isSpacecraft: false
                 }
             });
         };
@@ -97,7 +81,7 @@ angular.module(
          *
          * @param {String} identifier Identifier of the Ground Station
          */
-        $scope.edit = function (identifier) {
+        $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/gs/dialog.html',
                 controller: 'gsDialogCtrl',
