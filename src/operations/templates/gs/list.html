@@ -17,19 +17,21 @@
 
                 <div layout="row" layout-fill>
 
-                    <md-button id="{{ gs }}-edit" ng-click="edit(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button" style="text-align:center; width: 58%">
+                    <md-button id="{{ gs }}-edit" ng-click="edit(gs)" aria-label="edit ground station {{ gs }}" class="md-primary menu-button" style="text-align:center; width: 70%">
                         <div layout="row" layout-fill>
                             <b>{{ gs }}</b>
                         </div>
                     </md-button>
 
+                    <!--
                     <md-button id="{{ gs }}-availability" ng-click="showRuleList(gs)" aria-label="define availability {{ gs }}" class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-clock-o"></i>
                         </div>
                     </md-button>
+                    -->
 
-                    <md-button id="{{ gs }}-channels" ng-click="showChannelsDialog(gs)" aria-label="define channels {{ gs }}" class="md-primary menu-button" flex>
+                    <md-button id="{{ gs }}-channels" ng-click="showChannelList(gs)" aria-label="define channels {{ gs }}" class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-rss"></i>
                         </div>

@@ -1,0 +1,40 @@
+<md-dialog ng-init="init()" aria-label="Channels Menu">
+
+    <md-content class="menu-list">
+
+        <md-button id="addChannel" ng-click="showChannelDialog()" aria-label="add channel" class="md-primary menu-button">
+
+            <div layout="row" layout-fill>
+                <i class="fa fa-plus"></i>
+                <b>channel</b>
+            </div>
+
+        </md-button>
+
+        <md-divider></md-divider>
+
+        <md-list>
+            <md-list-item ng-repeat="c in channelList">
+
+                <div layout="row" layout-fill>
+
+                    <md-button id="{{ c }}-edit" ng-click="edit(c)" aria-label="edit channel {{ c }}" class="md-primary menu-button" style="text-align:center; width: 58%">
+                        <div layout="row" layout-fill>
+                            <b>{{ c }}</b>
+                        </div>
+                    </md-button>
+
+                    <md-button id="{{ c }}-delete" ng-click="delete(c)" aria-label="delete channel {{ c }}" class="md-primary menu-button" flex>
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-close"></i>
+                        </div>
+                    </md-button>
+
+                </div>
+
+            </md-list-item>
+        </md-list>
+
+    </md-content>
+
+</md-dialog>
