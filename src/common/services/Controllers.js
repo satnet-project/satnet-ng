@@ -14,7 +14,9 @@
    limitations under the License.
 */
 
-angular.module('snControllers', ['ngMaterial']).service('snDialog', [
+angular
+.module('snControllers', ['ngMaterial'])
+.service('snDialog', [
     '$log', '$mdDialog', '$mdToast',
 
     /**

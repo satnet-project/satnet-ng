@@ -53,7 +53,7 @@ angular.module(
                 controller: 'gsDialogCtrl',
                 locals: {
                     identifier: '',
-                    editing: false
+                    isEditing: false
                 }
             });
         };
@@ -70,7 +70,7 @@ angular.module(
                 controller: 'gsDialogCtrl',
                 locals: {
                     identifier: identifier,
-                    editing: true
+                    isEditing: true
                 }
             });
         };
