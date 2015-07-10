@@ -20,44 +20,8 @@ describe('Testing Channel controllers', function () {
 
     var $rootScope, $controller, $mdDialog, $q,
         __mock__cookies = {},
-        __mock__satnetRPC = {
-            rCall: function () {}
-        },
         test_channel_id = 'channel-test',
         channel_list = ['channel_1', 'channel_2'],
-        __fn_channel_list = function () {
-            return $q.when().then(function () {
-                return channel_list;
-            });
-        },
-        __fn_channel_delete = function () {
-            return $q.when().then(function () {
-                return test_channel_id;
-            });
-        },
-        __fn_channel_options = function () {
-            return $q.when().then(function () {
-                return {
-                    bands: [],
-                    modulations: [],
-                    polarizations: [],
-                    bitrates: [],
-                    bandwidths: []
-                };
-            });
-        },
-        __fn_channel_get_sc_cfg = function () {
-            return $q.when().then(function() {
-                return {
-                    identifier: test_channel_id,
-                    frequency: 0.0,
-                    modulation: '',
-                    polarization: '',
-                    bitrate: '',
-                    bandwidth: ''
-                };
-            });
-        },
         __fn_exception = function () {
             return $q.reject(function () {
                 return {data: {message: 'Simulated Exception'}};
@@ -70,11 +34,14 @@ describe('Testing Channel controllers', function () {
     beforeEach(function () {
 
         module(
-            'snChannelControllers', 'snControllers', 'snBroadcasterServices'
+            'snChannelControllers',
+            'snControllers',
+            'snBroadcasterServices',
+            'snJRPCMock'
         );
         module(function ($provide) {
             $provide.value('$cookies', __mock__cookies);
-            $provide.value('satnetRPC', __mock__satnetRPC);
+            //$provide.value('satnetRPC', __mock__satnetRPC);
         });
 
         inject(function ($injector) {
@@ -97,8 +64,6 @@ describe('Testing Channel controllers', function () {
         var $scope_sc = $rootScope.$new(),
             $scope_gs = $rootScope.$new();
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_list);
         $controller('channelListCtrl', {
             $scope: $scope_sc,
             $mdDialog: $mdDialog,
@@ -110,15 +75,16 @@ describe('Testing Channel controllers', function () {
         $scope_sc.init();
         $rootScope.$digest();
 
-        expect($scope_sc.uiCtrl.channelDlgTplUrl).toEqual(dialogTplUrl);
-        expect($scope_sc.uiCtrl.segmentId).toEqual('sc-test');
-        expect($scope_sc.uiCtrl.isSpacecraft).toEqual(true);
-        expect($scope_sc.uiCtrl.rpc_prefix).toEqual('sc');
+        expect($scope_sc.uiCtrl).toEqual({
+            channelDlgTplUrl: dialogTplUrl,
+            segmentId: 'sc-test',
+            isSpacecraft: true,
+            rpc_prefix: 'sc'
+        });
 
         expect($scope_sc.channelList).toEqual(channel_list);
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_exception);
+        spyOn(satnetRPC, 'rCall').and.callFake(__fn_exception);
         spyOn(snDialog, 'exception');
 
         $scope_sc.init();
@@ -126,8 +92,7 @@ describe('Testing Channel controllers', function () {
 
         expect(snDialog.exception).toHaveBeenCalled();
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_list);
+        satnetRPC.rCall.and.callThrough();
         $controller('channelListCtrl', {
             $scope: $scope_gs, $mdDialog: $mdDialog,
             satnetRPC: satnetRPC, snDialog: snDialog,
@@ -138,8 +103,7 @@ describe('Testing Channel controllers', function () {
         $rootScope.$digest();
         expect($scope_gs.channelList).toEqual(channel_list);
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_exception);
+        satnetRPC.rCall.and.callFake(__fn_exception);
 
         $scope_gs.init();
         $rootScope.$digest();
@@ -147,7 +111,7 @@ describe('Testing Channel controllers', function () {
         expect(snDialog.exception).toHaveBeenCalled();
 
     });
-    
+
     it('should launch the associated add dialogs', function () {
 
         var $scope_sc = $rootScope.$new(),
@@ -175,8 +139,6 @@ describe('Testing Channel controllers', function () {
                 }
             };
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_list);
         spyOn($mdDialog, 'show');
 
         $controller("channelListCtrl", {
@@ -237,8 +199,6 @@ describe('Testing Channel controllers', function () {
                 }
             };
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_list);
         spyOn($mdDialog, 'show');
 
         $controller("channelListCtrl", {
@@ -289,14 +249,8 @@ describe('Testing Channel controllers', function () {
         });
         spyOn($scope_sc, 'refresh');
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_list);
-
         $scope_sc.init();
         $rootScope.$digest();
-
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_delete);
 
         $scope_sc.delete(test_channel_id);
         $rootScope.$digest();
@@ -307,8 +261,7 @@ describe('Testing Channel controllers', function () {
         );
         snDialog.success.calls.reset();
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_exception);
+        spyOn(satnetRPC, 'rCall').and.callFake(__fn_exception);
 
         $scope_sc.delete(test_channel_id);
         $rootScope.$digest();
@@ -325,14 +278,10 @@ describe('Testing Channel controllers', function () {
         });
         spyOn($scope_gs, 'refresh');
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_list);
+        satnetRPC.rCall.and.callThrough();
 
         $scope_gs.init();
         $rootScope.$digest();
-
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_delete);
 
         $scope_gs.delete(test_channel_id);
         $rootScope.$digest();
@@ -342,8 +291,7 @@ describe('Testing Channel controllers', function () {
             'gs.channel.delete', test_channel_id, test_channel_id, null
         );
 
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_exception);
+        satnetRPC.rCall.and.callFake(__fn_exception);
 
         $scope_gs.delete(test_channel_id);
         $rootScope.$digest();
@@ -359,9 +307,6 @@ describe('Testing Channel controllers', function () {
         var $scope_sc = $rootScope.$new(),
             $scope_gs = $rootScope.$new(),
             sc_id = 'sc-test', gs_id = 'gs-test';
-
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_options);
 
         $controller('channelDialogCtrl', {
             $scope: $scope_sc, $mdDialog: $mdDialog,
@@ -440,6 +385,7 @@ describe('Testing Channel controllers', function () {
 
     });
 
+    /*
     it('should create the Dialog controller for editing channels', function () {
 
         // TODO Real configuration loading
@@ -461,7 +407,6 @@ describe('Testing Channel controllers', function () {
         $scope_sc.init();
         $rootScope.$digest();
 
-        /*
         expect($scope_sc.scCfg).toEqual({
             identifier: test_channel_id,
             frequency: 0.0,
@@ -485,7 +430,6 @@ describe('Testing Channel controllers', function () {
             polarizations: [],
             bandwidths: []
         });
-        */
 
         $controller('channelDialogCtrl', {
             $scope: $scope_gs, $mdDialog: $mdDialog,
@@ -497,7 +441,6 @@ describe('Testing Channel controllers', function () {
         $scope_gs.init();
         $rootScope.$digest();
 
-        /*
         expect($scope_gs.gsCfg).toEqual({
             identifier: test_channel_id,
             band: '',
@@ -522,8 +465,8 @@ describe('Testing Channel controllers', function () {
             polarizations: [],
             bandwidths: []
         });
-        */
 
     });
+    */
 
 });
