@@ -21,20 +21,21 @@ angular.module('snNetworkModels', [
     'snJRPCServices',
     'snMarkerModels'
 ]).service('serverModels', [
-    '$rootScope', '$location', 'broadcaster', 'satnetRPC',  'markers',
+    '$rootScope', '$log', '$location', 'broadcaster', 'satnetRPC',  'markers',
 
     /**
      * Function that provides the services for handling the markers related to
      * the elements of the network that must be shown on the map.
      * 
      * @param   {Object} $rootScope  Main Angular scope where the map is
+     * @param   {Object} Angular     $log service
      * @param   {Object} $location   Angular location service
      * @param   {Object} broadcaster SatNet service to broadcast events
      * @param   {Object} satnetRPC   SatNet service to access RPC methods
      * @param   {Object} markers     SatNet service to handle map markers
      * @returns {Object} Object that offers this service
      */
-    function ($rootScope, $location, broadcaster, satnetRPC, markers) {
+    function ($rootScope, $log, $location, broadcaster, satnetRPC, markers) {
 
         /**
          * Function that initializes the listeners that connect this service
@@ -44,9 +45,9 @@ angular.module('snNetworkModels', [
             $rootScope.$on(
                 broadcaster.KEEP_ALIVE_EVENT,
                 function (event, message) {
-                    console.log('ev = ' + event + ', msg = ' + message);
+                    $log.log('ev = ' + event + ', msg = ' + message);
                     satnetRPC.alive().then(function (data) {
-                        console.log('alive! data = ' + JSON.stringify(data));
+                        $log.log('alive! data = ' + JSON.stringify(data));
                     });
                 }
             );

@@ -266,8 +266,7 @@ angular.module('snBroadcasterServices', [
          */
         this.keepAliveReceived = function (data) {
             $rootScope.$broadcast('KEEP_ALIVE', {});
-            console.log('ALIVE! data = ' + JSON.stringify(data));
-            $log.log('alive');
+            $log.log('ALIVE! data = ' + JSON.stringify(data));
         };
 
         satnetPush.bind(
@@ -680,7 +679,7 @@ angular
          *                       connection.
          */
         this._logConnection = function (states) {
-            $log.warn(
+            $log.info(
                 '[push] State connection change, states = ' +
                 JSON.stringify(states)
             );
@@ -2192,20 +2191,21 @@ angular.module('snNetworkModels', [
     'snJRPCServices',
     'snMarkerModels'
 ]).service('serverModels', [
-    '$rootScope', '$location', 'broadcaster', 'satnetRPC',  'markers',
+    '$rootScope', '$log', '$location', 'broadcaster', 'satnetRPC',  'markers',
 
     /**
      * Function that provides the services for handling the markers related to
      * the elements of the network that must be shown on the map.
      * 
      * @param   {Object} $rootScope  Main Angular scope where the map is
+     * @param   {Object} Angular     $log service
      * @param   {Object} $location   Angular location service
      * @param   {Object} broadcaster SatNet service to broadcast events
      * @param   {Object} satnetRPC   SatNet service to access RPC methods
      * @param   {Object} markers     SatNet service to handle map markers
      * @returns {Object} Object that offers this service
      */
-    function ($rootScope, $location, broadcaster, satnetRPC, markers) {
+    function ($rootScope, $log, $location, broadcaster, satnetRPC, markers) {
 
         /**
          * Function that initializes the listeners that connect this service
@@ -2215,9 +2215,9 @@ angular.module('snNetworkModels', [
             $rootScope.$on(
                 broadcaster.KEEP_ALIVE_EVENT,
                 function (event, message) {
-                    console.log('ev = ' + event + ', msg = ' + message);
+                    $log.log('ev = ' + event + ', msg = ' + message);
                     satnetRPC.alive().then(function (data) {
-                        console.log('alive! data = ' + JSON.stringify(data));
+                        $log.log('alive! data = ' + JSON.stringify(data));
                     });
                 }
             );
@@ -2499,8 +2499,8 @@ angular.module('snSpacecraftModels', [
     'snMarkerModels'
 ])
 .service('scModels', [
-    '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
-    function ($rootScope, $q, broadcaster, satnetRPC, markers) {
+    '$rootScope', '$log', '$q', 'broadcaster', 'satnetRPC', 'markers',
+    function ($rootScope, $log, $q, broadcaster, satnetRPC, markers) {
 
         /**
          * Initializes all the configuration objects for the available
@@ -2574,19 +2574,19 @@ angular.module('snSpacecraftModels', [
         this.initListeners = function () {
             var self = this;
             $rootScope.$on(broadcaster.SC_ADDED_EVENT, function (event, id) {
-                console.log(
+                $log.log(
                     '@on-sc-added-event, event = ' + event + ', id = ' + id
                 );
                 self.addSC(id);
             });
             $rootScope.$on(broadcaster.SC_UPDATED_EVENT, function (event, id) {
-                console.log(
+                $log.log(
                     '@on-sc-updated-event, event = ' + event + ', id = ' + id
                 );
                 self.updateSC(id);
             });
             $rootScope.$on(broadcaster.SC_REMOVED_EVENT, function (event, id) {
-                console.log(
+                $log.log(
                     '@on-sc-removed-event, event = ' + event + ', id = ' + id
                 );
                 self.removeSC(id);

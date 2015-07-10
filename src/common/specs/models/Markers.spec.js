@@ -412,7 +412,7 @@ describe('Testing Markers Service', function () {
         markers.panTo(latlng);
         /* TODO Evaluate properly the call to this promises
         .then(function (result) {
-            console.log('AAA result = ' + JSON.stringify(result));
+            ???
         });
         */
 

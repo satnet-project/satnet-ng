@@ -96,10 +96,10 @@ describe('Testing Pusher Service', function () {
 
     it('should log the connection change status', function () {
 
-        spyOn($log, 'warn');
+        spyOn($log, 'info');
         satnetPush._logConnection(['state_a', 'state_b']);
 
-        expect($log.warn).toHaveBeenCalledWith(
+        expect($log.info).toHaveBeenCalledWith(
             '[push] State connection change, states = [\"state_a\",\"state_b\"]'
         );
 

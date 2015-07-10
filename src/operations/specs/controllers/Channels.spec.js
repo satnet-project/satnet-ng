@@ -29,7 +29,8 @@ describe('Testing Channel controllers', function () {
         },
         listTplUrl = 'operations/templates/channels/list.html',
         dialogTplUrl = 'operations/templates/channels/dialog.html',
-        satnetRPC, snDialog, broadcaster;
+        satnetRPC, snDialog, broadcaster,
+        CHANNELS_OPTIONS_MOCK;
 
     beforeEach(function () {
 
@@ -52,6 +53,8 @@ describe('Testing Channel controllers', function () {
             $q = $injector.get('$q');
 
             satnetRPC = $injector.get('satnetRPC');
+            CHANNELS_OPTIONS_MOCK = $injector.get('CHANNELS_OPTIONS_MOCK');
+
             snDialog = $injector.get('snDialog');
             broadcaster = $injector.get('broadcaster');
 
@@ -336,13 +339,7 @@ describe('Testing Channel controllers', function () {
             rpcPrefix: 'sc',
             listTplUrl: listTplUrl,
             configuration: $scope_sc.scCfg,
-            options: {
-                bands: [],
-                modulations: [],
-                polarizations: [],
-                bandwidths: [],
-                bitrates: []
-            }
+            options: CHANNELS_OPTIONS_MOCK
         });
 
         $controller('channelDialogCtrl', {
@@ -374,18 +371,11 @@ describe('Testing Channel controllers', function () {
             rpcPrefix: 'gs',
             listTplUrl: listTplUrl,
             configuration: $scope_gs.gsCfg,
-            options: {
-                bands: [],
-                modulations: [],
-                polarizations: [],
-                bandwidths: [],
-                bitrates: []
-            }
+            options: CHANNELS_OPTIONS_MOCK
         });
 
     });
 
-    /*
     it('should create the Dialog controller for editing channels', function () {
 
         // TODO Real configuration loading
@@ -393,9 +383,6 @@ describe('Testing Channel controllers', function () {
         var $scope_sc = $rootScope.$new(),
             $scope_gs = $rootScope.$new(),
             sc_id = 'sc-test', gs_id = 'gs-test';
-
-        __mock__satnetRPC.rCall =
-            jasmine.createSpy('rCall').and.callFake(__fn_channel_get_sc_cfg);
 
         $controller('channelDialogCtrl', {
             $scope: $scope_sc, $mdDialog: $mdDialog,
@@ -425,12 +412,10 @@ describe('Testing Channel controllers', function () {
             rpcPrefix: 'sc',
             listTplUrl: listTplUrl,
             configuration: $scope_sc.scCfg,
-            modulations: [],
-            bands: [],
-            polarizations: [],
-            bandwidths: []
+            options: CHANNELS_OPTIONS_MOCK
         });
 
+        /*
         $controller('channelDialogCtrl', {
             $scope: $scope_gs, $mdDialog: $mdDialog,
             satnetRPC: satnetRPC, snDialog: snDialog,
@@ -465,8 +450,8 @@ describe('Testing Channel controllers', function () {
             polarizations: [],
             bandwidths: []
         });
+        */
 
     });
-    */
 
 });

@@ -23,8 +23,8 @@ angular.module('snSpacecraftModels', [
     'snMarkerModels'
 ])
 .service('scModels', [
-    '$rootScope', '$q', 'broadcaster', 'satnetRPC', 'markers',
-    function ($rootScope, $q, broadcaster, satnetRPC, markers) {
+    '$rootScope', '$log', '$q', 'broadcaster', 'satnetRPC', 'markers',
+    function ($rootScope, $log, $q, broadcaster, satnetRPC, markers) {
 
         /**
          * Initializes all the configuration objects for the available
@@ -98,19 +98,19 @@ angular.module('snSpacecraftModels', [
         this.initListeners = function () {
             var self = this;
             $rootScope.$on(broadcaster.SC_ADDED_EVENT, function (event, id) {
-                console.log(
+                $log.log(
                     '@on-sc-added-event, event = ' + event + ', id = ' + id
                 );
                 self.addSC(id);
             });
             $rootScope.$on(broadcaster.SC_UPDATED_EVENT, function (event, id) {
-                console.log(
+                $log.log(
                     '@on-sc-updated-event, event = ' + event + ', id = ' + id
                 );
                 self.updateSC(id);
             });
             $rootScope.$on(broadcaster.SC_REMOVED_EVENT, function (event, id) {
-                console.log(
+                $log.log(
                     '@on-sc-removed-event, event = ' + event + ', id = ' + id
                 );
                 self.removeSC(id);

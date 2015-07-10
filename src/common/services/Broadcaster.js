@@ -266,8 +266,7 @@ angular.module('snBroadcasterServices', [
          */
         this.keepAliveReceived = function (data) {
             $rootScope.$broadcast('KEEP_ALIVE', {});
-            console.log('ALIVE! data = ' + JSON.stringify(data));
-            $log.log('alive');
+            $log.log('ALIVE! data = ' + JSON.stringify(data));
         };
 
         satnetPush.bind(

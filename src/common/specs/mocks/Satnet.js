@@ -20,13 +20,20 @@
 angular.module('snJRPCMock', [])
 .constant('CHANNEL_ID_MOCK', 'channel-test')
 .constant('CHANNEL_LIST_MOCK', ['channel_1', 'channel_2'])
+.constant('CHANNELS_OPTIONS_MOCK', {
+    bands: ['UHF', 'VHF'],
+    modulations: ['FM', 'AFSK'],
+    polarizations: ['LHCP'],
+    bitrates: [1200, 2400],
+    bandwidths: [25.00, 50.00]
+})
 .service('satnetRPC', [
     '$log', '$q',
-    'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK',
+    'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK', 'CHANNELS_OPTIONS_MOCK',
 
     function (
         $log, $q,
-        CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK
+        CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK
     ) {
 
         /**
@@ -38,39 +45,40 @@ angular.module('snJRPCMock', [])
          * @returns {*}
          */
         this.rCall = function (service, params) {
+            var result = null;
             $log.debug('@satnetRPC: using mocked service');
-
-            if  (
-                    (service === 'sc.channel.list') ||
-                    (service === 'gs.channel.list')
-                )
-            {
-                return $q.when().then(function() {
-                    return CHANNEL_LIST_MOCK;
-                });
+            
+            if ((service === 'sc.channel.list') ||
+                (service === 'gs.channel.list')) {
+                result = CHANNEL_LIST_MOCK;
             }
 
-            if  (
-                    (service === 'sc.channel.delete') ||
-                    (service === 'gs.channel.delete')
-                )
-            {
-                return $q.when().then(function() {
-                    return params[1];
-                });
+            if ((service === 'sc.channel.delete') ||
+                (service === 'gs.channel.delete')) {
+                result = params[1];
             }
 
-            if  (service === 'channels.options') {
-                return $q.when().then(function () {
-                    return {
-                        bands: [],
-                        modulations: [],
-                        polarizations: [],
-                        bitrates: [],
-                        bandwidths: []
-                    };
-                });
+            if (service === 'channels.options') {
+                result = CHANNELS_OPTIONS_MOCK;
             }
+
+            if (service === 'sc.channel.get') {
+                result = {
+                    frequency: 437.365, modulation: 'FM', polarization: 'LHCP',
+                    bitrate: 1200, bandwidth: 25.00
+                };
+            }
+            if (service === 'gs.channel.get') {
+                result = {
+                    band: 'UHF', modulations: ['FM', 'AFSK'],
+                    polarizations: ['LHCP'],
+                    bitrates: [1200, 2400], bandwidths: [25.00]
+                };
+            }
+
+            return $q.when().then(function() {
+                return result;
+            });
 
         };
 

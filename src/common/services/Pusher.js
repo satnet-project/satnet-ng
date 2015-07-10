@@ -85,7 +85,7 @@ angular
          *                       connection.
          */
         this._logConnection = function (states) {
-            $log.warn(
+            $log.info(
                 '[push] State connection change, states = ' +
                 JSON.stringify(states)
             );
