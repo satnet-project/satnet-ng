@@ -210,10 +210,12 @@ angular.module(
             rpcPrefix: RPC_GS_PREFIX,
             listTplUrl: 'operations/templates/channels/list.html',
             configuration: $scope.gsCfg,
-            modulations: [],
-            bands: [],
-            polarizations: [],
-            bandwidths: []
+            options: {
+                bands: [],
+                modulations: [],
+                polarizations: [],
+                bandwidths: []
+            }
         };
 
         /**
@@ -223,10 +225,10 @@ angular.module(
         $scope.add = function () {
             var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.add';
             satnetRPC.rCall(rpc_service, [
-            $scope.uiCtrl.segmentId,
-            $scope.configuration.identifier,
-            $scope.configuration
-        ]).then(
+                $scope.uiCtrl.segmentId,
+                $scope.configuration.identifier,
+                $scope.configuration
+            ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
@@ -247,10 +249,10 @@ angular.module(
         $scope.update = function () {
             var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.update';
             satnetRPC.rCall(rpc_service, [
-            $scope.uiCtrl.segmentId,
-            $scope.configuration.identifier,
-            $scope.configuration
-        ]).then(
+                $scope.uiCtrl.segmentId,
+                $scope.configuration.identifier,
+                $scope.configuration
+            ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
@@ -292,19 +294,51 @@ angular.module(
             if (isEditing === null) {
                 throw '@channelDialogCtrl: no editing flag provided';
             }
-            if (($scope.uiCtrl.isEditing === true) && (!channelId)) {
-                throw '@channelDialogCtrl: no channel identifier provided';
+            if ($scope.uiCtrl.isEditing === true) {
+                if (!channelId) {
+                    throw '@channelDialogCtrl: no channel identifier provided';
+                }
+                $scope.loadConfiguration();
             }
-            $scope.loadConfiguration();
+            $scope.loadOptions();
         };
 
         /**
          * Function that loads the configuration of the object to be edited.
          */
         $scope.loadConfiguration = function () {
-
+            var rpc_service = $scope.uiCtrl.rpcPrefix + 'channel.get';
+            satnetRPC.rCall(rpc_service, []).then(
+                function (results) {
+                    if ($scope.uiCtrl.isSpacecraft === true) {
+                        $scope.scCfg = angular.copy(results);
+                    } else {
+                        $scope.gsCfg = angular.copy(results);
+                    }
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception(rpc_service, '-', cause);
+                }
+            );
         };
 
+        /**
+         * Function that loads the options for creating the channels.
+         */
+        $scope.loadOptions =  function () {
+            var rpc_service = 'channels.options';
+            satnetRPC.rCall(rpc_service, []).then(
+                function (results) {
+                    $scope.uiCtrl.options = angular.copy(results);
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception(rpc_service, '-', cause);
+                }
+            );
+        };
+            
     }
 
 ]);

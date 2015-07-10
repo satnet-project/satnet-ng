@@ -106,6 +106,8 @@ angular
             this._network = jsonrpc.newService('network', _rpc);
 
             this._services = {
+                'channels.options': this._configuration
+                    .createMethod('channels.getOptions'),
                 // Configuration methods (Ground Stations)
                 'gs.list': this._configuration
                     .createMethod('gs.list'),
@@ -136,6 +138,10 @@ angular
                     .createMethod('sc.channel.list'),
                 'sc.channel.add': this._configuration
                     .createMethod('sc.channel.create'),
+                'sc.channel.get': this._configuration
+                    .createMethod('sc.channel.getConfiguration'),
+                'sc.channel.set': this._configuration
+                    .createMethod('sc.channel.setConfiguration'),
                 // User configuration
                 'user.getLocation': this._configuration
                     .createMethod('user.getLocation'),

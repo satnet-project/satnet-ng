@@ -35,16 +35,43 @@ describe('Testing Channel controllers', function () {
                 return test_channel_id;
             });
         },
+        __fn_channel_options = function () {
+            return $q.when().then(function () {
+                return {
+                    bands: [],
+                    modulations: [],
+                    polarizations: [],
+                    bitrates: [],
+                    bandwidths: []
+                };
+            });
+        },
+        __fn_channel_get_sc_cfg = function () {
+            return $q.when().then(function() {
+                return {
+                    identifier: test_channel_id,
+                    frequency: 0.0,
+                    modulation: '',
+                    polarization: '',
+                    bitrate: '',
+                    bandwidth: ''
+                };
+            });
+        },
         __fn_exception = function () {
             return $q.reject(function () {
                 return {data: {message: 'Simulated Exception'}};
             });
         },
-        satnetRPC, snDialog;
+        listTplUrl = 'operations/templates/channels/list.html',
+        dialogTplUrl = 'operations/templates/channels/dialog.html',
+        satnetRPC, snDialog, broadcaster;
 
     beforeEach(function () {
 
-        module('snChannelControllers', 'snControllers');
+        module(
+            'snChannelControllers', 'snControllers', 'snBroadcasterServices'
+        );
         module(function ($provide) {
             $provide.value('$cookies', __mock__cookies);
             $provide.value('satnetRPC', __mock__satnetRPC);
@@ -59,6 +86,7 @@ describe('Testing Channel controllers', function () {
 
             satnetRPC = $injector.get('satnetRPC');
             snDialog = $injector.get('snDialog');
+            broadcaster = $injector.get('broadcaster');
 
         });
 
@@ -82,9 +110,7 @@ describe('Testing Channel controllers', function () {
         $scope_sc.init();
         $rootScope.$digest();
 
-        expect($scope_sc.uiCtrl.channelDlgTplUrl).toEqual(
-            'operations/templates/channels/dialog.html'
-        );
+        expect($scope_sc.uiCtrl.channelDlgTplUrl).toEqual(dialogTplUrl);
         expect($scope_sc.uiCtrl.segmentId).toEqual('sc-test');
         expect($scope_sc.uiCtrl.isSpacecraft).toEqual(true);
         expect($scope_sc.uiCtrl.rpc_prefix).toEqual('sc');
@@ -129,7 +155,7 @@ describe('Testing Channel controllers', function () {
             sc_id = 'sc-test',
             gs_id = 'gs-test',
             x_param_sc = {
-                templateUrl: 'operations/templates/channels/dialog.html',
+                templateUrl: dialogTplUrl,
                 controller: 'channelDialogCtrl',
                 locals: {
                     segmentId: sc_id,
@@ -139,7 +165,7 @@ describe('Testing Channel controllers', function () {
                 }
             },
             x_param_gs = {
-                templateUrl: 'operations/templates/channels/dialog.html',
+                templateUrl: dialogTplUrl,
                 controller: 'channelDialogCtrl',
                 locals: {
                     segmentId: gs_id,
@@ -191,7 +217,7 @@ describe('Testing Channel controllers', function () {
             gs_id = 'gs-test',
             channel_id = 'channel-test',
             x_param_sc = {
-                templateUrl: 'operations/templates/channels/dialog.html',
+                templateUrl: dialogTplUrl,
                 controller: 'channelDialogCtrl',
                 locals: {
                     segmentId: sc_id,
@@ -201,7 +227,7 @@ describe('Testing Channel controllers', function () {
                 }
             },
             x_param_gs = {
-                templateUrl: 'operations/templates/channels/dialog.html',
+                templateUrl: dialogTplUrl,
                 controller: 'channelDialogCtrl',
                 locals: {
                     segmentId: gs_id,
@@ -279,6 +305,7 @@ describe('Testing Channel controllers', function () {
         expect(snDialog.success).toHaveBeenCalledWith(
             'sc.channel.delete', test_channel_id, test_channel_id, null
         );
+        snDialog.success.calls.reset();
 
         __mock__satnetRPC.rCall =
             jasmine.createSpy('rCall').and.callFake(__fn_exception);
@@ -286,7 +313,9 @@ describe('Testing Channel controllers', function () {
         $scope_sc.delete(test_channel_id);
         $rootScope.$digest();
 
-        expect(snDialog.exception).toHaveBeenCalled();
+        expect(snDialog.exception).toHaveBeenCalledWith(
+            'sc.channel.delete', test_channel_id, jasmine.any(Function)
+        );
         snDialog.exception.calls.reset();
 
         $controller("channelListCtrl", {
@@ -316,11 +345,185 @@ describe('Testing Channel controllers', function () {
         __mock__satnetRPC.rCall =
             jasmine.createSpy('rCall').and.callFake(__fn_exception);
 
-        $scope_sc.delete(test_channel_id);
+        $scope_gs.delete(test_channel_id);
         $rootScope.$digest();
 
-        expect(snDialog.exception).toHaveBeenCalled();
+        expect(snDialog.exception).toHaveBeenCalledWith(
+            'gs.channel.delete', test_channel_id, jasmine.any(Function)
+        );
 
     });
-    
+
+    it('should create the Dialog controller for adding channels', function () {
+
+        var $scope_sc = $rootScope.$new(),
+            $scope_gs = $rootScope.$new(),
+            sc_id = 'sc-test', gs_id = 'gs-test';
+
+        __mock__satnetRPC.rCall =
+            jasmine.createSpy('rCall').and.callFake(__fn_channel_options);
+
+        $controller('channelDialogCtrl', {
+            $scope: $scope_sc, $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC, snDialog: snDialog,
+            segmentId: sc_id, channelId: test_channel_id,
+            isSpacecraft: true, isEditing: false
+        });
+
+        $scope_sc.init();
+        $rootScope.$digest();
+
+        expect($scope_sc.scCfg).toEqual({
+            identifier: test_channel_id,
+            frequency: 0.0,
+            modulation: '',
+            polarization: '',
+            bitrate: '',
+            bandwidth: ''
+        });
+        expect($scope_sc.uiCtrl).toEqual({
+            add: {
+                disabled: true
+            },
+            segmentId: sc_id,
+            isSpacecraft: true,
+            editing: false,
+            rpcPrefix: 'sc',
+            listTplUrl: listTplUrl,
+            configuration: $scope_sc.scCfg,
+            options: {
+                bands: [],
+                modulations: [],
+                polarizations: [],
+                bandwidths: [],
+                bitrates: []
+            }
+        });
+
+        $controller('channelDialogCtrl', {
+            $scope: $scope_gs, $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC, snDialog: snDialog,
+            segmentId: gs_id, channelId: test_channel_id,
+            isSpacecraft: false, isEditing: false
+        });
+
+        $scope_gs.init();
+        $rootScope.$digest();
+
+        expect($scope_gs.gsCfg).toEqual({
+            identifier: test_channel_id,
+            band: '',
+            automated: false,
+            modulations: [],
+            polarizations: [],
+            bitrates: [],
+            bandwidths: []
+        });
+        expect($scope_gs.uiCtrl).toEqual({
+            add: {
+                disabled: true
+            },
+            segmentId: gs_id,
+            isSpacecraft: false,
+            editing: false,
+            rpcPrefix: 'gs',
+            listTplUrl: listTplUrl,
+            configuration: $scope_gs.gsCfg,
+            options: {
+                bands: [],
+                modulations: [],
+                polarizations: [],
+                bandwidths: [],
+                bitrates: []
+            }
+        });
+
+    });
+
+    it('should create the Dialog controller for editing channels', function () {
+
+        // TODO Real configuration loading
+
+        var $scope_sc = $rootScope.$new(),
+            $scope_gs = $rootScope.$new(),
+            sc_id = 'sc-test', gs_id = 'gs-test';
+
+        __mock__satnetRPC.rCall =
+            jasmine.createSpy('rCall').and.callFake(__fn_channel_get_sc_cfg);
+
+        $controller('channelDialogCtrl', {
+            $scope: $scope_sc, $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC, snDialog: snDialog,
+            segmentId: sc_id, channelId: test_channel_id,
+            isSpacecraft: true, isEditing: true
+        });
+
+        $scope_sc.init();
+        $rootScope.$digest();
+
+        /*
+        expect($scope_sc.scCfg).toEqual({
+            identifier: test_channel_id,
+            frequency: 0.0,
+            modulation: '',
+            polarization: '',
+            bitrate: '',
+            bandwidth: ''
+        });
+        expect($scope_sc.uiCtrl).toEqual({
+            add: {
+                disabled: true
+            },
+            segmentId: sc_id,
+            isSpacecraft: true,
+            editing: true,
+            rpcPrefix: 'sc',
+            listTplUrl: listTplUrl,
+            configuration: $scope_sc.scCfg,
+            modulations: [],
+            bands: [],
+            polarizations: [],
+            bandwidths: []
+        });
+        */
+
+        $controller('channelDialogCtrl', {
+            $scope: $scope_gs, $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC, snDialog: snDialog,
+            segmentId: gs_id, channelId: test_channel_id,
+            isSpacecraft: false, isEditing: true
+        });
+
+        $scope_gs.init();
+        $rootScope.$digest();
+
+        /*
+        expect($scope_gs.gsCfg).toEqual({
+            identifier: test_channel_id,
+            band: '',
+            automated: false,
+            modulations: [],
+            polarizations: [],
+            bitrates: [],
+            bandwidths: []
+        });
+        expect($scope_gs.uiCtrl).toEqual({
+            add: {
+                disabled: true
+            },
+            segmentId: gs_id,
+            isSpacecraft: false,
+            editing: true,
+            rpcPrefix: 'gs',
+            listTplUrl: listTplUrl,
+            configuration: $scope_gs.gsCfg,
+            modulations: [],
+            bands: [],
+            polarizations: [],
+            bandwidths: []
+        });
+        */
+
+    });
+
 });
