@@ -1,0 +1,76 @@
+<md-dialog ng-init="init()" aria-label="Channel Dialog">
+
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span ng-show="!uiCtrl.editing">Add new Channel</span>
+            <span ng-show="uiCtrl.editing">Edit Channel</span>
+        </h2>
+    </md-toolbar>
+
+    <md-content class="add-gs-dialog menu-list">
+
+        <form name="configuration">
+
+            <div layout="row">
+                <md-input-container style="width: 40%">
+                    <label>Identifier</label>
+                    <input name="identifier" ng-model="uiCtrl.configuration.channel_id" ng-disabled="uiCtrl.editing" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" required>
+                </md-input-container>
+                <md-input-container style="width: 30%">
+                    <md-select ng-model="uiCtrl.configuration.modulation" required>
+                        <md-select-label>{{ uiCtrl.configuration.modulation ? uiCtrl.configuration.modulation : 'Modulation' }}</md-select-label>
+                        <md-option ng-value="m" ng-repeat="m in uiCtrl.options.modulations">{{ m }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container style="width: 30%">
+                    <md-select ng-model="uiCtrl.configuration.polarization" required>
+                        <md-select-label>{{ uiCtrl.configuration.polarization ? uiCtrl.configuration.polarization : 'Polarization' }}</md-select-label>
+                        <md-option ng-value="p" ng-repeat="p in uiCtrl.options.polarizations">{{ p }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container style="width: 50%">
+                    <md-select ng-model="uiCtrl.configuration.bitrate" required>
+                        <md-select-label>{{ uiCtrl.configuration.bitrate ? uiCtrl.configuration.bitrate : 'Bitrate' }}</md-select-label>
+                        <md-option ng-value="m" ng-repeat="m in uiCtrl.options.bitrates">{{ m }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <md-select ng-model="uiCtrl.configuration.bandwidth" required>
+                        <md-select-label>{{ uiCtrl.configuration.bandwidth ? uiCtrl.configuration.bandwidth : 'Bandwidth' }}</md-select-label>
+                        <md-option ng-value="p" ng-repeat="p in uiCtrl.options.bandwidths">{{ p }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+        </form>
+
+        <div layout="row">
+
+            <md-button id="add" ng-click="add()" ng-show="!uiCtrl.editing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-plus"></i>
+                    <b>add</b>
+                </div>
+            </md-button>
+
+            <md-button id="edit" ng-click="update()" ng-show="uiCtrl.editing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Edit Ground Station" class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-floppy-o"></i>
+                    <b>save</b>
+                </div>
+            </md-button>
+
+            <md-button id="cancel" ng-click="cancel()" aria-label="Cancel" class="md-primary menu-button">
+                <div layout="row">
+                    <i class="fa fa-times"></i>
+                    <b>cancel</b>
+                </div>
+            </md-button>
+
+        </div>
+
+    </md-content>
+</md-dialog>
