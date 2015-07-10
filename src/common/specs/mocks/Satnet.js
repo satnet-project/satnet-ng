@@ -34,7 +34,7 @@ angular.module('snJRPCMock', [])
 })
 .constant('GS_CHANNEL_MOCK', {
     band: 'UHF',
-    modulations: ['FM'], polarizations: ['LHCP'],
+    modulations: ['FM'], polarizations: ['RHCP'],
     bitrates: [1200], bandwidths: [25.00, 37.50]
 })
 .service('satnetRPC', [
@@ -77,8 +77,14 @@ angular.module('snJRPCMock', [])
                 result = CHANNELS_OPTIONS_MOCK;
             }
 
+            if (service === 'sc.channel.add') {
+                result = true;
+            }
             if (service === 'sc.channel.get') {
                 result = SC_CHANNEL_MOCK;
+            }
+            if (service === 'gs.channel.add') {
+                result = true;
             }
             if (service === 'gs.channel.get') {
                 result = GS_CHANNEL_MOCK;

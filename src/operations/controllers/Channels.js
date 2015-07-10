@@ -14,39 +14,43 @@
    limitations under the License.
 */
 
-angular.module(
-        'snChannelControllers', [
-        'ngMaterial',
-        'snJRPCServices',
-        'snControllers'
-    ]
-)
-.constant('RPC_GS_PREFIX', 'gs')
-.constant('RPC_SC_PREFIX', 'sc')
+angular.module('snChannelControllers', [
+    'ngMaterial',
+    'snJRPCServices',
+    'snControllers'
+])
+.constant('CH_LIST_TPL', 'operations/templates/channels/list.html')
+.constant('CH_DLG_GS_TPL', 'operations/templates/channels/gs.dialog.html')
+.constant('CH_DLG_SC_TPL', 'operations/templates/channels/sc.dialog.html')
 .controller('channelListCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
     'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
+    'CH_DLG_GS_TPL', 'CH_DLG_SC_TPL',
     'segmentId', 'isSpacecraft',
 
     /**
      * Controller for the list of the channels for this given segment (either
      * a Ground Station or a Spacecraft).
      *
-     * @param {Object}  $scope          $scope for the Angular controller
-     * @param {Object}  $log            Angular JS $log service
-     * @param {Object}  $mdDialog       Angular Material $mdDialog service
-     * @param {Object}  satnetRPC       Satnet RPC service
-     * @param {Object}  snDialog        Satnet Dialog service
-     * @param {String}  RPC_GS_PREFIX   Prefix for the Ground Station services
-     * @param {String}  RPC_SC_PREFIX   Prefix for the Spacecraft services
-     * @param {String}  segmentId       Identifier of the segment
-     * @param {Boolean} isSpacecraft    Flag that defines the type of segment
+     * @param {Object}  $scope        $scope for the Angular controller
+     * @param {Object}  $log          Angular JS $log service
+     * @param {Object}  $mdDialog     Angular Material $mdDialog service
+     * @param {Object}  satnetRPC     Satnet RPC service
+     * @param {Object}  snDialog      Satnet Dialog service
+     * @param {String}  RPC_GS_PREFIX Prefix for the Ground Station services
+     * @param {String}  RPC_SC_PREFIX Prefix for the Spacecraft services
+     * @param {String}  CH_LIST_TPL   URL to the Channels List
+     * @param {String}  CH_DLG_GS_TPL URL to the GS Dialog
+     * @param {String}  CH_DLG_SC_TPL URL to the SC Dialog
+     * @param {String}  segmentId     Identifier of the segment
+     * @param {Boolean} isSpacecraft  Flag that defines the type of segment
      */
     function (
             $scope, $log, $mdDialog,
             satnetRPC, snDialog,
             RPC_GS_PREFIX, RPC_SC_PREFIX,
+            CH_DLG_GS_TPL, CH_DLG_SC_TPL,
             segmentId, isSpacecraft
         ) {
 
@@ -55,8 +59,8 @@ angular.module(
             $scope.uiCtrl = {
                 segmentId: segmentId,
                 isSpacecraft: isSpacecraft,
-                rpc_prefix: RPC_GS_PREFIX,
-                channelDlgTplUrl: 'operations/templates/channels/dialog.html'
+                rpcPrefix: RPC_GS_PREFIX,
+                channelDlgTplUrl: CH_DLG_GS_TPL
             };
 
             /**
@@ -102,7 +106,7 @@ angular.module(
              * @param {String} channelId Identifier of the channel
              */
             $scope.delete = function (channelId) {
-                var rpc_service = $scope.uiCtrl.rpc_prefix + '.channel.delete';
+                var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.delete';
                 satnetRPC.rCall(
                     rpc_service, [$scope.uiCtrl.segmentId, channelId]
                 ).then(
@@ -122,7 +126,7 @@ angular.module(
              * Function that refreshes the list of registered ground stations.
              */
             $scope.refresh = function () {
-                var rpc_service = $scope.uiCtrl.rpc_prefix + '.channel.list';
+                var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.list';
                 satnetRPC.rCall(rpc_service, [$scope.uiCtrl.segmentId]).then(
                     function (results) {
                         if (results !== null) {
@@ -137,14 +141,15 @@ angular.module(
             };
 
             /**
-             * Function that initializes the list of ground stations that are to be
-             * displayed. This initialization function checks whether the Dialog is
-             * suppose to display the channel list for a Spacecraft or a Ground
-             * Station in order to call the proper JRPC method.
+             * Function that initializes the list of ground stations that are
+             * to be displayed. This initialization function checks whether the
+             * Dialog is suppose to display the channel list for a Spacecraft
+             * or a Ground Station in order to call the proper JRPC method.
              */
             $scope.init = function () {
                 if ($scope.uiCtrl.isSpacecraft === true) {
-                    $scope.uiCtrl.rpc_prefix = RPC_SC_PREFIX;
+                    $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
+                    $scope.uiCtrl.channelDlgTplUrl = CH_DLG_SC_TPL;
                 }
                 $scope.refresh();
             };
@@ -155,6 +160,7 @@ angular.module(
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC', 'snDialog',
     'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
+    'CH_LIST_TPL',
     'segmentId', 'channelId', 'isSpacecraft', 'isEditing',
 
     /**
@@ -169,7 +175,8 @@ angular.module(
      * @param {Object}  satnetRPC     SatNet RPC service
      * @param {Object}  snDialog      SatNet Dialog service
      * @param {String}  RPC_GS_PREFIX Prefix for the GS RPC services
-     * @param {String}  RPC_SC_PREFIX Prefix for the SC RPC services
+     * @param {String}  RPC_SC_PREFIX Prefix for the Spacecraft services
+     * @param {String}  CH_LIST_TPL   URL to the Channels List
      * @param {String}  segmentId     Identifier of the segment
      * @param {String}  channelId     Identifier of the channel
      * @param {Boolean} isSpacecraft  Flag that indicates the type of segment
@@ -179,6 +186,7 @@ angular.module(
         $log, $scope, $mdDialog, $mdToast,
         broadcaster, satnetRPC, snDialog,
         RPC_GS_PREFIX, RPC_SC_PREFIX,
+        CH_LIST_TPL,
         segmentId, channelId, isSpacecraft, isEditing
     ) {
 
@@ -208,7 +216,7 @@ angular.module(
             isSpacecraft: isSpacecraft,
             isEditing: isEditing,
             rpcPrefix: RPC_GS_PREFIX,
-            listTplUrl: 'operations/templates/channels/list.html',
+            listTplUrl: CH_LIST_TPL,
             configuration: $scope.gsCfg,
             options: {
                 bands: [],
@@ -223,11 +231,11 @@ angular.module(
          * selected segment.
          */
         $scope.add = function () {
-            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.add';
-            satnetRPC.rCall(rpc_service, [
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
+            satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.configuration.identifier,
-                $scope.configuration
+                $scope.uiCtrl.configuration.identifier,
+                $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
@@ -237,7 +245,7 @@ angular.module(
                 }
             ).catch(
                 function (cause) {
-                    snDialog.exception(rpc_service, '-', cause);
+                    snDialog.exception(rpcService, '-', cause);
                 }
             );
         };
@@ -250,8 +258,8 @@ angular.module(
             var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.update';
             satnetRPC.rCall(rpc_service, [
                 $scope.uiCtrl.segmentId,
-                $scope.configuration.identifier,
-                $scope.configuration
+                $scope.uiCtrl.configuration.identifier,
+                $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
@@ -273,7 +281,7 @@ angular.module(
         $scope.cancel = function () {
             $mdDialog.hide();
             $mdDialog.show({
-                templateUrl: $scope.listTplUrl
+                templateUrl: $scope.uiCtrl.listTplUrl
             });
         };
 
@@ -307,8 +315,11 @@ angular.module(
          * Function that loads the configuration of the object to be edited.
          */
         $scope.loadConfiguration = function () {
-            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.get';
-            satnetRPC.rCall(rpc_service, []).then(
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.get';
+            satnetRPC.rCall(rpcService, [
+                $scope.uiCtrl.segmentId,
+                $scope.uiCtrl.configuration.identifier
+            ]).then(
                 function (results) {
                     if ($scope.uiCtrl.isSpacecraft === true) {
                         $scope.scCfg = angular.copy(results);
@@ -320,7 +331,7 @@ angular.module(
                 }
             ).catch(
                 function (cause) {
-                    snDialog.exception(rpc_service, '-', cause);
+                    snDialog.exception(rpcService, '-', cause);
                 }
             );
         };
