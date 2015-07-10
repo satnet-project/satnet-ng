@@ -2745,7 +2745,7 @@ angular.module('snSplashDirective', []).directive('mAppLoading', ['$animate',
 */
 
 angular.module(
-    'snChannelControllers', [
+        'snChannelControllers', [
         'ngMaterial',
         'snJRPCServices',
         'snControllers'
@@ -2762,7 +2762,7 @@ angular.module(
     /**
      * Controller for the list of the channels for this given segment (either
      * a Ground Station or a Spacecraft).
-     * 
+     *
      * @param {Object}  $scope          $scope for the Angular controller
      * @param {Object}  $log            Angular JS $log service
      * @param {Object}  $mdDialog       Angular Material $mdDialog service
@@ -2773,111 +2773,111 @@ angular.module(
      * @param {String}  segmentId       Identifier of the segment
      * @param {Boolean} isSpacecraft    Flag that defines the type of segment
      */
-    function(
-        $scope, $log, $mdDialog,
-        satnetRPC, snDialog,
-        RPC_GS_PREFIX, RPC_SC_PREFIX,
-        segmentId, isSpacecraft
-    ) {
+    function (
+            $scope, $log, $mdDialog,
+            satnetRPC, snDialog,
+            RPC_GS_PREFIX, RPC_SC_PREFIX,
+            segmentId, isSpacecraft
+        ) {
 
-        $scope.channelList = [];
+            $scope.channelList = [];
 
-        $scope.uiCtrl = {
-            segmentId: segmentId,
-            isSpacecraft: isSpacecraft,
-            rpc_prefix: RPC_GS_PREFIX,
-            channelDlgTplUrl: 'operations/templates/channels/dialog.html'
-        };
+            $scope.uiCtrl = {
+                segmentId: segmentId,
+                isSpacecraft: isSpacecraft,
+                rpc_prefix: RPC_GS_PREFIX,
+                channelDlgTplUrl: 'operations/templates/channels/dialog.html'
+            };
 
-        /**
-         * Function that triggers the opening of a window to add a new ground
-         * station into the system.
-         */
-        $scope.showAddDialog = function () {
-            $mdDialog.show({
-                templateUrl: $scope.uiCtrl.channelDlgTplUrl,
-                controller: 'channelDialogCtrl',
-                locals: {
-                    segmentId: $scope.uiCtrl.segmentId,
-                    isSpacecraft: $scope.uiCtrl.isSpacecraft,
-                    channelId: '',
-                    editing: false
-                }
-            });
-        };
-
-        /**
-         * Function that handles the display of the Dialog that permits the
-         * edition of the channels.
-         * 
-         * @param {String} channelId Identifier of the channel
-         */
-        $scope.showEditDialog = function (channelId) {
-            $mdDialog.show({
-                templateUrl: $scope.uiCtrl.channelDlgTplUrl,
-                controller: 'channelDialogCtrl',
-                locals: {
-                    segmentId: $scope.uiCtrl.segmentId,
-                    isSpacecraft: $scope.uiCtrl.isSpacecraft,
-                    channelId: channelId,
-                    editing: true
-                }
-            });
-        };
-
-        /**
-         * Function that handles the removal of the specific channel for the
-         * given segment.
-         * 
-         * @param {String} channelId Identifier of the channel
-         */
-        $scope.delete = function (channelId) {
-            var rpc_service = $scope.uiCtrl.rpc_prefix + '.channel.delete';
-            satnetRPC.rCall(
-                rpc_service, [$scope.uiCtrl.segmentId, channelId]
-            ).then(
-                function (results) {
-                    // TODO broadcaster.channelRemoved(gs_id, channelId);
-                    snDialog.success(rpc_service, channelId, results, null);
-                    $scope.refresh();
-                }
-            ).catch(
-                function (cause) {
-                    snDialog.exception(rpc_service, channelId, cause);
-                }
-            );
-        };
-
-        /**
-         * Function that refreshes the list of registered ground stations.
-         */
-        $scope.refresh = function () {
-            var rpc_service = $scope.uiCtrl.rpc_prefix + '.channel.list';
-            satnetRPC.rCall(rpc_service, [$scope.uiCtrl.segmentId]).then(
-                function (results) {
-                    if (results !== null) {
-                        $scope.channelList = results.slice(0);
+            /**
+             * Function that triggers the opening of a window to add a new
+             * channel associated with a given segment.
+             */
+            $scope.showAddDialog = function () {
+                $mdDialog.show({
+                    templateUrl: $scope.uiCtrl.channelDlgTplUrl,
+                    controller: 'channelDialogCtrl',
+                    locals: {
+                        segmentId: $scope.uiCtrl.segmentId,
+                        channelId: '',
+                        isSpacecraft: $scope.uiCtrl.isSpacecraft,
+                        isEditing: false
                     }
-                }
-            ).catch(
-                function (cause) {
-                    snDialog.exception(rpc_service, '-', cause);
-                }
-            );
-        };
+                });
+            };
 
-        /**
-         * Function that initializes the list of ground stations that are to be
-         * displayed. This initialization function checks whether the Dialog is
-         * suppose to display the channel list for a Spacecraft or a Ground
-         * Station in order to call the proper JRPC method.
-         */
-        $scope.init = function () {
-            if ($scope.isSpacecraft) {
-                $scope.uiCtrl.rpc_prefix = RPC_SC_PREFIX;
-            }
-            $scope.refresh();
-        };
+            /**
+             * Function that handles the display of the Dialog that permits the
+             * edition of the channels.
+             *
+             * @param {String} channelId Identifier of the channel
+             */
+            $scope.showEditDialog = function (channelId) {
+                $mdDialog.show({
+                    templateUrl: $scope.uiCtrl.channelDlgTplUrl,
+                    controller: 'channelDialogCtrl',
+                    locals: {
+                        segmentId: $scope.uiCtrl.segmentId,
+                        channelId: channelId,
+                        isSpacecraft: $scope.uiCtrl.isSpacecraft,
+                        isEditing: true
+                    }
+                });
+            };
+
+            /**
+             * Function that handles the removal of the specific channel for the
+             * given segment.
+             *
+             * @param {String} channelId Identifier of the channel
+             */
+            $scope.delete = function (channelId) {
+                var rpc_service = $scope.uiCtrl.rpc_prefix + '.channel.delete';
+                satnetRPC.rCall(
+                    rpc_service, [$scope.uiCtrl.segmentId, channelId]
+                ).then(
+                    function (results) {
+                        // TODO broadcaster.channelRemoved(gs_id, channelId);
+                        snDialog.success(rpc_service, channelId, results, null);
+                        $scope.refresh();
+                    }
+                ).catch(
+                    function (cause) {
+                        snDialog.exception(rpc_service, channelId, cause);
+                    }
+                );
+            };
+
+            /**
+             * Function that refreshes the list of registered ground stations.
+             */
+            $scope.refresh = function () {
+                var rpc_service = $scope.uiCtrl.rpc_prefix + '.channel.list';
+                satnetRPC.rCall(rpc_service, [$scope.uiCtrl.segmentId]).then(
+                    function (results) {
+                        if (results !== null) {
+                            $scope.channelList = results.slice(0);
+                        }
+                    }
+                ).catch(
+                    function (cause) {
+                        snDialog.exception(rpc_service, '-', cause);
+                    }
+                );
+            };
+
+            /**
+             * Function that initializes the list of ground stations that are to be
+             * displayed. This initialization function checks whether the Dialog is
+             * suppose to display the channel list for a Spacecraft or a Ground
+             * Station in order to call the proper JRPC method.
+             */
+            $scope.init = function () {
+                if ($scope.uiCtrl.isSpacecraft === true) {
+                    $scope.uiCtrl.rpc_prefix = RPC_SC_PREFIX;
+                }
+                $scope.refresh();
+            };
 
     }
 
@@ -2890,7 +2890,7 @@ angular.module(
     /**
      * Controller for the dialog that allows users to create and edit the
      * configuration for a given channel.
-     * 
+     *
      * @param {Object}  $log          Angular JS $log service
      * @param {Object}  $scope        Angular JS $scope service
      * @param {Object}  $mdDialog     Angular Material $mdDialog service
@@ -2953,10 +2953,10 @@ angular.module(
         $scope.add = function () {
             var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.add';
             satnetRPC.rCall(rpc_service, [
-                $scope.uiCtrl.segmentId,
-                $scope.configuration.identifier,
-                $scope.configuration
-            ]).then(
+            $scope.uiCtrl.segmentId,
+            $scope.configuration.identifier,
+            $scope.configuration
+        ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
@@ -2977,10 +2977,10 @@ angular.module(
         $scope.update = function () {
             var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.update';
             satnetRPC.rCall(rpc_service, [
-                $scope.uiCtrl.segmentId,
-                $scope.configuration.identifier,
-                $scope.configuration
-            ]).then(
+            $scope.uiCtrl.segmentId,
+            $scope.configuration.identifier,
+            $scope.configuration
+        ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
@@ -3012,30 +3012,26 @@ angular.module(
          * the configuration of that given channel.
          */
         $scope.init = function () {
-
             if (!segmentId) {
                 throw '@channelDialogCtrl: no segment identifier provided';
             }
-            if (isSpacecraft) {
+            if ($scope.uiCtrl.isSpacecraft === true) {
                 $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
                 $scope.uiCtrl.configuration = $scope.scCfg;
             }
-            if (!isEditing) {
+            if (isEditing === null) {
                 throw '@channelDialogCtrl: no editing flag provided';
-            } else {
-                if (!channelId) {
-                    throw '@channelDialogCtrl: no channel identifier provided';
-                }
-                $scope.loadConfiguration();
             }
-
+            if (($scope.uiCtrl.isEditing === true) && (!channelId)) {
+                throw '@channelDialogCtrl: no channel identifier provided';
+            }
+            $scope.loadConfiguration();
         };
 
         /**
          * Function that loads the configuration of the object to be edited.
          */
         $scope.loadConfiguration = function () {
-
 
         };
 
