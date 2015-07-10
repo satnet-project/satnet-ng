@@ -30,7 +30,7 @@ describe('Testing Channel controllers', function () {
         listTplUrl = 'operations/templates/channels/list.html',
         dialogTplUrl = 'operations/templates/channels/dialog.html',
         satnetRPC, snDialog, broadcaster,
-        CHANNELS_OPTIONS_MOCK;
+        CHANNELS_OPTIONS_MOCK, SC_CHANNEL_MOCK, GS_CHANNEL_MOCK;
 
     beforeEach(function () {
 
@@ -54,6 +54,8 @@ describe('Testing Channel controllers', function () {
 
             satnetRPC = $injector.get('satnetRPC');
             CHANNELS_OPTIONS_MOCK = $injector.get('CHANNELS_OPTIONS_MOCK');
+            SC_CHANNEL_MOCK = $injector.get('SC_CHANNEL_MOCK');
+            GS_CHANNEL_MOCK = $injector.get('GS_CHANNEL_MOCK');
 
             snDialog = $injector.get('snDialog');
             broadcaster = $injector.get('broadcaster');
@@ -335,7 +337,7 @@ describe('Testing Channel controllers', function () {
             },
             segmentId: sc_id,
             isSpacecraft: true,
-            editing: false,
+            isEditing: false,
             rpcPrefix: 'sc',
             listTplUrl: listTplUrl,
             configuration: $scope_sc.scCfg,
@@ -367,7 +369,7 @@ describe('Testing Channel controllers', function () {
             },
             segmentId: gs_id,
             isSpacecraft: false,
-            editing: false,
+            isEditing: false,
             rpcPrefix: 'gs',
             listTplUrl: listTplUrl,
             configuration: $scope_gs.gsCfg,
@@ -377,8 +379,6 @@ describe('Testing Channel controllers', function () {
     });
 
     it('should create the Dialog controller for editing channels', function () {
-
-        // TODO Real configuration loading
 
         var $scope_sc = $rootScope.$new(),
             $scope_gs = $rootScope.$new(),
@@ -394,28 +394,20 @@ describe('Testing Channel controllers', function () {
         $scope_sc.init();
         $rootScope.$digest();
 
-        expect($scope_sc.scCfg).toEqual({
-            identifier: test_channel_id,
-            frequency: 0.0,
-            modulation: '',
-            polarization: '',
-            bitrate: '',
-            bandwidth: ''
-        });
+        expect($scope_sc.scCfg).toEqual(SC_CHANNEL_MOCK);
         expect($scope_sc.uiCtrl).toEqual({
             add: {
                 disabled: true
             },
             segmentId: sc_id,
             isSpacecraft: true,
-            editing: true,
+            isEditing: true,
             rpcPrefix: 'sc',
             listTplUrl: listTplUrl,
             configuration: $scope_sc.scCfg,
             options: CHANNELS_OPTIONS_MOCK
         });
 
-        /*
         $controller('channelDialogCtrl', {
             $scope: $scope_gs, $mdDialog: $mdDialog,
             satnetRPC: satnetRPC, snDialog: snDialog,
@@ -426,31 +418,19 @@ describe('Testing Channel controllers', function () {
         $scope_gs.init();
         $rootScope.$digest();
 
-        expect($scope_gs.gsCfg).toEqual({
-            identifier: test_channel_id,
-            band: '',
-            automated: false,
-            modulations: [],
-            polarizations: [],
-            bitrates: [],
-            bandwidths: []
-        });
+        expect($scope_gs.gsCfg).toEqual(GS_CHANNEL_MOCK);
         expect($scope_gs.uiCtrl).toEqual({
             add: {
                 disabled: true
             },
             segmentId: gs_id,
             isSpacecraft: false,
-            editing: true,
+            isEditing: true,
             rpcPrefix: 'gs',
             listTplUrl: listTplUrl,
             configuration: $scope_gs.gsCfg,
-            modulations: [],
-            bands: [],
-            polarizations: [],
-            bandwidths: []
+            options: CHANNELS_OPTIONS_MOCK
         });
-        */
 
     });
 

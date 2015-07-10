@@ -27,13 +27,25 @@ angular.module('snJRPCMock', [])
     bitrates: [1200, 2400],
     bandwidths: [25.00, 50.00]
 })
+.constant('SC_CHANNEL_MOCK', {
+    frequency: 437.365,
+    modulation: 'FM', polarization: 'LHCP',
+    bitrate: 1200, bandwidth: 25.00
+})
+.constant('GS_CHANNEL_MOCK', {
+    band: 'UHF',
+    modulations: ['FM'], polarizations: ['LHCP'],
+    bitrates: [1200], bandwidths: [25.00, 37.50]
+})
 .service('satnetRPC', [
     '$log', '$q',
     'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK', 'CHANNELS_OPTIONS_MOCK',
+    'SC_CHANNEL_MOCK', 'GS_CHANNEL_MOCK',
 
     function (
         $log, $q,
-        CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK
+        CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK,
+        SC_CHANNEL_MOCK, GS_CHANNEL_MOCK
     ) {
 
         /**
@@ -46,8 +58,11 @@ angular.module('snJRPCMock', [])
          */
         this.rCall = function (service, params) {
             var result = null;
-            $log.debug('@satnetRPC: using mocked service');
-            
+            $log.debug(
+                '@satnetRPC [MOCK]: ' + service +
+                ', params = ' + JSON.stringify(params, null, '  ')
+            );
+
             if ((service === 'sc.channel.list') ||
                 (service === 'gs.channel.list')) {
                 result = CHANNEL_LIST_MOCK;
@@ -63,19 +78,16 @@ angular.module('snJRPCMock', [])
             }
 
             if (service === 'sc.channel.get') {
-                result = {
-                    frequency: 437.365, modulation: 'FM', polarization: 'LHCP',
-                    bitrate: 1200, bandwidth: 25.00
-                };
+                result = SC_CHANNEL_MOCK;
             }
             if (service === 'gs.channel.get') {
-                result = {
-                    band: 'UHF', modulations: ['FM', 'AFSK'],
-                    polarizations: ['LHCP'],
-                    bitrates: [1200, 2400], bandwidths: [25.00]
-                };
+                result = GS_CHANNEL_MOCK;
             }
 
+            if (result === null) {
+                throw '@satnetRPC [MOCK]: Service <' + service + '> not found';
+            }
+            
             return $q.when().then(function() {
                 return result;
             });

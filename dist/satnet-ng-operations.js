@@ -2942,7 +2942,7 @@ angular.module(
             },
             segmentId: segmentId,
             isSpacecraft: isSpacecraft,
-            editing: isEditing,
+            isEditing: isEditing,
             rpcPrefix: RPC_GS_PREFIX,
             listTplUrl: 'operations/templates/channels/list.html',
             configuration: $scope.gsCfg,
@@ -3043,13 +3043,15 @@ angular.module(
          * Function that loads the configuration of the object to be edited.
          */
         $scope.loadConfiguration = function () {
-            var rpc_service = $scope.uiCtrl.rpcPrefix + 'channel.get';
+            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.get';
             satnetRPC.rCall(rpc_service, []).then(
                 function (results) {
                     if ($scope.uiCtrl.isSpacecraft === true) {
                         $scope.scCfg = angular.copy(results);
+                        $scope.uiCtrl.configuration = $scope.scCfg;
                     } else {
                         $scope.gsCfg = angular.copy(results);
+                        $scope.uiCtrl.configuration = $scope.gsCfg;
                     }
                 }
             ).catch(
