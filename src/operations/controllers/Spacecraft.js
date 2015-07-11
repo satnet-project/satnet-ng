@@ -131,6 +131,9 @@ angular.module(
             $scope.refresh();
         };
 
+        // INITIALIZATION: avoids using ng-init within the template
+        $scope.init();
+
     }
 
 ]).controller('scDialogCtrl', [
@@ -209,7 +212,10 @@ angular.module(
                     var id = response.spacecraft_id;
                     broadcaster.scAdded(id);
                     snDialog.success(
-                        'sc.add', id, response, $scope.listTemplateUrl
+                        'sc.add', id, response, {
+                            templateUrl: $scope.listTemplateUrl,
+                            controller: 'scListCtrl'
+                        }
                     );
                 },
                 function (cause) {

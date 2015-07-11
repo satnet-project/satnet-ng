@@ -68,6 +68,7 @@ angular.module('snChannelControllers', [
              * channel associated with a given segment.
              */
             $scope.showAddDialog = function () {
+                $mdDialog.hide();
                 $mdDialog.show({
                     templateUrl: $scope.uiCtrl.channelDlgTplUrl,
                     controller: 'channelDialogCtrl',
@@ -87,6 +88,7 @@ angular.module('snChannelControllers', [
              * @param {String} channelId Identifier of the channel
              */
             $scope.showEditDialog = function (channelId) {
+                $mdDialog.hide();
                 $mdDialog.show({
                     templateUrl: $scope.uiCtrl.channelDlgTplUrl,
                     controller: 'channelDialogCtrl',
@@ -154,6 +156,9 @@ angular.module('snChannelControllers', [
                 $scope.refresh();
             };
 
+            // INITIALIZATION: avoids using ng-init within the template
+            $scope.init();
+
     }
 
 ]).controller('channelDialogCtrl', [
@@ -191,7 +196,7 @@ angular.module('snChannelControllers', [
     ) {
 
         $scope.gsCfg = {
-            identifier: channelId,
+            channel_id: channelId,
             band: '',
             automated: false,
             modulations: [],
@@ -200,7 +205,7 @@ angular.module('snChannelControllers', [
             bandwidths: []
         };
         $scope.scCfg = {
-            identifier: channelId,
+            channel_id: channelId,
             frequency: 0.0,
             modulation: '',
             polarization: '',
@@ -216,7 +221,14 @@ angular.module('snChannelControllers', [
             isSpacecraft: isSpacecraft,
             isEditing: isEditing,
             rpcPrefix: RPC_GS_PREFIX,
-            listTplUrl: CH_LIST_TPL,
+            listTplOptions: {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: segmentId,
+                    isSpacecraft: isSpacecraft
+                }
+            },
             configuration: $scope.gsCfg,
             options: {
                 bands: [],
@@ -234,13 +246,14 @@ angular.module('snChannelControllers', [
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.identifier,
+                $scope.uiCtrl.configuration.channel_id,
                 $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
-                        $scope.uiCtrl.segmentId, results, $scope.listTplUrl
+                        rpcService, $scope.uiCtrl.segmentId,
+                        results, $scope.uiCtrl.listTplOptions
                     );
                 }
             ).catch(
@@ -255,21 +268,22 @@ angular.module('snChannelControllers', [
          * of the selected segment.
          */
         $scope.update = function () {
-            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.update';
-            satnetRPC.rCall(rpc_service, [
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.set';
+            satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.identifier,
+                $scope.uiCtrl.configuration.channel_id,
                 $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
-                        $scope.uiCtrl.segmentId, results, $scope.listTplUrl
+                        rpcService, $scope.uiCtrl.segmentId,
+                        results, $scope.uiCtrl.listTplOptions
                     );
                 }
             ).catch(
                 function (cause) {
-                    snDialog.exception(rpc_service, '-', cause);
+                    snDialog.exception(rpcService, '-', cause);
                 }
             );
         };
@@ -280,9 +294,7 @@ angular.module('snChannelControllers', [
          */
         $scope.cancel = function () {
             $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: $scope.uiCtrl.listTplUrl
-            });
+            $mdDialog.show($scope.uiCtrl.listTplOptions);
         };
 
         /**
@@ -318,10 +330,11 @@ angular.module('snChannelControllers', [
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.get';
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.identifier
+                $scope.uiCtrl.configuration.channel_id
             ]).then(
                 function (results) {
                     if ($scope.uiCtrl.isSpacecraft === true) {
+                        results.frequency = parseFloat(results.frequency);
                         $scope.scCfg = angular.copy(results);
                         $scope.uiCtrl.configuration = $scope.scCfg;
                     } else {

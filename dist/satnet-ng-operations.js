@@ -548,10 +548,11 @@ angular
          * @param {String} operation  Descriptive name of the operation
          * @param {String} identifier Identifier of the object
          * @param {Object} response    Response from the server
-         * @param {String} templateUrl URL with the template to load after
-         *                             closing the dialog.
+         * @param {Object} templateOptions Options for the $mdDialog template
          */
-        this.success = function (operation, identifier, response, templateUrl) {
+        this.success = function (
+            operation, identifier, response, templateOptions
+        ) {
 
             var message = 'Succesfull operation <' + operation +
                 '> over id = <' + identifier + '>';
@@ -561,11 +562,9 @@ angular
             );
             $mdToast.show($mdToast.simple().content(message));
 
-            if (templateUrl) {
+            if (templateOptions) {
                 $mdDialog.hide();
-                $mdDialog.show({
-                    templateUrl: templateUrl
-                });
+                $mdDialog.show(templateOptions);
             }
 
         };
@@ -862,6 +861,12 @@ angular.module('snJRPCServices', [
                 .createMethod('gs.channel.list'),
             'gs.channel.add': this._configuration
                 .createMethod('gs.channel.create'),
+            'gs.channel.delete': this._configuration
+                .createMethod('gs.channel.delete'),
+            'gs.channel.get': this._configuration
+                .createMethod('gs.channel.getConfiguration'),
+            'gs.channel.set': this._configuration
+                .createMethod('gs.channel.setConfiguration'),
             // Configuration methods (Spacecraft)
             'sc.list': this._configuration
                 .createMethod('sc.list'),
@@ -877,6 +882,8 @@ angular.module('snJRPCServices', [
                 .createMethod('sc.channel.list'),
             'sc.channel.add': this._configuration
                 .createMethod('sc.channel.create'),
+            'sc.channel.delete': this._configuration
+                .createMethod('sc.channel.delete'),
             'sc.channel.get': this._configuration
                 .createMethod('sc.channel.getConfiguration'),
             'sc.channel.set': this._configuration
@@ -2805,6 +2812,7 @@ angular.module('snChannelControllers', [
              * channel associated with a given segment.
              */
             $scope.showAddDialog = function () {
+                $mdDialog.hide();
                 $mdDialog.show({
                     templateUrl: $scope.uiCtrl.channelDlgTplUrl,
                     controller: 'channelDialogCtrl',
@@ -2824,6 +2832,7 @@ angular.module('snChannelControllers', [
              * @param {String} channelId Identifier of the channel
              */
             $scope.showEditDialog = function (channelId) {
+                $mdDialog.hide();
                 $mdDialog.show({
                     templateUrl: $scope.uiCtrl.channelDlgTplUrl,
                     controller: 'channelDialogCtrl',
@@ -2891,6 +2900,9 @@ angular.module('snChannelControllers', [
                 $scope.refresh();
             };
 
+            // INITIALIZATION: avoids using ng-init within the template
+            $scope.init();
+
     }
 
 ]).controller('channelDialogCtrl', [
@@ -2928,7 +2940,7 @@ angular.module('snChannelControllers', [
     ) {
 
         $scope.gsCfg = {
-            identifier: channelId,
+            channel_id: channelId,
             band: '',
             automated: false,
             modulations: [],
@@ -2937,7 +2949,7 @@ angular.module('snChannelControllers', [
             bandwidths: []
         };
         $scope.scCfg = {
-            identifier: channelId,
+            channel_id: channelId,
             frequency: 0.0,
             modulation: '',
             polarization: '',
@@ -2953,7 +2965,14 @@ angular.module('snChannelControllers', [
             isSpacecraft: isSpacecraft,
             isEditing: isEditing,
             rpcPrefix: RPC_GS_PREFIX,
-            listTplUrl: CH_LIST_TPL,
+            listTplOptions: {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: segmentId,
+                    isSpacecraft: isSpacecraft
+                }
+            },
             configuration: $scope.gsCfg,
             options: {
                 bands: [],
@@ -2971,13 +2990,14 @@ angular.module('snChannelControllers', [
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.identifier,
+                $scope.uiCtrl.configuration.channel_id,
                 $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
-                        $scope.uiCtrl.segmentId, results, $scope.listTplUrl
+                        rpcService, $scope.uiCtrl.segmentId,
+                        results, $scope.uiCtrl.listTplOptions
                     );
                 }
             ).catch(
@@ -2992,21 +3012,22 @@ angular.module('snChannelControllers', [
          * of the selected segment.
          */
         $scope.update = function () {
-            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.update';
-            satnetRPC.rCall(rpc_service, [
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.set';
+            satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.identifier,
+                $scope.uiCtrl.configuration.channel_id,
                 $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
                     snDialog.success(
-                        $scope.uiCtrl.segmentId, results, $scope.listTplUrl
+                        rpcService, $scope.uiCtrl.segmentId,
+                        results, $scope.uiCtrl.listTplOptions
                     );
                 }
             ).catch(
                 function (cause) {
-                    snDialog.exception(rpc_service, '-', cause);
+                    snDialog.exception(rpcService, '-', cause);
                 }
             );
         };
@@ -3017,9 +3038,7 @@ angular.module('snChannelControllers', [
          */
         $scope.cancel = function () {
             $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: $scope.uiCtrl.listTplUrl
-            });
+            $mdDialog.show($scope.uiCtrl.listTplOptions);
         };
 
         /**
@@ -3055,10 +3074,11 @@ angular.module('snChannelControllers', [
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.get';
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.identifier
+                $scope.uiCtrl.configuration.channel_id
             ]).then(
                 function (results) {
                     if ($scope.uiCtrl.isSpacecraft === true) {
+                        results.frequency = parseFloat(results.frequency);
                         $scope.scCfg = angular.copy(results);
                         $scope.uiCtrl.configuration = $scope.scCfg;
                     } else {
@@ -3222,6 +3242,9 @@ angular.module(
         $scope.init = function () {
             $scope.refresh();
         };
+
+        // INITIALIZATION: avoids using ng-init within the template
+        $scope.init();
 
     }
 
@@ -3439,7 +3462,9 @@ angular.module(
 */
 
 angular.module('snOperationsMenuControllers', [
-    'ngMaterial'
+    'ngMaterial',
+    'snScControllers',
+    'snGsControllers'
 ])
 .controller('operationsMenuCtrl', [
     '$scope', '$mdSidenav', '$mdDialog',
@@ -3467,7 +3492,8 @@ angular.module('snOperationsMenuControllers', [
          */
         $scope.showGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/list.html'
+                templateUrl: 'operations/templates/gs/list.html',
+                controller: 'gsListCtrl'
             });
         };
 
@@ -3476,7 +3502,8 @@ angular.module('snOperationsMenuControllers', [
          */
         $scope.showScMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/sc/list.html'
+                templateUrl: 'operations/templates/sc/list.html',
+                controller: 'scListCtrl'
             });
         };
         
@@ -3673,6 +3700,9 @@ angular.module(
             $scope.refresh();
         };
 
+        // INITIALIZATION: avoids using ng-init within the template
+        $scope.init();
+
     }
 
 ]).controller('scDialogCtrl', [
@@ -3751,7 +3781,10 @@ angular.module(
                     var id = response.spacecraft_id;
                     broadcaster.scAdded(id);
                     snDialog.success(
-                        'sc.add', id, response, $scope.listTemplateUrl
+                        'sc.add', id, response, {
+                            templateUrl: $scope.listTemplateUrl,
+                            controller: 'scListCtrl'
+                        }
                     );
                 },
                 function (cause) {

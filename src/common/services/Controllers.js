@@ -36,10 +36,11 @@ angular
          * @param {String} operation  Descriptive name of the operation
          * @param {String} identifier Identifier of the object
          * @param {Object} response    Response from the server
-         * @param {String} templateUrl URL with the template to load after
-         *                             closing the dialog.
+         * @param {Object} templateOptions Options for the $mdDialog template
          */
-        this.success = function (operation, identifier, response, templateUrl) {
+        this.success = function (
+            operation, identifier, response, templateOptions
+        ) {
 
             var message = 'Succesfull operation <' + operation +
                 '> over id = <' + identifier + '>';
@@ -49,11 +50,9 @@ angular
             );
             $mdToast.show($mdToast.simple().content(message));
 
-            if (templateUrl) {
+            if (templateOptions) {
                 $mdDialog.hide();
-                $mdDialog.show({
-                    templateUrl: templateUrl
-                });
+                $mdDialog.show(templateOptions);
             }
 
         };

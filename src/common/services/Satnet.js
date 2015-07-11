@@ -127,6 +127,12 @@ angular.module('snJRPCServices', [
                 .createMethod('gs.channel.list'),
             'gs.channel.add': this._configuration
                 .createMethod('gs.channel.create'),
+            'gs.channel.delete': this._configuration
+                .createMethod('gs.channel.delete'),
+            'gs.channel.get': this._configuration
+                .createMethod('gs.channel.getConfiguration'),
+            'gs.channel.set': this._configuration
+                .createMethod('gs.channel.setConfiguration'),
             // Configuration methods (Spacecraft)
             'sc.list': this._configuration
                 .createMethod('sc.list'),
@@ -142,6 +148,8 @@ angular.module('snJRPCServices', [
                 .createMethod('sc.channel.list'),
             'sc.channel.add': this._configuration
                 .createMethod('sc.channel.create'),
+            'sc.channel.delete': this._configuration
+                .createMethod('sc.channel.delete'),
             'sc.channel.get': this._configuration
                 .createMethod('sc.channel.getConfiguration'),
             'sc.channel.set': this._configuration

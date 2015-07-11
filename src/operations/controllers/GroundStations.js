@@ -130,6 +130,9 @@ angular.module(
             $scope.refresh();
         };
 
+        // INITIALIZATION: avoids using ng-init within the template
+        $scope.init();
+
     }
 
 ]).controller('gsDialogCtrl', [

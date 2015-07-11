@@ -377,7 +377,15 @@ describe('Testing Channel controllers', function () {
     it('should cancel the dialog and show the list', function () {
 
         var $scope_sc = $rootScope.$new(),
-            sc_id = 'sc-test';
+            sc_id = 'sc-test', 
+            x_sc_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: sc_id,
+                    isSpacecraft: true
+                }
+            };
 
         $controller('channelDialogCtrl', {
             $scope: $scope_sc, $mdDialog: $mdDialog,
@@ -392,9 +400,7 @@ describe('Testing Channel controllers', function () {
         $scope_sc.cancel();
 
         expect($mdDialog.hide).toHaveBeenCalled();
-        expect($mdDialog.show).toHaveBeenCalledWith({
-            templateUrl: CH_LIST_TPL
-        });
+        expect($mdDialog.show).toHaveBeenCalledWith(x_sc_ch_list_tpl_options);
 
     });
     
@@ -402,7 +408,23 @@ describe('Testing Channel controllers', function () {
 
         var $scope_sc = $rootScope.$new(),
             $scope_gs = $rootScope.$new(),
-            sc_id = 'sc-test', gs_id = 'gs-test';
+            sc_id = 'sc-test', gs_id = 'gs-test',
+            x_sc_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: sc_id,
+                    isSpacecraft: true
+                }
+            },
+            x_gs_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: gs_id,
+                    isSpacecraft: false
+                }
+            };
 
         $controller('channelDialogCtrl', {
             $scope: $scope_sc, $mdDialog: $mdDialog,
@@ -415,7 +437,7 @@ describe('Testing Channel controllers', function () {
         $rootScope.$digest();
 
         expect($scope_sc.scCfg).toEqual({
-            identifier: test_channel_id,
+            channel_id: test_channel_id,
             frequency: 0.0,
             modulation: '',
             polarization: '',
@@ -430,7 +452,7 @@ describe('Testing Channel controllers', function () {
             isSpacecraft: true,
             isEditing: false,
             rpcPrefix: 'sc',
-            listTplUrl: CH_LIST_TPL,
+            listTplOptions: x_sc_ch_list_tpl_options,
             configuration: $scope_sc.scCfg,
             options: CHANNELS_OPTIONS_MOCK
         });
@@ -446,7 +468,7 @@ describe('Testing Channel controllers', function () {
         $rootScope.$digest();
 
         expect($scope_gs.gsCfg).toEqual({
-            identifier: test_channel_id,
+            channel_id: test_channel_id,
             band: '',
             automated: false,
             modulations: [],
@@ -462,7 +484,7 @@ describe('Testing Channel controllers', function () {
             isSpacecraft: false,
             isEditing: false,
             rpcPrefix: 'gs',
-            listTplUrl: CH_LIST_TPL,
+            listTplOptions: x_gs_ch_list_tpl_options,
             configuration: $scope_gs.gsCfg,
             options: CHANNELS_OPTIONS_MOCK
         });
@@ -473,7 +495,23 @@ describe('Testing Channel controllers', function () {
 
         var $scope_sc = $rootScope.$new(),
             $scope_gs = $rootScope.$new(),
-            sc_id = 'sc-test', gs_id = 'gs-test';
+            sc_id = 'sc-test', gs_id = 'gs-test',
+            x_sc_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: sc_id,
+                    isSpacecraft: true
+                }
+            },
+            x_gs_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: gs_id,
+                    isSpacecraft: false
+                }
+            };
 
         $controller('channelDialogCtrl', {
             $scope: $scope_sc, $mdDialog: $mdDialog,
@@ -494,7 +532,7 @@ describe('Testing Channel controllers', function () {
             isSpacecraft: true,
             isEditing: true,
             rpcPrefix: 'sc',
-            listTplUrl: CH_LIST_TPL,
+            listTplOptions: x_sc_ch_list_tpl_options,
             configuration: $scope_sc.scCfg,
             options: CHANNELS_OPTIONS_MOCK
         });
@@ -518,7 +556,7 @@ describe('Testing Channel controllers', function () {
             isSpacecraft: false,
             isEditing: true,
             rpcPrefix: 'gs',
-            listTplUrl: CH_LIST_TPL,
+            listTplOptions: x_gs_ch_list_tpl_options,
             configuration: $scope_gs.gsCfg,
             options: CHANNELS_OPTIONS_MOCK
         });
@@ -531,7 +569,7 @@ describe('Testing Channel controllers', function () {
             $scope_gs = $rootScope.$new(),
             sc_id = 'sc-test', gs_id = 'gs-test',
             x_gs_ch_cfg = {
-                identifier: test_channel_id,
+                channel_id: test_channel_id,
                 band: '',
                 automated: false,
                 modulations: [],
@@ -540,16 +578,32 @@ describe('Testing Channel controllers', function () {
                 bandwidths: []
             },
             x_sc_ch_cfg = {
-                identifier: test_channel_id,
+                channel_id: test_channel_id,
                 frequency: 437.265,
                 modulation: 'FM',
                 polarization: 'LHCP',
                 bitrate: 2400,
                 bandwidth: 25.000
+            },
+            x_sc_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: sc_id,
+                    isSpacecraft: true
+                }
+            },
+            x_gs_ch_list_tpl_options = {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: gs_id,
+                    isSpacecraft: false
+                }
             };
 
-        spyOn(snDialog, 'success').and.callThrough();
-        spyOn(snDialog, 'exception').and.callThrough();
+        spyOn(snDialog, 'success');
+        spyOn(snDialog, 'exception');
 
         // ********************************************************* SC TESTING
         $controller('channelDialogCtrl', {
@@ -575,7 +629,7 @@ describe('Testing Channel controllers', function () {
             ]
         );
         expect(snDialog.success).toHaveBeenCalledWith(
-            sc_id, true, undefined
+            'sc.channel.add', sc_id, true, x_sc_ch_list_tpl_options
         );
         snDialog.success.calls.reset();
 
@@ -617,7 +671,7 @@ describe('Testing Channel controllers', function () {
             ]
         );
         expect(snDialog.success).toHaveBeenCalledWith(
-            gs_id, true, undefined
+            'gs.channel.add', gs_id, true, x_gs_ch_list_tpl_options
         );
         snDialog.success.calls.reset();
 
