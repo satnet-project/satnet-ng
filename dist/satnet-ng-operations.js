@@ -1953,17 +1953,7 @@ angular.module('snMarkerModels', [
                 steps: _GEOLINE_STEPS
             };
 
-            this.colors = [
-                //'#57EF1E', '#47DE2D', '#37CD3C', '#27BC4B', '#17AB5A'
-                //'#00DFFC', '#00B4CC', '#008C9E', '#005F6B',
-                //'#00ABAF', '#74FF60', '#499F3C', '#2C6024'
-                '#003366'
-                /*
-                '#000033', '#003333', '#006633', '#009933', '#00CC33',
-                '#00FF33', '#000066', '#003366', '#006666', '#009966',
-                '#00CC66' '#00FF66'
-                */
-            ];
+            this.colors = ['#003366'];
             this.color_n = 0;
 
             /**
@@ -2912,8 +2902,6 @@ angular.module('snChannelControllers', [
     'CH_LIST_TPL',
     'segmentId', 'channelId', 'isSpacecraft', 'isEditing',
 
-    // TODO Test return from Dialog to List....
-    
     /**
      * Controller for the dialog that allows users to create and edit the
      * configuration for a given channel.
@@ -3021,7 +3009,7 @@ angular.module('snChannelControllers', [
                 $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
-                    // TODO broadcaster.channelAdded(segmentId, channelId);
+                    // TODO broadcaster.channelUpdated(segmentId, channelId);
                     snDialog.success(
                         rpcService, $scope.uiCtrl.segmentId,
                         results, $scope.uiCtrl.listTplOptions

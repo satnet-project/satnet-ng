@@ -48,6 +48,15 @@ angular.module('snJRPCMock', [])
         SC_CHANNEL_MOCK, GS_CHANNEL_MOCK
     ) {
 
+        this.getServerLocation = function (hostname) {
+            $log.debug(
+                '@satnetRPC [MOCK]: getServerLocation, hostname = ' + hostname
+            );
+            return $q.when().then(function() {
+                return ['gs_test_1', 'gs_test_2'];
+            });
+        };
+
         /**
          * Method for calling the remote service through JSON-RPC.
          *

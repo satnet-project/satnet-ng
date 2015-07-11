@@ -16,7 +16,7 @@
 		"excludeFolders": [
 			"lib",
 			"dist",
-			"scripts",
+			"__old__",
 			"tests"
 		],
 		"excludeFiles": []

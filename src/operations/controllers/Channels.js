@@ -168,8 +168,6 @@ angular.module('snChannelControllers', [
     'CH_LIST_TPL',
     'segmentId', 'channelId', 'isSpacecraft', 'isEditing',
 
-    // TODO Test return from Dialog to List....
-    
     /**
      * Controller for the dialog that allows users to create and edit the
      * configuration for a given channel.
@@ -277,7 +275,7 @@ angular.module('snChannelControllers', [
                 $scope.uiCtrl.configuration
             ]).then(
                 function (results) {
-                    // TODO broadcaster.channelAdded(segmentId, channelId);
+                    // TODO broadcaster.channelUpdated(segmentId, channelId);
                     snDialog.success(
                         rpcService, $scope.uiCtrl.segmentId,
                         results, $scope.uiCtrl.listTplOptions

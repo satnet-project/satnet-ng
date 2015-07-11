@@ -63,9 +63,9 @@ describe("Testing Operations Interface", function () {
             app_scope = $rootScope.$new();
             menu_scope = $rootScope.$new();
 
-            $directive = $compile(angular.element(simpleHtml))($rootScope);
-
         });
+
+        $directive = $compile(angular.element(simpleHtml))($rootScope);
 
         appCtrl = $controller("operationsAppCtrl", {
             $scope: app_scope,
@@ -79,6 +79,7 @@ describe("Testing Operations Interface", function () {
         $httpBackend
             .when('GET', 'http://server:80/configuration/user/geoip')
             .respond(x_post_geoip);
+
         $httpBackend
             .expectPOST('http://server:80/jrpc/')
             .respond(x_post_geoip);
@@ -110,16 +111,6 @@ describe("Testing Operations Interface", function () {
         expect(button.length).toBe(1);
 
     });
-
-    /* FIXME Problem with the .catch() statement from SatnetRPC
-    it('MenuCtrl should show the GS menu', function () {
-
-        var button = $('#menuGS');
-        button.click();
-        $rootScope.$digest();
-
-    });
-    */
 
     it('MenuCtrl should close itself', function () {
 
