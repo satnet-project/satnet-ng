@@ -45,7 +45,7 @@ angular.module('snOperationsMenuControllers', [
          */
         $scope.showGsMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/list.html',
+                templateUrl: 'operations/templates/segments/gs.list.html',
                 controller: 'gsListCtrl'
             });
         };
@@ -55,7 +55,7 @@ angular.module('snOperationsMenuControllers', [
          */
         $scope.showScMenu = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/sc/list.html',
+                templateUrl: 'operations/templates/segments/sc.list.html',
                 controller: 'scListCtrl'
             });
         };

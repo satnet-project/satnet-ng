@@ -1,8 +1,8 @@
-<md-dialog aria-label="Channels Menu">
+<md-dialog aria-label="Channel List">
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
-            <span>{{ segmentId }} Channels</span>
+            <span>{{ uiCtrl.segmentId }} Channels</span>
         </h2>
     </md-toolbar>
 
@@ -20,10 +20,10 @@
         <md-divider></md-divider>
 
         <md-list>
-            <li ng-hide="channelList.length" class="sn-no-item">
+            <md-list-item ng-hide="channelList.length" class="sn-no-item">
                 (no channels)
-            </li>
-            <md-list-item ng-repeat="c in channelList">
+            </md-list-item>
+            <md-list-item ng-hide="!channelList.length" ng-repeat="c in channelList">
 
                 <div layout="row" layout-fill>
 

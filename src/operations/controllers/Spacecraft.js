@@ -48,7 +48,7 @@ angular.module(
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/sc/dialog.html',
+                templateUrl: 'operations/templates/segments/sc.dialog.html',
                 controller: 'scDialogCtrl',
                 locals: {
                     identifier: '',
@@ -65,7 +65,7 @@ angular.module(
          */
         $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
-                templateUrl: 'operations/templates/sc/dialog.html',
+                templateUrl: 'operations/templates/segments/sc.dialog.html',
                 controller: 'scDialogCtrl',
                 locals: {
                     identifier: identifier,
@@ -99,15 +99,15 @@ angular.module(
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.delete = function (identifier) {
-
-            satnetRPC.rCall('sc.delete', [identifier]).then(function (results) {
+            satnetRPC.rCall('sc.delete', [
+                identifier
+            ]).then(function (results) {
                 broadcaster.scRemoved(identifier);
                 snDialog.success('sc.delete', identifier, results, null);
                 $scope.refresh();
             }).catch(function (cause) {
                 snDialog.exception('sc.delete', identifier, cause);
             });
-
         };
 
         /**
@@ -178,7 +178,7 @@ angular.module(
             tles: []
         };
 
-        $scope.listTemplateUrl = 'operations/templates/sc/list.html';
+        $scope.listTemplateUrl = 'operations/templates/segments/sc.list.html';
 
         /**
          * Function that updates the list of selectable TLE's once the group
@@ -211,12 +211,8 @@ angular.module(
                 function (response) {
                     var id = response.spacecraft_id;
                     broadcaster.scAdded(id);
-                    snDialog.success(
-                        'sc.add', id, response, {
-                            templateUrl: $scope.listTemplateUrl,
-                            controller: 'scListCtrl'
-                        }
-                    );
+                    // FIXME ISSUE #10: Error while showing the $mdDialog
+                    snDialog.success('sc.add', id, response, null);
                 },
                 function (cause) {
                     snDialog.exception('sc.add', '-', cause);
@@ -240,9 +236,8 @@ angular.module(
             satnetRPC.rCall('sc.update', [identifier, cfg]).then(
                 function (response) {
                     broadcaster.scUpdated(response);
-                    snDialog.success(
-                        'sc.update', response, response, $scope.listTemplateUrl
-                    );
+                    // FIXME ISSUE #10: Error while showing the $mdDialog
+                    snDialog.success('sc.update', response, response, null);
                 },
                 function (cause) {
                     snDialog.exception('sc.update', '-', cause);
@@ -257,9 +252,8 @@ angular.module(
          */
         $scope.cancel = function () {
             $mdDialog.hide();
-            $mdDialog.show({
-                templateUrl: $scope.listTemplateUrl
-            });
+            // FIXME ISSUE #10: Error while showing the $mdDialog
+            // $mdDialog.show({ templateUrl: $scope.listTemplateUrl });
         };
 
         /**

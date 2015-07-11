@@ -149,14 +149,11 @@ angular.module('snChannelControllers', [
              * or a Ground Station in order to call the proper JRPC method.
              */
             $scope.init = function () {
-                console.log('11111');
                 if ($scope.uiCtrl.isSpacecraft === true) {
                     $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
                     $scope.uiCtrl.channelDlgTplUrl = CH_DLG_SC_TPL;
                 }
-                console.log('22222');
                 $scope.refresh();
-                console.log('33333');
             };
 
             // INITIALIZATION: avoids using ng-init within the template
@@ -299,7 +296,8 @@ angular.module('snChannelControllers', [
          */
         $scope.cancel = function () {
             $mdDialog.hide();
-            $mdDialog.show($scope.uiCtrl.listTplOptions);
+            // FIXME ISSUE #10: Error while showing the $mdDialog
+            // $mdDialog.show($scope.uiCtrl.listTplOptions);
         };
 
         /**

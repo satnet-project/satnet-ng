@@ -49,7 +49,7 @@ angular.module(
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/dialog.html',
+                templateUrl: 'operations/templates/segments/gs.dialog.html',
                 controller: 'gsDialogCtrl',
                 locals: {
                     identifier: '',
@@ -66,7 +66,7 @@ angular.module(
          */
         $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
-                templateUrl: 'operations/templates/gs/dialog.html',
+                templateUrl: 'operations/templates/segments/gs.dialog.html',
                 controller: 'gsDialogCtrl',
                 locals: {
                     identifier: identifier,
@@ -186,7 +186,7 @@ angular.module(
         };
         $scope.events = {};
 
-        $scope.listTplUrl = 'operations/templates/gs/list.html';
+        $scope.listTplUrl = 'operations/templates/segments/gs.list.html';
 
         /**
          * Function that triggers the opening of a window to add a new Ground
