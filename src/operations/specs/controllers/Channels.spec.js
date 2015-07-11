@@ -377,7 +377,8 @@ describe('Testing Channel controllers', function () {
     it('should cancel the dialog and show the list', function () {
 
         var $scope_sc = $rootScope.$new(),
-            sc_id = 'sc-test', 
+            sc_id = 'sc-test';
+            /*
             x_sc_ch_list_tpl_options = {
                 tempalteUrl: CH_LIST_TPL,
                 controller: 'channelListCtrl',
@@ -386,6 +387,7 @@ describe('Testing Channel controllers', function () {
                     isSpacecraft: true
                 }
             };
+            */
 
         $controller('channelDialogCtrl', {
             $scope: $scope_sc, $mdDialog: $mdDialog,
@@ -585,7 +587,8 @@ describe('Testing Channel controllers', function () {
                 polarization: 'LHCP',
                 bitrate: 2400,
                 bandwidth: 25.000
-            },
+            };
+            /*
             x_sc_ch_list_tpl_options = {
                 tempalteUrl: CH_LIST_TPL,
                 controller: 'channelListCtrl',
@@ -601,7 +604,7 @@ describe('Testing Channel controllers', function () {
                     segmentId: gs_id,
                     isSpacecraft: false
                 }
-            };
+            };*/
 
         spyOn(snDialog, 'success');
         spyOn(snDialog, 'exception');
@@ -630,7 +633,7 @@ describe('Testing Channel controllers', function () {
             ]
         );
         expect(snDialog.success).toHaveBeenCalledWith(
-            'sc.channel.add', sc_id, true, x_sc_ch_list_tpl_options
+            'sc.channel.add', sc_id, true, null //x_sc_ch_list_tpl_options
         );
         snDialog.success.calls.reset();
 
@@ -672,7 +675,7 @@ describe('Testing Channel controllers', function () {
             ]
         );
         expect(snDialog.success).toHaveBeenCalledWith(
-            'gs.channel.add', gs_id, true, x_gs_ch_list_tpl_options
+            'gs.channel.add', gs_id, true, null //x_gs_ch_list_tpl_options
         );
         snDialog.success.calls.reset();
 
