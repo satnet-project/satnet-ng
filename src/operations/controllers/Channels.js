@@ -149,11 +149,14 @@ angular.module('snChannelControllers', [
              * or a Ground Station in order to call the proper JRPC method.
              */
             $scope.init = function () {
+                console.log('11111');
                 if ($scope.uiCtrl.isSpacecraft === true) {
                     $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
                     $scope.uiCtrl.channelDlgTplUrl = CH_DLG_SC_TPL;
                 }
+                console.log('22222');
                 $scope.refresh();
+                console.log('33333');
             };
 
             // INITIALIZATION: avoids using ng-init within the template
@@ -168,6 +171,8 @@ angular.module('snChannelControllers', [
     'CH_LIST_TPL',
     'segmentId', 'channelId', 'isSpacecraft', 'isEditing',
 
+    // TODO Test return from Dialog to List....
+    
     /**
      * Controller for the dialog that allows users to create and edit the
      * configuration for a given channel.
