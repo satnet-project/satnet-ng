@@ -51,7 +51,6 @@ angular
             $mdToast.show($mdToast.simple().content(message));
 
             if (templateOptions) {
-                $mdDialog.hide();
                 $mdDialog.show(templateOptions);
             }
 

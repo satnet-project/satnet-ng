@@ -563,7 +563,6 @@ angular
             $mdToast.show($mdToast.simple().content(message));
 
             if (templateOptions) {
-                $mdDialog.hide();
                 $mdDialog.show(templateOptions);
             }
 
@@ -2985,9 +2984,10 @@ angular.module('snChannelControllers', [
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelAdded(segmentId, channelId);
+                    $mdDialog.hide();
                     snDialog.success(
                         rpcService, $scope.uiCtrl.segmentId,
-                        results, $scope.uiCtrl.listTplOptions
+                        results, null //$scope.uiCtrl.listTplOptions
                     );
                 }
             ).catch(
@@ -3010,9 +3010,10 @@ angular.module('snChannelControllers', [
             ]).then(
                 function (results) {
                     // TODO broadcaster.channelUpdated(segmentId, channelId);
+                    $mdDialog.hide();
                     snDialog.success(
                         rpcService, $scope.uiCtrl.segmentId,
-                        results, $scope.uiCtrl.listTplOptions
+                        results, null //$scope.uiCtrl.listTplOptions
                     );
                 }
             ).catch(
