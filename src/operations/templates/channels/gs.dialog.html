@@ -33,6 +33,27 @@
 
             </div>
 
+            <div layout="row">
+                <md-input-container style="width: 30%">
+                    <md-select ng-model="uiCtrl.configuration.polarizations" multiple="true" required>
+                        <md-select-label>{{ uiCtrl.configuration.polarizations ? uiCtrl.configuration.polarizations : 'Polarization(s)' }}</md-select-label>
+                        <md-option ng-value="p" ng-repeat="p in uiCtrl.options.polarizations">{{ p }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <md-select ng-model="uiCtrl.configuration.bitrates" multiple="true" required>
+                        <md-select-label>{{ uiCtrl.configuration.bitrates ? uiCtrl.configuration.bitrates : 'Bitrate(s)' }}</md-select-label>
+                        <md-option ng-value="m" ng-repeat="m in uiCtrl.options.bitrates">{{ m }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <md-select ng-model="uiCtrl.configuration.bandwidths" multiple="true" required>
+                        <md-select-label>{{ uiCtrl.configuration.bandwidths ? uiCtrl.configuration.bandwidths : 'Bandwidth(s)' }}</md-select-label>
+                        <md-option ng-value="p" ng-repeat="p in uiCtrl.options.bandwidths">{{ p }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
         </form>
 
         <div layout="row">
