@@ -114,7 +114,7 @@ describe('Testing Ground Station controllers', function () {
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC,
             identifier: test_id,
-            editing: true
+            isEditing: true
         });
 
         __mock__satnetRPC.rCall =
@@ -157,7 +157,7 @@ describe('Testing Ground Station controllers', function () {
             $mdDialog: $mdDialog,
             satnetRPC: satnetRPC,
             identifier: test_id,
-            editing: true
+            isEditing: true
         });
 
         __mock__satnetRPC.rCall =

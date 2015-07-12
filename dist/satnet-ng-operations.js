@@ -2977,6 +2977,7 @@ angular.module('snChannelControllers', [
          */
         $scope.add = function () {
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
+            console.log('configuration = ' + JSON.stringify($scope.uiCtrl.configuration));
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
                 $scope.uiCtrl.configuration.channel_id,
@@ -3181,12 +3182,29 @@ angular.module(
         };
 
         /**
-         * Function that triggers the opening of a window to add a new
-         * Availability Rule to this Ground Station.
+         * Function that triggers the opening of a dialog with the list of
+         * channels for this Ground Station.
          * 
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.showChannelList = function (identifier) {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/channels/list.html',
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: identifier,
+                    isSpacecraft: false
+                }
+            });
+        };
+
+        /**
+         * Function that triggers the opening of a dialog with the list of
+         * Availability Rules for this Ground Station.
+         * 
+         * @param {String} identifier Identifier of the Ground Station
+         */
+        $scope.showRuleList = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/channels/list.html',
                 controller: 'channelListCtrl',
@@ -3244,7 +3262,7 @@ angular.module(
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC', 'snDialog',
     'mapServices', 'LAT', 'LNG', 'ZOOM_SELECT',
-    'identifier', 'editing',
+    'identifier', 'isEditing',
 
     /**
      * Controller of the dialog used to add a new Ground Station. This dialog
@@ -3257,14 +3275,14 @@ angular.module(
         $log, $scope, $mdDialog, $mdToast,
         broadcaster, satnetRPC, snDialog,
         mapServices, LAT, LNG, ZOOM_SELECT,
-        identifier, editing
+        identifier, isEditing
     ) {
 
         if (!identifier) {
             identifier = '';
         }
-        if (!editing) {
-            editing = false;
+        if (!isEditing) {
+            isEditing = false;
         }
 
         $scope.configuration = {
@@ -3276,7 +3294,7 @@ angular.module(
             add: {
                 disabled: true
             },
-            editing: editing
+            isEditing: isEditing
         };
 
         $scope.center = {};
@@ -3339,6 +3357,7 @@ angular.module(
             satnetRPC.rCall('gs.update', [identifier, cfg]).then(
                 function (gs_id) {
                     broadcaster.gsUpdated(gs_id);
+                    $mdDialog.hide();
                     snDialog.success(gs_id, gs_id, $scope.listTplUrl);
                 },
                 function (cause) {
@@ -3378,7 +3397,7 @@ angular.module(
                 }
             );
 
-            if (editing) {
+            if (isEditing) {
                 $scope.loadConfiguration();
             } else {
                 $scope.initConfiguration();

@@ -1,5 +1,6 @@
 .complexity/
 .coverage/
+.idea/
 lib/bower/
 node_modules/
 npm-debug.log

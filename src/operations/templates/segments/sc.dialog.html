@@ -23,14 +23,18 @@
             </div>
 
             <div layout="row">
-                <md-select ng-model="configuration.tle_group" ng-change="updateTles()" style="width: 50%" required>
-                    <md-select-label>{{ configuration.tle_group ? configuration.tle_group.subsection : 'Select Group' }}</md-select-label>
-                    <md-option ng-value="group" ng-repeat="group in uiCtrl.tle_groups">{{ group.subsection }}</md-option>
-                </md-select>
-                <md-select ng-model="configuration.tle" ng-change="updateTles()" style="width: 50%" required>
-                    <md-select-label>{{ configuration.tle ? configuration.tle.spacecraft_tle_id : 'Select TLE' }}</md-select-label>
-                    <md-option ng-value="tle" ng-repeat="tle in uiCtrl.tles">{{ tle.spacecraft_tle_id }}</md-option>
-                </md-select>
+                <md-input-container style="width: 50%">
+                    <md-select ng-model="configuration.tle_group" ng-change="updateTles()" required>
+                        <md-select-label>{{ configuration.tle_group ? configuration.tle_group.subsection : 'Select Group' }}</md-select-label>
+                        <md-option ng-value="group" ng-repeat="group in uiCtrl.tle_groups">{{ group.subsection }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container style="width: 50%">
+                    <md-select ng-model="configuration.tle" ng-change="updateTles()" required>
+                        <md-select-label>{{ configuration.tle ? configuration.tle.spacecraft_tle_id : 'Select TLE' }}</md-select-label>
+                        <md-option ng-value="tle" ng-repeat="tle in uiCtrl.tles">{{ tle.spacecraft_tle_id }}</md-option>
+                    </md-select>
+                </md-input-container>
             </div>
 
         </form>

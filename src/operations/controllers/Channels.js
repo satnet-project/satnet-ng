@@ -244,6 +244,7 @@ angular.module('snChannelControllers', [
          */
         $scope.add = function () {
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
+            console.log('configuration = ' + JSON.stringify($scope.uiCtrl.configuration));
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
                 $scope.uiCtrl.configuration.channel_id,

@@ -12,34 +12,36 @@
         <form name="configuration">
 
             <div layout="row">
-                <md-input-container style="width: 40%">
+                <md-input-container style="width: 25%">
                     <label>Identifier</label>
                     <input name="identifier" ng-model="uiCtrl.configuration.channel_id" ng-disabled="uiCtrl.editing" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" required>
                 </md-input-container>
 
-                <md-input-container style="width: 30%">
+                <md-input-container style="width: 75%">
                     <md-select ng-model="uiCtrl.configuration.band" required>
                         <md-select-label>{{ uiCtrl.configuration.band ? uiCtrl.configuration.band : 'Band' }}</md-select-label>
                         <md-option ng-value="m" ng-repeat="m in uiCtrl.options.bands">{{ m }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container style="width: 30%">
+            </div>
+
+            <div layout="row">
+                <md-input-container style="width: 50%">
                     <md-select ng-model="uiCtrl.configuration.modulations" multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.modulations ? uiCtrl.configuration.modulations : 'Modulation(s)' }}</md-select-label>
                         <md-option ng-value="m" ng-repeat="m in uiCtrl.options.modulations">{{ m }}</md-option>
                     </md-select>
                 </md-input-container>
-
-            </div>
-
-            <div layout="row">
-                <md-input-container style="width: 30%">
+                <md-input-container style="width: 50%">
                     <md-select ng-model="uiCtrl.configuration.polarizations" multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.polarizations ? uiCtrl.configuration.polarizations : 'Polarization(s)' }}</md-select-label>
                         <md-option ng-value="p" ng-repeat="p in uiCtrl.options.polarizations">{{ p }}</md-option>
                     </md-select>
                 </md-input-container>
+            </div>
+
+            <div layout="row">
                 <md-input-container style="width: 50%">
                     <md-select ng-model="uiCtrl.configuration.bitrates" multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.bitrates ? uiCtrl.configuration.bitrates : 'Bitrate(s)' }}</md-select-label>
