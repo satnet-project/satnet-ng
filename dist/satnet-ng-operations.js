@@ -3206,7 +3206,7 @@ angular.module(
          */
         $scope.showRuleList = function (identifier) {
             $mdDialog.show({
-                templateUrl: 'operations/templates/channels/list.html',
+                templateUrl: 'operations/templates/rules/list.html',
                 controller: 'channelListCtrl',
                 locals: {
                     segmentId: identifier,
