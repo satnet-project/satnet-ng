@@ -866,6 +866,13 @@ angular.module('snJRPCServices', [
                 .createMethod('gs.channel.getConfiguration'),
             'gs.channel.set': this._configuration
                 .createMethod('gs.channel.setConfiguration'),
+            // Rules management
+            'rules.list': this._configuration
+                .createMethod('gs.channel.getRules'),
+            'rules.add': this._configuration
+                .createMethod('gs.channel.addRules'),
+            'rules.delete': this._configuration
+                .createMethod('gs.channel.removeRules'),
             // Configuration methods (Spacecraft)
             'sc.list': this._configuration
                 .createMethod('sc.list'),
@@ -3174,6 +3181,7 @@ angular.module(
         'snJRPCServices',
         'snControllers',
         'snChannelControllers',
+        'snRuleControllers',
         'snMapServices'
     ]
 ).controller('gsListCtrl', [
@@ -3252,10 +3260,9 @@ angular.module(
         $scope.showRuleList = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/rules/list.html',
-                controller: 'channelListCtrl',
+                controller: 'ruleListCtrl',
                 locals: {
-                    segmentId: identifier,
-                    isSpacecraft: false
+                    identifier: identifier
                 }
             });
         };
@@ -3607,14 +3614,14 @@ angular.module(
 
         $scope.identifier = identifier;
         $scope.ruleList = [];
-        $scope.ruleDlgTplUrl = 'operations/templates/rules/dialog.html';
+        $scope.dlgTplUrl = 'operations/templates/rules/dialog.html';
 
         /**
          * Functiont hat handles the creation of a Dialog to add a new rule.
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
-                templateUrl: $scope.ruleDlgTplUrl,
+                templateUrl: $scope.dlgTplUrl,
                 controller: 'ruleDialogCtrl',
                 locals: {
                     identifier: $scope.identifier,
@@ -3629,7 +3636,7 @@ angular.module(
          */
         $scope.showEditDialog = function (rule) {
             $mdDialog.show({
-                templateUrl: $scope.ruleDlgTplUrl,
+                templateUrl: $scope.dlgTplUrl,
                 controller: 'ruleDialogCtrl',
                 locals: {
                     identifier: $scope.identifier,

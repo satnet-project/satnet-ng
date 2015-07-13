@@ -40,14 +40,14 @@ angular.module(
 
         $scope.identifier = identifier;
         $scope.ruleList = [];
-        $scope.ruleDlgTplUrl = 'operations/templates/rules/dialog.html';
+        $scope.dlgTplUrl = 'operations/templates/rules/dialog.html';
 
         /**
          * Functiont hat handles the creation of a Dialog to add a new rule.
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
-                templateUrl: $scope.ruleDlgTplUrl,
+                templateUrl: $scope.dlgTplUrl,
                 controller: 'ruleDialogCtrl',
                 locals: {
                     identifier: $scope.identifier,
@@ -62,7 +62,7 @@ angular.module(
          */
         $scope.showEditDialog = function (rule) {
             $mdDialog.show({
-                templateUrl: $scope.ruleDlgTplUrl,
+                templateUrl: $scope.dlgTplUrl,
                 controller: 'ruleDialogCtrl',
                 locals: {
                     identifier: $scope.identifier,

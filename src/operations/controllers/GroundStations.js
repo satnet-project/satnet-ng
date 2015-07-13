@@ -23,6 +23,7 @@ angular.module(
         'snJRPCServices',
         'snControllers',
         'snChannelControllers',
+        'snRuleControllers',
         'snMapServices'
     ]
 ).controller('gsListCtrl', [
@@ -101,10 +102,9 @@ angular.module(
         $scope.showRuleList = function (identifier) {
             $mdDialog.show({
                 templateUrl: 'operations/templates/rules/list.html',
-                controller: 'channelListCtrl',
+                controller: 'ruleListCtrl',
                 locals: {
-                    segmentId: identifier,
-                    isSpacecraft: false
+                    identifier: identifier
                 }
             });
         };
