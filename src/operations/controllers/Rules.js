@@ -38,15 +38,67 @@ angular.module(
      */
     function($scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
 
-        $scope.gsId = identifier;
+        $scope.identifier = identifier;
         $scope.ruleList = [];
         $scope.ruleDlgTplUrl = 'operations/templates/rules/dialog.html';
 
         /**
-         * Function that refreshes the list of registered ground stations.
+         * Functiont hat handles the creation of a Dialog to add a new rule.
+         */
+        $scope.showAddDialog = function () {
+            $mdDialog.show({
+                templateUrl: $scope.ruleDlgTplUrl,
+                controller: 'ruleDialogCtrl',
+                locals: {
+                    identifier: $scope.identifier,
+                    isEditing: false
+                }
+            });
+        };
+
+        /**
+         * Function that handles the creation of a Dialog to edit an existing
+         * rule.
+         */
+        $scope.showEditDialog = function (rule) {
+            $mdDialog.show({
+                templateUrl: $scope.ruleDlgTplUrl,
+                controller: 'ruleDialogCtrl',
+                locals: {
+                    identifier: $scope.identifier,
+                    isEditing: true,
+                    ruleKey: rule.key
+                }
+            });
+        };
+
+        /**
+         * Controller function that removes the given Ground Station from the
+         * database in the remote server upon user request. It first asks for
+         * confirmation before executing this removal.
+         *
+         * @param {String} identifier Identifier of the Ground Station
+         */
+        $scope.delete = function (rule) {
+            satnetRPC.rCall('rules.delete', [
+                $scope.identifier, rule.key
+            ]).then(function (results) {
+                // TODO broadcaster.ruleRemoved(identifier);
+                snDialog.success('rules.delete', identifier, results, null);
+                $scope.refresh();
+            }).catch(function (cause) {
+                snDialog.exception('rules.delete', identifier, cause);
+            });
+        };
+        
+        
+        /**
+         * Function that refreshes the list of registered Ground Stations.
          */
         $scope.refresh = function () {
-            satnetRPC.rCall('rules.list', [$scope.gsId]).then(
+            satnetRPC.rCall('rules.list', [
+                $scope.identifier
+            ]).then(
                 function (results) {
                     if (results !== null) {
                         $scope.ruleList = results.slice(0);
@@ -60,11 +112,34 @@ angular.module(
         };
 
         /**
-         * Function that initializes the list of ground stations that are to be
+         * Function that initializes the list of Ground Stations that are to be
          * displayed.
          */
         $scope.init = function () {
             $scope.refresh();
+        };
+
+        // INITIALIZATION: avoids using ng-init within the template
+        $scope.init();
+
+    }
+
+])
+.controller('ruleDialogCtrl', [
+    '$scope', 'identifier', 'isEditing',
+
+    function ($scope, identifier, isEditing) {
+
+        $scope.uiCtrl = {
+            identifier: identifier,
+            isEditing: isEditing
+        };
+
+        /**
+         * Function that initializes the list of Ground Stations that are to be
+         * displayed.
+         */
+        $scope.init = function () {
         };
 
         // INITIALIZATION: avoids using ng-init within the template
