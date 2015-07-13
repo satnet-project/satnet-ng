@@ -18,15 +18,15 @@
 
                 <div layout="row" layout-fill>
 
+                    <md-content layout-padding>
+                        <b>{{ r.key }}</b>
+                    </md-content>
+
                     <md-button id="{{ r }}-edit" ng-click="edit(r)" aria-label="edit availability rule {{ r }}" class="md-primary menu-button" style="text-align:center; width: 58%">
                         <div layout="row" layout-fill>
-                            <b>{{ r }}</b>
+                            <b>{{ r | printRule }}</b>
                         </div>
                     </md-button>
-
-                    <md-content layout-padding>
-                        <b>{{ r }}</b>
-                    </md-content>
 
                     <md-button id="{{ r }}-delete" aria-label="delete rule {{ r }}" class="md-primary menu-button" flex ng-click="delete(r)">
                         <div layout="row" layout-fill>

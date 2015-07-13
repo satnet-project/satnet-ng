@@ -3540,9 +3540,11 @@ angular.module(
     'snRuleControllers', [
         'ngMaterial',
         'snJRPCServices',
-        'snControllers'
+        'snControllers',
+        'snRuleFilters'
     ]
-).controller('ruleListCtrl', [
+)  
+.controller('ruleListCtrl', [
     '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
     
     function($scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
@@ -3792,6 +3794,7 @@ angular.module(
                     var id = response.spacecraft_id;
                     broadcaster.scAdded(id);
                     // FIXME ISSUE #10: Error while showing the $mdDialog
+                    $mdDialog.hide();
                     snDialog.success('sc.add', id, response, null);
                 },
                 function (cause) {
@@ -3817,6 +3820,7 @@ angular.module(
                 function (response) {
                     broadcaster.scUpdated(response);
                     // FIXME ISSUE #10: Error while showing the $mdDialog
+                    $mdDialog.hide();
                     snDialog.success('sc.update', response, response, null);
                 },
                 function (cause) {

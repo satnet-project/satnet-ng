@@ -18,9 +18,11 @@ angular.module(
     'snRuleControllers', [
         'ngMaterial',
         'snJRPCServices',
-        'snControllers'
+        'snControllers',
+        'snRuleFilters'
     ]
-).controller('ruleListCtrl', [
+)  
+.controller('ruleListCtrl', [
     '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
     
     function($scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
