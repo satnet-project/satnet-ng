@@ -139,6 +139,7 @@ div.m-app-loading p {
   margin-top: 20px;
   text-align: center;
   font-style: italic;
+  width: 100%;
   list-style-type: none; }
 
 /* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila

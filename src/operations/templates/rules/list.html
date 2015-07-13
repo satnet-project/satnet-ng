@@ -1,4 +1,4 @@
-<md-dialog ng-init="init()" aria-label="Availability Rules Menu">
+<md-dialog aria-label="Availability Rules Menu">
 
     <md-content class="menu-list">
 
@@ -14,7 +14,10 @@
         <md-divider></md-divider>
 
         <md-list>
-            <md-list-item ng-repeat="r in ruleList">
+            <md-list-item ng-hide="ruleList.length">
+                <span class="sn-no-item" flex>(no rules)</span>
+            </md-list-item>
+            <md-list-item ng-hide="!ruleList.length" ng-repeat="r in ruleList">
 
                 <div layout="row" layout-fill>
 

@@ -62,6 +62,7 @@ module.exports = function (grunt) {
                     'src/common/services/Pusher.js',
                     'src/common/services/Satnet.js',
                     'src/common/services/Maps.js',
+                    'src/common/filters/Rules.js',
                     'src/common/models/Markers.js',
                     'src/common/models/Network.js',
                     'src/common/models/GroundStations.js',
