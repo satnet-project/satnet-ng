@@ -51,16 +51,32 @@
 
                 <md-tabs md-dynamic-height md-border-bottom md-selected="uiCtrl.activeTab">
                     <md-tab label="Once" md-on-select="tabSelected('O')">
-                        <md-content class="md-padding">
-                        </md-content>
+                        <div layout="row">
+                            <md-input-container>
+                                <label for="start_time">Start Time</label>
+                                <input name="start_time" type="time" ng-model="rule.start_time" ng-required="true"/>
+                            </md-input-container>
+                            <md-input-container>
+                                <label for="end_time">End Time</label>
+                                <input name="end_time" type="time" ng-model="rule.end_time" ng-required="true"/>
+                            </md-input-container>
+                        </div>
                     </md-tab>
                     <md-tab label="Daily" md-on-select="tabSelected('D')">
-                        <md-content class="md-padding">
-                        </md-content>
+                        <div layout="row">
+                            <md-input-container>
+                                <label for="start_time">Start Time</label>
+                                <input name="start_time" type="time" ng-model="rule.start_time" ng-required="true"/>
+                            </md-input-container>
+                            <md-input-container>
+                                <label for="end_time">End Time</label>
+                                <input name="end_time" type="time" ng-model="rule.end_time" ng-required="true"/>
+                            </md-input-container>
+                        </div>
                     </md-tab>
                     <md-tab label="Weekly" md-on-select="tabSelected('W')" ng-disabled="true">
-                        <md-content class="md-padding">
-                        </md-content>
+                        <!--<md-content class="md-padding">-->
+                        <!--</md-content>-->
                     </md-tab>
                 </md-tabs>
 

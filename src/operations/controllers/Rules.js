@@ -133,13 +133,13 @@ angular.module(
 .constant('DAILY_PERIODICITY', 'D')
 .constant('WEEKLY_PERIODICITY', 'W')
 .controller('ruleDialogCtrl', [
-    '$scope',
+    '$scope', '$mdDialog',
     'CREATE_OPERATION', 'ERASE_OPERATION',
     'ONCE_PERIODICITY', 'DAILY_PERIODICITY', 'WEEKLY_PERIODICITY',
     'identifier', 'isEditing',
 
     function (
-        $scope,
+        $scope, $mdDialog,
         CREATE_OPERATION, ERASE_OPERATION,
         ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
         identifier, isEditing
@@ -205,7 +205,16 @@ angular.module(
 
         };
             
-            
+        /**
+         * Function that closes the current dialog and goes back to the
+         * original list.
+         */
+        $scope.cancel = function () {
+            $mdDialog.hide();
+            // FIXME ISSUE #10: Error while showing the $mdDialog
+            // $mdDialog.show($scope.uiCtrl.listTplOptions);
+        };
+
         /**
          * Function that initializes the list of Ground Stations that are to be
          * displayed.
