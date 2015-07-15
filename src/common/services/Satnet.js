@@ -135,11 +135,11 @@ angular.module('snJRPCServices', [
                 .createMethod('gs.channel.setConfiguration'),
             // Rules management
             'rules.list': this._configuration
-                .createMethod('gs.channel.listRules'),
+                .createMethod('gs.listRules'),
             'rules.add': this._configuration
-                .createMethod('gs.channel.addRule'),
+                .createMethod('gs.addRule'),
             'rules.delete': this._configuration
-                .createMethod('gs.channel.removeRule'),
+                .createMethod('gs.removeRule'),
             // Configuration methods (Spacecraft)
             'sc.list': this._configuration
                 .createMethod('sc.list'),
