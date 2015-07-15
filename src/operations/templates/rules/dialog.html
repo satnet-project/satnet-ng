@@ -1,5 +1,5 @@
 <md-dialog aria-label="Rules Dialog">
-
+    
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
             <span ng-show="!uiCtrl.editing">Add new Rule</span>
@@ -13,22 +13,34 @@
 
             <div layout="row">
 
-                <md-input-container>
-                    <p style="text-align: center">Operation</p>
-                    <md-radio-group ng-model="configuration.operation">
-                        <md-radio-button value="+" class="md-primary">add</md-radio-button>
-                        <md-radio-button value="-" class="md-primary">del</md-radio-button>
-                    </md-radio-group>
-                </md-input-container>
+                <div layout="column">
+                    <md-input-container>
+                        <p>Operation</p>
+                        <md-radio-group ng-model="configuration.operation">
+                            <md-radio-button value="+" class="md-primary" default>create</md-radio-button>
+                            <md-radio-button value="-" class="md-primary">erase</md-radio-button>
+                        </md-radio-group>
+                    </md-input-container>
+                    <md-input-container>
+                        <p>Periodicity</p>
+                        <md-radio-group ng-model="configuration.periodicity">
+                            <md-radio-button value="O" class="md-primary" default>once</md-radio-button>
+                            <md-radio-button value="D" class="md-primary">daily</md-radio-button>
+                            <md-radio-button value="W" class="md-primary">weekly</md-radio-button>
+                        </md-radio-group>
+                    </md-input-container>
+                </div>
 
-                <md-input-container>
-                    <p style="text-align: center">Periodicity</p>
-                    <md-radio-group ng-model="configuration.periodicity">
-                        <md-radio-button value="O" class="md-primary">once</md-radio-button>
-                        <md-radio-button value="D" class="md-primary">daily</md-radio-button>
-                        <md-radio-button value="W" class="md-primary">weekly</md-radio-button>
-                    </md-radio-group>
-                </md-input-container>
+                <div layout="column">
+                    <md-input-container>
+                        <label for="start_date">Start Date</label>
+                        <input name="start_date" type="date" ng-model="configuration.start_date" />
+                    </md-input-container>
+                    <md-input-container>
+                        <label for="end_date">End Date</label>
+                        <input name="end_date" type="date" ng-model="configuration.end_date" />
+                    </md-input-container>
+                </div>
 
             </div>
 

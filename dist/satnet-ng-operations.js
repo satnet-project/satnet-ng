@@ -3603,14 +3603,16 @@ angular.module(
      * Controller for the list with the Availability Rules for a given Ground
      * Station.
      * 
-     * @param {Object} $scope     Angular JS $scope for the controller
-     * @param {Object} $log       Angular JS $log service
-     * @param {Object} $mdDialog  Angular Material $mdDialog service
-     * @param {Object} satnetRPC  SatNet RPC service
-     * @param {Object} snDialog   SatNet Dialog service
-     * @param {String} identifier Identifier of the Ground Station
+     * @param {Object} $scope        Angular JS $scope for the controller
+     * @param {Object} $log          Angular JS $log service
+     * @param {Object} $mdDialog     Angular Material $mdDialog service
+     * @param {Object} $mdDatePicker $mdDatePicker component
+     * @param {Object} satnetRPC     SatNet RPC service
+     * @param {Object} snDialog      SatNet Dialog service
+     * @param {String} identifier    Identifier of the Ground Station
      */
-    function($scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
+    function(
+        $scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
 
         $scope.identifier = identifier;
         $scope.ruleList = [];
