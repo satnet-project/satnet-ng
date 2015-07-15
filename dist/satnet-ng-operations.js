@@ -3701,26 +3701,96 @@ angular.module(
     }
 
 ])
+.constant('CREATE_OPERATION', '+')
+.constant('ERASE_OPERATION', '-')
+.constant('ONCE_PERIODICITY', 'O')
+.constant('DAILY_PERIODICITY', 'D')
+.constant('WEEKLY_PERIODICITY', 'W')
 .controller('ruleDialogCtrl', [
-    '$scope', 'identifier', 'isEditing',
+    '$scope',
+    'CREATE_OPERATION', 'ERASE_OPERATION',
+    'ONCE_PERIODICITY', 'DAILY_PERIODICITY', 'WEEKLY_PERIODICITY',
+    'identifier', 'isEditing',
 
-    function ($scope, identifier, isEditing) {
+    function (
+        $scope,
+        CREATE_OPERATION, ERASE_OPERATION,
+        ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
+        identifier, isEditing
+    ) {
 
+        $scope.rule = {
+            operation: CREATE_OPERATION,
+            periodicity: ONCE_PERIODICITY,
+            start_date: '',
+            end_date: ''
+        };
         $scope.uiCtrl = {
+            activeTab: 0,
+            endDateDisabled: true,
             identifier: identifier,
             isEditing: isEditing
         };
 
+        $scope.enableEndDate = function () {
+            if ($scope.rule.periodicity === ONCE_PERIODICITY ) {
+                return false;
+            }
+            return true;
+        };
+
+        $scope.periodicityChanged = function () {
+
+            if ($scope.rule.periodicity === ONCE_PERIODICITY) {
+                $scope.uiCtrl.activeTab = 0;
+                $scope.uiCtrl.endDateDisabled = true;
+                return;
+            }
+            if ($scope.rule.periodicity === DAILY_PERIODICITY) {
+                $scope.uiCtrl.activeTab = 1;
+                $scope.uiCtrl.endDateDisabled = false;
+                return;
+            }
+            if ($scope.rule.periodicity === WEEKLY_PERIODICITY) {
+                $scope.uiCtrl.activeTab = 2;
+                $scope.uiCtrl.endDateDisabled = false;
+                return;
+            }
+
+        };
+
+        $scope.tabSelected = function (periodicity) {
+
+            if (periodicity === ONCE_PERIODICITY) {
+                $scope.rule.periodicity = ONCE_PERIODICITY;
+                $scope.uiCtrl.endDateDisabled = true;
+                return;
+            }
+            if (periodicity === DAILY_PERIODICITY) {
+                $scope.rule.periodicity = DAILY_PERIODICITY;
+                $scope.uiCtrl.endDateDisabled = false;
+                return;
+            }
+            if (periodicity === WEEKLY_PERIODICITY) {
+                $scope.rule.periodicity = WEEKLY_PERIODICITY;
+                $scope.uiCtrl.endDateDisabled = false;
+                return;
+            }
+
+        };
+            
+            
         /**
          * Function that initializes the list of Ground Stations that are to be
          * displayed.
          */
         $scope.init = function () {
+            //var today = moment().format();
+            $scope.rule.start_date = new Date();
+            $scope.rule.end_date = new Date();
         };
 
-        // INITIALIZATION: avoids using ng-init within the template
         $scope.init();
-
     }
 
 ]);;/*
