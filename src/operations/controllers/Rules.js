@@ -17,6 +17,7 @@
 angular.module(
     'snRuleControllers', [
         'ngMaterial',
+        //'ngInputDate',
         'snJRPCServices',
         'snControllers',
         'snRuleFilters'
@@ -149,22 +150,29 @@ angular.module(
             operation: CREATE_OPERATION,
             periodicity: ONCE_PERIODICITY,
             start_date: '',
-            end_date: ''
+            end_date: '',
+            onceCfg: {
+                start_time: '',
+                end_time: ''
+            },
+            dailyCfg: {
+                start_time: '',
+                end_time: ''
+            },
+            weeklyCfg: {}
         };
+
         $scope.uiCtrl = {
             activeTab: 0,
             endDateDisabled: true,
+            wrongDate: false,
             identifier: identifier,
             isEditing: isEditing
         };
 
-        $scope.enableEndDate = function () {
-            if ($scope.rule.periodicity === ONCE_PERIODICITY ) {
-                return false;
-            }
-            return true;
-        };
-
+        /**
+         * Function that handles the change in the periodicity.
+         */
         $scope.periodicityChanged = function () {
 
             if ($scope.rule.periodicity === ONCE_PERIODICITY) {
@@ -185,6 +193,18 @@ angular.module(
 
         };
 
+        $scope.dateChanged = function () {
+
+            console.log('XXXXXXX dateChanged, s =' + $scope.rule.start_date);
+            console.log('XXXXXXX dateChanged, e =' + $scope.rule.end_date);
+
+        };
+            
+        /**
+         * Function that handles the change in the active tab.
+         * 
+         * @param {String} periodicity String with the type of periodicity
+         */
         $scope.tabSelected = function (periodicity) {
 
             if (periodicity === ONCE_PERIODICITY) {
@@ -204,7 +224,17 @@ angular.module(
             }
 
         };
-            
+
+        /**
+         * Function that handles the change in the time for the once rule.
+         */
+        $scope.onceTimeChanged = function () {
+            var onceCfg = $scope.rule.onceCfg;
+            if ( onceCfg.start_time > onceCfg.end_time ) {
+                $scope.uiCtrl.wrongDate = true;
+            }
+        };
+
         /**
          * Function that closes the current dialog and goes back to the
          * original list.
@@ -220,12 +250,17 @@ angular.module(
          * displayed.
          */
         $scope.init = function () {
-            //var today = moment().format();
-            $scope.rule.start_date = new Date();
-            $scope.rule.end_date = new Date();
+            var today = moment().format('YYYY-MM-DD');
+            $scope.rule.start_date = today;
+            $scope.rule.end_date = today;
+            //$scope.rule.onceCfg.start_time = today;
+            //$scope.rule.onceCfg.end_time = today;
+            //$scope.rule.dailyCfg.start_time = today;
+            //$scope.rule.dailyCfg.end_time = today;
         };
 
         $scope.init();
+
     }
 
 ]);

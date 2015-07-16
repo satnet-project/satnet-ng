@@ -2,8 +2,8 @@
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
-            <span ng-show="!uiCtrl.editing">Add new Rule</span>
-            <span ng-show="uiCtrl.editing">Edit Rule #{{ configuration.key }}</span>
+            <span ng-show="!uiCtrl.isEditing">Add new Rule</span>
+            <span ng-show="uiCtrl.isEditing">Edit Rule #{{ configuration.key }}</span>
         </h2>
     </md-toolbar>
 
@@ -54,11 +54,11 @@
                         <div layout="row">
                             <md-input-container>
                                 <label for="start_time">Start Time</label>
-                                <input name="start_time" type="time" ng-model="rule.start_time" ng-required="true"/>
+                                <input name="start_time" type="time" step="60" ng-model="rule.onceCfg.start_time" ng-click="onceTimeChanged()" ng-required="true"/>
                             </md-input-container>
                             <md-input-container>
                                 <label for="end_time">End Time</label>
-                                <input name="end_time" type="time" ng-model="rule.end_time" ng-required="true"/>
+                                <input name="end_time" type="time" step="60" ng-model="rule.onceCfg.end_time" ng-click="onceTimeChanged()" ng-required="true"/>
                             </md-input-container>
                         </div>
                     </md-tab>
@@ -66,17 +66,18 @@
                         <div layout="row">
                             <md-input-container>
                                 <label for="start_time">Start Time</label>
-                                <input name="start_time" type="time" ng-model="rule.start_time" ng-required="true"/>
+                                <input name="start_time" type="time" ng-model="rule.dailyCfg.start_time" ng-required="true"/>
                             </md-input-container>
                             <md-input-container>
                                 <label for="end_time">End Time</label>
-                                <input name="end_time" type="time" ng-model="rule.end_time" ng-required="true"/>
+                                <input name="end_time" type="time" ng-model="rule.dailyCfg.end_time" ng-required="true"/>
                             </md-input-container>
                         </div>
                     </md-tab>
                     <md-tab label="Weekly" md-on-select="tabSelected('W')" ng-disabled="true">
-                        <!--<md-content class="md-padding">-->
-                        <!--</md-content>-->
+                        <md-content class="md-padding">
+                            <strong style="font-color: red">Not supported yet</strong>
+                        </md-content>
                     </md-tab>
                 </md-tabs>
 
