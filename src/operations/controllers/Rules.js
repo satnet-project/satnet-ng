@@ -17,7 +17,6 @@
 angular.module(
     'snRuleControllers', [
         'ngMaterial',
-        //'ngInputDate',
         'snJRPCServices',
         'snControllers',
         'snRuleFilters'
@@ -168,7 +167,7 @@ angular.module(
         $scope.uiCtrl = {
             activeTab: 0,
             endDateDisabled: true,
-            wrongDate: false,
+            invalidDate: false,
             minDate: null,
             identifier: identifier,
             isEditing: isEditing
@@ -194,13 +193,6 @@ angular.module(
                 $scope.uiCtrl.endDateDisabled = false;
                 return;
             }
-
-        };
-
-        $scope.dateChanged = function () {
-
-            console.log('XXXXXXX dateChanged, s =' + $scope.rule.start_date);
-            console.log('XXXXXXX dateChanged, e =' + $scope.rule.end_date);
 
         };
             
@@ -230,12 +222,37 @@ angular.module(
         };
 
         /**
-         * Function that handles the change in the time for the once rule.
+         * Function that handles the change in the starting date of the rule.
          */
-        $scope.onceTimeChanged = function () {
-            var onceCfg = $scope.rule.onceCfg;
-            if ( onceCfg.start_time > onceCfg.end_time ) {
-                $scope.uiCtrl.wrongDate = true;
+        $scope.startDateChanged = function () {
+            if ( $scope.rule.periodicity === ONCE_PERIODICITY ) {
+                return;
+            }
+            $scope.validateDates();
+            $scope.minDate = $scope.rule.start_date.toISOString().split('T')[0];
+        };
+
+        /**
+         * Function that handles the change in the ending date of the rule.
+         */
+        $scope.endDateChanged = function () {
+            $scope.validateDates();
+        };
+
+        /**
+         * Function that validates whether the dates that the user has just
+         * input in the system are valid or not. For this, the starting date
+         * of the rule has to be earlier (strictly speaking) than the ending
+         * date. If it is the same, then it should be changed from a daily or
+         * weekly rule to a ONCE rule.
+         */
+        $scope.validateDates = function () {
+            if ( $scope.rule.start_date >= $scope.rule.end_date ) {
+                console.log('>>>> @dateChanged, INVALID');
+                $scope.uiCtrl.invalidDate = true;
+            } else {
+                console.log('>>>> @dateChanged, VALID');
+                $scope.uiCtrl.invalidDate = false;
             }
         };
 
@@ -255,13 +272,16 @@ angular.module(
          */
         $scope.init = function () {
 
-            var today = new Date(moment().utc().format(NG_DATE_FORMAT)),
+            var ref = moment().utc(),
+                today = new Date(ref.format(NG_DATE_FORMAT)),
                 tomorrow = new Date(
-                    moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
+                    ref.add(1, 'days').format(NG_DATE_FORMAT)
                 ),
-                minDate = today.toISOString().split('T')[0],
+                minDate = new Date(
+                    ref.format(NG_DATE_FORMAT)
+                ).toISOString().split('T')[0],
                 maxDate = new Date(
-                    moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
+                    ref.add(1, 'years').format(NG_DATE_FORMAT)
                 ).toISOString().split('T')[0];
 
             $scope.rule.start_date = today;
@@ -275,6 +295,7 @@ angular.module(
 
         };
 
+        // INITIALIZATION: avoids using ng-init within the template
         $scope.init();
 
     }

@@ -35,13 +35,13 @@
 
                 <div layout="column" style="width: 40%">
                     <strong>Applicability Range</strong>
-                    <md-input-container>
+                    <md-input-container ng-class="{ 'md-input-invalid': uiCtrl.invalidDate }">
                         <label for="start_date">Start Date</label>
-                        <input name="start_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.start_date" ng-change="dateChanged()" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
+                        <input name="start_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.start_date" ng-change="startDateChanged()" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
                     </md-input-container>
-                    <md-input-container>
+                    <md-input-container ng-class="{ 'md-input-invalid': uiCtrl.invalidDate }">
                         <label for="end_date">End Date</label>
-                        <input name="end_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.end_date" ng-change="dateChanged()" ng-disabled="uiCtrl.endDateDisabled" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
+                        <input name="end_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.end_date" ng-change="endDateChanged()" ng-disabled="uiCtrl.endDateDisabled" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
                     </md-input-container>
                 </div>
 
@@ -52,11 +52,11 @@
                 <md-tabs md-dynamic-height md-border-bottom md-selected="uiCtrl.activeTab">
                     <md-tab label="Once" md-on-select="tabSelected('O')">
                         <div layout="row">
-                            <md-input-container>
+                            <md-input-container style="padding: 25px; width: 50%">
                                 <label for="start_time">Start Time</label>
                                 <input name="start_time" type="time" step="60" ng-model="rule.onceCfg.start_time" ng-click="onceTimeChanged()" ng-required="true"/>
                             </md-input-container>
-                            <md-input-container>
+                            <md-input-container style="padding: 25px; width: 50%">
                                 <label for="end_time">End Time</label>
                                 <input name="end_time" type="time" step="60" ng-model="rule.onceCfg.end_time" ng-click="onceTimeChanged()" ng-required="true"/>
                             </md-input-container>
@@ -64,11 +64,11 @@
                     </md-tab>
                     <md-tab label="Daily" md-on-select="tabSelected('D')">
                         <div layout="row">
-                            <md-input-container>
+                            <md-input-container style="padding: 25px; width: 50%">
                                 <label for="start_time">Start Time</label>
                                 <input name="start_time" type="time" ng-model="rule.dailyCfg.start_time" ng-required="true"/>
                             </md-input-container>
-                            <md-input-container>
+                            <md-input-container style="padding: 25px; width: 50%">
                                 <label for="end_time">End Time</label>
                                 <input name="end_time" type="time" ng-model="rule.dailyCfg.end_time" ng-required="true"/>
                             </md-input-container>
