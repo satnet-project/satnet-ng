@@ -3707,16 +3707,19 @@ angular.module(
 .constant('ONCE_PERIODICITY', 'O')
 .constant('DAILY_PERIODICITY', 'D')
 .constant('WEEKLY_PERIODICITY', 'W')
+.constant('NG_DATE_FORMAT', 'YYYY-MM-DD')
 .controller('ruleDialogCtrl', [
     '$scope', '$mdDialog',
     'CREATE_OPERATION', 'ERASE_OPERATION',
     'ONCE_PERIODICITY', 'DAILY_PERIODICITY', 'WEEKLY_PERIODICITY',
+    'NG_DATE_FORMAT',
     'identifier', 'isEditing',
 
     function (
         $scope, $mdDialog,
         CREATE_OPERATION, ERASE_OPERATION,
         ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
+        NG_DATE_FORMAT,
         identifier, isEditing
     ) {
 
@@ -3740,6 +3743,7 @@ angular.module(
             activeTab: 0,
             endDateDisabled: true,
             wrongDate: false,
+            minDate: null,
             identifier: identifier,
             isEditing: isEditing
         };
@@ -3824,13 +3828,25 @@ angular.module(
          * displayed.
          */
         $scope.init = function () {
-            var today = moment().format('YYYY-MM-DD');
+
+            var today = new Date(moment().utc().format(NG_DATE_FORMAT)),
+                tomorrow = new Date(
+                    moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
+                ),
+                minDate = today.toISOString().split('T')[0],
+                maxDate = new Date(
+                    moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
+                ).toISOString().split('T')[0];
+
             $scope.rule.start_date = today;
-            $scope.rule.end_date = today;
-            //$scope.rule.onceCfg.start_time = today;
-            //$scope.rule.onceCfg.end_time = today;
-            //$scope.rule.dailyCfg.start_time = today;
-            //$scope.rule.dailyCfg.end_time = today;
+            $scope.rule.end_date = tomorrow;
+            $scope.rule.onceCfg.start_time = today;
+            $scope.rule.onceCfg.end_time = today;
+            $scope.rule.dailyCfg.start_time = today;
+            $scope.rule.dailyCfg.end_time = today;
+            $scope.uiCtrl.minDate = minDate;
+            $scope.uiCtrl.maxDate = maxDate;
+
         };
 
         $scope.init();

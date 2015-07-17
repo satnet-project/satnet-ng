@@ -37,11 +37,11 @@
                     <strong>Applicability Range</strong>
                     <md-input-container>
                         <label for="start_date">Start Date</label>
-                        <input name="start_date" type="date" ng-model="rule.start_date" ng-required="true"/>
+                        <input name="start_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.start_date" ng-change="dateChanged()" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
                     </md-input-container>
                     <md-input-container>
                         <label for="end_date">End Date</label>
-                        <input name="end_date" type="date" ng-model="rule.end_date" ng-disabled="uiCtrl.endDateDisabled" ng-required="true"/>
+                        <input name="end_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.end_date" ng-change="dateChanged()" ng-disabled="uiCtrl.endDateDisabled" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
                     </md-input-container>
                 </div>
 
