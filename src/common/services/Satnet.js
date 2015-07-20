@@ -262,7 +262,7 @@ angular.module('snJRPCServices', [
                     // NOTICE GroundTracks are not displayed completely...
                     var result_msg = ', result = <';
                     if (service === 'sc.getGroundtrack') {
-                        result_msg += '$GT_TOO_LONG$';
+                        result_msg += '$GT_TOO_LONG$>';
                     } else {
                         result_msg += JSON.stringify(data) + '>';
                     }

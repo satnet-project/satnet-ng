@@ -135,6 +135,7 @@ angular.module(
 .constant('NG_DATE_FORMAT', 'YYYY-MM-DD')
 .controller('ruleDialogCtrl', [
     '$scope', '$mdDialog',
+    'satnetRPC', 'snDialog',
     'CREATE_OPERATION', 'ERASE_OPERATION',
     'ONCE_PERIODICITY', 'DAILY_PERIODICITY', 'WEEKLY_PERIODICITY',
     'NG_DATE_FORMAT',
@@ -142,6 +143,7 @@ angular.module(
 
     function (
         $scope, $mdDialog,
+        satnetRPC, snDialog,
         CREATE_OPERATION, ERASE_OPERATION,
         ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
         NG_DATE_FORMAT,
@@ -168,6 +170,9 @@ angular.module(
             activeTab: 0,
             endDateDisabled: true,
             invalidDate: false,
+            invalidOnceTime: false,
+            invalidDailyTime: false,
+            invalidWeeklyTime: false,
             minDate: null,
             identifier: identifier,
             isEditing: isEditing
@@ -195,7 +200,7 @@ angular.module(
             }
 
         };
-            
+
         /**
          * Function that handles the change in the active tab.
          * 
@@ -218,6 +223,41 @@ angular.module(
                 $scope.uiCtrl.endDateDisabled = false;
                 return;
             }
+
+        };
+
+        /**
+         * Function that handles the change in the time input fields,
+         * validating them while the user inputs the hours.
+         */
+        $scope.onceTimeChanged = function () {
+
+            console.log('>> st = ' + $scope.rule.onceCfg.start_time.getTime());
+            console.log('>> et = ' + $scope.rule.onceCfg.end_time.getTime());
+            console.log('>> dd = ' + (
+                $scope.rule.onceCfg.end_time.getTime() -
+                $scope.rule.onceCfg.start_time.getTime()
+            ));
+            console.log('>> si = ' + $scope.rule.onceCfg.start_time.toISOString());
+            console.log('>> ei = ' + $scope.rule.onceCfg.end_time.toISOString());
+
+            $scope.uiCtrl.invalidOnceTime =
+                $scope.rule.onceCfg.start_time.getTime() >
+                    $scope.rule.onceCfg.end_time.getTime() ?
+                true : false;
+
+        };
+
+        /**
+         * Function that handles the change in the time input fields,
+         * validating them while the user inputs the hours.
+         */
+        $scope.dailyTimeChanged = function () {
+
+            $scope.uiCtrl.invalidDailyTime =
+                $scope.rule.dailyCfg.start_time.getTime() >
+                    $scope.rule.dailyCfg.end_time.getTime() ?
+                true : false;
 
         };
 
@@ -255,7 +295,7 @@ angular.module(
                 $scope.uiCtrl.invalidDate = false;
             }
         };
-
+  
         /**
          * Function that closes the current dialog and goes back to the
          * original list.
@@ -267,29 +307,72 @@ angular.module(
         };
 
         /**
+         * Function that handles the creation of the rule in the remote server.
+         * Its main responsibilities are the serialization of the configuration
+         * that has been input by the user into an object that can be properly
+         * serialized and transmitted to the remote end.
+         */
+        $scope.add = function () {
+
+            var cfg = {
+                rule_operation: $scope.rule.operation,
+                rule_periodicity: $scope.rule.periodicity
+            };
+    
+            if ($scope.rule.periodicity === ONCE_PERIODICITY) {
+                cfg.rule_once_date = $scope.rule.start_date;
+                cfg.rule_once_starting_time = $scope.rule.onceCfg.start_time;
+                cfg.rule_once_ending_time = $scope.rule.onceCfg.end_time;
+            } else {
+                cfg.rule_daily_initial_date = $scope.rule.start_date;
+                cfg.rule_daily_final_date = $scope.rule.end_date;
+                cfg.rule_daily_starting_time = $scope.rule.dailyCfg.start_time;
+                cfg.rule_daily_ending_time = $scope.rule.dailyCfg.end_time;
+            }
+
+            satnetRPC.rCall('rules.add', [identifier, cfg]).then(
+                function (response) {
+                    var id = response.spacecraft_id;
+                    // TODO broadcaster.scAdded(id);
+                    // FIXME ISSUE #10: Error while showing the $mdDialog
+                    $mdDialog.hide();
+                    snDialog.success('sc.add', id, response, null);
+                },
+                function (cause) {
+                    snDialog.exception('sc.add', '-', cause);
+                }
+            );
+
+        };
+            
+        /**
          * Function that initializes the list of Ground Stations that are to be
          * displayed.
          */
         $scope.init = function () {
 
-            var ref = moment().utc(),
-                today = new Date(ref.format(NG_DATE_FORMAT)),
+            var today = new Date(
+                    moment().utc().format(NG_DATE_FORMAT)
+                ),
                 tomorrow = new Date(
-                    ref.add(1, 'days').format(NG_DATE_FORMAT)
+                    moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
+                ),
+                today_1h = new Date(
+                    moment().utc().add(1, 'hours').format(NG_DATE_FORMAT)
                 ),
                 minDate = new Date(
-                    ref.format(NG_DATE_FORMAT)
+                    moment().utc().format(NG_DATE_FORMAT)
                 ).toISOString().split('T')[0],
                 maxDate = new Date(
-                    ref.add(1, 'years').format(NG_DATE_FORMAT)
+                    moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
                 ).toISOString().split('T')[0];
 
             $scope.rule.start_date = today;
             $scope.rule.end_date = tomorrow;
             $scope.rule.onceCfg.start_time = today;
-            $scope.rule.onceCfg.end_time = today;
+            $scope.rule.onceCfg.end_time = today_1h;
             $scope.rule.dailyCfg.start_time = today;
-            $scope.rule.dailyCfg.end_time = today;
+            $scope.rule.dailyCfg.end_time = today_1h;
             $scope.uiCtrl.minDate = minDate;
             $scope.uiCtrl.maxDate = maxDate;
 

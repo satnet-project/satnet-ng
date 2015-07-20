@@ -172,5 +172,21 @@ describe('Testing Rules controllers', function () {
         );
 
     });
-    
+
+    it('should cancel the dialog and show the list', function () {
+
+        var $scope = $rootScope.$new(),
+            sc_id = 'sc-test';
+
+        $controller('ruleDialogCtrl', {
+            $scope: $scope, $mdDialog: $mdDialog,
+            identifier: sc_id, isEditing: true
+        });
+
+        spyOn($mdDialog, 'hide').and.callThrough();
+        $scope.cancel();
+        expect($mdDialog.hide).toHaveBeenCalled();
+
+    });
+
 });
