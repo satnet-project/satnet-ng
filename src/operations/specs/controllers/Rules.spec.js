@@ -26,7 +26,10 @@ describe('Testing Rules controllers', function () {
             });
         },
         satnetRPC, snDialog,
-        GS_RULES_MOCK;
+        GS_RULES_MOCK,
+        CREATE_OPERATION, ERASE_OPERATION,
+        ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
+        NG_DATE_FORMAT;
 
     beforeEach(function () {
 
@@ -46,6 +49,14 @@ describe('Testing Rules controllers', function () {
             satnetRPC = $injector.get('satnetRPC');
 
             GS_RULES_MOCK = $injector.get('GS_RULES_MOCK');
+
+            CREATE_OPERATION = $injector.get('CREATE_OPERATION');
+            ERASE_OPERATION = $injector.get('ERASE_OPERATION');
+            ONCE_PERIODICITY = $injector.get('ONCE_PERIODICITY');
+            DAILY_PERIODICITY = $injector.get('DAILY_PERIODICITY');
+            WEEKLY_PERIODICITY = $injector.get('WEEKLY_PERIODICITY');
+
+            NG_DATE_FORMAT = $injector.get('NG_DATE_FORMAT');
 
         });
 
@@ -173,14 +184,106 @@ describe('Testing Rules controllers', function () {
 
     });
 
-    it('should cancel the dialog and show the list', function () {
+    it('should initialize the scope of the controler', function () {
 
         var $scope = $rootScope.$new(),
-            sc_id = 'sc-test';
+            gs_id = 'gs-test',
+            today_array = new Date().toISOString().split('T')[0].split('-'),
+            x_min_date = '' +
+                today_array[0] + '-' +
+                today_array[1] + '-' +
+                ( parseInt(today_array[2]) - 1 ),
+            x_max_date = '' +
+                ( parseInt(today_array[0]) + 1 ) + '-' +
+                today_array[1] + '-' +
+                today_array[2];
 
         $controller('ruleDialogCtrl', {
             $scope: $scope, $mdDialog: $mdDialog,
-            identifier: sc_id, isEditing: true
+            identifier: gs_id, isEditing: true
+        });
+
+        expect($scope.uiCtrl).toEqual({
+            activeTab: 0,
+            endDateDisabled: true,
+            invalidDate: false,
+            invalidOnceTime: false,
+            invalidDailyTime: false,
+            invalidWeeklyTime: false,
+            identifier: gs_id,
+            isEditing: true,
+            minDate: x_min_date,
+            maxDate: x_max_date
+        });
+
+        expect($scope.rule.operation).toEqual(CREATE_OPERATION);
+        expect($scope.rule.periodicity).toEqual(ONCE_PERIODICITY);
+        expect($scope.rule.weeklyCfg).toEqual({});
+
+    });
+
+    it('should add a new rule to the system', function () {
+
+        var $scope = $rootScope.$new(),
+            gs_id = 'gs-test',
+            today = new Date(
+                moment().utc().format(NG_DATE_FORMAT)
+            ),
+            tomorrow = new Date(
+                moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
+            ),
+            time = today.toISOString().split('T')[1],
+            x_once_cfg = {
+                rule_operation: CREATE_OPERATION,
+                rule_periodicity: ONCE_PERIODICITY,
+                rule_once_date: today.toISOString(),
+                rule_once_starting_time: time,
+                rule_once_ending_time: time
+            },
+            x_daily_cfg = {
+                rule_operation: CREATE_OPERATION,
+                rule_periodicity: DAILY_PERIODICITY,
+                rule_daily_initial_date: today.toISOString(),
+                rule_daily_final_date: tomorrow.toISOString(),
+                rule_daily_starting_time: today.toISOString().split('T')[1],
+                rule_daily_ending_time: today.toISOString().split('T')[1]
+            };
+
+        $controller('ruleDialogCtrl', {
+            $scope: $scope,
+            $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC,
+            identifier: gs_id,
+            isEditing: true
+        });
+        spyOn(satnetRPC, 'rCall').and.callThrough();
+
+        // 1) ONCE-type rule
+        $scope.add();
+        expect(satnetRPC.rCall).toHaveBeenCalledWith(
+            'rules.add', [gs_id, x_once_cfg]
+        );
+        satnetRPC.rCall.calls.reset();
+
+        // 2) DAILY-type rule
+        $scope.periodicity = DAILY_PERIODICITY;
+        $scope.rule.periodicity = DAILY_PERIODICITY;
+        $scope.add();
+        expect(satnetRPC.rCall).toHaveBeenCalledWith(
+            'rules.add', [gs_id, x_daily_cfg]
+        );
+
+    });
+    
+    it('should cancel the dialog and show the list', function () {
+
+        var $scope = $rootScope.$new(),
+            gs_id = 'gs-test';
+
+        $controller('ruleDialogCtrl', {
+            $scope: $scope,
+            $mdDialog: $mdDialog,
+            identifier: gs_id, isEditing: true
         });
 
         spyOn($mdDialog, 'hide').and.callThrough();

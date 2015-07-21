@@ -179,23 +179,79 @@ angular.module(
         };
 
         /**
+         * Function that resets all the flags that control the validation state
+         * of the ONCE-type rule.
+         */
+        $scope.resetOnceFlags = function () {
+            $scope.uiCtrl.endDateDisabled = false;
+            $scope.uiCtrl.invalidOnceTime = false;
+            // TODO Weekly rule not implemented yet
+        };
+
+        /**
+         * Function that resets all the flags that control the validation state
+         * of the DAILY-type rule.
+         */
+        $scope.resetDailyFlags = function () {
+            $scope.uiCtrl.endDateDisabled = true;
+            $scope.uiCtrl.invalidDailyTime = false;
+            // TODO Weekly rule not implemented yet
+        };
+
+        /**
+         * Function that resets all the flags that control the validation state
+         * of the WEEKLY-type rule.
+         */
+        $scope.resetWeeklyFlags = function () {
+            $scope.uiCtrl.endDateDisabled = false;
+            // TODO Weekly rule not implemented yet
+        };
+
+        /**
+         * Function that handles the transition to the ONCE state.
+         */
+        $scope.switch2Once = function () {
+            $scope.uiCtrl.activeTab = 0;
+            $scope.rule.periodicity = ONCE_PERIODICITY;
+            $scope.resetDailyFlags();
+            $scope.resetWeeklyFlags();
+        };
+
+        /**
+         * Function that handles the transition to the DAILY state.
+         */
+        $scope.switch2Daily = function () {
+            $scope.uiCtrl.activeTab = 1;
+            $scope.rule.periodicity = DAILY_PERIODICITY;
+            $scope.resetOnceFlags();
+            $scope.resetWeeklyFlags();
+        };
+
+        /**
+         * Function that handles the transition to the WEEKLY state.
+         */
+        $scope.switch2Weekly = function () {
+            $scope.uiCtrl.activeTab = 2;
+            $scope.rule.periodicity = WEEKLY_PERIODICITY;
+            $scope.resetOnceFlags();
+            $scope.resetDailyFlags();
+        };
+
+        /**
          * Function that handles the change in the periodicity.
          */
         $scope.periodicityChanged = function () {
 
             if ($scope.rule.periodicity === ONCE_PERIODICITY) {
-                $scope.uiCtrl.activeTab = 0;
-                $scope.uiCtrl.endDateDisabled = true;
+                $scope.switch2Once();
                 return;
             }
             if ($scope.rule.periodicity === DAILY_PERIODICITY) {
-                $scope.uiCtrl.activeTab = 1;
-                $scope.uiCtrl.endDateDisabled = false;
+                $scope.switch2Daily();
                 return;
             }
             if ($scope.rule.periodicity === WEEKLY_PERIODICITY) {
-                $scope.uiCtrl.activeTab = 2;
-                $scope.uiCtrl.endDateDisabled = false;
+                $scope.switch2Weekly();
                 return;
             }
 
@@ -209,18 +265,15 @@ angular.module(
         $scope.tabSelected = function (periodicity) {
 
             if (periodicity === ONCE_PERIODICITY) {
-                $scope.rule.periodicity = ONCE_PERIODICITY;
-                $scope.uiCtrl.endDateDisabled = true;
+                $scope.switch2Once();
                 return;
             }
             if (periodicity === DAILY_PERIODICITY) {
-                $scope.rule.periodicity = DAILY_PERIODICITY;
-                $scope.uiCtrl.endDateDisabled = false;
+                $scope.switch2Daily();
                 return;
             }
             if (periodicity === WEEKLY_PERIODICITY) {
-                $scope.rule.periodicity = WEEKLY_PERIODICITY;
-                $scope.uiCtrl.endDateDisabled = false;
+                $scope.switch2Weekly();
                 return;
             }
 
@@ -231,15 +284,6 @@ angular.module(
          * validating them while the user inputs the hours.
          */
         $scope.onceTimeChanged = function () {
-
-            console.log('>> st = ' + $scope.rule.onceCfg.start_time.getTime());
-            console.log('>> et = ' + $scope.rule.onceCfg.end_time.getTime());
-            console.log('>> dd = ' + (
-                $scope.rule.onceCfg.end_time.getTime() -
-                $scope.rule.onceCfg.start_time.getTime()
-            ));
-            console.log('>> si = ' + $scope.rule.onceCfg.start_time.toISOString());
-            console.log('>> ei = ' + $scope.rule.onceCfg.end_time.toISOString());
 
             $scope.uiCtrl.invalidOnceTime =
                 $scope.rule.onceCfg.start_time.getTime() >
@@ -287,11 +331,10 @@ angular.module(
          * weekly rule to a ONCE rule.
          */
         $scope.validateDates = function () {
-            if ( $scope.rule.start_date >= $scope.rule.end_date ) {
-                console.log('>>>> @dateChanged, INVALID');
+            if ( $scope.rule.start_date.getTime() >=
+                $scope.rule.end_date.getTime() ) {
                 $scope.uiCtrl.invalidDate = true;
             } else {
-                console.log('>>>> @dateChanged, VALID');
                 $scope.uiCtrl.invalidDate = false;
             }
         };
@@ -320,14 +363,25 @@ angular.module(
             };
     
             if ($scope.rule.periodicity === ONCE_PERIODICITY) {
-                cfg.rule_once_date = $scope.rule.start_date;
-                cfg.rule_once_starting_time = $scope.rule.onceCfg.start_time;
-                cfg.rule_once_ending_time = $scope.rule.onceCfg.end_time;
+                cfg.rule_once_date =
+                    $scope.rule.start_date.toISOString();
+                cfg.rule_once_starting_time =
+                    $scope.rule.onceCfg.start_time
+                        .toISOString().split('T')[1];
+                cfg.rule_once_ending_time =
+                    $scope.rule.onceCfg.end_time
+                        .toISOString().split('T')[1];
             } else {
-                cfg.rule_daily_initial_date = $scope.rule.start_date;
-                cfg.rule_daily_final_date = $scope.rule.end_date;
-                cfg.rule_daily_starting_time = $scope.rule.dailyCfg.start_time;
-                cfg.rule_daily_ending_time = $scope.rule.dailyCfg.end_time;
+                cfg.rule_daily_initial_date =
+                    $scope.rule.start_date.toISOString();
+                cfg.rule_daily_final_date =
+                    $scope.rule.end_date.toISOString();
+                cfg.rule_daily_starting_time =
+                    $scope.rule.dailyCfg.start_time
+                        .toISOString().split('T')[1];
+                cfg.rule_daily_ending_time =
+                    $scope.rule.dailyCfg.end_time
+                        .toISOString().split('T')[1];
             }
 
             satnetRPC.rCall('rules.add', [identifier, cfg]).then(
@@ -361,7 +415,7 @@ angular.module(
                     moment().utc().add(1, 'hours').format(NG_DATE_FORMAT)
                 ),
                 minDate = new Date(
-                    moment().utc().format(NG_DATE_FORMAT)
+                    moment().utc().subtract(1, 'days').format(NG_DATE_FORMAT)
                 ).toISOString().split('T')[0],
                 maxDate = new Date(
                     moment().utc().add(1, 'years').format(NG_DATE_FORMAT)

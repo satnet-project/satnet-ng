@@ -40,15 +40,18 @@ angular.module('snJRPCMock', [])
 .constant('GS_RULES_MOCK', [
     '1', '2', '3'
 ])
+.constant('GS_RULE_ID_MOCK', 1)
 .service('satnetRPC', [
     '$log', '$q',
     'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK', 'CHANNELS_OPTIONS_MOCK',
-    'SC_CHANNEL_MOCK', 'GS_CHANNEL_MOCK', 'GS_RULES_MOCK',
+    'SC_CHANNEL_MOCK', 'GS_CHANNEL_MOCK',
+    'GS_RULES_MOCK', 'GS_RULE_ID_MOCK',
 
     function (
         $log, $q,
         CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK,
-        SC_CHANNEL_MOCK, GS_CHANNEL_MOCK, GS_RULES_MOCK
+        SC_CHANNEL_MOCK, GS_CHANNEL_MOCK,
+        GS_RULES_MOCK, GS_RULE_ID_MOCK
     ) {
 
         this.getServerLocation = function (hostname) {
@@ -100,6 +103,10 @@ angular.module('snJRPCMock', [])
             }
             if (service === 'gs.channel.get') {
                 result = GS_CHANNEL_MOCK;
+            }
+
+            if (service === 'rules.add') {
+                result = GS_RULE_ID_MOCK;
             }
             if (service === 'rules.list') {
                 result = GS_RULES_MOCK;
