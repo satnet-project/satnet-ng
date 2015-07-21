@@ -28,6 +28,7 @@ describe('Testing Rules controllers', function () {
         satnetRPC, snDialog,
         GS_RULES_MOCK,
         CREATE_OPERATION, ERASE_OPERATION,
+        DATES_SERIAL,
         ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
         NG_DATE_FORMAT;
 
@@ -52,6 +53,8 @@ describe('Testing Rules controllers', function () {
 
             CREATE_OPERATION = $injector.get('CREATE_OPERATION');
             ERASE_OPERATION = $injector.get('ERASE_OPERATION');
+
+            DATES_SERIAL = $injector.get('DATES_SERIAL');
             ONCE_PERIODICITY = $injector.get('ONCE_PERIODICITY');
             DAILY_PERIODICITY = $injector.get('DAILY_PERIODICITY');
             WEEKLY_PERIODICITY = $injector.get('WEEKLY_PERIODICITY');
@@ -235,18 +238,22 @@ describe('Testing Rules controllers', function () {
             time = today.toISOString().split('T')[1],
             x_once_cfg = {
                 rule_operation: CREATE_OPERATION,
-                rule_periodicity: ONCE_PERIODICITY,
-                rule_once_date: today.toISOString(),
-                rule_once_starting_time: time,
-                rule_once_ending_time: time
+                rule_periodicity: 'rule_periodicity_once',
+                rule_dates: {
+                    rule_once_date: today.toISOString(),
+                    rule_once_starting_time: time,
+                    rule_once_ending_time: time
+                }
             },
             x_daily_cfg = {
                 rule_operation: CREATE_OPERATION,
-                rule_periodicity: DAILY_PERIODICITY,
-                rule_daily_initial_date: today.toISOString(),
-                rule_daily_final_date: tomorrow.toISOString(),
-                rule_daily_starting_time: today.toISOString().split('T')[1],
-                rule_daily_ending_time: today.toISOString().split('T')[1]
+                rule_periodicity: 'rule_periodicity_daily',
+                rule_dates: {
+                    rule_daily_initial_date: today.toISOString(),
+                    rule_daily_final_date: tomorrow.toISOString(),
+                    rule_starting_time: today.toISOString().split('T')[1],
+                    rule_ending_time: today.toISOString().split('T')[1]
+                }
             };
 
         $controller('ruleDialogCtrl', {
@@ -274,7 +281,7 @@ describe('Testing Rules controllers', function () {
         );
 
     });
-    
+
     it('should cancel the dialog and show the list', function () {
 
         var $scope = $rootScope.$new(),

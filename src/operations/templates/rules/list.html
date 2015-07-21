@@ -2,7 +2,7 @@
 
     <md-content class="menu-list">
 
-        <md-button id="addRule" ng-click="showAddDialog()" aria-label="add rule" class="md-primary menu-button">
+        <md-button id="addRule" ng-click="showAddDialog()" ng-disabled="addRuleDisabled" aria-label="add rule" class="md-primary menu-button">
 
             <div layout="row" layout-fill>
                 <i class="fa fa-plus"></i>
@@ -11,6 +11,14 @@
 
         </md-button>
 
+        <div ng-show="addRuleDisabled">
+            <md-content class="ng-invalid">
+                <span>
+                    To add availability rules, channels should be added first
+                </span>
+            </md-content>
+        </div>
+        
         <md-divider></md-divider>
 
         <md-list>

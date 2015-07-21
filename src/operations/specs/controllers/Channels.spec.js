@@ -378,7 +378,7 @@ describe('Testing Channel controllers', function () {
 
         var $scope_sc = $rootScope.$new(),
             sc_id = 'sc-test';
-            /*
+            /* FIXME ISSUE #10: Error while showing the $mdDialog
             x_sc_ch_list_tpl_options = {
                 tempalteUrl: CH_LIST_TPL,
                 controller: 'channelListCtrl',
