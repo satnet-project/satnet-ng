@@ -20,28 +20,35 @@ angular.module('snRuleFilters', [])
     rule_periodicity_daily: 'DAILY',
     rule_periodicity_weekly: 'WEEKLY'
 })
+.constant('SHORT_RULE_PERIODICITIES', {
+    rule_periodicity_once: 'O',
+    rule_periodicity_daily: 'D',
+    rule_periodicity_weekly: 'W'
+})
 .filter('printRule', [
-    'RULE_PERIODICITIES',
+    'RULE_PERIODICITIES', 'SHORT_RULE_PERIODICITIES',
 
     /**
      * Filter that prints out a human-readable definition of the rule to be
      * filtered.
      * 
      * @param   {Object} RULE_PERIODICITIES Dictionary with the conversion
+     * @param   {Object} SHORT_RULE_PERIODICITIES Dictionary with the conversion
      * @returns {String} Human-readable string
      */
-    function (RULE_PERIODICITIES) {
+    function (RULE_PERIODICITIES, SHORT_RULE_PERIODICITIES) {
         return function (rule) {
-            var p = RULE_PERIODICITIES[rule.rule_periodicity],
+            var p = SHORT_RULE_PERIODICITIES[rule.rule_periodicity],
                 date_str;
 
-            if ( p === RULE_PERIODICITIES.rule_periodicity_once ) {
-                date_str = '' + rule.rule_dates.rule_once_date;
+            if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_once ) {
+                date_str = '' + rule.rule_dates.rule_once_date.split('T')[0];
             }
-            if ( p === RULE_PERIODICITIES.rule_periodicity_daily ) {
+            if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_daily ) {
                 date_str = '' +
-                    rule.rule_dates.rule_daily_initial_date + ' >>> ' +
-                    rule.rule_dates.rule_daily_final_date;
+                    rule.rule_dates.rule_daily_initial_date.split('T')[0] +
+                    ' > ' +
+                    rule.rule_dates.rule_daily_final_date.split('T')[0];
             }
 
             return '' + 
