@@ -43,7 +43,29 @@ describe("Testing Rule Filters", function () {
                     rule_once_ending_time: 'XXX'
                 }
             },
-            x_str = '(+, ONCE)';
+            x_str = '(+, ONCE) [' + rule_cfg.rule_dates.rule_once_date + ']';
+
+            expect(printRuleFilter(rule_cfg)).toEqual(x_str);
+
+        });
+
+        it('should print daily rules', function () {
+
+            var rule_cfg = {
+                key: 1,
+                rule_periodicity: 'rule_periodicity_daily',
+                rule_operation: '+',
+                rule_dates: {
+                    rule_daily_initial_date: 'XXX',
+                    rule_daily_final_date: 'ZZZ',
+                    rule_daily_starting_time: 'TTT',
+                    rule_daily_ending_time: 'WWW'
+                }
+            },
+            x_str = '(+, DAILY) [' +
+                rule_cfg.rule_dates.rule_daily_initial_date +
+                ' >>> ' +
+                rule_cfg.rule_dates.rule_daily_final_date +  ']';
 
             expect(printRuleFilter(rule_cfg)).toEqual(x_str);
 

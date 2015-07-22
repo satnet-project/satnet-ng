@@ -1515,10 +1515,6 @@ angular.module('snRuleFilters', [])
     rule_periodicity_daily: 'DAILY',
     rule_periodicity_weekly: 'WEEKLY'
 })
-.constant('RULE_STARTING_DATE', 'starts')
-.constant('RULE_ENDINGING_DATE', 'ends')
-.constant('RULE_STARTING_TIME', 'from')
-.constant('RULE_ENDING_TIME', 'to')
 .filter('printRule', [
     'RULE_PERIODICITIES',
 
@@ -1531,11 +1527,21 @@ angular.module('snRuleFilters', [])
      */
     function (RULE_PERIODICITIES) {
         return function (rule) {
-            var periodicity = RULE_PERIODICITIES[rule.rule_periodicity];
+            var p = RULE_PERIODICITIES[rule.rule_periodicity],
+                date_str;
+
+            if ( p === RULE_PERIODICITIES.rule_periodicity_once ) {
+                date_str = '' + rule.rule_dates.rule_once_date;
+            }
+            if ( p === RULE_PERIODICITIES.rule_periodicity_daily ) {
+                date_str = '' +
+                    rule.rule_dates.rule_daily_initial_date + ' >>> ' +
+                    rule.rule_dates.rule_daily_final_date;
+            }
+
             return '' + 
-                '(' +
-                    rule.rule_operation + ', ' + periodicity +
-                ')';
+                '(' + rule.rule_operation + ', ' + p + ') [' + date_str + ']';
+
         };
     }
 
