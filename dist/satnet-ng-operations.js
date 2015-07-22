@@ -3381,7 +3381,9 @@ angular.module(
                 function (results) {
                     var gs_id = results.groundstation_id;
                     broadcaster.gsAdded(gs_id);
-                    snDialog.success(gs_id, results, $scope.listTplUrl);
+                    // FIXME ISSUE #10: Error while showing the $mdDialog
+                    $mdDialog.hide();
+                    snDialog.success(gs_id, results, null);
                 },
                 function (cause) {
                     snDialog.exception('gs.add', '-', cause);
@@ -3409,8 +3411,9 @@ angular.module(
             satnetRPC.rCall('gs.update', [identifier, cfg]).then(
                 function (gs_id) {
                     broadcaster.gsUpdated(gs_id);
+                    // FIXME ISSUE #10: Error while showing the $mdDialog
                     $mdDialog.hide();
-                    snDialog.success(gs_id, gs_id, $scope.listTplUrl);
+                    snDialog.success(gs_id, gs_id, null);
                 },
                 function (cause) {
                     snDialog.exception('gs.update', '-', cause);

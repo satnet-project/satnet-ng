@@ -11,14 +11,12 @@
 
         </md-button>
 
-        <div ng-show="addRuleDisabled">
-            <md-content class="ng-invalid">
-                <span>
-                    To add availability rules, channels should be added first
-                </span>
-            </md-content>
-        </div>
-        
+        <md-content class="ng-invalid" ng-show="addRuleDisabled">
+            <span><strong>
+                To add availability rules, channels should be added first
+            </strong></span>
+        </md-content>
+
         <md-divider></md-divider>
 
         <md-list>
