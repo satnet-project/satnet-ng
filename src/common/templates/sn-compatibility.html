@@ -1,17 +1,6 @@
-<md-dialog ng-controller="snCompatibilityCtrl" aria-label="Compatibility Channels">
-
-    <md-toolbar class="md-theme-light">
-        <h2 class="md-toolbar-tools">
-            <span>Compatible Channels for {{ uiCtrl.scChannel }}</span>
-        </h2>
-    </md-toolbar>
-
-    <md-content>
-        
-    </md-content>
-
-    <div class="md-actions">
-        <md-button id="close" ng-click="closeDialog()">Close</md-button>
+<md-button id="menuCompatibility" ng-controller="snCompatibilityCtrl" ng-click="openDialog()" aria-label="compatibility" class="md-primary menu-button">
+    <div layout="row" layout-fill>
+        <i class="fa fa-puzzle-piece"></i>
+        <b>compatibility</b>
     </div>
-
-</md-dialog>
+</md-button>

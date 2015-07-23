@@ -22,6 +22,7 @@ angular.module('snOperationsDirective', [
         'snJRPCServices',
         'snSplashDirective',
         'snAboutDirective',
+        'snCompatibilityDirective',
         'snRuleFilters',
         'snControllers',
         'snOperationsMap',

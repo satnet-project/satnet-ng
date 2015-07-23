@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/satnet-project/satnet-ng/badge.svg)](https://coveralls.io/r/satnet-project/satnet-ng)
 
 [![Code Health](https://landscape.io/github/satnet-project/satnet-ng/master/landscape.svg?style=flat)](https://landscape.io/github/satnet-project/satnet-ng/master)
+[![Codacy Badge](https://www.codacy.com/project/badge/cf2f7e18001244ab96137cd71806385e)](https://www.codacy.com/app/rtubiopa/satnet-ng)
 [![Inline docs](http://inch-ci.org/github/satnet-project/satnet-ng.png)](http://inch-ci.org/github/satnet-project/satnet-ng)
 
 [![Dependencies Status](https://david-dm.org/satnet-project/satnet-ng.svg)](https://david-dm.org/satnet-project/satnet-ng.svg)

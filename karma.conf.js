@@ -34,6 +34,7 @@ module.exports = function (config) {
             'node_modules/leaflet/dist/leaflet.js',
             'node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js',
             'node_modules/moment/min/moment-with-locales.min.js',
+            'node_modules/angular-loading-bar/build/loading-bar.js',
             'node_modules/libs/*.js',
             'src/common/**/*.js',
             'src/common/templates/**/*.html',
