@@ -4515,6 +4515,7 @@ angular.module('snOperationsMap', [
 angular.module('snOperationsDirective', [
         'ngMaterial',
         'ngAnimate',
+        'angular-loading-bar',
         'leaflet-directive',
         'snJRPCServices',
         'snSplashDirective',
