@@ -14,7 +14,11 @@
    limitations under the License.
 */
 
-angular.module('snCompatibilityDirective', ['ngMaterial'])
+angular.module('snCompatibilityDirective', [
+    'ngMaterial',
+    'snControllers',
+    'snJRPCServices'
+])
 .controller('snCompatibilityCtrl', ['$scope', '$mdDialog',
 
     /**
@@ -38,14 +42,15 @@ angular.module('snCompatibilityDirective', ['ngMaterial'])
     }
 
 ])
-.controller('snCompatibilityDlgCtrl', ['$scope', '$mdDialog',
+.controller('snCompatibilityDlgCtrl', [
+    '$scope', '$mdDialog', 'satnetRPC', 'snDialog',
 
     /**
      * Controller function for the SatNet compatibility dialog.
      *
      * @param {Object} $scope    $scope for the controller.
      */
-    function ($scope, $mdDialog) {
+    function ($scope, $mdDialog, satnetRPC, snDialog) {
 
         /**
          * Function that handles the close of the Compatibility dialog.
@@ -54,6 +59,31 @@ angular.module('snCompatibilityDirective', ['ngMaterial'])
             $mdDialog.hide();
         };
 
+        $scope._loadScChannels = function () {
+            satnetRPC.rCall('sc.getCompatibility').then(
+                function (results) {
+
+                },
+                function (cause) {
+                    snDialog.exception('sc.getCompatibility', '-', cause);
+                }
+            );
+        };
+
+        $scope._loadGsChannels = function () {
+            satnetRPC.rCall('gs.channel.list').then(
+                function (results) {
+
+                },
+                function (cause) {
+                    snDialog.exception('gs.channel.list', '-', cause);
+                }
+            );
+        };
+        
+        $scope.init = function () {
+        };
+        
     }
 
 ])

@@ -161,6 +161,8 @@ angular.module('snJRPCServices', [
                 .createMethod('sc.channel.getConfiguration'),
             'sc.channel.set': this._configuration
                 .createMethod('sc.channel.setConfiguration'),
+            'sc.compatibility': this._configuration
+                .createMethod('sc.getCompatibility'),
             // User configuration
             'user.getLocation': this._configuration
                 .createMethod('user.getLocation'),
