@@ -21,69 +21,72 @@ angular.module('snJRPCMock', [])
 .constant('CHANNEL_ID_MOCK', 'channel-test')
 .constant('CHANNEL_LIST_MOCK', ['channel_1', 'channel_2'])
 .constant('SC_LIST_MOCK', ['sc-test-1', 'sc-test-2'])
-.constant('SC_COMPATIBILITY_MOCK', [
-  {
-    "Compatibility": [
-      {
-        "GroundStation": {
-          "identifier": "gs-ag-1"
-        },
-        "GsChannel": {
-          "enabled": true,
-          "automated": false,
-          "band": {
-            "IARU_allocation_maximum_frequency": "438000000.000000",
-            "IARU_allocation_minimum_frequency": "435000000.000000",
-            "uplink": true,
-            "downlink": true
+.constant('SC_COMPATIBILITY_MOCK', {
+  "spacecraft_id": "HumSAT",
+  "Compatibility": [
+    {
+      "Compatibility": [
+        {
+          "GroundStation": {
+            "identifier": "gs-ag-1"
           },
-          "bandwidths": [
-            {
-              "bandwidth": "12.500000000"
+          "GsChannel": {
+            "band": {
+              "IARU_allocation_minimum_frequency": "435000000.000000",
+              "IARU_allocation_maximum_frequency": "438000000.000000",
+              "downlink": true,
+              "uplink": true
             },
-            {
-              "bandwidth": "25.000000000"
-            }
-          ],
-          "identifier": "ch-fm-1",
-          "bitrates": [
-            {
-              "bitrate": 300
-            },
-            {
-              "bitrate": 600
-            },
-            {
-              "bitrate": 900
-            }
-          ],
-          "modulations": [
-            {
-              "modulation": "FM"
-            }
-          ],
-          "polarizations": [
-            {
-              "polarization": "LHCP"
-            },
-            {
-              "polarization": "RHCP"
-            }
-          ]
+            "polarizations": [
+              {
+                "polarization": "LHCP"
+              },
+              {
+                "polarization": "RHCP"
+              }
+            ],
+            "enabled": true,
+            "bitrates": [
+              {
+                "bitrate": 300
+              },
+              {
+                "bitrate": 600
+              },
+              {
+                "bitrate": 900
+              }
+            ],
+            "identifier": "ch-fm-1",
+            "modulations": [
+              {
+                "modulation": "FM"
+              }
+            ],
+            "bandwidths": [
+              {
+                "bandwidth": "12.500000000"
+              },
+              {
+                "bandwidth": "25.000000000"
+              }
+            ],
+            "automated": false
+          }
         }
+      ],
+      "ScChannel": {
+        "enabled": true,
+        "frequency": "437365000.000",
+        "identifier": "humd-fm1",
+        "modulation": "FM",
+        "bandwidth": "25.000000000",
+        "polarization": "LHCP",
+        "bitrate": 600
       }
-    ],
-    "ScChannel": {
-      "enabled": true,
-      "bandwidth": "25.000000000",
-      "polarization": "LHCP",
-      "frequency": "437365000.000",
-      "identifier": "humd-fm1",
-      "bitrate": 600,
-      "modulation": "FM"
     }
-  }
-])
+  ]
+})
 .constant('CHANNELS_OPTIONS_MOCK', {
     bands: ['UHF', 'VHF'],
     modulations: ['FM', 'AFSK'],

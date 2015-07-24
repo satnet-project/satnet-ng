@@ -52,6 +52,9 @@ angular.module('snCompatibilityDirective', [
      */
     function ($scope, $mdDialog, satnetRPC, snDialog) {
 
+        /** Array with the compatibility for all the sc of the user */
+        $scope.compatibility = [];
+
         /**
          * Function that handles the close of the Compatibility dialog.
          */
@@ -64,19 +67,14 @@ angular.module('snCompatibilityDirective', [
          * spacecraft segments registered with this user.
          */
         $scope.loadCompatibility = function () {
-            var sc_c = {}, cfield = 'Compatibility';
-
             satnetRPC.rCall('sc.list', []).then(
                 function (results) {
                     angular.forEach(results, function (sc) {
-                        $scope.compatibility = [];
                         satnetRPC.rCall('sc.compatibility', [sc]).then(
                             function (results) {
-                                console.log('>>> results = ' + JSON.stringify(results[0], null, '  '));
-                                console.log('>>> results.c = ' + JSON.stringify(results[0][cfield], null, '  '));
-                                sc_c = angular.copy(results.Compatibility);
-                                console.log('>>> compat for sc <' + sc + '> = ' + JSON.stringify(sc_c, null, '  '));
+                                var sc_c = angular.copy(results);
                                 $scope.compatibility.push(sc_c);
+                                console.log('>>> compat = ' + JSON.stringify($scope.compatibility, null, '  '));
                             },
                             function (cause) {
                                 snDialog.exception(
@@ -85,7 +83,6 @@ angular.module('snCompatibilityDirective', [
                             }
                         );
                     });
-                    console.log('>>> compat = ' + JSON.stringify(results, null, '  '));
                 },
                 function (cause) {
                     snDialog.exception('sc.list', '-', cause);
