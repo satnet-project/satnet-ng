@@ -59,31 +59,40 @@ angular.module('snCompatibilityDirective', [
             $mdDialog.hide();
         };
 
-        $scope._loadScChannels = function () {
-            satnetRPC.rCall('sc.getCompatibility').then(
+        /**
+         * Loads the compatibility information for the channels of the
+         * spacecraft segments registered with this user.
+         */
+        $scope.loadCompatibility = function () {
+            satnetRPC.rCall('sc.list', []).then(
                 function (results) {
-
+                    angular.forEach(results, function (sc) {
+                        console.log('>>> loading compat for sc = ' + sc);
+                        satnetRPC.rCall('sc.compatibility', [sc]).then(
+                            function (results) {
+                                angular.copy(results, $scope.compatibility);
+                            },
+                            function (cause) {
+                                snDialog.exception(
+                                    'sc.compatibility', '-', cause
+                                );
+                            }
+                        );
+                    });
                 },
                 function (cause) {
-                    snDialog.exception('sc.getCompatibility', '-', cause);
+                    snDialog.exception('sc.list', '-', cause);
                 }
             );
         };
 
-        $scope._loadGsChannels = function () {
-            satnetRPC.rCall('gs.channel.list').then(
-                function (results) {
-
-                },
-                function (cause) {
-                    snDialog.exception('gs.channel.list', '-', cause);
-                }
-            );
-        };
-        
+        /**
+         * Initialization of the controller.
+         */
         $scope.init = function () {
+            $scope.loadCompatibility();
         };
-        
+
     }
 
 ])

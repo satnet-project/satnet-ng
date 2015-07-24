@@ -3,7 +3,14 @@
 
 <div layout="row">
 
-    
+    <md-list>
+        <md-list-item class="md-3-line" ng-repeat="sc in compatibility">
+            <div class="md-list-item-text">
+                <h3>{{sc.identifier}}</h3>
+            </div>
+        <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+    </md-list>
     
 </div>
     
@@ -14,6 +21,7 @@
             <i class="fa fa-times"></i>
             <b>cancel</b>
         </div>
+        <md-divider></md-divider>
     </md-button>
 
 </div>
