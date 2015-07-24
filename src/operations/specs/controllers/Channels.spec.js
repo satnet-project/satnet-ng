@@ -390,8 +390,10 @@ describe('Testing Channel controllers', function () {
             */
 
         $controller('channelDialogCtrl', {
-            $scope: $scope_sc, $mdDialog: $mdDialog,
-            satnetRPC: satnetRPC, snDialog: snDialog,
+            $scope: $scope_sc,
+            $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC,
+            snDialog: snDialog,
             segmentId: sc_id, channelId: test_channel_id,
             isSpacecraft: true, isEditing: true
         });
@@ -580,9 +582,17 @@ describe('Testing Channel controllers', function () {
                 bitrates: [],
                 bandwidths: []
             },
+            input_sc_ch_cfg = {
+                channel_id: test_channel_id,
+                frequency: 437.365000,
+                modulation: 'FM',
+                polarization: 'LHCP',
+                bitrate: 2400,
+                bandwidth: 25.000
+            },
             x_sc_ch_cfg = {
                 channel_id: test_channel_id,
-                frequency: 437.265,
+                frequency: 437365000,
                 modulation: 'FM',
                 polarization: 'LHCP',
                 bitrate: 2400,
@@ -611,8 +621,10 @@ describe('Testing Channel controllers', function () {
 
         // ********************************************************* SC TESTING
         $controller('channelDialogCtrl', {
-            $scope: $scope_sc, $mdDialog: $mdDialog,
-            satnetRPC: satnetRPC, snDialog: snDialog,
+            $scope: $scope_sc,
+            $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC,
+            snDialog: snDialog,
             segmentId: sc_id, channelId: test_channel_id,
             isSpacecraft: true, isEditing: false
         });
@@ -620,7 +632,7 @@ describe('Testing Channel controllers', function () {
         // A1) add test
         $scope_sc.init();
         $rootScope.$digest();
-        $scope_sc.scCfg = angular.copy(x_sc_ch_cfg);
+        $scope_sc.scCfg = angular.copy(input_sc_ch_cfg);
         $scope_sc.uiCtrl.configuration = $scope_sc.scCfg;
         spyOn(satnetRPC, 'rCall').and.callThrough();
 
@@ -628,9 +640,7 @@ describe('Testing Channel controllers', function () {
         $rootScope.$digest();
 
         expect(satnetRPC.rCall).toHaveBeenCalledWith(
-            'sc.channel.add', [
-                sc_id, test_channel_id, x_sc_ch_cfg
-            ]
+            'sc.channel.add', [sc_id, test_channel_id, x_sc_ch_cfg]
         );
         expect(snDialog.success).toHaveBeenCalledWith(
             'sc.channel.add', sc_id, true, null //x_sc_ch_list_tpl_options
@@ -639,22 +649,24 @@ describe('Testing Channel controllers', function () {
 
         // A2) exception during add test
         satnetRPC.rCall.and.callFake(__fn_exception);
+        $scope_sc.scCfg = angular.copy(input_sc_ch_cfg);
+        $scope_sc.uiCtrl.configuration = $scope_sc.scCfg;
         $scope_sc.add();
         $rootScope.$digest();
         expect(satnetRPC.rCall).toHaveBeenCalledWith(
-            'sc.channel.add', [
-                sc_id, test_channel_id, x_sc_ch_cfg
-            ]
+            'sc.channel.add', [sc_id, test_channel_id, x_sc_ch_cfg]
         );
         expect(snDialog.exception).toHaveBeenCalledWith(
             'sc.channel.add', '-', jasmine.any(Function)
         );
         snDialog.exception.calls.reset();
 
-        //********************************************************** GS TESTING
+        // ********************************************************* GS TESTING
         $controller('channelDialogCtrl', {
-            $scope: $scope_gs, $mdDialog: $mdDialog,
-            satnetRPC: satnetRPC, snDialog: snDialog,
+            $scope: $scope_gs,
+            $mdDialog: $mdDialog,
+            satnetRPC: satnetRPC,
+            snDialog: snDialog,
             segmentId: gs_id, channelId: test_channel_id,
             isSpacecraft: false, isEditing: false
         });
@@ -670,9 +682,7 @@ describe('Testing Channel controllers', function () {
         $rootScope.$digest();
 
         expect(satnetRPC.rCall).toHaveBeenCalledWith(
-            'gs.channel.add', [
-                gs_id, test_channel_id, x_gs_ch_cfg
-            ]
+            'gs.channel.add', [gs_id, test_channel_id, x_gs_ch_cfg]
         );
         expect(snDialog.success).toHaveBeenCalledWith(
             'gs.channel.add', gs_id, true, null //x_gs_ch_list_tpl_options
@@ -684,9 +694,7 @@ describe('Testing Channel controllers', function () {
         $scope_gs.add();
         $rootScope.$digest();
         expect(satnetRPC.rCall).toHaveBeenCalledWith(
-            'gs.channel.add', [
-                gs_id, test_channel_id, x_gs_ch_cfg
-            ]
+            'gs.channel.add', [gs_id, test_channel_id, x_gs_ch_cfg]
         );
         expect(snDialog.exception).toHaveBeenCalledWith(
             'gs.channel.add', '-', jasmine.any(Function)

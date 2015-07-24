@@ -55,7 +55,7 @@ angular.module('snCompatibilityDirective', [
         /**
          * Function that handles the close of the Compatibility dialog.
          */
-        $scope.cancel = function () {
+        $scope.closeDialog = function () {
             $mdDialog.hide();
         };
 
@@ -64,13 +64,19 @@ angular.module('snCompatibilityDirective', [
          * spacecraft segments registered with this user.
          */
         $scope.loadCompatibility = function () {
+            var sc_c = {}, cfield = 'Compatibility';
+
             satnetRPC.rCall('sc.list', []).then(
                 function (results) {
                     angular.forEach(results, function (sc) {
-                        console.log('>>> loading compat for sc = ' + sc);
+                        $scope.compatibility = [];
                         satnetRPC.rCall('sc.compatibility', [sc]).then(
                             function (results) {
-                                angular.copy(results, $scope.compatibility);
+                                console.log('>>> results = ' + JSON.stringify(results[0], null, '  '));
+                                console.log('>>> results.c = ' + JSON.stringify(results[0][cfield], null, '  '));
+                                sc_c = angular.copy(results.Compatibility);
+                                console.log('>>> compat for sc <' + sc + '> = ' + JSON.stringify(sc_c, null, '  '));
+                                $scope.compatibility.push(sc_c);
                             },
                             function (cause) {
                                 snDialog.exception(
@@ -79,6 +85,7 @@ angular.module('snCompatibilityDirective', [
                             }
                         );
                     });
+                    console.log('>>> compat = ' + JSON.stringify(results, null, '  '));
                 },
                 function (cause) {
                     snDialog.exception('sc.list', '-', cause);

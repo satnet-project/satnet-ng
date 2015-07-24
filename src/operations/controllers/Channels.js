@@ -243,7 +243,13 @@ angular.module('snChannelControllers', [
          * selected segment.
          */
         $scope.add = function () {
+
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
+
+            if ($scope.uiCtrl.isSpacecraft === true) {
+                $scope.uiCtrl.configuration.frequency *= 1e6;
+            }
+
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
                 $scope.uiCtrl.configuration.channel_id,
@@ -269,7 +275,13 @@ angular.module('snChannelControllers', [
          * of the selected segment.
          */
         $scope.update = function () {
+
             var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.set';
+
+            if ($scope.uiCtrl.isSpacecraft === true) {
+                $scope.uiCtrl.configuration.frequency *= 1e6;
+            }
+
             satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
                 $scope.uiCtrl.configuration.channel_id,
@@ -338,6 +350,7 @@ angular.module('snChannelControllers', [
                 function (results) {
                     if ($scope.uiCtrl.isSpacecraft === true) {
                         results.frequency = parseFloat(results.frequency);
+                        results.frequency /= 1e6;
                         $scope.scCfg = angular.copy(results);
                         $scope.uiCtrl.configuration = $scope.scCfg;
                     } else {
@@ -367,7 +380,7 @@ angular.module('snChannelControllers', [
                 }
             );
         };
-            
+
     }
 
 ]);

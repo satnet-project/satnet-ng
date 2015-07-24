@@ -20,6 +20,70 @@
 angular.module('snJRPCMock', [])
 .constant('CHANNEL_ID_MOCK', 'channel-test')
 .constant('CHANNEL_LIST_MOCK', ['channel_1', 'channel_2'])
+.constant('SC_LIST_MOCK', ['sc-test-1', 'sc-test-2'])
+.constant('SC_COMPATIBILITY_MOCK', [
+  {
+    "Compatibility": [
+      {
+        "GroundStation": {
+          "identifier": "gs-ag-1"
+        },
+        "GsChannel": {
+          "enabled": true,
+          "automated": false,
+          "band": {
+            "IARU_allocation_maximum_frequency": "438000000.000000",
+            "IARU_allocation_minimum_frequency": "435000000.000000",
+            "uplink": true,
+            "downlink": true
+          },
+          "bandwidths": [
+            {
+              "bandwidth": "12.500000000"
+            },
+            {
+              "bandwidth": "25.000000000"
+            }
+          ],
+          "identifier": "ch-fm-1",
+          "bitrates": [
+            {
+              "bitrate": 300
+            },
+            {
+              "bitrate": 600
+            },
+            {
+              "bitrate": 900
+            }
+          ],
+          "modulations": [
+            {
+              "modulation": "FM"
+            }
+          ],
+          "polarizations": [
+            {
+              "polarization": "LHCP"
+            },
+            {
+              "polarization": "RHCP"
+            }
+          ]
+        }
+      }
+    ],
+    "ScChannel": {
+      "enabled": true,
+      "bandwidth": "25.000000000",
+      "polarization": "LHCP",
+      "frequency": "437365000.000",
+      "identifier": "humd-fm1",
+      "bitrate": 600,
+      "modulation": "FM"
+    }
+  }
+])
 .constant('CHANNELS_OPTIONS_MOCK', {
     bands: ['UHF', 'VHF'],
     modulations: ['FM', 'AFSK'],
@@ -28,7 +92,7 @@ angular.module('snJRPCMock', [])
     bandwidths: [25.00, 50.00]
 })
 .constant('SC_CHANNEL_MOCK', {
-    frequency: 437.365,
+    frequency: 437365000.0,
     modulation: 'FM', polarization: 'LHCP',
     bitrate: 1200, bandwidth: 25.00
 })
@@ -44,12 +108,14 @@ angular.module('snJRPCMock', [])
 .service('satnetRPC', [
     '$log', '$q',
     'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK', 'CHANNELS_OPTIONS_MOCK',
+    'SC_LIST_MOCK', 'SC_COMPATIBILITY_MOCK',
     'SC_CHANNEL_MOCK', 'GS_CHANNEL_MOCK',
     'GS_RULES_MOCK', 'GS_RULE_ID_MOCK',
 
     function (
         $log, $q,
         CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK,
+        SC_LIST_MOCK, SC_COMPATIBILITY_MOCK,
         SC_CHANNEL_MOCK, GS_CHANNEL_MOCK,
         GS_RULES_MOCK, GS_RULE_ID_MOCK
     ) {
@@ -78,6 +144,14 @@ angular.module('snJRPCMock', [])
                 ', params = ' + JSON.stringify(params, null, '  ')
             );
 
+            if (service === 'sc.list') {
+                result = SC_LIST_MOCK;
+            }
+
+            if (service === 'sc.compatibility') {
+                result = SC_COMPATIBILITY_MOCK;
+            }
+            
             if ((service === 'sc.channel.list') ||
                 (service === 'gs.channel.list')) {
                 result = CHANNEL_LIST_MOCK;

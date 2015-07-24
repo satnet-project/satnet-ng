@@ -12,7 +12,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/sn-compatibility-dialog.html',
-    "<md-dialog ng-controller=\"snCompatibilityDlgCtrl\" ng-init=\"init()\" aria-label=\"Compatibility Dialog\"><md-content><div layout=\"row\"><md-list><md-list-item class=\"md-3-line\" ng-repeat=\"sc in compatibility\"><div class=\"md-list-item-text\"><h3>{{sc.identifier}}</h3></div><md-divider ng-if=\"!$last\"></md-divider></md-list-item></md-list></div><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"cancel()\" aria-label=\"Cancel\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div><md-divider></md-divider></md-button></div></md-content></md-dialog>"
+    "<md-dialog ng-controller=\"snCompatibilityDlgCtrl\" ng-init=\"init()\" aria-label=\"Compatibility Dialog\"><md-content><div layout=\"row\"><md-list><md-list-item class=\"md-3-line\" ng-repeat=\"sc in compatibility\"><div class=\"md-list-item-text\"><h3>{{sc.identifier}}</h3></div><md-divider ng-if=\"!$last\"></md-divider></md-list-item></md-list></div><md-divider></md-divider><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"closeDialog()\" aria-label=\"close dialog\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
