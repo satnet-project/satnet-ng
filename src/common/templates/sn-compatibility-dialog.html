@@ -1,4 +1,11 @@
 <md-dialog ng-controller="snCompatibilityDlgCtrl" ng-init="init()" aria-label="Compatibility Dialog">
+    
+<md-toolbar class="md-theme-light">
+    <h2 class="md-toolbar-tools">
+        <span>Compatible Ground Station Channels</span>
+    </h2>
+</md-toolbar>
+
 <md-content class="md-padding">
 
     <md-list>
@@ -13,7 +20,7 @@
                         </md-list-item>
                         <md-list-item class="md-4-line" ng-repeat="sc_ch in sc.Compatibility" layout="row">
                             <div class="sn-box-100">
-                                <i class="md-title sn-padding sn-fg-color">{{ sc_ch.ScChannel.identifier }}</i>
+                                <a class="md-title sn-padding sn-fg-color">{{ sc_ch.ScChannel.identifier }}</a>
                             </div>
                             <div class="sn-box-100 sn-box-format" ng-repeat="gs_compat in sc_ch.Compatibility">
                                 <div>
