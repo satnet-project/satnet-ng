@@ -1,27 +1,42 @@
 <md-dialog ng-controller="snCompatibilityDlgCtrl" ng-init="init()" aria-label="Compatibility Dialog">
-<md-content>
-
-<div layout="row">
+<md-content class="md-padding">
 
     <md-list>
         <md-list-item class="md-3-line" ng-repeat="sc in compatibility">
-            <div class="md-list-item-text">
-                <h3>{{sc.identifier}}</h3>
-            </div>
-        <md-divider ng-if="!$last"></md-divider>
+
+            <md-card>
+                <md-card-content>
+                    <h2 class="md-title md-primary sn-padding sn-fg-color">{{ sc.spacecraft_id }}</h2>
+                    <md-list class="md-list-item-text">
+                        <md-list-item ng-hide="sc.Compatibility.length">
+                            <span class="sn-no-item" style="margin-left: 25px">(no compatible channels found)</span>
+                        </md-list-item>
+                        <md-list-item class="md-4-line" ng-repeat="sc_ch in sc.Compatibility" layout="row">
+                            <div>
+                                <h3 class="md-title sn-padding sn-fg-color" style="margin-left: 10px; margin-top: 50px;">{{ sc_ch.ScChannel.identifier }}</h3>
+                            </div>
+                            <div class="sn-box-150" ng-repeat="gs_compat in sc_ch.Compatibility">
+                                <div>
+                                    <h3 class="md-title sn-padding" style="margin-left: 10px">{{ gs_compat.GsChannel.identifier }}</h3>
+                                </div>
+                                <div>
+                                    <h2 class="md-title sn-padding" style="margin-left: 10px">{{ gs_compat.GroundStation.identifier }}</h2>
+                                </div>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-card-content>
+            </md-card>
+
         </md-list-item>
     </md-list>
-    
-</div>
-
-<md-divider></md-divider>
 
 <div layout="row">
 
     <md-button id="cancel" ng-click="closeDialog()" aria-label="close dialog" class="md-primary menu-button">
         <div layout="row">
             <i class="fa fa-times"></i>
-            <b>cancel</b>
+            <b>close</b>
         </div>
     </md-button>
 

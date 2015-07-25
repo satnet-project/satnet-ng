@@ -21,6 +21,30 @@ md-content {
     }
 }
 
+.sn-padding {
+    padding: 5px;
+}
+
+.sn-box-format {
+    margin: 0px 2px 0px 2px;
+    padding: 10px;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 5px;
+    border-color: $sn-primary-color;
+    background-color: $sn-secondary-color;
+}
+
+.sn-box-150 {
+    @extend .sn-box-format;
+    height: 150px;
+    width: 150px;
+}
+
+.sn-fg-color {
+    color: $sn-primary-color;
+}
+
 .menu-button {
     width: 100%;
     b {
