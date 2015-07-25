@@ -48,18 +48,21 @@ md-content .md-button {
 .sn-padding {
   padding: 5px; }
 
-.sn-box-format, .sn-box-150 {
+.sn-box-placement, .sn-box-100 {
+  text-align: center;
+  vertical-align: middle;
   margin: 0px 2px 0px 2px;
-  padding: 10px;
+  padding: 5px; }
+
+.sn-box-format {
   border-style: solid;
   border-width: 3px;
-  border-radius: 3px;
+  border-radius: 5px;
   border-color: #607D8B;
   background-color: #CFD8DC; }
 
-.sn-box-150 {
-  height: 150px;
-  width: 150px; }
+.sn-box-100 {
+  width: 100px; }
 
 .sn-fg-color {
   color: #607D8B; }
