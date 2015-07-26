@@ -107,6 +107,7 @@ describe('Testing Compatibility directive', function () {
         $c_scope.init();
         $rootScope.$digest();
 
+        expect();
     });
 
 });

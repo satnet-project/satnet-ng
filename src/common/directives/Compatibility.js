@@ -30,8 +30,7 @@ angular.module('snCompatibilityDirective', [
     function ($scope, $mdDialog) {
 
         /**
-         * Function that opens the dialog when the snAbout button is
-         * clicked.
+         * Function that opens the dialog when the snAbout button is clicked.
          */
         $scope.openDialog = function () {
             $mdDialog.show({
@@ -74,7 +73,6 @@ angular.module('snCompatibilityDirective', [
                             function (results) {
                                 var sc_c = angular.copy(results);
                                 $scope.compatibility.push(sc_c);
-                                console.log('>>> compat = ' + JSON.stringify($scope.compatibility, null, '  '));
                             },
                             function (cause) {
                                 snDialog.exception(
