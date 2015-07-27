@@ -45,7 +45,10 @@ md-content md-divider {
 md-content .md-button {
   margin: 5px 0 5px 0; }
 
-.sn-padding {
+.sn-margin {
+  margin: 10px; }
+
+.sn-padding, .sn-logo, .sn-about {
   padding: 5px; }
 
 .sn-box-placement, .sn-box-100 {
@@ -60,6 +63,14 @@ md-content .md-button {
   border-radius: 5px;
   border-color: #607D8B;
   background-color: #CFD8DC; }
+
+.sn-logo {
+  margin-right: 25px;
+  float: left;
+  width: 25%; }
+
+.sn-about {
+  text-align: justify; }
 
 .sn-box-100 {
   width: 100px; }

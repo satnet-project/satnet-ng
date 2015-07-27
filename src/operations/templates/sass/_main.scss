@@ -21,6 +21,10 @@ md-content {
     }
 }
 
+.sn-margin {
+    margin: 10px;
+}
+
 .sn-padding {
     padding: 5px;
 }
@@ -38,6 +42,18 @@ md-content {
     border-radius: 5px;
     border-color: $sn-primary-color;
     background-color: $sn-secondary-color;
+}
+
+.sn-logo {
+    @extend .sn-padding;
+    margin-right: 25px;
+    float: left;
+    width: 25%;
+}
+
+.sn-about {
+    @extend .sn-padding;
+    text-align: justify;
 }
 
 .sn-box-100 {

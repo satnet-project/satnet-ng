@@ -2,7 +2,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
   'use strict';
 
   $templateCache.put('common/templates/sn-about-dialog.html',
-    "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><p>The SatNet Network is a cooperative Open Source project hosted at GitHub (github.com/satnet-project).</p></md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
+    "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\" style=\"width: 50%\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><div class=\"sn-about\"><img class=\"sn-logo\" src=\"/images/logo.png\"><p>The SatNet Network is a cooperative Open Source project hosted at (<a href=\"https://github.com/satnet-project\">GitHub</a>). Its objective is to provide a communications network that enables sharing the Ground Stations of the members of the CubeSat developers community.</p><p>All the documentation is edited online in a collaborative wiki website hosted also at GitHub: <a href=\"https://github.com/satnet-project/documentation/wiki\">SatNet Wiki</a>. Frozen versions of the documents can be downloaded in PDF format.</p></div></md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
   );
 
 
