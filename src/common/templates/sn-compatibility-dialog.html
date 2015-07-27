@@ -15,12 +15,17 @@
                 <md-card-content>
                     <h2 class="md-title md-primary sn-padding sn-fg-color">{{ sc.spacecraft_id }}</h2>
                     <md-list class="md-list-item-text">
-                        <md-list-item ng-hide="sc.Compatibility.length">
-                            <span class="sn-no-item" style="margin-left: 25px">(no compatible channels found)</span>
+                        <md-list-item ng-show="!sc.Compatibility.length">
+                            <span class="sn-no-item" style="margin-left: 25px">(no channels available)</span>
                         </md-list-item>
                         <md-list-item class="md-4-line" ng-repeat="sc_ch in sc.Compatibility" layout="row">
                             <div class="sn-box-100">
                                 <a class="md-title sn-padding sn-fg-color">{{ sc_ch.ScChannel.identifier }}</a>
+                            </div>
+                            <div ng-show="!sc_ch.Compatibility.length" class="sn-box-placement">
+                                <i class="md-title sn-padding">
+                                    (no compatible channels found)
+                                </i>
                             </div>
                             <div class="sn-box-100 sn-box-format" ng-repeat="gs_compat in sc_ch.Compatibility">
                                 <div>
