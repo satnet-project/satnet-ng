@@ -2940,19 +2940,23 @@ angular.module('snLoggerDirective', [])
             return {
                 setScope: function (scope) { rScope = scope; },
                 log: function (args) {
-                    $delegate.log.apply(null, ['[log] ' + args]);
+                    $delegate.log.apply(null, [args]);
                     rScope.$broadcast('logEvent', args);
                 },
                 info: function (args) {
-                    $delegate.info.apply(null, ['[info] ' + args]);
+                    $delegate.info.apply(null, [args]);
                     rScope.$broadcast('infoEvent', args);
                 },
                 error: function () {
                     $delegate.error.apply(null, arguments);
                     rScope.$broadcast('errEvent', arguments);
                 },
+                debug: function () {
+                    $delegate.debug.apply(null, arguments);
+                    rScope.$broadcast('debEvent', arguments[0]);
+                },
                 warn: function (args) {
-                    $delegate.warn.apply(null, ['[warn] ' + args]);
+                    $delegate.warn.apply(null, [args]);
                     rScope.$broadcast('warnEvent', args);
                 }
             };

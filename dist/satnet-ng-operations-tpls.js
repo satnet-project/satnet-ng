@@ -22,7 +22,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/sn-logger.html',
-    "<div ng-controller=\"snLoggerCtrl\" class=\"n-area\"><div class=\"sn-logger-content\"><ul class=\"n-area-list\"><li ng-repeat=\"e in eventLog\"><div class=\"sn-logger-msg\"><div class=\"sn-logger-cell\"><p class=\"{{ e.type }}\">[@{{ e.timestamp }}]</p></div><div class=\"sn-logger-cell\"><span class=\"{{ e.type }}\">{{ e.msg }}</span></div></div></li></ul></div></div>"
+    "<div ng-controller=\"snLoggerCtrl\" class=\"sn-logger-area\" style=\"overflow: hidden\"><div class=\"sn-logger-content\"><ul class=\"sn-logger-list\"><li ng-repeat=\"e in eventLog\"><a class=\"sn-logger-info {{e.type}}\">{{ e.type }}</a> <a class=\"sn-logger-cell\">{{ e.msg }}</a></li></ul></div></div>"
   );
 
 

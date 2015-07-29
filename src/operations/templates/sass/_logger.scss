@@ -1,4 +1,4 @@
-/* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
+/* Copyright 2013, 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -12,11 +12,33 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-.add-gs-dialog {
-    width: 600px
+.sn-logger-font {
+    text-align: left;
+    font-size: 75%;
 }
 
-.sn-select-gs-map {
-    height: 250px;
-    width: 550px;
+.sn-logger-area {
+}
+
+.sn-logger-content {
+    margin: 5px;
+    max-height: 400px;
+}
+
+.sn-logger-list {
+    list-style-type: none;
+    padding: 0px;
+}
+
+.sn-logger-msg {
+}
+
+.debEvent {
+    font-weight: bolder;
+    color: $sn-primary-color;
+}
+
+.sn-logger-cell {
+    @extend .sn-logger-font;
+    word-break: break-all;
 }
