@@ -9,6 +9,12 @@
 <md-content class="md-padding">
 
     <md-list>
+
+        <div ng-show="!sc_ch.Compatibility.length" class="sn-box-placement" style="padding: 25px">
+            <i class="md-title">
+                (no spacecraft available)
+            </i>
+        </div>
         <md-list-item class="md-3-line" ng-repeat="sc in compatibility">
 
             <md-card>
@@ -45,18 +51,19 @@
             </md-card>
 
         </md-list-item>
+
     </md-list>
 
-<div layout="row">
+    <div layout="row">
 
-    <md-button id="cancel" ng-click="closeDialog()" aria-label="close dialog" class="md-primary menu-button">
-        <div layout="row">
-            <i class="fa fa-times"></i>
-            <b>close</b>
-        </div>
-    </md-button>
+        <md-button id="cancel" ng-click="closeDialog()" aria-label="close dialog" class="md-primary menu-button">
+            <div layout="row">
+                <i class="fa fa-times"></i>
+                <b>close</b>
+            </div>
+        </md-button>
 
-</div>
+    </div>
 
 </md-content>
 </md-dialog>
