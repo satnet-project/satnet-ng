@@ -65,6 +65,12 @@ md-content {
     color: $sn-primary-color;
 }
 
+.sn-sc-compat {
+    @extend .sn-fg-color;
+    text-align: center;
+    margin-top: 0;
+}
+
 .menu-button {
     width: 100%;
     b {

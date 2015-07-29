@@ -75,8 +75,12 @@ md-content .md-button {
 .sn-box-100 {
   width: 100px; }
 
-.sn-fg-color {
+.sn-fg-color, .sn-sc-compat {
   color: #607D8B; }
+
+.sn-sc-compat {
+  text-align: center;
+  margin-top: 0; }
 
 .menu-button {
   width: 100%; }
