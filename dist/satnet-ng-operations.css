@@ -282,7 +282,11 @@ div.m-app-loading p {
    limitations under the License. */
 .sn-logger-font, .sn-logger-cell {
   text-align: left;
-  font-size: 75%; }
+  font-size: 70%; }
+
+.sn-logger-area {
+  margin-top: 50px;
+  overflow: hidden; }
 
 .sn-logger-content {
   margin: 5px;
@@ -292,9 +296,27 @@ div.m-app-loading p {
   list-style-type: none;
   padding: 0px; }
 
-.debEvent {
-  font-weight: bolder;
+.sn-logger-row {
+  margin: 5px; }
+
+.sn-event, .logEvent, .infoEvent, .errEvent, .debEvent, .warnEvent {
+  font-size: 75%;
+  font-weight: bolder; }
+
+.logEvent {
   color: #607D8B; }
+
+.infoEvent {
+  color: #0B486B; }
+
+.errEvent {
+  color: #a52a2a; }
+
+.debEvent {
+  color: #607D8B; }
+
+.warnEvent {
+  color: #fb8840; }
 
 .sn-logger-cell {
   word-break: break-all; }

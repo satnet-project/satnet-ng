@@ -14,10 +14,12 @@
 
 .sn-logger-font {
     text-align: left;
-    font-size: 75%;
+    font-size: 70%;
 }
 
 .sn-logger-area {
+    margin-top: 50px;
+    overflow: hidden;
 }
 
 .sn-logger-content {
@@ -30,12 +32,41 @@
     padding: 0px;
 }
 
+.sn-logger-row {
+    margin: 5px;
+}
+
 .sn-logger-msg {
 }
 
-.debEvent {
+.sn-event {
+    font-size: 75%;
     font-weight: bolder;
+}
+
+.logEvent {
+    @extend .sn-event;
     color: $sn-primary-color;
+}
+
+.infoEvent {
+    @extend .sn-event;
+    color: $sn-blue-color;
+}
+
+.errEvent {
+    @extend .sn-event;
+    color: $sn-error-color;
+}
+
+.debEvent {
+    @extend .sn-event;
+    color: $sn-primary-color;
+}
+
+.warnEvent {
+    @extend .sn-event;
+    color: $sn-warn-color;
 }
 
 .sn-logger-cell {
