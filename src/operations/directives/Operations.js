@@ -24,6 +24,7 @@ angular.module('snOperationsDirective', [
     'snSplashDirective',
     'snAboutDirective',
     'snCompatibilityDirective',
+    'snAvailabilityDirective',
     'snRuleFilters',
     'snLoggerFilters',
     'snControllers',

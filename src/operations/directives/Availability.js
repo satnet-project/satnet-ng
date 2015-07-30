@@ -17,63 +17,63 @@
 angular.module('snAvailabilityDirective', [
     'ngMaterial'
 ])
-    .controller('snAvailabilityDlgCtrl', ['$scope', '$mdDialog',
+.controller('snAvailabilityDlgCtrl', ['$scope', '$mdDialog',
+
+    /**
+     * Controller function for handling the SatNet availability dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $mdDialog) {
 
         /**
-         * Controller function for handling the SatNet availability dialog.
-         *
-         * @param {Object} $scope $scope for the controller
+         * Function that closes the dialog.
          */
-        function ($scope, $mdDialog) {
+        $scope.close = function () {
+            $mdDialog.hide();
+        };
 
-            /**
-             * Function that closes the dialog.
-             */
-            $scope.closeDialog = function () {
-                $mdDialog.hide();
-            };
+    }
 
-        }
+])
+.controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
 
-    ])
-    .controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
+    /**
+     * Controller function for opening the SatNet availability dialog.
+     *
+     * @param {Object} $scope    $scope for the controller
+     * @param {Object} $mdDialog Angular material Dialog service
+     */
+    function ($scope, $mdDialog) {
 
         /**
-         * Controller function for opening the SatNet availability dialog.
-         *
-         * @param {Object} $scope    $scope for the controller
-         * @param {Object} $mdDialog Angular material Dialog service
+         * Function that opens the dialog when the snAvailability button is
+         * clicked.
          */
-        function ($scope, $mdDialog) {
+        $scope.openDialog = function () {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/availability/dialog.html',
+                controller: 'snAvailabilityDlgCtrl'
+            });
+        };
 
-            /**
-             * Function that opens the dialog when the snAbout button is
-             * clicked.
-             */
-            $scope.openSnAbout = function () {
-                $mdDialog.show({
-                    templateUrl:
-                        'operations/templates/availability/dialog.html'
-                });
-            };
+    }
 
-        }
+])
+.directive('snAvailability',
 
-    ])
-    .directive('snAvailability',
+    /**
+     * Function that creates the directive itself returning the object
+     * required by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/availability/menu.html'
+        };
+    }
 
-        /**
-         * Function that creates the directive itself returning the object
-         * required by Angular.
-         *
-         * @returns {Object} Object directive required by Angular, with
-         *                   restrict and templateUrl
-         */
-        function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'operations/templates/availability/entry.html'
-            };
-        }
-
-    );
+);
