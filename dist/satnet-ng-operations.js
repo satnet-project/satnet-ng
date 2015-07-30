@@ -1496,6 +1496,53 @@ angular.module('snMapServices', [
 
     }
 ]);;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snLoggerFilters', [])
+.constant('LOGGER_EVENT_KEYS', {
+    debEvent: 'DEBUG',
+    logEvent: 'LOG',
+    infoEvent: 'INFO',
+    warnEvent: 'WARNING',
+    errEvent: 'ERROR'
+})
+.filter('logEvent', [
+    'LOGGER_EVENT_KEYS',
+
+    /**
+     * Filter that prints out a human-readable definition of the type of the
+     * logger event.
+     * 
+     * @param   {Object} LOGGER_EVENT_KEYS Dictionary with the conversion
+     * @returns {String} Human-readable string
+     */
+    function (LOGGER_EVENT_KEYS) {
+        return function (logEvent) {
+
+            if (!LOGGER_EVENT_KEYS.hasOwnProperty(logEvent)) {
+                return logEvent;
+            }
+            
+            return LOGGER_EVENT_KEYS[logEvent];
+
+        };
+    }
+
+]);
+;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -2868,9 +2915,10 @@ angular.module('snCompatibilityDirective', [
 */
 
 angular.module('snLoggerDirective', [])
+.constant('MAX_LOG_MSGS', 20)
 .constant('TIMESTAMP_FORMAT', 'HH:mm:ss.sss')
 .controller('snLoggerCtrl', [
-    '$scope', '$filter', 'TIMESTAMP_FORMAT',
+    '$scope', '$filter', 'TIMESTAMP_FORMAT', 'MAX_LOG_MSGS',
 
     /** 
      * Log controller.
@@ -2878,16 +2926,33 @@ angular.module('snLoggerDirective', [])
      * @param {Object} $scope           Angular $scope controller
      * @param {Object} $filter          Angular $filter service
      * @param {String} TIMESTAMP_FORMAT Timestamp date format
+     * @param {Number} MAX_LOG_MSGS     Maximum number of allowed messages
      */
-    function ($scope, $filter, TIMESTAMP_FORMAT) {
+    function ($scope, $filter, TIMESTAMP_FORMAT, MAX_LOG_MSGS) {
 
         $scope.eventLog = [];
+
+        /**
+         * Function that adds the just-captured event to the list of events to
+         * be logged. It can keep up to the maximum number of events whose
+         * messages are going to be displayed, a mark after which it starts
+         * dropping htme.
+         * 
+         * @param {Object} event   Event to be logged
+         * @param {String} message Type of the event (necessary to display it)
+         */
         $scope.logEvent = function (event, message) {
+
             $scope.eventLog.unshift({
                 type: event.name,
                 timestamp: $filter('date')(new Date(), TIMESTAMP_FORMAT),
                 msg:  message
             });
+
+            if ($scope.eventLog.length > MAX_LOG_MSGS) {
+                $scope.eventLog.pop();
+            }
+
         };
 
         $scope.$on('logEvent', function (event, message) {
@@ -4644,7 +4709,85 @@ angular.module(
 
     }
 
-]);;/**
+]);;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snAvailabilityDirective', [
+    'ngMaterial'
+])
+    .controller('snAvailabilityDlgCtrl', ['$scope', '$mdDialog',
+
+        /**
+         * Controller function for handling the SatNet availability dialog.
+         *
+         * @param {Object} $scope $scope for the controller
+         */
+        function ($scope, $mdDialog) {
+
+            /**
+             * Function that closes the dialog.
+             */
+            $scope.closeDialog = function () {
+                $mdDialog.hide();
+            };
+
+        }
+
+    ])
+    .controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
+
+        /**
+         * Controller function for opening the SatNet availability dialog.
+         *
+         * @param {Object} $scope    $scope for the controller
+         * @param {Object} $mdDialog Angular material Dialog service
+         */
+        function ($scope, $mdDialog) {
+
+            /**
+             * Function that opens the dialog when the snAbout button is
+             * clicked.
+             */
+            $scope.openSnAbout = function () {
+                $mdDialog.show({
+                    templateUrl:
+                        'operations/templates/availability/dialog.html'
+                });
+            };
+
+        }
+
+    ])
+    .directive('snAvailability',
+
+        /**
+         * Function that creates the directive itself returning the object
+         * required by Angular.
+         *
+         * @returns {Object} Object directive required by Angular, with
+         *                   restrict and templateUrl
+         */
+        function () {
+            return {
+                restrict: 'E',
+                templateUrl: 'operations/templates/availability/entry.html'
+            };
+        }
+
+    );;/**
  * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -4781,6 +4924,7 @@ angular.module('snOperationsDirective', [
     'snAboutDirective',
     'snCompatibilityDirective',
     'snRuleFilters',
+    'snLoggerFilters',
     'snControllers',
     'snOperationsMap',
     'snOperationsMenuControllers',

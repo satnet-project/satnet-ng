@@ -15,9 +15,10 @@
 */
 
 angular.module('snLoggerDirective', [])
+.constant('MAX_LOG_MSGS', 20)
 .constant('TIMESTAMP_FORMAT', 'HH:mm:ss.sss')
 .controller('snLoggerCtrl', [
-    '$scope', '$filter', 'TIMESTAMP_FORMAT',
+    '$scope', '$filter', 'TIMESTAMP_FORMAT', 'MAX_LOG_MSGS',
 
     /** 
      * Log controller.
@@ -25,16 +26,33 @@ angular.module('snLoggerDirective', [])
      * @param {Object} $scope           Angular $scope controller
      * @param {Object} $filter          Angular $filter service
      * @param {String} TIMESTAMP_FORMAT Timestamp date format
+     * @param {Number} MAX_LOG_MSGS     Maximum number of allowed messages
      */
-    function ($scope, $filter, TIMESTAMP_FORMAT) {
+    function ($scope, $filter, TIMESTAMP_FORMAT, MAX_LOG_MSGS) {
 
         $scope.eventLog = [];
+
+        /**
+         * Function that adds the just-captured event to the list of events to
+         * be logged. It can keep up to the maximum number of events whose
+         * messages are going to be displayed, a mark after which it starts
+         * dropping htme.
+         * 
+         * @param {Object} event   Event to be logged
+         * @param {String} message Type of the event (necessary to display it)
+         */
         $scope.logEvent = function (event, message) {
+
             $scope.eventLog.unshift({
                 type: event.name,
                 timestamp: $filter('date')(new Date(), TIMESTAMP_FORMAT),
                 msg:  message
             });
+
+            if ($scope.eventLog.length > MAX_LOG_MSGS) {
+                $scope.eventLog.pop();
+            }
+
         };
 
         $scope.$on('logEvent', function (event, message) {

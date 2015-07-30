@@ -18,13 +18,13 @@
 }
 
 .sn-logger-area {
-    margin-top: 50px;
+    margin-top: 100px;
     overflow: hidden;
 }
 
 .sn-logger-content {
     margin: 5px;
-    max-height: 400px;
+    max-height: 450px;
 }
 
 .sn-logger-list {
@@ -42,31 +42,42 @@
 .sn-event {
     font-size: 75%;
     font-weight: bolder;
+    padding: 1px;
+    vertical-align: middle;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 .logEvent {
     @extend .sn-event;
-    color: $sn-primary-color;
+    color: $sn-blue-color;
+    border-color: $sn-blue-color;
 }
 
 .infoEvent {
     @extend .sn-event;
     color: $sn-blue-color;
+    border-color: $sn-blue-color;
 }
 
 .errEvent {
     @extend .sn-event;
     color: $sn-error-color;
+    border-color: $sn-error-color;
 }
 
 .debEvent {
     @extend .sn-event;
-    color: $sn-primary-color;
+    color: $sn-orange-color;
+    border-color: $sn-orange-color;
 }
 
 .warnEvent {
     @extend .sn-event;
     color: $sn-warn-color;
+    border-color: $sn-warn-color;
 }
 
 .sn-logger-cell {

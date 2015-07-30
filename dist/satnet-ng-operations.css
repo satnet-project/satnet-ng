@@ -285,12 +285,12 @@ div.m-app-loading p {
   font-size: 70%; }
 
 .sn-logger-area {
-  margin-top: 50px;
+  margin-top: 100px;
   overflow: hidden; }
 
 .sn-logger-content {
   margin: 5px;
-  max-height: 400px; }
+  max-height: 450px; }
 
 .sn-logger-list {
   list-style-type: none;
@@ -301,22 +301,33 @@ div.m-app-loading p {
 
 .sn-event, .logEvent, .infoEvent, .errEvent, .debEvent, .warnEvent {
   font-size: 75%;
-  font-weight: bolder; }
+  font-weight: bolder;
+  padding: 1px;
+  vertical-align: middle;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-style: solid; }
 
 .logEvent {
-  color: #607D8B; }
+  color: #0B486B;
+  border-color: #0B486B; }
 
 .infoEvent {
-  color: #0B486B; }
+  color: #0B486B;
+  border-color: #0B486B; }
 
 .errEvent {
-  color: #a52a2a; }
+  color: #a52a2a;
+  border-color: #a52a2a; }
 
 .debEvent {
-  color: #607D8B; }
+  color: #F87217;
+  border-color: #F87217; }
 
 .warnEvent {
-  color: #fb8840; }
+  color: #fb8840;
+  border-color: #fb8840; }
 
 .sn-logger-cell {
   word-break: break-all; }
