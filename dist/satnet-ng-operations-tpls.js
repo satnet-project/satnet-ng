@@ -32,7 +32,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/availability/dialog.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2><md-content><div ng-show=\"!groundstations.length\" class=\"sn-box-placement\" style=\"padding: 25px\"><i class=\"md-title\">(no ground stations registered)</i></div><div ng-repeat=\"gs in groundstations\"><div ng-repeat=\"slots in slots(gs)\"></div></div></md-content></md-toolbar><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
