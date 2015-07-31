@@ -841,6 +841,7 @@ angular.module('snJRPCServices', [
         this._simulation = jsonrpc.newService('simulation', _rpc);
         this._leop = jsonrpc.newService('leop', _rpc);
         this._network = jsonrpc.newService('network', _rpc);
+        this._scheduling = jsonrpc.newService('scheduling', _rpc);
 
         this._services = {
             'channels.options': this._configuration
@@ -944,7 +945,10 @@ angular.module('snJRPCServices', [
             'net.alive': this._network
                 .createMethod('keepAlive'),
             'net.geoip': this._network
-                .createMethod('geoip')
+                .createMethod('geoip'),
+            // SCHEDULING services
+            'gs.slots': this._scheduling
+                .createMethod('gs.getOperationalSlots')
         };
 
         /**
@@ -4726,17 +4730,23 @@ angular.module(
 */
 
 angular.module('snAvailabilityDirective', [
-    'ngMaterial'
+    'ngMaterial',
+    'snJRPCServices'
 ])
-.controller('snAvailabilityDlgCtrl', ['$scope', '$mdDialog',
+.controller('snAvailabilityDlgCtrl', [
+    '$scope', '$log', '$mdDialog',
+    'satnetRPC', 'snDialog',
 
     /**
      * Controller function for handling the SatNet availability dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $mdDialog) {
+    function ($scope, $log, $mdDialog, satnetRPC, snDialog) {
 
+        $scope.gss = [];
+        $scope.slots = {};
+        
         /**
          * Function that closes the dialog.
          */
@@ -4744,6 +4754,44 @@ angular.module('snAvailabilityDirective', [
             $mdDialog.hide();
         };
 
+        /**
+         * Helps adding all the information structures related to a given
+         * ground station correctly into the $scope. It post-processes them and
+         * creates the associated structures that are easier to convert into
+         * an HTML-like component.
+         * 
+         * @param {String} groundstation_id Ground Station identifier
+         * @param {Object} slots            Array with the operational slots
+         */
+        $scope._addGS = function (groundstation_id, slots) {
+            $scope.gss.push(groundstation_id);
+            $scope.slots[groundstation_id] = angular.copy(slots);
+        };
+
+        /**
+         * Function that initializes the data structures for the visualization
+         * of the available operational slots. The following data structures
+         * have to be pulled out of the server:
+         * 
+         * 1) retrieve all the ground station identifiers from the server,
+         * 2) retrieve the operatonal slots for the ground stations.
+         */
+        $scope.init = function () {
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                angular.forEach(results, function (gs) {
+                    $log.debug('>>> loading slots for <' + gs + '>');
+                    satnetRPC.rCall('gs.slots').then(function (results) {
+                        $scope._addGS(gs, results);
+                    })
+                    .catch(function (cause) {
+                        snDialog.exception('gs.slots', gs, cause);
+                    });
+                });
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', [], cause);
+            });
+        };
+        
     }
 
 ])

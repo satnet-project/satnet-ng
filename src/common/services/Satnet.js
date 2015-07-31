@@ -108,6 +108,7 @@ angular.module('snJRPCServices', [
         this._simulation = jsonrpc.newService('simulation', _rpc);
         this._leop = jsonrpc.newService('leop', _rpc);
         this._network = jsonrpc.newService('network', _rpc);
+        this._scheduling = jsonrpc.newService('scheduling', _rpc);
 
         this._services = {
             'channels.options': this._configuration
@@ -211,7 +212,10 @@ angular.module('snJRPCServices', [
             'net.alive': this._network
                 .createMethod('keepAlive'),
             'net.geoip': this._network
-                .createMethod('geoip')
+                .createMethod('geoip'),
+            // SCHEDULING services
+            'gs.slots': this._scheduling
+                .createMethod('gs.getOperationalSlots')
         };
 
         /**
