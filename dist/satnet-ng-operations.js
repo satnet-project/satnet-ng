@@ -1605,7 +1605,8 @@ angular.module('snRuleFilters', [])
         };
     }
 
-]);;/**
+]);
+;/**
  * Copyright 2014 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -4746,7 +4747,7 @@ angular.module('snAvailabilityDirective', [
 
         $scope.gss = [];
         $scope.slots = {};
-        
+
         /**
          * Function that closes the dialog.
          */
@@ -4780,7 +4781,7 @@ angular.module('snAvailabilityDirective', [
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 angular.forEach(results, function (gs) {
                     $log.debug('>>> loading slots for <' + gs + '>');
-                    satnetRPC.rCall('gs.slots').then(function (results) {
+                    satnetRPC.rCall('gs.slots', [gs]).then(function (results) {
                         $scope._addGS(gs, results);
                     })
                     .catch(function (cause) {
@@ -4791,7 +4792,7 @@ angular.module('snAvailabilityDirective', [
                 snDialog.exception('gs.list', [], cause);
             });
         };
-        
+
     }
 
 ])
