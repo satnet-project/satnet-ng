@@ -93,15 +93,12 @@ angular.module(
                 snDialog.exception('rules.delete', identifier, cause);
             });
         };
-        
-        
+
         /**
          * Function that refreshes the list of registered Ground Stations.
          */
         $scope.refresh = function () {
-            satnetRPC.rCall('rules.list', [
-                $scope.identifier
-            ]).then(
+            satnetRPC.rCall('rules.list', [$scope.identifier]).then(
                 function (results) {
                     if (results !== null) {
                         $scope.ruleList = results.slice(0);
