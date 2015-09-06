@@ -112,7 +112,7 @@ angular.module('snJRPCServices', [
 
             this._services = {
                 'channels.options': this._configuration
-                    .createMethod('channels.getOptions'),
+                    .createMethod('bands.available'),
                 // Configuration methods (Ground Stations)
                 'gs.list': this._configuration
                     .createMethod('gs.list'),

@@ -22,7 +22,11 @@ describe('Testing Rules controllers', function () {
         __mock__cookies = {},
         __fn_exception = function () {
             return $q.reject(function () {
-                return {data: {message: 'Simulated Exception'}};
+                return {
+                    data: {
+                        message: 'Simulated Exception'
+                    }
+                };
             });
         },
         satnetRPC, snDialog,
@@ -192,18 +196,16 @@ describe('Testing Rules controllers', function () {
         var $scope = $rootScope.$new(),
             gs_id = 'gs-test',
             today_array = new Date().toISOString().split('T')[0].split('-'),
-            x_min_date = '' +
-                today_array[0] + '-' +
-                today_array[1] + '-' +
-                ( parseInt(today_array[2]) - 1 ),
-            x_max_date = '' +
-                ( parseInt(today_array[0]) + 1 ) + '-' +
-                today_array[1] + '-' +
-                today_array[2];
+            min_day_i = parseInt(today_array[2]) - 1,
+            min_day_s = (min_day_i < 10) ? '0' + min_day_i : '' + min_day_i,
+            x_min_date = '' + today_array[0] + '-' + today_array[1] + '-' + min_day_s,
+            x_max_date = '' + (parseInt(today_array[0]) + 1) + '-' + today_array[1] + '-' + today_array[2];
 
         $controller('ruleDialogCtrl', {
-            $scope: $scope, $mdDialog: $mdDialog,
-            identifier: gs_id, isEditing: true
+            $scope: $scope,
+            $mdDialog: $mdDialog,
+            identifier: gs_id,
+            isEditing: true
         });
 
         expect($scope.uiCtrl).toEqual({
@@ -290,7 +292,8 @@ describe('Testing Rules controllers', function () {
         $controller('ruleDialogCtrl', {
             $scope: $scope,
             $mdDialog: $mdDialog,
-            identifier: gs_id, isEditing: true
+            identifier: gs_id,
+            isEditing: true
         });
 
         spyOn($mdDialog, 'hide').and.callThrough();
