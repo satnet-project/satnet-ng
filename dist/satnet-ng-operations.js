@@ -752,7 +752,7 @@ angular
 angular.module('snJRPCServices', [
     'jsonrpc', 'ngCookies'
 ])
-.run([
+    .run([
     '$http', '$cookies',
 
     /**
@@ -765,14 +765,14 @@ angular.module('snJRPCServices', [
      * @param {Object} $cookies Angular JS $cookies service
      */
     function ($http, $cookies) {
-        $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+            $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
     }
 
 ])
-.constant('RPC_GS_PREFIX', 'gs')
-.constant('RPC_SC_PREFIX', 'sc')
-.constant('TEST_PORT', 8000)
-.service('satnetRPC', [
+    .constant('RPC_GS_PREFIX', 'gs')
+    .constant('RPC_SC_PREFIX', 'sc')
+    .constant('TEST_PORT', 8000)
+    .service('satnetRPC', [
     'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
 
     /**
@@ -788,346 +788,346 @@ angular.module('snJRPCServices', [
      */
     function (jsonrpc, $location, $log, $q, $http, TEST_PORT) {
 
-        /**
-         * PRIVATE METHOD
-         *
-         * Returns the complete address to connect to the sever where the
-         * SatNet services are running. This can be use as the base for any
-         * of the offered services, regardless of whether they are offered
-         * over JRPC or over HTTP (AJAX requests).
-         *
-         * If the current connection address is "localhost", it assumes
-         * debug mode and the URL that it returns has the port changed so
-         * that it re-routes the calls to the port 8000. At that port, the
-         * code for the SatNet server is supposed to be running.
-         *
-         * The latter policy for automatic test detection might incurr in
-         * further Cross-Reference connection problems.
-         *
-         * @returns {String} Corrected address for the remote SatNet server.
-         */
-        this._getSatNetAddress = function () {
+            /**
+             * PRIVATE METHOD
+             *
+             * Returns the complete address to connect to the sever where the
+             * SatNet services are running. This can be use as the base for any
+             * of the offered services, regardless of whether they are offered
+             * over JRPC or over HTTP (AJAX requests).
+             *
+             * If the current connection address is "localhost", it assumes
+             * debug mode and the URL that it returns has the port changed so
+             * that it re-routes the calls to the port 8000. At that port, the
+             * code for the SatNet server is supposed to be running.
+             *
+             * The latter policy for automatic test detection might incurr in
+             * further Cross-Reference connection problems.
+             *
+             * @returns {String} Corrected address for the remote SatNet server.
+             */
+            this._getSatNetAddress = function () {
                 var protocol = $location.protocol(),
-                hostname = $location.host(),
-                port = $location.port();
+                    hostname = $location.host(),
+                    port = $location.port();
                 if (hostname === 'localhost') {
-                port = TEST_PORT;
-            }
+                    port = TEST_PORT;
+                }
                 return '' + protocol + '://' + hostname + ':' + port;
             };
 
-        /**
-         * PRIVATE METHOD
-         *
-         * Returns the complete address to connect with the remote server
-         * that implements the remote SATNET API over JRPC.
-         *
-         * If the current connection address is "localhost", it assumes
-         * debug mode and the URL that it returns has the port changed so
-         * that it re-routes the calls to the port 8000. At that port, the
-         * code for the SatNet server is supposed to be running.
-         *
-         * The latter policy for automatic test detection might incurr in
-         * further Cross-Reference connection problems.
-         *
-         * @returns {String} Corrected address for the remote SatNet server.
-         */
-        this._getRPCAddress = function () {
-            return this._getSatNetAddress() + '/jrpc/';
-        };
-        
-        var _rpc = this._getRPCAddress();
-        this._configuration = jsonrpc.newService('configuration', _rpc);
-        this._simulation = jsonrpc.newService('simulation', _rpc);
-        this._leop = jsonrpc.newService('leop', _rpc);
-        this._network = jsonrpc.newService('network', _rpc);
-        this._scheduling = jsonrpc.newService('scheduling', _rpc);
+            /**
+             * PRIVATE METHOD
+             *
+             * Returns the complete address to connect with the remote server
+             * that implements the remote SATNET API over JRPC.
+             *
+             * If the current connection address is "localhost", it assumes
+             * debug mode and the URL that it returns has the port changed so
+             * that it re-routes the calls to the port 8000. At that port, the
+             * code for the SatNet server is supposed to be running.
+             *
+             * The latter policy for automatic test detection might incurr in
+             * further Cross-Reference connection problems.
+             *
+             * @returns {String} Corrected address for the remote SatNet server.
+             */
+            this._getRPCAddress = function () {
+                return this._getSatNetAddress() + '/jrpc/';
+            };
 
-        this._services = {
-            'channels.options': this._configuration
-                .createMethod('channels.getOptions'),
-            // Configuration methods (Ground Stations)
-            'gs.list': this._configuration
-                .createMethod('gs.list'),
-            'gs.add': this
-                ._configuration.createMethod('gs.create'),
-            'gs.get': this._configuration
-                .createMethod('gs.getConfiguration'),
-            'gs.update': this._configuration
-                .createMethod('gs.setConfiguration'),
-            'gs.delete': this._configuration
-                .createMethod('gs.delete'),
-            'gs.channel.list': this._configuration
-                .createMethod('gs.channel.list'),
-            'gs.channel.add': this._configuration
-                .createMethod('gs.channel.create'),
-            'gs.channel.delete': this._configuration
-                .createMethod('gs.channel.delete'),
-            'gs.channel.get': this._configuration
-                .createMethod('gs.channel.getConfiguration'),
-            'gs.channel.set': this._configuration
-                .createMethod('gs.channel.setConfiguration'),
-            // Rules management
-            'rules.list': this._configuration
-                .createMethod('gs.listRules'),
-            'rules.add': this._configuration
-                .createMethod('gs.addRule'),
-            'rules.delete': this._configuration
-                .createMethod('gs.removeRule'),
-            // Configuration methods (Spacecraft)
-            'sc.list': this._configuration
-                .createMethod('sc.list'),
-            'sc.add': this._configuration
-                .createMethod('sc.create'),
-            'sc.get': this._configuration
-                .createMethod('sc.getConfiguration'),
-            'sc.update': this._configuration
-                .createMethod('sc.setConfiguration'),
-            'sc.delete': this._configuration
-                .createMethod('sc.delete'),
-            'sc.channel.list': this._configuration
-                .createMethod('sc.channel.list'),
-            'sc.channel.add': this._configuration
-                .createMethod('sc.channel.create'),
-            'sc.channel.delete': this._configuration
-                .createMethod('sc.channel.delete'),
-            'sc.channel.get': this._configuration
-                .createMethod('sc.channel.getConfiguration'),
-            'sc.channel.set': this._configuration
-                .createMethod('sc.channel.setConfiguration'),
-            'sc.compatibility': this._configuration
-                .createMethod('sc.getCompatibility'),
-            // User configuration
-            'user.getLocation': this._configuration
-                .createMethod('user.getLocation'),
-            // TLE methods
-            'tle.celestrak.getSections': this._configuration
-                .createMethod('tle.celestrak.getSections'),
-            'tle.celestrak.getResource': this._configuration
-                .createMethod('tle.celestrak.getResource'),
-            'tle.celestrak.getTle': this._configuration
-                .createMethod('tle.celestrak.getTle'),
-            // Simulation methods
-            'sc.getGroundtrack': this._simulation
-                .createMethod('spacecraft.getGroundtrack'),
-            'sc.getPasses': this._simulation
-                .createMethod('spacecraft.getPasses'),
-            'gs.getPasses': this._simulation
-                .createMethod('groundstation.getPasses'),
-            // LEOP services
-            'leop.getCfg': this._leop
-                .createMethod('getConfiguration'),
-            'leop.setCfg': this._leop
-                .createMethod('setConfiguration'),
-            'leop.getPasses': this._leop
-                .createMethod('getPasses'),
-            'leop.gs.list': this._leop
-                .createMethod('gs.list'),
-            'leop.sc.list': this._leop
-                .createMethod('sc.list'),
-            'leop.gs.add': this._leop
-                .createMethod('gs.add'),
-            'leop.gs.remove': this._leop
-                .createMethod('gs.remove'),
-            'leop.ufo.add': this._leop
-                .createMethod('launch.addUnknown'),
-            'leop.ufo.remove': this._leop
-                .createMethod('launch.removeUnknown'),
-            'leop.ufo.identify': this._leop
-                .createMethod('launch.identify'),
-            'leop.ufo.forget': this._leop
-                .createMethod('launch.forget'),
-            'leop.ufo.update': this._leop
-                .createMethod('launch.update'),
-            'leop.getMessages': this._leop
-                .createMethod('getMessages'),
-            // NETWORK services
-            'net.alive': this._network
-                .createMethod('keepAlive'),
-            'net.geoip': this._network
-                .createMethod('geoip'),
-            // SCHEDULING services
-            'gs.slots': this._scheduling
-                .createMethod('gs.getOperationalSlots')
-        };
+            var _rpc = this._getRPCAddress();
+            this._configuration = jsonrpc.newService('configuration', _rpc);
+            this._simulation = jsonrpc.newService('simulation', _rpc);
+            this._leop = jsonrpc.newService('leop', _rpc);
+            this._network = jsonrpc.newService('network', _rpc);
+            this._scheduling = jsonrpc.newService('scheduling', _rpc);
 
-        /**
-         * PRIVATE function that is used only by this service in order to
-         * generate in the same way all possible errors produced by the
-         * remote invokation of the SatNet services.
-         *
-         * @param {String} service Name of the SatNet JRPC service that
-         *                         has just been invoked.
-         * @param {Array}  params  Array with the parameters for the
-         *                         service to be invoked.
-         * @param {String} code    Error code.
-         * @param {String} message Messsage description.
-         */
-        this._generateError = function (service, params, code, message) {
+            this._services = {
+                'channels.options': this._configuration
+                    .createMethod('channels.getOptions'),
+                // Configuration methods (Ground Stations)
+                'gs.list': this._configuration
+                    .createMethod('gs.list'),
+                'gs.add': this
+                    ._configuration.createMethod('gs.create'),
+                'gs.get': this._configuration
+                    .createMethod('gs.getConfiguration'),
+                'gs.update': this._configuration
+                    .createMethod('gs.setConfiguration'),
+                'gs.delete': this._configuration
+                    .createMethod('gs.delete'),
+                'gs.channel.list': this._configuration
+                    .createMethod('gs.channel.list'),
+                'gs.channel.add': this._configuration
+                    .createMethod('gs.channel.create'),
+                'gs.channel.delete': this._configuration
+                    .createMethod('gs.channel.delete'),
+                'gs.channel.get': this._configuration
+                    .createMethod('gs.channel.getConfiguration'),
+                'gs.channel.set': this._configuration
+                    .createMethod('gs.channel.setConfiguration'),
+                // Rules management
+                'rules.list': this._configuration
+                    .createMethod('gs.rules.list'),
+                'rules.add': this._configuration
+                    .createMethod('gs.rules.add'),
+                'rules.delete': this._configuration
+                    .createMethod('gs.rules.remove'),
+                // Configuration methods (Spacecraft)
+                'sc.list': this._configuration
+                    .createMethod('sc.list'),
+                'sc.add': this._configuration
+                    .createMethod('sc.create'),
+                'sc.get': this._configuration
+                    .createMethod('sc.getConfiguration'),
+                'sc.update': this._configuration
+                    .createMethod('sc.setConfiguration'),
+                'sc.delete': this._configuration
+                    .createMethod('sc.delete'),
+                'sc.channel.list': this._configuration
+                    .createMethod('sc.channel.list'),
+                'sc.channel.add': this._configuration
+                    .createMethod('sc.channel.create'),
+                'sc.channel.delete': this._configuration
+                    .createMethod('sc.channel.delete'),
+                'sc.channel.get': this._configuration
+                    .createMethod('sc.channel.getConfiguration'),
+                'sc.channel.set': this._configuration
+                    .createMethod('sc.channel.setConfiguration'),
+                'sc.compatibility': this._configuration
+                    .createMethod('sc.getCompatibility'),
+                // User configuration
+                'user.getLocation': this._configuration
+                    .createMethod('user.getLocation'),
+                // TLE methods
+                'tle.celestrak.getSections': this._configuration
+                    .createMethod('tle.celestrak.getSections'),
+                'tle.celestrak.getResource': this._configuration
+                    .createMethod('tle.celestrak.getResource'),
+                'tle.celestrak.getTle': this._configuration
+                    .createMethod('tle.celestrak.getTle'),
+                // Simulation methods
+                'sc.getGroundtrack': this._simulation
+                    .createMethod('spacecraft.getGroundtrack'),
+                'sc.getPasses': this._simulation
+                    .createMethod('spacecraft.getPasses'),
+                'gs.getPasses': this._simulation
+                    .createMethod('groundstation.getPasses'),
+                // LEOP services
+                'leop.getCfg': this._leop
+                    .createMethod('getConfiguration'),
+                'leop.setCfg': this._leop
+                    .createMethod('setConfiguration'),
+                'leop.getPasses': this._leop
+                    .createMethod('getPasses'),
+                'leop.gs.list': this._leop
+                    .createMethod('gs.list'),
+                'leop.sc.list': this._leop
+                    .createMethod('sc.list'),
+                'leop.gs.add': this._leop
+                    .createMethod('gs.add'),
+                'leop.gs.remove': this._leop
+                    .createMethod('gs.remove'),
+                'leop.ufo.add': this._leop
+                    .createMethod('launch.addUnknown'),
+                'leop.ufo.remove': this._leop
+                    .createMethod('launch.removeUnknown'),
+                'leop.ufo.identify': this._leop
+                    .createMethod('launch.identify'),
+                'leop.ufo.forget': this._leop
+                    .createMethod('launch.forget'),
+                'leop.ufo.update': this._leop
+                    .createMethod('launch.update'),
+                'leop.getMessages': this._leop
+                    .createMethod('getMessages'),
+                // NETWORK services
+                'net.alive': this._network
+                    .createMethod('keepAlive'),
+                'net.geoip': this._network
+                    .createMethod('geoip'),
+                // SCHEDULING services
+                'gs.slots': this._scheduling
+                    .createMethod('gs.getOperationalSlots')
+            };
 
-            var msg = 'Satnet.js@_generateError: invoking = <' + service +
-                '>, with params = <' + JSON.stringify(params) +
-                '>, code = <' + JSON.stringify(code) +
-                '>, description = <' + JSON.stringify(message) + '>';
-            $log.warn(msg);
-            throw msg;
+            /**
+             * PRIVATE function that is used only by this service in order to
+             * generate in the same way all possible errors produced by the
+             * remote invokation of the SatNet services.
+             *
+             * @param {String} service Name of the SatNet JRPC service that
+             *                         has just been invoked.
+             * @param {Array}  params  Array with the parameters for the
+             *                         service to be invoked.
+             * @param {String} code    Error code.
+             * @param {String} message Messsage description.
+             */
+            this._generateError = function (service, params, code, message) {
 
-        };
+                var msg = 'Satnet.js@_generateError: invoking = <' + service +
+                    '>, with params = <' + JSON.stringify(params) +
+                    '>, code = <' + JSON.stringify(code) +
+                    '>, description = <' + JSON.stringify(message) + '>';
+                $log.warn(msg);
+                throw msg;
 
-        /**
-         * Method for calling the remote service through JSON-RPC.
-         *
-         * @param service The name of the service, as per the internal
-         * services name definition.
-         * @param params The parameters for the service (as an array).
-         * @returns {*}
-         */
-        this.rCall = function (service, params) {
-            var error_fn = this._generateError;
-            if ((this._services.hasOwnProperty(service)) === false) {
-                throw '@rCall: service not found, id = <' + service + '>';
-            }
-            $log.info(
-                '@rCall: Invoked service = <' + service + '>' +
-                ', params = ' + JSON.stringify(params)
-            );
-            return this._services[service](params).then(
-                function (data) {
-                    // TODO Workaround for the JSON-RPC library.
-                    if (data.data.name === 'JSONRPCError') {
-                        error_fn(service, params, data.code, data.message);
-                    }
+            };
 
-                    // NOTICE GroundTracks are not displayed completely...
-                    var result_msg = ', result = <';
-                    if (service === 'sc.getGroundtrack') {
-                        result_msg += '$GT_TOO_LONG$>';
-                    } else {
-                        result_msg += JSON.stringify(data) + '>';
-                    }
-                    $log.info(
-                        '@rCall: Invoked service = <' + service + '>' +
-                        ', params = <' + JSON.stringify(params) + '>, ' +
-                        ', result = <' + result_msg
-                    );
-
-                    return data.data;
-
-                },
-                function (error) {
-                    error_fn(service, params, 'NONE', error);
+            /**
+             * Method for calling the remote service through JSON-RPC.
+             *
+             * @param service The name of the service, as per the internal
+             * services name definition.
+             * @param params The parameters for the service (as an array).
+             * @returns {*}
+             */
+            this.rCall = function (service, params) {
+                var error_fn = this._generateError;
+                if ((this._services.hasOwnProperty(service)) === false) {
+                    throw '@rCall: service not found, id = <' + service + '>';
                 }
+                $log.info(
+                    '@rCall: Invoked service = <' + service + '>' +
+                    ', params = ' + JSON.stringify(params)
+                );
+                return this._services[service](params).then(
+                    function (data) {
+                        // TODO Workaround for the JSON-RPC library.
+                        if (data.data.name === 'JSONRPCError') {
+                            error_fn(service, params, data.code, data.message);
+                        }
 
-            );
-        };
+                        // NOTICE GroundTracks are not displayed completely...
+                        var result_msg = ', result = <';
+                        if (service === 'sc.getGroundtrack') {
+                            result_msg += '$GT_TOO_LONG$>';
+                        } else {
+                            result_msg += JSON.stringify(data) + '>';
+                        }
+                        $log.info(
+                            '@rCall: Invoked service = <' + service + '>' +
+                            ', params = <' + JSON.stringify(params) + '>, ' +
+                            ', result = <' + result_msg
+                        );
 
-        /**
-         * Simple convenience method for invoking the remote keep alive of the
-         * network sevice.
-         *
-         * @returns {*} Promise that returns True.
-         */
-        this.alive = function () {
-            return this.rCall('net.alive', []).then(function () {
-                return true;
-            });
-        };
+                        return data.data;
 
-        /**
-         * Retrieves the user location using an available Internet service.
-         *
-         * @returns Promise that returns a { latitude, longitude } object.
-         */
-        this.getUserLocation = function () {
-            var url = this._getSatNetAddress() +
-                '/configuration/user/geoip';
-            return $http.get(url).then(function (data) {
-                $log.info('Satnet.js@getUserLocation: user@(' + JSON
-                    .stringify(data.data) + ')');
-                return {
-                    latitude: parseFloat(data.data.latitude),
-                    longitude: parseFloat(data.data.longitude)
-                };
-            });
-        };
+                    },
+                    function (error) {
+                        error_fn(service, params, 'NONE', error);
+                    }
 
-        /**
-         * Retrieves the server location using an available Internet
-         * service.
-         *
-         * @returns Promise that returns a { latitude, longitude } object.
-         */
-        this.getServerLocation = function (hostname) {
-            return this.rCall('net.geoip', [hostname])
-                .then(function (location) {
-                    return location;
+                );
+            };
+
+            /**
+             * Simple convenience method for invoking the remote keep alive of the
+             * network sevice.
+             *
+             * @returns {*} Promise that returns True.
+             */
+            this.alive = function () {
+                return this.rCall('net.alive', []).then(function () {
+                    return true;
                 });
-        };
+            };
 
-        /**
-         * Reads the configuration for a given spacecraft, including the
-         * estimated groundtrack.
-         *
-         * @param scId The identifier of the spacecraft.
-         * @returns Promise that resturns the Spacecraft configuration
-         * object.
-         */
-        this.readSCCfg = function (scId) {
-            var cfg = {},
-                p = [
+            /**
+             * Retrieves the user location using an available Internet service.
+             *
+             * @returns Promise that returns a { latitude, longitude } object.
+             */
+            this.getUserLocation = function () {
+                var url = this._getSatNetAddress() +
+                    '/configuration/user/geoip';
+                return $http.get(url).then(function (data) {
+                    $log.info('Satnet.js@getUserLocation: user@(' + JSON
+                        .stringify(data.data) + ')');
+                    return {
+                        latitude: parseFloat(data.data.latitude),
+                        longitude: parseFloat(data.data.longitude)
+                    };
+                });
+            };
+
+            /**
+             * Retrieves the server location using an available Internet
+             * service.
+             *
+             * @returns Promise that returns a { latitude, longitude } object.
+             */
+            this.getServerLocation = function (hostname) {
+                return this.rCall('net.geoip', [hostname])
+                    .then(function (location) {
+                        return location;
+                    });
+            };
+
+            /**
+             * Reads the configuration for a given spacecraft, including the
+             * estimated groundtrack.
+             *
+             * @param scId The identifier of the spacecraft.
+             * @returns Promise that resturns the Spacecraft configuration
+             * object.
+             */
+            this.readSCCfg = function (scId) {
+                var cfg = {},
+                    p = [
                     this.rCall('sc.get', [scId]),
                     this.rCall('sc.getGroundtrack', [scId]),
                     this.rCall('tle.celestrak.getTle', [scId])
                 ];
-            return $q.all(p).then(function (results) {
-                cfg = results[0];
-                cfg.groundtrack = results[1];
-                cfg.tle = results[2];
-                angular.extend(cfg, results[0]);
-                angular.extend(cfg.groundtrack, results[1]);
-                angular.extend(cfg.tle, results[2]);
-                return cfg;
-            });
-        };
-
-        /**
-         * Reads the configuration for all the GroundStations associated
-         * with this LEOP cluster.
-         *
-         * @param leop_id Identifier of the LEOP cluster.
-         * @returns Promise to be resolved with the result.
-         */
-        this.readAllLEOPGS = function (leop_id) {
-            var self = this;
-            return this.rCall('leop.gs.list', [leop_id])
-                .then(function (gss) {
-                    var p = [];
-                    angular.forEach(gss.leop_gs_available, function (gs) {
-                        p.push(self.rCall('gs.get', [gs]));
-                    });
-                    angular.forEach(gss.leop_gs_inuse, function (gs) {
-                        p.push(self.rCall('gs.get', [gs]));
-                    });
-                    return $q.all(p).then(function (results) {
-                        var a_cfgs = [],
-                            u_cfgs = [],
-                            j, r_j, r_j_id;
-                        for (j = 0; j < results.length; j += 1) {
-                            r_j = results[j];
-                            r_j_id = r_j.groundstation_id;
-                            if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
-                                a_cfgs.push(r_j);
-                            } else {
-                                u_cfgs.push(r_j);
-                            }
-                        }
-                        return {
-                            leop_gs_available: a_cfgs,
-                            leop_gs_inuse: u_cfgs
-                        };
-                    });
+                return $q.all(p).then(function (results) {
+                    cfg = results[0];
+                    cfg.groundtrack = results[1];
+                    cfg.tle = results[2];
+                    angular.extend(cfg, results[0]);
+                    angular.extend(cfg.groundtrack, results[1]);
+                    angular.extend(cfg.tle, results[2]);
+                    return cfg;
                 });
-        };
+            };
+
+            /**
+             * Reads the configuration for all the GroundStations associated
+             * with this LEOP cluster.
+             *
+             * @param leop_id Identifier of the LEOP cluster.
+             * @returns Promise to be resolved with the result.
+             */
+            this.readAllLEOPGS = function (leop_id) {
+                var self = this;
+                return this.rCall('leop.gs.list', [leop_id])
+                    .then(function (gss) {
+                        var p = [];
+                        angular.forEach(gss.leop_gs_available, function (gs) {
+                            p.push(self.rCall('gs.get', [gs]));
+                        });
+                        angular.forEach(gss.leop_gs_inuse, function (gs) {
+                            p.push(self.rCall('gs.get', [gs]));
+                        });
+                        return $q.all(p).then(function (results) {
+                            var a_cfgs = [],
+                                u_cfgs = [],
+                                j, r_j, r_j_id;
+                            for (j = 0; j < results.length; j += 1) {
+                                r_j = results[j];
+                                r_j_id = r_j.groundstation_id;
+                                if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
+                                    a_cfgs.push(r_j);
+                                } else {
+                                    u_cfgs.push(r_j);
+                                }
+                            }
+                            return {
+                                leop_gs_available: a_cfgs,
+                                leop_gs_inuse: u_cfgs
+                            };
+                        });
+                    });
+            };
     }
 
 ]);;/**
@@ -3933,14 +3933,14 @@ angular.module('snOperationsMenuControllers', [
 */
 
 angular.module(
-    'snRuleControllers', [
+        'snRuleControllers', [
         'ngMaterial',
         'snJRPCServices',
         'snControllers',
         'snRuleFilters'
     ]
-)
-.controller('ruleListCtrl', [
+    )
+    .controller('ruleListCtrl', [
     '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
 
     /**
@@ -3955,134 +3955,104 @@ angular.module(
      * @param {Object} snDialog      SatNet Dialog service
      * @param {String} identifier    Identifier of the Ground Station
      */
-    function(
-        $scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
+    function (
+            $scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
 
-        $scope.identifier = identifier;
-        $scope.addRuleDisabled = false;
-        $scope.ruleList = [];
-        $scope.dlgTplUrl = 'operations/templates/rules/dialog.html';
+            $scope.identifier = identifier;
+            $scope.ruleList = [];
+            $scope.dlgTplUrl = 'operations/templates/rules/dialog.html';
 
-        /**
-         * Functiont hat handles the creation of a Dialog to add a new rule.
-         */
-        $scope.showAddDialog = function () {
-            $mdDialog.show({
-                templateUrl: $scope.dlgTplUrl,
-                controller: 'ruleDialogCtrl',
-                locals: {
-                    identifier: $scope.identifier,
-                    isEditing: false
-                }
-            });
-        };
+            /**
+             * Functiont hat handles the creation of a Dialog to add a new rule.
+             */
+            $scope.showAddDialog = function () {
+                $mdDialog.show({
+                    templateUrl: $scope.dlgTplUrl,
+                    controller: 'ruleDialogCtrl',
+                    locals: {
+                        identifier: $scope.identifier,
+                        isEditing: false
+                    }
+                });
+            };
 
-        /**
-         * Function that handles the creation of a Dialog to edit an existing
-         * rule.
-         */
-        $scope.showEditDialog = function (rule) {
-            $mdDialog.show({
-                templateUrl: $scope.dlgTplUrl,
-                controller: 'ruleDialogCtrl',
-                locals: {
-                    identifier: $scope.identifier,
-                    isEditing: true,
-                    ruleKey: rule.key
-                }
-            });
-        };
+            /**
+             * Function that handles the creation of a Dialog to edit an existing
+             * rule.
+             */
+            $scope.showEditDialog = function (rule) {
+                $mdDialog.show({
+                    templateUrl: $scope.dlgTplUrl,
+                    controller: 'ruleDialogCtrl',
+                    locals: {
+                        identifier: $scope.identifier,
+                        isEditing: true,
+                        ruleKey: rule.key
+                    }
+                });
+            };
 
-        /**
-         * Controller function that removes the given Ground Station from the
-         * database in the remote server upon user request. It first asks for
-         * confirmation before executing this removal.
-         *
-         * @param {String} identifier Identifier of the Ground Station
-         */
-        $scope.delete = function (rule) {
-            satnetRPC.rCall('rules.delete', [
+            /**
+             * Controller function that removes the given Ground Station from the
+             * database in the remote server upon user request. It first asks for
+             * confirmation before executing this removal.
+             *
+             * @param {String} identifier Identifier of the Ground Station
+             */
+            $scope.delete = function (rule) {
+                satnetRPC.rCall('rules.delete', [
                 $scope.identifier, rule.key
             ]).then(function (results) {
-                // TODO broadcaster.ruleRemoved(identifier);
-                snDialog.success('rules.delete', identifier, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception('rules.delete', identifier, cause);
-            });
-        };
+                    // TODO broadcaster.ruleRemoved(identifier);
+                    snDialog.success('rules.delete', identifier, results, null);
+                    $scope.refresh();
+                }).catch(function (cause) {
+                    snDialog.exception('rules.delete', identifier, cause);
+                });
+            };
 
-        /**
-         * Function that refreshes the list of registered Ground Stations.
-         */
-        $scope.refresh = function () {
-            satnetRPC.rCall('rules.list', [$scope.identifier]).then(
-                function (results) {
-                    if (results !== null) {
-                        $scope.ruleList = results.slice(0);
-                    }
-                }
-            ).catch(
-                function (cause) {
-                    snDialog.exception('rules.list', '-', cause);
-                }
-            );
-        };
-
-        /**
-         * Function that enables the button to allow users to add a new rule or
-         * not. This depends on whether the ground segment already has channels
-         * associated to it or not, so that the rules will be directly linked
-         * to those channels once they are added.
-         */
-        $scope.enableAddRule = function () {
-            var rpc_service = 'gs.channel.list';
-            satnetRPC.rCall(rpc_service, [$scope.identifier]).then(
-                function (results) {
-                    if (results !== null) {
-                        if (results.length === 0) {
-                            $scope.addRuleDisabled = true;
-                        } else {
-                            $scope.addRuleDisabled = false;
+            /**
+             * Function that refreshes the list of registered Ground Stations.
+             */
+            $scope.refresh = function () {
+                satnetRPC.rCall('rules.list', [$scope.identifier]).then(
+                    function (results) {
+                        if (results !== null) {
+                            $scope.ruleList = results.slice(0);
                         }
-                    } else {
-                        $scope.addRuleDisabled = true;
                     }
-                }
-            ).catch(
-                function (cause) {
-                    $scope.addRuleDisabled = true;
-                    snDialog.exception(rpc_service, '-', cause);
-                }
-            );
-        };
-            
-        /**
-         * Function that initializes the list of Ground Stations that are to be
-         * displayed.
-         */
-        $scope.init = function () {
-            $scope.enableAddRule();
-            $scope.refresh();
-        };
+                ).catch(
+                    function (cause) {
+                        snDialog.exception('rules.list', '-', cause);
+                    }
+                );
+            };
 
-        // INITIALIZATION: avoids using ng-init within the template
-        $scope.init();
+            /**
+             * Function that initializes the list of Ground Stations that are to be
+             * displayed.
+             */
+            $scope.init = function () {
+                $scope.refresh();
+            };
+
+            // INITIALIZATION: avoids using ng-init within the template
+            $scope.init();
 
     }
 
 ])
-.constant('CREATE_OPERATION', '+')
-.constant('ERASE_OPERATION', '-')
-.constant('ONCE_PERIODICITY', 'O')
-.constant('DAILY_PERIODICITY', 'D')
-.constant('WEEKLY_PERIODICITY', 'W')
-.constant('DATES_SERIAL', 'rule_dates')
-.constant('ONCE_PERIODICITY_SERIAL', 'rule_periodicity_once')
-.constant('DAILY_PERIODICITY_SERIAL', 'rule_periodicity_daily')
-.constant('WEEKLY_PERIODICITY_SERIAL', 'rule_periodicity_weekly')
-.constant('NG_DATE_FORMAT', 'YYYY-MM-DD')
-.controller('ruleDialogCtrl', [
+    .constant('CREATE_OPERATION', '+')
+    .constant('ERASE_OPERATION', '-')
+    .constant('ONCE_PERIODICITY', 'O')
+    .constant('DAILY_PERIODICITY', 'D')
+    .constant('WEEKLY_PERIODICITY', 'W')
+    .constant('DATES_SERIAL', 'rule_dates')
+    .constant('ONCE_PERIODICITY_SERIAL', 'rule_periodicity_once')
+    .constant('DAILY_PERIODICITY_SERIAL', 'rule_periodicity_daily')
+    .constant('WEEKLY_PERIODICITY_SERIAL', 'rule_periodicity_weekly')
+    .constant('NG_DATE_FORMAT', 'YYYY-MM-DD')
+    .controller('ruleDialogCtrl', [
     '$scope', '$mdDialog',
     'satnetRPC', 'snDialog',
     'CREATE_OPERATION', 'ERASE_OPERATION',
@@ -4094,340 +4064,329 @@ angular.module(
     'identifier', 'isEditing',
 
     function (
-        $scope, $mdDialog,
-        satnetRPC, snDialog,
-        CREATE_OPERATION, ERASE_OPERATION,
-        ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
-        DATES_SERIAL,
-        ONCE_PERIODICITY_SERIAL,
-        DAILY_PERIODICITY_SERIAL, WEEKLY_PERIODICITY_SERIAL,
-        NG_DATE_FORMAT,
-        identifier, isEditing
+            $scope, $mdDialog,
+            satnetRPC, snDialog,
+            CREATE_OPERATION, ERASE_OPERATION,
+            ONCE_PERIODICITY, DAILY_PERIODICITY, WEEKLY_PERIODICITY,
+            DATES_SERIAL,
+            ONCE_PERIODICITY_SERIAL,
+            DAILY_PERIODICITY_SERIAL, WEEKLY_PERIODICITY_SERIAL,
+            NG_DATE_FORMAT,
+            identifier, isEditing
     ) {
 
-        $scope.rule = {
-            operation: CREATE_OPERATION,
-            periodicity: ONCE_PERIODICITY,
-            start_date: '',
-            end_date: '',
-            onceCfg: {
-                start_time: '',
-                end_time: ''
-            },
-            dailyCfg: {
-                start_time: '',
-                end_time: ''
-            },
-            weeklyCfg: {}
-        };
-
-        $scope.uiCtrl = {
-            activeTab: 0,
-            endDateDisabled: true,
-            invalidDate: false,
-            invalidOnceTime: false,
-            invalidDailyTime: false,
-            invalidWeeklyTime: false,
-            identifier: identifier,
-            isEditing: isEditing,
-            minDate: null,
-            maxDate: null
-        };
-
-        /**
-         * Function that resets all the flags that control the validation state
-         * of the ONCE-type rule.
-         */
-        $scope.setOnceFlags = function () {
-            $scope.uiCtrl.endDateDisabled = true;
-            $scope.uiCtrl.invalidDailyTime = false;
-            $scope.uiCtrl.invalidWeeklyTime = false;
-            // TODO Weekly rule not implemented yet
-        };
-
-        /**
-         * Function that resets all the flags that control the validation state
-         * of the DAILY-type rule.
-         */
-        $scope.setDailyFlags = function () {
-            $scope.uiCtrl.endDateDisabled = false;
-            $scope.uiCtrl.invalidOnceTime = false;
-            $scope.uiCtrl.invalidWeeklyTime = false;
-            // TODO Weekly rule not implemented yet
-        };
-
-        /**
-         * Function that resets all the flags that control the validation state
-         * of the WEEKLY-type rule.
-         */
-        $scope.setWeeklyFlags = function () {
-            $scope.uiCtrl.endDateDisabled = false;
-            // TODO Weekly rule not implemented yet
-        };
-
-        /**
-         * Function that handles the transition to the ONCE state.
-         */
-        $scope.switch2Once = function () {
-            $scope.uiCtrl.activeTab = 0;
-            $scope.rule.periodicity = ONCE_PERIODICITY;
-            $scope.setOnceFlags();
-            $scope.validateOnceTimes();
-        };
-
-        /**
-         * Function that handles the transition to the DAILY state.
-         */
-        $scope.switch2Daily = function () {
-            $scope.uiCtrl.activeTab = 1;
-            $scope.rule.periodicity = DAILY_PERIODICITY;
-            $scope.setDailyFlags();
-            $scope.validateDailyTimes();
-        };
-
-        /**
-         * Function that handles the transition to the WEEKLY state.
-         */
-        $scope.switch2Weekly = function () {
-            $scope.uiCtrl.activeTab = 2;
-            $scope.rule.periodicity = WEEKLY_PERIODICITY;
-            $scope.setWeeklyFlags();
-        };
-
-        /**
-         * Function that handles the change in the periodicity.
-         */
-        $scope.periodicityChanged = function () {
-
-            if ($scope.rule.periodicity === ONCE_PERIODICITY) {
-                $scope.switch2Once();
-                return;
-            }
-            if ($scope.rule.periodicity === DAILY_PERIODICITY) {
-                $scope.switch2Daily();
-                return;
-            }
-            if ($scope.rule.periodicity === WEEKLY_PERIODICITY) {
-                $scope.switch2Weekly();
-                return;
-            }
-
-        };
-
-        /**
-         * Function that handles the change in the active tab.
-         * 
-         * @param {String} periodicity String with the type of periodicity
-         */
-        $scope.tabSelected = function (periodicity) {
-
-            if (periodicity === ONCE_PERIODICITY) {
-                $scope.switch2Once();
-                return;
-            }
-            if (periodicity === DAILY_PERIODICITY) {
-                $scope.switch2Daily();
-                return;
-            }
-            if (periodicity === WEEKLY_PERIODICITY) {
-                $scope.switch2Weekly();
-                return;
-            }
-
-        };
-
-        /**
-         * Function that handles the change in the time input fields,
-         * validating them while the user inputs the hours.
-         */
-        $scope.validateOnceTimes = function () {
-
-            if ($scope.rule.onceCfg.start_time.getTime() >
-                    $scope.rule.onceCfg.end_time.getTime() ) {
-                $scope.uiCtrl.invalidOnceTime = true;
-                $scope.configuration.$setValidity('', false);
-            } else {
-                $scope.uiCtrl.invalidOnceTime = false;
-                $scope.configuration.$setValidity('', true);
-            }
-
-            $scope.configuration.once_start_time.$valid =
-                !($scope.uiCtrl.invalidOnceTime);
-            $scope.configuration.once_end_time.$valid =
-                !($scope.uiCtrl.invalidOnceTime);
-            $scope.configuration.once_start_time.$invalid =
-                $scope.uiCtrl.invalidOnceTime;
-            $scope.configuration.once_end_time.$invalid =
-                $scope.uiCtrl.invalidOnceTime;
-
-        };
-
-        /**
-         * Function that handles the change in the time input fields,
-         * validating them while the user inputs the hours.
-         */
-        $scope.validateDailyTimes = function () {
-
-            if ($scope.rule.dailyCfg.start_time.getTime() >
-                    $scope.rule.dailyCfg.end_time.getTime() ) {
-                $scope.uiCtrl.invalidDailyTime = true;
-                $scope.configuration.$setValidity('', false);
-            } else {
-                $scope.uiCtrl.invalidDailyTime = false;
-                $scope.configuration.$setValidity('', true);
-            }
-
-            $scope.configuration.once_start_time.$valid =
-                !($scope.uiCtrl.invalidDailyTime);
-            $scope.configuration.once_end_time.$valid =
-                !($scope.uiCtrl.invalidDailyTime);
-            $scope.configuration.once_start_time.$invalid =
-                $scope.uiCtrl.invalidDailyTime;
-            $scope.configuration.once_end_time.$invalid =
-                $scope.uiCtrl.invalidDailyTime;
-
-        };
-
-        /**
-         * Function that validates whether the dates that the user has just
-         * input in the system are valid or not. For this, the starting date
-         * of the rule has to be earlier (strictly speaking) than the ending
-         * date. If it is the same, then it should be changed from a daily or
-         * weekly rule to a ONCE rule.
-         */
-        $scope.validateDates = function () {
-            if ( $scope.rule.start_date.getTime() >=
-                $scope.rule.end_date.getTime() ) {
-                $scope.uiCtrl.invalidDate = true;
-                $scope.configuration.$setValidity('', false);
-            } else {
-                $scope.uiCtrl.invalidDate = false;
-                $scope.configuration.$setValidity('', true);
-            }
-        };
-
-        /**
-         * Function that handles the change in the starting date of the rule.
-         */
-        $scope.startDateChanged = function () {
-            if ( $scope.rule.periodicity === ONCE_PERIODICITY ) {
-                return;
-            }
-            if ((!$scope.rule.start_date)||(!$scope.rule.end_date)) {
-                return;
-            }
-            $scope.validateDates();
-            $scope.minDate = $scope.rule.start_date.toISOString().split('T')[0];
-        };
-
-        /**
-         * Function that handles the change in the ending date of the rule.
-         */
-        $scope.endDateChanged = function () {
-            if ((!$scope.rule.start_date)||(!$scope.rule.end_date)) {
-                return;
-            }
-            $scope.validateDates();
-        };
-  
-        /**
-         * Function that closes the current dialog and goes back to the
-         * original list.
-         */
-        $scope.cancel = function () {
-            $mdDialog.hide();
-            // FIXME ISSUE #10: Error while showing the $mdDialog
-            // $mdDialog.show($scope.uiCtrl.listTplOptions);
-        };
-
-        /**
-         * Function that handles the creation of the rule in the remote server.
-         * Its main responsibilities are the serialization of the configuration
-         * that has been input by the user into an object that can be properly
-         * serialized and transmitted to the remote end.
-         */
-        $scope.add = function () {
-
-            var cfg = {};
-            cfg.rule_operation = $scope.rule.operation;
-    
-            if ($scope.rule.periodicity === ONCE_PERIODICITY) {
-                cfg.rule_periodicity = ONCE_PERIODICITY_SERIAL;
-                cfg[DATES_SERIAL] = {
-                    rule_once_date:
-                        $scope.rule.start_date
-                            .toISOString(),
-                    rule_once_starting_time:
-                        $scope.rule.onceCfg.start_time
-                            .toISOString().split('T')[1],
-                    rule_once_ending_time:
-                        $scope.rule.onceCfg.end_time
-                            .toISOString().split('T')[1]
-                };
-            } else {
-                cfg.rule_periodicity = DAILY_PERIODICITY_SERIAL;
-                cfg[DATES_SERIAL] = {
-                    rule_daily_initial_date:
-                        $scope.rule.start_date.toISOString(),
-                    rule_daily_final_date:
-                        $scope.rule.end_date.toISOString(),
-                    rule_starting_time:
-                        $scope.rule.dailyCfg.start_time
-                            .toISOString().split('T')[1],
-                    rule_ending_time:
-                        $scope.rule.dailyCfg.end_time
-                            .toISOString().split('T')[1]
-                };
-            }
-
-            satnetRPC.rCall('rules.add', [identifier, cfg]).then(
-                function (response) {
-                    var id = response.spacecraft_id;
-                    // TODO broadcaster.scAdded(id);
-                    // FIXME ISSUE #10: Error while showing the $mdDialog
-                    $mdDialog.hide();
-                    snDialog.success('rules.add', id, response, null);
+            $scope.rule = {
+                operation: CREATE_OPERATION,
+                periodicity: ONCE_PERIODICITY,
+                start_date: '',
+                end_date: '',
+                onceCfg: {
+                    start_time: '',
+                    end_time: ''
                 },
-                function (cause) {
-                    snDialog.exception('rules.add', '-', cause);
+                dailyCfg: {
+                    start_time: '',
+                    end_time: ''
+                },
+                weeklyCfg: {}
+            };
+
+            $scope.uiCtrl = {
+                activeTab: 0,
+                endDateDisabled: true,
+                invalidDate: false,
+                invalidOnceTime: false,
+                invalidDailyTime: false,
+                invalidWeeklyTime: false,
+                identifier: identifier,
+                isEditing: isEditing,
+                minDate: null,
+                maxDate: null
+            };
+
+            /**
+             * Function that resets all the flags that control the validation state
+             * of the ONCE-type rule.
+             */
+            $scope.setOnceFlags = function () {
+                $scope.uiCtrl.endDateDisabled = true;
+                $scope.uiCtrl.invalidDailyTime = false;
+                $scope.uiCtrl.invalidWeeklyTime = false;
+                // TODO Weekly rule not implemented yet
+            };
+
+            /**
+             * Function that resets all the flags that control the validation state
+             * of the DAILY-type rule.
+             */
+            $scope.setDailyFlags = function () {
+                $scope.uiCtrl.endDateDisabled = false;
+                $scope.uiCtrl.invalidOnceTime = false;
+                $scope.uiCtrl.invalidWeeklyTime = false;
+                // TODO Weekly rule not implemented yet
+            };
+
+            /**
+             * Function that resets all the flags that control the validation state
+             * of the WEEKLY-type rule.
+             */
+            $scope.setWeeklyFlags = function () {
+                $scope.uiCtrl.endDateDisabled = false;
+                // TODO Weekly rule not implemented yet
+            };
+
+            /**
+             * Function that handles the transition to the ONCE state.
+             */
+            $scope.switch2Once = function () {
+                $scope.uiCtrl.activeTab = 0;
+                $scope.rule.periodicity = ONCE_PERIODICITY;
+                $scope.setOnceFlags();
+                $scope.validateOnceTimes();
+            };
+
+            /**
+             * Function that handles the transition to the DAILY state.
+             */
+            $scope.switch2Daily = function () {
+                $scope.uiCtrl.activeTab = 1;
+                $scope.rule.periodicity = DAILY_PERIODICITY;
+                $scope.setDailyFlags();
+                $scope.validateDailyTimes();
+            };
+
+            /**
+             * Function that handles the transition to the WEEKLY state.
+             */
+            $scope.switch2Weekly = function () {
+                $scope.uiCtrl.activeTab = 2;
+                $scope.rule.periodicity = WEEKLY_PERIODICITY;
+                $scope.setWeeklyFlags();
+            };
+
+            /**
+             * Function that handles the change in the periodicity.
+             */
+            $scope.periodicityChanged = function () {
+
+                if ($scope.rule.periodicity === ONCE_PERIODICITY) {
+                    $scope.switch2Once();
+                    return;
                 }
-            );
+                if ($scope.rule.periodicity === DAILY_PERIODICITY) {
+                    $scope.switch2Daily();
+                    return;
+                }
+                if ($scope.rule.periodicity === WEEKLY_PERIODICITY) {
+                    $scope.switch2Weekly();
+                    return;
+                }
 
-        };
+            };
 
-        /**
-         * Function that initializes the list of Ground Stations that are to be
-         * displayed.
-         */
-        $scope.init = function () {
+            /**
+             * Function that handles the change in the active tab.
+             * 
+             * @param {String} periodicity String with the type of periodicity
+             */
+            $scope.tabSelected = function (periodicity) {
 
-            var today = new Date(moment().utc().format(NG_DATE_FORMAT)),
-                tomorrow = new Date(
-                    moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
-                ),
-                today_1h = new Date(
-                    moment().utc().add(1, 'hours').format(NG_DATE_FORMAT)
-                ),
-                minDate = new Date(
-                    moment().utc().subtract(1, 'days').format(NG_DATE_FORMAT)
-                ).toISOString().split('T')[0],
-                maxDate = new Date(
-                    moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
-                ).toISOString().split('T')[0];
+                if (periodicity === ONCE_PERIODICITY) {
+                    $scope.switch2Once();
+                    return;
+                }
+                if (periodicity === DAILY_PERIODICITY) {
+                    $scope.switch2Daily();
+                    return;
+                }
+                if (periodicity === WEEKLY_PERIODICITY) {
+                    $scope.switch2Weekly();
+                    return;
+                }
 
-            $scope.rule.start_date = today;
-            $scope.rule.end_date = tomorrow;
-            $scope.rule.onceCfg.start_time = today;
-            $scope.rule.onceCfg.end_time = today_1h;
-            $scope.rule.dailyCfg.start_time = today;
-            $scope.rule.dailyCfg.end_time = today_1h;
-            $scope.uiCtrl.minDate = minDate;
-            $scope.uiCtrl.maxDate = maxDate;
+            };
 
-        };
+            /**
+             * Function that handles the change in the time input fields,
+             * validating them while the user inputs the hours.
+             */
+            $scope.validateOnceTimes = function () {
 
-        // INITIALIZATION: avoids using ng-init within the template
-        $scope.init();
+                if ($scope.rule.onceCfg.start_time.getTime() >
+                    $scope.rule.onceCfg.end_time.getTime()) {
+                    $scope.uiCtrl.invalidOnceTime = true;
+                    $scope.configuration.$setValidity('', false);
+                } else {
+                    $scope.uiCtrl.invalidOnceTime = false;
+                    $scope.configuration.$setValidity('', true);
+                }
+
+                $scope.configuration.once_start_time.$valid = !($scope.uiCtrl.invalidOnceTime);
+                $scope.configuration.once_end_time.$valid = !($scope.uiCtrl.invalidOnceTime);
+                $scope.configuration.once_start_time.$invalid =
+                    $scope.uiCtrl.invalidOnceTime;
+                $scope.configuration.once_end_time.$invalid =
+                    $scope.uiCtrl.invalidOnceTime;
+
+            };
+
+            /**
+             * Function that handles the change in the time input fields,
+             * validating them while the user inputs the hours.
+             */
+            $scope.validateDailyTimes = function () {
+
+                if ($scope.rule.dailyCfg.start_time.getTime() >
+                    $scope.rule.dailyCfg.end_time.getTime()) {
+                    $scope.uiCtrl.invalidDailyTime = true;
+                    $scope.configuration.$setValidity('', false);
+                } else {
+                    $scope.uiCtrl.invalidDailyTime = false;
+                    $scope.configuration.$setValidity('', true);
+                }
+
+                $scope.configuration.once_start_time.$valid = !($scope.uiCtrl.invalidDailyTime);
+                $scope.configuration.once_end_time.$valid = !($scope.uiCtrl.invalidDailyTime);
+                $scope.configuration.once_start_time.$invalid =
+                    $scope.uiCtrl.invalidDailyTime;
+                $scope.configuration.once_end_time.$invalid =
+                    $scope.uiCtrl.invalidDailyTime;
+
+            };
+
+            /**
+             * Function that validates whether the dates that the user has just
+             * input in the system are valid or not. For this, the starting date
+             * of the rule has to be earlier (strictly speaking) than the ending
+             * date. If it is the same, then it should be changed from a daily or
+             * weekly rule to a ONCE rule.
+             */
+            $scope.validateDates = function () {
+                if ($scope.rule.start_date.getTime() >=
+                    $scope.rule.end_date.getTime()) {
+                    $scope.uiCtrl.invalidDate = true;
+                    $scope.configuration.$setValidity('', false);
+                } else {
+                    $scope.uiCtrl.invalidDate = false;
+                    $scope.configuration.$setValidity('', true);
+                }
+            };
+
+            /**
+             * Function that handles the change in the starting date of the rule.
+             */
+            $scope.startDateChanged = function () {
+                if ($scope.rule.periodicity === ONCE_PERIODICITY) {
+                    return;
+                }
+                if ((!$scope.rule.start_date) || (!$scope.rule.end_date)) {
+                    return;
+                }
+                $scope.validateDates();
+                $scope.minDate = $scope.rule.start_date.toISOString().split('T')[0];
+            };
+
+            /**
+             * Function that handles the change in the ending date of the rule.
+             */
+            $scope.endDateChanged = function () {
+                if ((!$scope.rule.start_date) || (!$scope.rule.end_date)) {
+                    return;
+                }
+                $scope.validateDates();
+            };
+
+            /**
+             * Function that closes the current dialog and goes back to the
+             * original list.
+             */
+            $scope.cancel = function () {
+                $mdDialog.hide();
+                // FIXME ISSUE #10: Error while showing the $mdDialog
+                // $mdDialog.show($scope.uiCtrl.listTplOptions);
+            };
+
+            /**
+             * Function that handles the creation of the rule in the remote server.
+             * Its main responsibilities are the serialization of the configuration
+             * that has been input by the user into an object that can be properly
+             * serialized and transmitted to the remote end.
+             */
+            $scope.add = function () {
+
+                var cfg = {};
+                cfg.rule_operation = $scope.rule.operation;
+
+                if ($scope.rule.periodicity === ONCE_PERIODICITY) {
+                    cfg.rule_periodicity = ONCE_PERIODICITY_SERIAL;
+                    cfg[DATES_SERIAL] = {
+                        rule_once_date: $scope.rule.start_date
+                            .toISOString(),
+                        rule_once_starting_time: $scope.rule.onceCfg.start_time
+                            .toISOString().split('T')[1],
+                        rule_once_ending_time: $scope.rule.onceCfg.end_time
+                            .toISOString().split('T')[1]
+                    };
+                } else {
+                    cfg.rule_periodicity = DAILY_PERIODICITY_SERIAL;
+                    cfg[DATES_SERIAL] = {
+                        rule_daily_initial_date: $scope.rule.start_date.toISOString(),
+                        rule_daily_final_date: $scope.rule.end_date.toISOString(),
+                        rule_starting_time: $scope.rule.dailyCfg.start_time
+                            .toISOString().split('T')[1],
+                        rule_ending_time: $scope.rule.dailyCfg.end_time
+                            .toISOString().split('T')[1]
+                    };
+                }
+
+                satnetRPC.rCall('rules.add', [identifier, cfg]).then(
+                    function (response) {
+                        var id = response.spacecraft_id;
+                        // TODO broadcaster.scAdded(id);
+                        // FIXME ISSUE #10: Error while showing the $mdDialog
+                        $mdDialog.hide();
+                        snDialog.success('rules.add', id, response, null);
+                    },
+                    function (cause) {
+                        snDialog.exception('rules.add', '-', cause);
+                    }
+                );
+
+            };
+
+            /**
+             * Function that initializes the list of Ground Stations that are to be
+             * displayed.
+             */
+            $scope.init = function () {
+
+                var today = new Date(moment().utc().format(NG_DATE_FORMAT)),
+                    tomorrow = new Date(
+                        moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
+                    ),
+                    today_1h = new Date(
+                        moment().utc().add(1, 'hours').format(NG_DATE_FORMAT)
+                    ),
+                    minDate = new Date(
+                        moment().utc().subtract(1, 'days').format(NG_DATE_FORMAT)
+                    ).toISOString().split('T')[0],
+                    maxDate = new Date(
+                        moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
+                    ).toISOString().split('T')[0];
+
+                $scope.rule.start_date = today;
+                $scope.rule.end_date = tomorrow;
+                $scope.rule.onceCfg.start_time = today;
+                $scope.rule.onceCfg.end_time = today_1h;
+                $scope.rule.dailyCfg.start_time = today;
+                $scope.rule.dailyCfg.end_time = today_1h;
+                $scope.uiCtrl.minDate = minDate;
+                $scope.uiCtrl.maxDate = maxDate;
+
+            };
+
+            // INITIALIZATION: avoids using ng-init within the template
+            $scope.init();
 
     }
 
