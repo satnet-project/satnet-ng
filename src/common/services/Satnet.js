@@ -116,24 +116,24 @@ angular.module('snJRPCServices', [
                 // Configuration methods (Ground Stations)
                 'gs.list': this._configuration
                     .createMethod('gs.list'),
-                'gs.add': this
-                    ._configuration.createMethod('gs.create'),
+                'gs.add': this._configuration
+                    .createMethod('gs.create'),
                 'gs.get': this._configuration
-                    .createMethod('gs.getConfiguration'),
+                    .createMethod('gs.get'),
                 'gs.update': this._configuration
-                    .createMethod('gs.setConfiguration'),
+                    .createMethod('gs.set'),
                 'gs.delete': this._configuration
                     .createMethod('gs.delete'),
                 'gs.channel.list': this._configuration
                     .createMethod('gs.channel.list'),
                 'gs.channel.add': this._configuration
                     .createMethod('gs.channel.create'),
+                'gs.channel.get': this._configuration
+                    .createMethod('gs.channel.get'),
+                'gs.channel.set': this._configuration
+                    .createMethod('gs.channel.set'),
                 'gs.channel.delete': this._configuration
                     .createMethod('gs.channel.delete'),
-                'gs.channel.get': this._configuration
-                    .createMethod('gs.channel.getConfiguration'),
-                'gs.channel.set': this._configuration
-                    .createMethod('gs.channel.setConfiguration'),
                 // Rules management
                 'rules.list': this._configuration
                     .createMethod('gs.rules.list'),
@@ -147,39 +147,39 @@ angular.module('snJRPCServices', [
                 'sc.add': this._configuration
                     .createMethod('sc.create'),
                 'sc.get': this._configuration
-                    .createMethod('sc.getConfiguration'),
+                    .createMethod('sc.get'),
                 'sc.update': this._configuration
-                    .createMethod('sc.setConfiguration'),
+                    .createMethod('sc.set'),
                 'sc.delete': this._configuration
                     .createMethod('sc.delete'),
                 'sc.channel.list': this._configuration
                     .createMethod('sc.channel.list'),
                 'sc.channel.add': this._configuration
                     .createMethod('sc.channel.create'),
+                'sc.channel.get': this._configuration
+                    .createMethod('sc.channel.get'),
+                'sc.channel.set': this._configuration
+                    .createMethod('sc.channel.set'),
                 'sc.channel.delete': this._configuration
                     .createMethod('sc.channel.delete'),
-                'sc.channel.get': this._configuration
-                    .createMethod('sc.channel.getConfiguration'),
-                'sc.channel.set': this._configuration
-                    .createMethod('sc.channel.setConfiguration'),
                 // User configuration
                 'user.getLocation': this._configuration
                     .createMethod('user.getLocation'),
                 // TLE methods
                 'tle.celestrak.getSections': this._configuration
-                    .createMethod('tle.celestrak.getSections'),
+                    .createMethod('tle.celestrak.sections'),
                 'tle.celestrak.getResource': this._configuration
-                    .createMethod('tle.celestrak.getResource'),
+                    .createMethod('tle.celestrak.resource'),
                 'tle.celestrak.getTle': this._configuration
-                    .createMethod('tle.celestrak.getTle'),
+                    .createMethod('tle.celestrak.tle'),
                 // Simulation methods
                 'sc.getGroundtrack': this._simulation
-                    .createMethod('spacecraft.getGroundtrack'),
+                    .createMethod('sc.groundtrack'),
                 'sc.getPasses': this._simulation
-                    .createMethod('spacecraft.getPasses'),
+                    .createMethod('sc.passes'),
                 'gs.getPasses': this._simulation
-                    .createMethod('groundstation.getPasses'),
-                // LEOP services
+                    .createMethod('gs.passes'),
+                /* LEOP services
                 'leop.getCfg': this._leop
                     .createMethod('getConfiguration'),
                 'leop.setCfg': this._leop
@@ -206,16 +206,19 @@ angular.module('snJRPCServices', [
                     .createMethod('launch.update'),
                 'leop.getMessages': this._leop
                     .createMethod('getMessages'),
+                */
                 // NETWORK services
                 'net.alive': this._network
-                    .createMethod('keepAlive'),
+                    .createMethod('alive'),
                 'net.geoip': this._network
                     .createMethod('geoip'),
                 // SCHEDULING services
+                'gs.availability': this._scheduling
+                    .createMethod('gs.availability'),
                 'sc.compatibility': this._scheduling
-                    .createMethod('sc.getCompatibility'),
+                    .createMethod('sc.compatibility'),
                 'gs.slots': this._scheduling
-                    .createMethod('gs.getOperationalSlots')
+                    .createMethod('gs.operational')
             };
 
             /**
