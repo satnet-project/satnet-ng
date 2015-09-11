@@ -31,6 +31,12 @@ angular.module('snAvailabilityDirective', [
 
             $scope.gss = [];
             $scope.slots = {};
+            $scope.hours = [
+                '0000', '0100', '0200', '0300', '0400', '0500',
+                '0600', '0700', '0800', '0900', '1000', '1100',
+                '1200', '1300', '1400', '1500', '1600', '1700',
+                '1800', '1900', '2000', '2100', '2200', '2300'
+            ];
 
             /**
              * Function that closes the dialog.
@@ -65,11 +71,15 @@ angular.module('snAvailabilityDirective', [
                 satnetRPC.rCall('gs.list', []).then(function (results) {
                     angular.forEach(results, function (gs) {
                         $log.debug('>>> loading slots for <' + gs + '>');
-                        satnetRPC.rCall('gs.slots', [gs]).then(function (results) {
+                        satnetRPC.rCall(
+                            'gs.availability', [gs]
+                        ).then(function (results) {
                                 $scope._addGS(gs, results);
                             })
                             .catch(function (cause) {
-                                snDialog.exception('gs.slots', gs, cause);
+                                snDialog.exception(
+                                    'gs.availability', gs, cause
+                                );
                             });
                     });
                 }).catch(function (cause) {

@@ -22,8 +22,28 @@
 
 .sn-sch-gs-id {
     display: table-cell;
+    text-align: center;
+    min-width: 90px;
+    padding: 20px;
 }
 
 .sn-sch-slots-table {
     display: table-cell;
+}
+
+.sn-sch-header {
+    display: table-row;
+    border-bottom: thick dotted black;
+}
+
+.sn-sch-slots-hours-container {
+    display: table-cell;
+    width: 420px;
+}
+
+.sn-sch-slots-hour {
+    display: table-cell;
+    font-size: 57%;
+    width: 30px;
+    padding: 5px;
 }
