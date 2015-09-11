@@ -130,6 +130,7 @@ describe('Testing SatNet Service', function () {
 
     });
 
+    /*
     it('should implement a valid API for LEOP services', function () {
 
         expect(satnetServices._services['leop.getCfg']).toBeDefined();
@@ -151,6 +152,7 @@ describe('Testing SatNet Service', function () {
         expect(satnetServices._services['leop.getMessages']).toBeDefined();
 
     });
+    */
 
     it('should implement a remote calling method', function () {
 

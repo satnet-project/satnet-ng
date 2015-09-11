@@ -82,7 +82,7 @@ describe('Testing Compatibility directive', function () {
         expect($mdDialog.hide).not.toHaveBeenCalled();
         button.click();
         expect($mdDialog.show).toHaveBeenCalledWith({
-            templateUrl: 'common/templates/sn-compatibility-dialog.html'
+            templateUrl: 'common/templates/compatibility/dialog.html'
         });
         expect($mdDialog.hide).not.toHaveBeenCalled();
 

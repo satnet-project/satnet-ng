@@ -76,7 +76,7 @@ describe('Testing About directive', function () {
         expect($mdDialog.hide).not.toHaveBeenCalled();
         button.click();
         expect($mdDialog.show).toHaveBeenCalledWith({
-            templateUrl: 'common/templates/sn-about-dialog.html'
+            templateUrl: 'common/templates/about/dialog.html'
         });
         expect($mdDialog.hide).not.toHaveBeenCalled();
 
