@@ -19,7 +19,7 @@ angular.module('snCompatibilityDirective', [
     'snControllers',
     'snJRPCServices'
 ])
-.controller('snCompatibilityCtrl', ['$scope', '$mdDialog',
+    .controller('snCompatibilityCtrl', ['$scope', '$mdDialog',
 
     /**
      * Controller function for opening the SatNet compatibility dialog.
@@ -29,19 +29,20 @@ angular.module('snCompatibilityDirective', [
      */
     function ($scope, $mdDialog) {
 
-        /**
-         * Function that opens the dialog when the snAbout button is clicked.
-         */
-        $scope.openDialog = function () {
-            $mdDialog.show({
-                templateUrl: 'common/templates/sn-compatibility-dialog.html'
-            });
-        };
+            /**
+             * Function that opens the dialog when the snAbout button is
+             * clicked.
+             */
+            $scope.openDialog = function () {
+                $mdDialog.show({
+                    templateUrl: 'common/templates/compatibility/dialog.html'
+                });
+            };
 
     }
 
 ])
-.controller('snCompatibilityDlgCtrl', [
+    .controller('snCompatibilityDlgCtrl', [
     '$scope', '$mdDialog', 'satnetRPC', 'snDialog',
 
     /**
@@ -51,54 +52,54 @@ angular.module('snCompatibilityDirective', [
      */
     function ($scope, $mdDialog, satnetRPC, snDialog) {
 
-        /** Array with the compatibility for all the sc of the user */
-        $scope.compatibility = [];
+            /** Array with the compatibility for all the sc of the user */
+            $scope.compatibility = [];
 
-        /**
-         * Function that handles the close of the Compatibility dialog.
-         */
-        $scope.closeDialog = function () {
-            $mdDialog.hide();
-        };
+            /**
+             * Function that handles the close of the Compatibility dialog.
+             */
+            $scope.closeDialog = function () {
+                $mdDialog.hide();
+            };
 
-        /**
-         * Loads the compatibility information for the channels of the
-         * spacecraft segments registered with this user.
-         */
-        $scope.loadCompatibility = function () {
-            satnetRPC.rCall('sc.list', []).then(
-                function (results) {
-                    angular.forEach(results, function (sc) {
-                        satnetRPC.rCall('sc.compatibility', [sc]).then(
-                            function (results) {
-                                var sc_c = angular.copy(results);
-                                $scope.compatibility.push(sc_c);
-                            },
-                            function (cause) {
-                                snDialog.exception(
-                                    'sc.compatibility', '-', cause
-                                );
-                            }
-                        );
-                    });
-                },
-                function (cause) {
-                    snDialog.exception('sc.list', '-', cause);
-                }
-            );
-        };
+            /**
+             * Loads the compatibility information for the channels of the
+             * spacecraft segments registered with this user.
+             */
+            $scope.loadCompatibility = function () {
+                satnetRPC.rCall('sc.list', []).then(
+                    function (results) {
+                        angular.forEach(results, function (sc) {
+                            satnetRPC.rCall('sc.compatibility', [sc]).then(
+                                function (results) {
+                                    var sc_c = angular.copy(results);
+                                    $scope.compatibility.push(sc_c);
+                                },
+                                function (cause) {
+                                    snDialog.exception(
+                                        'sc.compatibility', '-', cause
+                                    );
+                                }
+                            );
+                        });
+                    },
+                    function (cause) {
+                        snDialog.exception('sc.list', '-', cause);
+                    }
+                );
+            };
 
-        /**
-         * Initialization of the controller.
-         */
-        $scope.init = function () {
-            $scope.loadCompatibility();
-        };
+            /**
+             * Initialization of the controller.
+             */
+            $scope.init = function () {
+                $scope.loadCompatibility();
+            };
 
     }
 
 ])
-.directive('snCompatibility', [
+    .directive('snCompatibility', [
 
     /**
      * Directive that creates a dialog with the compatibility configuration.
@@ -107,10 +108,10 @@ angular.module('snCompatibilityDirective', [
      *                   and templateUrl.
      */
     function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'common/templates/sn-compatibility.html'
-        };
+            return {
+                restrict: 'E',
+                templateUrl: 'common/templates/compatibility/menu.html'
+            };
     }
 
 ]);

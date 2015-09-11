@@ -23,11 +23,11 @@ angular.module('snChannelControllers', [
     .constant('CH_DLG_GS_TPL', 'operations/templates/channels/gs.dialog.html')
     .constant('CH_DLG_SC_TPL', 'operations/templates/channels/sc.dialog.html')
     .controller('channelListCtrl', [
-    '$scope', '$log', '$mdDialog',
-    'satnetRPC', 'snDialog',
-    'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
-    'CH_DLG_GS_TPL', 'CH_DLG_SC_TPL',
-    'segmentId', 'isSpacecraft',
+        '$scope', '$log', '$mdDialog',
+        'satnetRPC', 'snDialog',
+        'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
+        'CH_DLG_GS_TPL', 'CH_DLG_SC_TPL',
+        'segmentId', 'isSpacecraft',
 
     /**
      * Controller for the list of the channels for this given segment (either

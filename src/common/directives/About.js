@@ -52,7 +52,7 @@ angular.module('snAboutDirective', [
              */
             $scope.openSnAbout = function () {
                 $mdDialog.show({
-                    templateUrl: 'common/templates/sn-about-dialog.html'
+                    templateUrl: 'common/templates/about/dialog.html'
                 });
             };
 
@@ -71,7 +71,7 @@ angular.module('snAboutDirective', [
         function () {
             return {
                 restrict: 'E',
-                templateUrl: 'common/templates/sn-about.html'
+                templateUrl: 'common/templates/about/menu.html'
             };
         }
 

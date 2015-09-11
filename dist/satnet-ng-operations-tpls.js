@@ -1,22 +1,32 @@
 angular.module('snOperationsDirective').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('common/templates/sn-about-dialog.html',
+  $templateCache.put('common/templates/about/dialog.html',
     "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\" style=\"width: 50%\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><div class=\"sn-about\"><img class=\"sn-logo\" src=\"/images/logo.png\"><p>The SatNet Network is a cooperative Open Source project hosted at (<a href=\"https://github.com/satnet-project\">GitHub</a>). Its objective is to provide a communications network that enables sharing the Ground Stations of the members of the CubeSat developers community.</p><p>All the documentation is edited online in a collaborative wiki website hosted also at GitHub: <a href=\"https://github.com/satnet-project/documentation/wiki\">SatNet Wiki</a>. Frozen versions of the documents can be downloaded in PDF format.</p></div></md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
   );
 
 
-  $templateCache.put('common/templates/sn-about.html',
+  $templateCache.put('common/templates/about/menu.html',
     "<md-button id=\"menuAbout\" ng-controller=\"snAboutCtrl\" ng-click=\"openSnAbout()\" aria-label=\"about\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-info\"></i> <b>about</b></div></md-button>"
   );
 
 
-  $templateCache.put('common/templates/sn-compatibility-dialog.html',
+  $templateCache.put('common/templates/availability/dialog.html',
+    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content><div class=\"sn-sch-table\"><div class=\"sn-box-placement\" ng-show=\"!gss.length\" style=\"padding: 25px\"><i class=\"md-title\">(no ground stations registered)</i></div><div class=\"sn-sch-row\" ng-show=\"gss.length\" ng-repeat=\"gs in gss\"><div class=\"sn-sch-gs-id\">{{ gs }}</div><div class=\"sn-sch-slots-table\"><div class=\"sn-box-placement\" ng-show=\"!slots[gs].length\" style=\"padding: 25px\"><i class=\"md-title\">(no slots)</i></div><div ng-repeat=\"slots in slots[gs]\"></div></div></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
+  );
+
+
+  $templateCache.put('common/templates/availability/menu.html',
+    "<md-button id=\"menuAvailability\" ng-controller=\"snAvailabilityCtrl\" ng-click=\"openDialog()\" aria-label=\"compatibility\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-clock-o\"></i> <b>availability</b></div></md-button>"
+  );
+
+
+  $templateCache.put('common/templates/compatibility/dialog.html',
     "<md-dialog ng-controller=\"snCompatibilityDlgCtrl\" ng-init=\"init()\" aria-label=\"Compatibility Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Compatible Ground Station Channels</span></h2></md-toolbar><md-content class=\"md-padding\"><md-list><div ng-show=\"!compatibility.length\" class=\"sn-box-placement\" style=\"padding: 25px\"><i class=\"md-title\">(no spacecraft available)</i></div><md-list-item class=\"md-3-line\" ng-repeat=\"sc in compatibility\"><md-card><md-card-content><h3 class=\"sn-sc-compat\">{{ sc.spacecraft_id }}</h3><md-list class=\"md-list-item-text\"><md-list-item ng-show=\"!sc.Compatibility.length\"><span class=\"sn-no-item\" style=\"margin-left: 25px\">(no channels available)</span></md-list-item><md-list-item class=\"md-4-line\" ng-repeat=\"sc_ch in sc.Compatibility\" layout=\"row\"><div class=\"sn-box-100\"><a class=\"md-title sn-padding sn-fg-color\">{{ sc_ch.ScChannel.identifier }}</a></div><div ng-show=\"!sc_ch.Compatibility.length\" class=\"sn-box-placement\"><i class=\"md-title sn-padding\">(no compatible channels found)</i></div><div class=\"sn-box-100 sn-box-format\" ng-repeat=\"gs_compat in sc_ch.Compatibility\"><div><i class=\"md-title sn-padding\">{{ gs_compat.GsChannel.identifier }}</i></div><div><b class=\"md-title sn-padding\">{{ gs_compat.GroundStation.identifier }}</b></div></div></md-list-item></md-list></md-card-content></md-card></md-list-item></md-list><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"closeDialog()\" aria-label=\"close dialog\" class=\"md-primary menu-button\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b>close</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
-  $templateCache.put('common/templates/sn-compatibility.html',
+  $templateCache.put('common/templates/compatibility/menu.html',
     "<md-button id=\"menuCompatibility\" ng-controller=\"snCompatibilityCtrl\" ng-click=\"openDialog()\" aria-label=\"compatibility\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-puzzle-piece\"></i> <b>compatibility</b></div></md-button>"
   );
 
@@ -28,16 +38,6 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
   $templateCache.put('operations/templates/app.html',
     "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\"><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"close()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-compatibility></sn-compatibility><sn-availability></sn-availability><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider><sn-logger></sn-logger></md-content></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
-  );
-
-
-  $templateCache.put('operations/templates/availability/dialog.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content><div class=\"sn-sch-table\"><div class=\"sn-box-placement\" ng-show=\"!gss.length\" style=\"padding: 25px\"><i class=\"md-title\">(no ground stations registered)</i></div><div class=\"sn-sch-row\" ng-show=\"gss.length\" ng-repeat=\"gs in gss\"><div class=\"sn-sch-gs-id\">{{ gs }}</div><div class=\"sn-sch-slots-table\"><div class=\"sn-box-placement\" ng-show=\"!slots[gs].length\" style=\"padding: 25px\"><i class=\"md-title\">(no slots)</i></div><div ng-repeat=\"slots in slots[gs]\"></div></div></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
-  );
-
-
-  $templateCache.put('operations/templates/availability/menu.html',
-    "<md-button id=\"menuAvailability\" ng-controller=\"snAvailabilityCtrl\" ng-click=\"openDialog()\" aria-label=\"availability\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-clock-o\"></i> <b>availability</b></div></md-button>"
   );
 
 
@@ -58,6 +58,11 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
   $templateCache.put('operations/templates/map.html',
     "<div ng-controller=\"mapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" defaults=\"defaults\" center=\"center\" markers=\"markers\" layers=\"layers\" paths=\"paths\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+  );
+
+
+  $templateCache.put('operations/templates/operational/dialog.html',
+    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content><div class=\"sn-sch-table\"><div class=\"sn-box-placement\" ng-show=\"!gss.length\" style=\"padding: 25px\"><i class=\"md-title\">(no ground stations registered)</i></div><div class=\"sn-sch-row\" ng-show=\"gss.length\" ng-repeat=\"gs in gss\"><div class=\"sn-sch-gs-id\">{{ gs }}</div><div class=\"sn-sch-slots-table\"><div class=\"sn-box-placement\" ng-show=\"!slots[gs].length\" style=\"padding: 25px\"><i class=\"md-title\">(no slots)</i></div><div ng-repeat=\"slots in slots[gs]\"></div></div></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
