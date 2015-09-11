@@ -2,8 +2,8 @@
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
-            <span ng-show="!uiCtrl.editing">Add new Channel</span>
-            <span ng-show="uiCtrl.editing">Edit Channel</span>
+            <span ng-show="!uiCtrl.isEditing">Add new Channel</span>
+            <span ng-show="uiCtrl.isEditing">Edit Channel</span>
         </h2>
     </md-toolbar>
 
@@ -14,7 +14,7 @@
             <div layout="row">
                 <md-input-container style="width: 25%">
                     <label for="identifier">Identifier</label>
-                    <input name="identifier" ng-model="uiCtrl.configuration.channel_id" ng-disabled="uiCtrl.editing" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" required>
+                    <input name="identifier" ng-model="uiCtrl.configuration.channel_id" ng-disabled="uiCtrl.isEditing" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" required>
                 </md-input-container>
 
                 <md-input-container style="width: 75%">
@@ -60,14 +60,14 @@
 
         <div layout="row">
 
-            <md-button id="add" ng-click="add()" ng-show="!uiCtrl.editing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
+            <md-button id="add" ng-click="add()" ng-show="!uiCtrl.isEditing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-plus"></i>
                     <b>add</b>
                 </div>
             </md-button>
 
-            <md-button id="edit" ng-click="update()" ng-show="uiCtrl.editing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Edit Ground Station" class="md-primary menu-button">
+            <md-button id="edit" ng-click="update()" ng-show="uiCtrl.isEditing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Edit Ground Station" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-floppy-o"></i>
                     <b>save</b>

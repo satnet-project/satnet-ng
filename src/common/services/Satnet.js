@@ -162,8 +162,6 @@ angular.module('snJRPCServices', [
                     .createMethod('sc.channel.getConfiguration'),
                 'sc.channel.set': this._configuration
                     .createMethod('sc.channel.setConfiguration'),
-                'sc.compatibility': this._configuration
-                    .createMethod('sc.getCompatibility'),
                 // User configuration
                 'user.getLocation': this._configuration
                     .createMethod('user.getLocation'),
@@ -214,6 +212,8 @@ angular.module('snJRPCServices', [
                 'net.geoip': this._network
                     .createMethod('geoip'),
                 // SCHEDULING services
+                'sc.compatibility': this._scheduling
+                    .createMethod('sc.getCompatibility'),
                 'gs.slots': this._scheduling
                     .createMethod('gs.getOperationalSlots')
             };
