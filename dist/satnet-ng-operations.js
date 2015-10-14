@@ -998,7 +998,10 @@ angular.module('snJRPCServices', [
                     function (data) {
                         // TODO Workaround for the JSON-RPC library.
                         if (data.data.name === 'JSONRPCError') {
-                            error_fn(service, params, data.code, data.message);
+                            error_fn(
+                                service, params,
+                                data.data.code, data.data.message
+                            );
                         }
 
                         // NOTICE GroundTracks are not displayed completely...
@@ -1018,6 +1021,7 @@ angular.module('snJRPCServices', [
 
                     },
                     function (error) {
+                        console.log("error = " + JSON.stringify(error));
                         error_fn(service, params, 'NONE', error);
                     }
 

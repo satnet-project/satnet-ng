@@ -169,7 +169,7 @@ describe('Testing SatNet Service', function () {
 
     });
 
-    it('should internall handle JRPC errors', function () {
+    it('should internal handle JRPC errors', function () {
 
         var x_service = 'x_srv',
             x_param = ['p1'],
@@ -177,8 +177,7 @@ describe('Testing SatNet Service', function () {
             x_msg = 'm',
             x_th_msg = 'Satnet.js@_generateError: invoking = <' + x_service +
             '>, with params = <' + JSON.stringify(x_param) +
-            '>, code = <' + JSON.stringify(x_code) +
-            '>, description = <' + JSON.stringify(x_msg) + '>';
+            '>, code = <\"' + x_code + '\">, description = <\"' + x_msg + '\">';
 
         spyOn($log, 'warn');
 
