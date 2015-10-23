@@ -3845,7 +3845,6 @@ angular.module(
         console.log('xxx ONNNNNNNNNNNNNNNN');
         $scope.$on("leafletDirectiveMarker.dragend",
             function (event, args) {
-                var ev = args.leafletEvent;
                 console.log('>>> event = ' + Object.keys(event));
                 console.log('>>> args = ' + Object.keys(args));
                 console.log('>>> leafletEvent = ' + Object.keys(args.leafletEvent));
