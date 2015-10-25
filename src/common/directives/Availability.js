@@ -68,7 +68,6 @@ angular.module('snAvailabilityDirective', [
 
             dataTable.addColumn({ type: 'string', id: 'Ground Station' });
             dataTable.addColumn({ type: 'string', id: 'Spacecraft' });
-            dataTable.addColumn({ type: 'string', id: 'SlotId' });
             dataTable.addColumn({ type: 'date', id: 'Start' });
             dataTable.addColumn({ type: 'date', id: 'End' });
 
