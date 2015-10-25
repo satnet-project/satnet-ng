@@ -18,6 +18,7 @@
         "angular",
         "moment",
         "L",
+        "google",
         "jasmine", "describe", "it", "expect", "afterEach", "beforeEach", "module", "inject", "spyOn",
         "$", "qunit", "test", "throws", "deepEqual",
         "Pusher"

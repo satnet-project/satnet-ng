@@ -2826,68 +2826,117 @@ angular.module('snAvailabilityDirective', [
      */
     function ($scope, $log, $mdDialog, satnetRPC, snDialog) {
 
-            $scope.gss = [];
-            $scope.slots = {};
-            $scope.hours = [
-                '0000', '0100', '0200', '0300', '0400', '0500',
-                '0600', '0700', '0800', '0900', '1000', '1100',
-                '1200', '1300', '1400', '1500', '1600', '1700',
-                '1800', '1900', '2000', '2100', '2200', '2300'
-            ];
+        $scope.gss = [];
+        $scope.slots = {};
 
-            /**
-             * Function that closes the dialog.
-             */
-            $scope.close = function () {
-                $mdDialog.hide();
+        /**
+         * Function that closes the dialog.
+         */
+        $scope.close = function () {
+            $mdDialog.hide();
+        };
+
+        /**
+         * Helps adding all the information structures related to a given
+         * ground station correctly into the $scope. It post-processes them and
+         * creates the associated structures that are easier to convert into
+         * an HTML-like component.
+         * 
+         * @param {String} groundstation_id Ground Station identifier
+         * @param {Object} slots            Array with the operational slots
+         */
+        $scope._addGS = function (groundstation_id, slots) {
+            $scope.gss.push(groundstation_id);
+            $scope.slots[groundstation_id] = angular.copy(slots);
+        };
+
+        /** Identifier of the container wihere the timeline is to be drawn */
+        $scope.container_id = 'a-slots-timeline';
+
+        /**
+         * Function that draws the timeline where the available slots are
+         * displayed.
+         */
+        $scope.drawTimeline = function () {
+
+            var container = document.getElementById($scope.container_id);
+            var chart = new google.visualization.Timeline(container);
+            var dataTable = new google.visualization.DataTable();
+
+            dataTable.addColumn({ type: 'string', id: 'Ground Station' });
+            dataTable.addColumn({ type: 'string', id: 'Spacecraft' });
+            dataTable.addColumn({ type: 'string', id: 'SlotId' });
+            dataTable.addColumn({ type: 'date', id: 'Start' });
+            dataTable.addColumn({ type: 'date', id: 'End' });
+
+            /**/
+            dataTable.addRows([
+                [
+                    'Magnolia Room',
+                    'Beginning JavaScript',
+                    new Date(0,0,0,12,0,0),
+                    new Date(0,0,0,13,30,0)
+                ],
+                [
+                    'Magnolia Room',
+                    'Intermediate JavaScript',
+                    new Date(0,0,0,14,0,0),
+                    new Date(0,0,0,15,30,0)
+                ]
+            ]);
+            /**/
+
+            var options = {
+                timeline: { colorByRowLabel: true }
             };
 
-            /**
-             * Helps adding all the information structures related to a given
-             * ground station correctly into the $scope. It post-processes them and
-             * creates the associated structures that are easier to convert into
-             * an HTML-like component.
-             * 
-             * @param {String} groundstation_id Ground Station identifier
-             * @param {Object} slots            Array with the operational slots
-             */
-            $scope._addGS = function (groundstation_id, slots) {
-                $scope.gss.push(groundstation_id);
-                $scope.slots[groundstation_id] = angular.copy(slots);
-            };
+            chart.draw(dataTable, options);
 
-            /**
-             * Function that initializes the data structures for the visualization
-             * of the available operational slots. The following data structures
-             * have to be pulled out of the server:
-             * 
-             * 1) retrieve all the ground station identifiers from the server,
-             * 2) retrieve the operatonal slots for the ground stations.
-             */
-            $scope.init = function () {
-                satnetRPC.rCall('gs.list', []).then(function (results) {
-                    angular.forEach(results, function (gs) {
-                        $log.debug('>>> loading slots for <' + gs + '>');
-                        satnetRPC.rCall(
-                            'gs.availability', [gs]
-                        ).then(function (results) {
-                                $scope._addGS(gs, results);
-                            })
-                            .catch(function (cause) {
-                                snDialog.exception(
-                                    'gs.availability', gs, cause
-                                );
-                            });
+        };
+
+        /**
+         * Function that initializes the data structures for the visualization
+         * of the available operational slots. The following data structures
+         * have to be pulled out of the server:
+         * 
+         * 1) retrieve all the ground station identifiers from the server,
+         * 2) retrieve the operatonal slots for the ground stations.
+         */
+        $scope.init = function () {
+
+            // 1> all the Ground Stations are retrieved
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                angular.forEach(results, function (gs) {
+                    $log.debug('>>> loading slots for <' + gs + '>');
+                    satnetRPC.rCall(
+                        'gs.availability', [gs]
+                    ).then(function (results) {
+                        $scope._addGS(gs, results);
+                    })
+                    .catch(function (cause) {
+                        snDialog.exception(
+                            'gs.availability', gs, cause
+                        );
                     });
-                }).catch(function (cause) {
-                    snDialog.exception('gs.list', [], cause);
                 });
-            };
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', [], cause);
+            });
+
+            // 2> the draw callback is set up for when the page is ready
+            $(document).ready(function () {
+                google.load('visualization', '1.0', {
+                    'packages': ['timeline'],
+                    'callback': $scope.drawTimeline
+                });
+            });
+
+        };
 
     }
 
 ])
-    .controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
+.controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
 
     /**
      * Controller function for opening the SatNet availability dialog.
@@ -2897,37 +2946,38 @@ angular.module('snAvailabilityDirective', [
      */
     function ($scope, $mdDialog) {
 
-            /**
-             * Function that opens the dialog when the snAvailability button is
-             * clicked.
-             */
-            $scope.openDialog = function () {
-                $mdDialog.show({
-                    templateUrl: 'common/templates/availability/dialog.html',
-                    controller: 'snAvailabilityDlgCtrl'
-                });
-            };
+        /**
+         * Function that opens the dialog when the snAvailability button is
+         * clicked.
+         */
+        $scope.openDialog = function () {
+            $mdDialog.show({
+                templateUrl: 'common/templates/availability/dialog.html',
+                controller: 'snAvailabilityDlgCtrl'
+            });
+        };
 
     }
 
 ])
-    .directive('snAvailability',
+.directive('snAvailability',
 
-        /**
-         * Function that creates the directive itself returning the object
-         * required by Angular.
-         *
-         * @returns {Object} Object directive required by Angular, with
-         *                   restrict and templateUrl
-         */
-        function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'common/templates/availability/menu.html'
-            };
-        }
+    /**
+     * Function that creates the directive itself returning the object
+     * required by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'common/templates/availability/menu.html'
+        };
+    }
 
-    );;/*
+);
+;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");

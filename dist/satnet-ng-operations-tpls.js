@@ -12,37 +12,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/availability/dialog.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content><div class=\"sn-sch-table\"><!--\n" +
-    "            <div class=\"sn-box-placement\" ng-show=\"!gss.length\" style=\"padding: 25px\">\n" +
-    "                <i class=\"md-title\">(no ground stations registered)</i>\n" +
-    "            </div>\n" +
-    "\n" +
-    "                <div class=\"sh-sch-header\">\n" +
-    "                    <div class=\"sn-sch-gs-id\"></div>\n" +
-    "                    <div class=\"sn-sch-slots-hours-container\">\n" +
-    "                        <div class=\"sn-sch-slots-hour\" ng-repeat=\"h in hours\">\n" +
-    "                            <a>{{ h }}</a>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
-    "\n" +
-    "                <div class=\"sn-sch-row\" ng-show=\"gss.length\" ng-repeat=\"gs in gss\">\n" +
-    "\n" +
-    "                    <div class=\"sn-sch-gs-id\">\n" +
-    "                        <a>{{ gs }}</a>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                    <div class=\"sn-sch-slots-hours-container\">\n" +
-    "                        <a ng-show=\"!slots[gs].length\"> - (no slots)</a>\n" +
-    "                        <div ng-hide=\"!slots[gs].length\" class=\"sn-sch-slots-table\">\n" +
-    "                            <div ng-repeat=\"\">\n" +
-    "                                \n" +
-    "                            </div>\n" +
-    "                        </div>\n" +
-    "                    </div>\n" +
-    "\n" +
-    "                </div>\n" +
-    "                --></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content><div id=\"a-slots-timeline\" style=\"height: 180px\"></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
