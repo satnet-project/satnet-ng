@@ -8,7 +8,16 @@
 
     <md-content>
 
-        <div id="a-slots-timeline" style="height: 180px;"></div>
+        <div id="a-slots-timeline" style="height: 180px;">
+        
+            <svg id="svg-timeline" width="100%" ng-attr-min-height="{{ timeline_min_height }}">
+                <g ng-repeat="gs in gss" class="sn-timeline-gs-row">
+                    <rect x="10" y="10" width="10" height="10" fill="black"></rect>
+                    <text>{{ gs.id }}</text>
+                </g>
+            </svg>
+
+        </div>
 
     </md-content>
 

@@ -32,6 +32,11 @@ angular.module('snAvailabilityDirective', [
         $scope.gss = [];
         $scope.slots = {};
 
+        $scope.xgss = [
+            { id: 'gs-1' },
+            { id: 'gs-2' }
+        ];
+
         /**
          * Function that closes the dialog.
          */
@@ -55,6 +60,14 @@ angular.module('snAvailabilityDirective', [
 
         /** Identifier of the container wihere the timeline is to be drawn */
         $scope.container_id = 'a-slots-timeline';
+        $scope.timeline_min_height = '180px';
+
+        /**
+         * Initializes the SVG timeline chart.
+         */
+        $scope.initSVG = function () {
+            
+        };
 
         /**
          * Function that draws the timeline where the available slots are
@@ -89,13 +102,23 @@ angular.module('snAvailabilityDirective', [
             /**/
 
             var options = {
-                timeline: { colorByRowLabel: true }
+                timeline: { colorByRowLabel: false }
             };
 
             chart.draw(dataTable, options);
 
         };
 
+        $scope.initGCharts = function () {
+            // 2> the draw callback is set up for when the page is ready
+            $(document).ready(function () {
+                google.load('visualization', '1.0', {
+                    'packages': ['timeline'],
+                    'callback': $scope.drawTimeline
+                });
+            });
+        };
+        
         /**
          * Function that initializes the data structures for the visualization
          * of the available operational slots. The following data structures
@@ -123,14 +146,6 @@ angular.module('snAvailabilityDirective', [
                 });
             }).catch(function (cause) {
                 snDialog.exception('gs.list', [], cause);
-            });
-
-            // 2> the draw callback is set up for when the page is ready
-            $(document).ready(function () {
-                google.load('visualization', '1.0', {
-                    'packages': ['timeline'],
-                    'callback': $scope.drawTimeline
-                });
             });
 
         };
