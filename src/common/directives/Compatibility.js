@@ -34,7 +34,8 @@ function ($scope, $mdDialog) {
      */
     $scope.openDialog = function () {
         $mdDialog.show({
-            templateUrl: 'common/templates/compatibility/dialog.html'
+            templateUrl: 'common/templates/compatibility/dialog.html',
+            controller: 'snCompatibilityDlgCtrl'
         });
     };
 
@@ -56,7 +57,7 @@ function ($scope, $mdDialog, satnetRPC, snDialog) {
     /**
      * Function that handles the close of the Compatibility dialog.
      */
-    $scope.closeDialog = function () {
+    $scope.close = function () {
         $mdDialog.hide();
     };
 

@@ -12,38 +12,44 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
+$sch-border-width: 3px;
+$sch-border-color: lightgray;
+$sch-padding: 5px;
+
+#sn-sch-md-content {
+    padding: sch-padding;
+}
+
 .sn-sch-table {
     display: table;
 }
 
-.sn-sch-row {
+.sn-sch-gs {
     display: table-row;
+}
+
+.sn-sch-axis {
+    display: table-row;
+}
+
+@mixin sn-sch-p-content($padding) {
+    display: table-cell;
+    text-align: center;
+    padding: $padding;
+    border-bottom: $sch-border-width solid $sch-border-color;
 }
 
 .sn-sch-gs-id {
-    display: table-cell;
-    text-align: center;
-    min-width: 90px;
-    padding: 20px;
+    @include sn-sch-p-content($sch-padding);
+    border-right: $sch-border-width solid $sch-border-color;
+    min-width: 75px;
 }
 
-.sn-sch-slots-table {
-    display: table-cell;
+.sn-sch-gs-content {
+    @include sn-sch-p-content($sch-padding);
+    width: 100%;
 }
 
-.sn-sch-header {
-    display: table-row;
-    border-bottom: thick dotted black;
-}
-
-.sn-sch-slots-hours-container {
-    display: table-cell;
-    width: 420px;
-}
-
-.sn-sch-slots-hour {
-    display: table-cell;
-    font-size: 57%;
-    width: 30px;
-    padding: 5px;
+div.sn-sch-gs:last-child div {
+    border-bottom-style: none;
 }

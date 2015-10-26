@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by rtubio on 10/24/14.
+ * Created by rtubio on 10/26/15.
  */
 
-describe('Testing Compatibility directive', function () {
+describe('Testing Availability directive', function () {
 
     var $compile, $directive, $mdDialog,
         $rootScope, $scope,
         __mock__cookies = {},
         $controller, dialogCtrl,
         $body = $("body"),
-        html = "<sn-compatibility></sn-compatibility>";
+        html = "<sn-availability></sn-availability>";
 
     beforeEach(function () {
 
         module(
-            'templates', 'snCompatibilityDirective', 'snJRPCMock',
+            'templates', 'snAvailabilityDirective', 'snJRPCMock',
             function($provide) {
                 $provide.value('$cookies', __mock__cookies);
             }
@@ -46,7 +46,7 @@ describe('Testing Compatibility directive', function () {
 
         });
 
-        dialogCtrl = $controller("snCompatibilityDlgCtrl", {
+        dialogCtrl = $controller("snAvailabilityDlgCtrl", {
             $scope: $scope,
             $mdDialog: $mdDialog
         });
@@ -64,26 +64,26 @@ describe('Testing Compatibility directive', function () {
     });
 
     it('should add a COMPAT button on the menu with an icon', function () {
-        var button = $('#menuCompatibility'),
-            icon = $('.fa-puzzle-piece'),
-            label = $('#menuCompatibility div b');
+        var button = $('#menuAvailability'),
+            icon = $('.fa-clock-o'),
+            label = $('#menuAvailability div b');
         expect(button.length).toBe(1);
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
-        expect(label.text()).toBe('compatibility');
+        expect(label.text()).toBe('availability');
     });
 
     it('should show the COMPAT dialog and hide it', function () {
 
-        var button = $('#menuCompatibility').eq(0);
+        var button = $('#menuAvailability').eq(0);
         expect(button).toBeDefined();
 
         expect($mdDialog.show).not.toHaveBeenCalled();
         expect($mdDialog.hide).not.toHaveBeenCalled();
         button.click();
         expect($mdDialog.show).toHaveBeenCalledWith({
-            templateUrl: 'common/templates/compatibility/dialog.html',
-            controller: 'snCompatibilityDlgCtrl'
+            templateUrl: 'common/templates/availability/dialog.html',
+            controller: 'snAvailabilityDlgCtrl'
         });
         expect($mdDialog.hide).not.toHaveBeenCalled();
 
@@ -95,20 +95,40 @@ describe('Testing Compatibility directive', function () {
 
     });
 
-    it('should load the compatibility information for a SC', function () {
+    it('should load the availability information for all GSs', function () {
 
         var $c_scope = $rootScope.$new(),
-            compatDlgCtrl = $controller("snCompatibilityDlgCtrl", {
+            dlgCtrl = $controller("snAvailabilityDlgCtrl", {
                 $scope: $c_scope,
                 $mdDialog: $mdDialog
             });
 
-        expect(compatDlgCtrl).not.toBeNull();
+        expect(dlgCtrl).not.toBeNull();
 
         $c_scope.init();
         $rootScope.$digest();
 
         expect();
+
     });
 
+    it('should create the times for the axis', function () {
+
+        var $c_scope = $rootScope.$new(),
+            dlgCtrl = $controller("snAvailabilityDlgCtrl", {
+                $scope: $c_scope,
+                $mdDialog: $mdDialog
+            });
+
+        expect(dlgCtrl).not.toBeNull();
+
+        $c_scope.init();
+        $rootScope.$digest();
+
+        expect($c_scope.axis_times).toBe({
+            
+        });
+
+    });
+    
 });

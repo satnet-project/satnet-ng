@@ -345,33 +345,34 @@ div.m-app-loading p {
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License. */
+#sn-sch-md-content {
+  padding: sch-padding; }
+
 .sn-sch-table {
   display: table; }
 
-.sn-sch-row {
+.sn-sch-gs {
+  display: table-row; }
+
+.sn-sch-axis {
   display: table-row; }
 
 .sn-sch-gs-id {
   display: table-cell;
   text-align: center;
-  min-width: 90px;
-  padding: 20px; }
+  padding: 5px;
+  border-bottom: 3px solid lightgray;
+  border-right: 3px solid lightgray;
+  min-width: 75px; }
 
-.sn-sch-slots-table {
-  display: table-cell; }
-
-.sn-sch-header {
-  display: table-row;
-  border-bottom: thick dotted black; }
-
-.sn-sch-slots-hours-container {
+.sn-sch-gs-content {
   display: table-cell;
-  width: 420px; }
+  text-align: center;
+  padding: 5px;
+  border-bottom: 3px solid lightgray;
+  width: 100%; }
 
-.sn-sch-slots-hour {
-  display: table-cell;
-  font-size: 57%;
-  width: 30px;
-  padding: 5px; }
+div.sn-sch-gs:last-child div {
+  border-bottom-style: none; }
 
 /*# sourceMappingURL=satnet-ng-operations.css.map */

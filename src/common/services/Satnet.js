@@ -140,7 +140,7 @@ angular.module('snJRPCServices', [
                 'rules.add': this._configuration
                     .createMethod('gs.rules.add'),
                 'rules.delete': this._configuration
-                    .createMethod('gs.rules.remove'),
+                    .createMethod('gs.rules.delete'),
                 // Configuration methods (Spacecraft)
                 'sc.list': this._configuration
                     .createMethod('sc.list'),

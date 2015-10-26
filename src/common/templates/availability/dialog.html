@@ -6,16 +6,25 @@
         </h2>
     </md-toolbar>
 
-    <md-content>
+    <md-content id="sn-sch-md-content">
 
         <div id="a-slots-timeline" style="height: 180px;">
-        
-            <svg id="svg-timeline" width="100%" ng-attr-min-height="{{ timeline_min_height }}">
-                <g ng-repeat="gs in gss" class="sn-timeline-gs-row">
-                    <rect x="10" y="10" width="10" height="10" fill="black"></rect>
-                    <text>{{ gs.id }}</text>
-                </g>
-            </svg>
+
+            <div class="sn-sch-axis" ng-repeat="(d, hours) in days">
+                <div class="sn-sch-axis-day">{{ d }}</div>
+                <div class="sn-sch-axis-hours" ng-repeat="h in hours">
+                    <!--<div></div>-->
+                </div>
+            </div>
+
+            <div class="sn-sch-gs" ng-repeat="(id, slots) in slots">
+                <div class="sn-sch-gs-id">
+                    <p>{{ id }}</p>
+                </div>
+                <div class="sn-sch-gs-content">
+                    <span></span>
+                </div>
+            </div>
 
         </div>
 

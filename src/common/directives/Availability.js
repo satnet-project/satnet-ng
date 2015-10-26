@@ -16,26 +16,25 @@
 
 angular.module('snAvailabilityDirective', [
     'ngMaterial',
+    'snControllers',
     'snJRPCServices'
 ])
-    .controller('snAvailabilityDlgCtrl', [
+.constant('SN_SCH_TIMELINE_DAYS', '2')
+.controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
+    'SN_SCH_TIMELINE_DAYS',
 
     /**
      * Controller function for handling the SatNet availability dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $log, $mdDialog, satnetRPC, snDialog) {
+    function (
+        $scope, $log, $mdDialog, satnetRPC, snDialog, SN_SCH_TIMELINE_DAYS
+    ) {
 
-        $scope.gss = [];
         $scope.slots = {};
-
-        $scope.xgss = [
-            { id: 'gs-1' },
-            { id: 'gs-2' }
-        ];
 
         /**
          * Function that closes the dialog.
@@ -54,71 +53,42 @@ angular.module('snAvailabilityDirective', [
          * @param {Object} slots            Array with the operational slots
          */
         $scope._addGS = function (groundstation_id, slots) {
-            $scope.gss.push(groundstation_id);
             $scope.slots[groundstation_id] = angular.copy(slots);
         };
 
         /** Identifier of the container wihere the timeline is to be drawn */
         $scope.container_id = 'a-slots-timeline';
+        /** Minimum height of the timeline component */
         $scope.timeline_min_height = '180px';
 
-        /**
-         * Initializes the SVG timeline chart.
-         */
-        $scope.initSVG = function () {
-            
-        };
+        /** Dictionary with the days and hours that have to be displayed */
+        $scope.axis_times = {};
 
         /**
-         * Function that draws the timeline where the available slots are
-         * displayed.
+         * Function that initializes the dictionary with the days and hours for
+         * the axis of the timeline. It simply contains as many days as
+         * specified in the variable "SN_SCH_TIMELINE_DAYS".
          */
-        $scope.drawTimeline = function () {
+        $scope.initAxisTimes = function () {
 
-            var container = document.getElementById($scope.container_id);
-            var chart = new google.visualization.Timeline(container);
-            var dataTable = new google.visualization.DataTable();
+            var first_day = moment(),
+                last_day = first_day.add(SN_SCH_TIMELINE_DAYS, 'days'),
+                day = first_day;
 
-            dataTable.addColumn({ type: 'string', id: 'Ground Station' });
-            dataTable.addColumn({ type: 'string', id: 'Spacecraft' });
-            dataTable.addColumn({ type: 'date', id: 'Start' });
-            dataTable.addColumn({ type: 'date', id: 'End' });
-
-            /**/
-            dataTable.addRows([
-                [
-                    'Magnolia Room',
-                    'Beginning JavaScript',
-                    new Date(0,0,0,12,0,0),
-                    new Date(0,0,0,13,30,0)
-                ],
-                [
-                    'Magnolia Room',
-                    'Intermediate JavaScript',
-                    new Date(0,0,0,14,0,0),
-                    new Date(0,0,0,15,30,0)
-                ]
-            ]);
-            /**/
-
-            var options = {
-                timeline: { colorByRowLabel: false }
-            };
-
-            chart.draw(dataTable, options);
-
-        };
-
-        $scope.initGCharts = function () {
-            // 2> the draw callback is set up for when the page is ready
-            $(document).ready(function () {
-                google.load('visualization', '1.0', {
-                    'packages': ['timeline'],
-                    'callback': $scope.drawTimeline
+            while (day.isBefore(last_day)) {
+                $scope.axis_times.push({
+                    d: day,
+                    hours: [
+                        '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+                        '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
+                        '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
+                        '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
+                    ]
                 });
-            });
+            }
+
         };
-        
+
         /**
          * Function that initializes the data structures for the visualization
          * of the available operational slots. The following data structures
@@ -129,7 +99,10 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.init = function () {
 
-            // 1> all the Ground Stations are retrieved
+            // 1> init days and hours for the axis
+            $scope.initAxisTimes();
+
+            // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 angular.forEach(results, function (gs) {
                     $log.debug('>>> loading slots for <' + gs + '>');

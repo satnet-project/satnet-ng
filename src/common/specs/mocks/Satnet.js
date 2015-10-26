@@ -87,6 +87,9 @@ angular.module('snJRPCMock', [])
     }
   ]
 })
+.constant('GS_AVAILABILITY_MOCK', [
+    { identifier: 1, slot_start: '2014-09-08T06:00:00-05:00', slot_end: '2014-09-08T09:00:00-05:00'}
+])
 .constant('CHANNELS_OPTIONS_MOCK', {
     bands: ['UHF', 'VHF'],
     modulations: ['FM', 'AFSK'],
@@ -99,6 +102,9 @@ angular.module('snJRPCMock', [])
     modulation: 'FM', polarization: 'LHCP',
     bitrate: 1200, bandwidth: 25.00
 })
+.constant('GS_LIST_MOCK', [
+    'gs-1', 'gs-2', 'gs-3'
+])
 .constant('GS_CHANNEL_MOCK', {
     band: 'UHF',
     modulations: ['FM'], polarizations: ['RHCP'],
@@ -111,14 +117,18 @@ angular.module('snJRPCMock', [])
 .service('satnetRPC', [
     '$log', '$q',
     'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK', 'CHANNELS_OPTIONS_MOCK',
-    'SC_LIST_MOCK', 'SC_COMPATIBILITY_MOCK',
+    'SC_LIST_MOCK', 'GS_LIST_MOCK',
+    'SC_COMPATIBILITY_MOCK',
+    'GS_AVAILABILITY_MOCK',
     'SC_CHANNEL_MOCK', 'GS_CHANNEL_MOCK',
     'GS_RULES_MOCK', 'GS_RULE_ID_MOCK',
 
     function (
         $log, $q,
         CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK,
-        SC_LIST_MOCK, SC_COMPATIBILITY_MOCK,
+        SC_LIST_MOCK, GS_LIST_MOCK,
+        SC_COMPATIBILITY_MOCK,
+        GS_AVAILABILITY_MOCK,
         SC_CHANNEL_MOCK, GS_CHANNEL_MOCK,
         GS_RULES_MOCK, GS_RULE_ID_MOCK
     ) {
@@ -151,10 +161,18 @@ angular.module('snJRPCMock', [])
                 result = SC_LIST_MOCK;
             }
 
+            if (service === 'gs.list') {
+                result = GS_LIST_MOCK;
+            }
+
             if (service === 'sc.compatibility') {
                 result = SC_COMPATIBILITY_MOCK;
             }
-            
+
+            if (service === 'gs.availability') {
+                result = GS_AVAILABILITY_MOCK;
+            }
+
             if ((service === 'sc.channel.list') ||
                 (service === 'gs.channel.list')) {
                 result = CHANNEL_LIST_MOCK;
