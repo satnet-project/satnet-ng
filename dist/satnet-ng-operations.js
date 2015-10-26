@@ -2859,7 +2859,7 @@ angular.module('snAvailabilityDirective', [
         $scope.timeline_min_height = '180px';
 
         /** Dictionary with the days and hours that have to be displayed */
-        $scope.axis_times = {};
+        $scope.axisTimes = [];
 
         /**
          * Function that initializes the dictionary with the days and hours for
@@ -2868,13 +2868,12 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.initAxisTimes = function () {
 
-            var first_day = moment(),
-                last_day = first_day.add(SN_SCH_TIMELINE_DAYS, 'days'),
-                day = first_day;
+            var day = moment().hours(0).minutes(0).seconds(0),
+                last_day = moment(day).add(SN_SCH_TIMELINE_DAYS, 'days');
 
             while (day.isBefore(last_day)) {
-                $scope.axis_times.push({
-                    d: day,
+                $scope.axisTimes.push({
+                    d: moment(day).format(),
                     hours: [
                         '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
                         '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
@@ -2882,6 +2881,7 @@ angular.module('snAvailabilityDirective', [
                         '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
                     ]
                 });
+                day = moment(day).add(1, 'days');
             }
 
         };
@@ -3880,18 +3880,8 @@ angular.module(
 
         $scope.eventDetected = "No events yet...";
 
-        console.log('xxx ONNNNNNNNNNNNNNNN');
         $scope.$on("leafletDirectiveMarker.dragend",
             function (event, args) {
-                console.log('>>> event = ' + Object.keys(event));
-                console.log('>>> args = ' + Object.keys(args));
-                console.log('>>> leafletEvent = ' + Object.keys(args.leafletEvent));
-                console.log('>>> leafletObject = ' + Object.keys(args.leafletObject));
-                console.log('>>> latlng = ' + JSON.stringify(args.leafletObject._latlng));
-                console.log('AAAAAAAAAAAAAAA event = ' + event.name);
-                console.log('AAAAAAAAAAAAAAA lat = ' + event.lat);
-                console.log('AAAAAAAAAAAAAAA lng = ' + event.lng);
-                console.log('AAAAAAAAAAAAAAA args.leafletEvent.target = ' + args.leafletEvent.target);
                 $scope.markers.gs.lat = args.leafletObject._latlng.lat;
                 $scope.markers.gs.lng = args.leafletObject._latlng.lng;
             }

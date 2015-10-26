@@ -205,18 +205,8 @@ angular.module(
 
         $scope.eventDetected = "No events yet...";
 
-        console.log('xxx ONNNNNNNNNNNNNNNN');
         $scope.$on("leafletDirectiveMarker.dragend",
             function (event, args) {
-                console.log('>>> event = ' + Object.keys(event));
-                console.log('>>> args = ' + Object.keys(args));
-                console.log('>>> leafletEvent = ' + Object.keys(args.leafletEvent));
-                console.log('>>> leafletObject = ' + Object.keys(args.leafletObject));
-                console.log('>>> latlng = ' + JSON.stringify(args.leafletObject._latlng));
-                console.log('AAAAAAAAAAAAAAA event = ' + event.name);
-                console.log('AAAAAAAAAAAAAAA lat = ' + event.lat);
-                console.log('AAAAAAAAAAAAAAA lng = ' + event.lng);
-                console.log('AAAAAAAAAAAAAAA args.leafletEvent.target = ' + args.leafletEvent.target);
                 $scope.markers.gs.lat = args.leafletObject._latlng.lat;
                 $scope.markers.gs.lng = args.leafletObject._latlng.lng;
             }
