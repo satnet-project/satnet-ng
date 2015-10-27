@@ -12,7 +12,29 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/availability/dialog.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><div id=\"a-slots-timeline\" style=\"height: 180px\"><div class=\"sn-sch-axis\" ng-repeat=\"(d, hours) in days\"><div class=\"sn-sch-axis-day\">{{ d }}</div><div class=\"sn-sch-axis-hours\" ng-repeat=\"h in hours\"><!--<div></div>--></div></div><div class=\"sn-sch-gs\" ng-repeat=\"(id, slots) in slots\"><div class=\"sn-sch-gs-id\"><p>{{ id }}</p></div><div class=\"sn-sch-gs-content\"><span></span></div></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><div id=\"a-slots-timeline\" class=\"sn-sch-table\"><div class=\"sn-sch-header\"><div class=\"sn-sch-axis-day\" ng-repeat=\"d in days\">{{ d }}</div></div><!--\n" +
+    "            <div class=\"sn-sch-header\">\n" +
+    "                <div class=\"sn-sch-header-corner\"></div>\n" +
+    "                <div class=\"sn-sch-header-axis\">\n" +
+    "                    <div class=\"sn-sch-axis-day\" ng-repeat=\"d in days\">{{ d }}</div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div class=\"sn-sch-header\">\n" +
+    "                <div class=\"sn-sch-header-corner\"></div>\n" +
+    "                <div class=\"sn-sch-header-axis-hours\">\n" +
+    "                    <div class=\"sn-sch-hour\" ng-repeat=\"h in hours\">{{ h }}</div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "\n" +
+    "            <div class=\"sn-sch-gs\" ng-repeat=\"(id, slots) in slots\">\n" +
+    "                <div class=\"sn-sch-gs-id\">\n" +
+    "                    <p>{{ id }}</p>\n" +
+    "                </div>\n" +
+    "                <div class=\"sn-sch-gs-content\">\n" +
+    "                    <span></span>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            --></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-times\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button><md-button id=\"detach\" ng-click=\"detach()\" aria-label=\"Detach\" class=\"md-primary menu-button\" style=\"width: 125px\"><div layout=\"row\" style=\"sn-margin\"><i class=\"fa fa-clone\"></i> <b style=\"margin-left: 15px\">detach</b></div></md-button></div></md-content></md-dialog>"
   );
 
 

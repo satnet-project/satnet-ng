@@ -346,16 +346,35 @@ div.m-app-loading p {
    See the License for the specific language governing permissions and
    limitations under the License. */
 #sn-sch-md-content {
-  padding: sch-padding; }
+  padding: 5px; }
 
 .sn-sch-table {
-  display: table; }
+  display: table;
+  min-width: 100%; }
 
 .sn-sch-gs {
   display: table-row; }
 
-.sn-sch-axis {
+.sn-sch-header {
   display: table-row; }
+
+.sn-sch-header-corner {
+  display: table-cell;
+  background: black; }
+
+.sn-sch-header-axis, .sn-sch-header-axis-hours {
+  display: table-cell;
+  column-span: 24;
+  width: 100%; }
+
+.sn-sch-header-axis-hours {
+  padding: 15px; }
+
+.sn-sch-hour {
+  display: table-cell;
+  font-size: 65%;
+  font-style: italic;
+  transform: rotate(-65deg); }
 
 .sn-sch-gs-id {
   display: table-cell;
@@ -371,6 +390,13 @@ div.m-app-loading p {
   padding: 5px;
   border-bottom: 3px solid lightgray;
   width: 100%; }
+
+.sn-sch-axis-day {
+  display: table-cell;
+  text-align: center;
+  padding: 5px;
+  border-bottom: 3px solid lightgray;
+  column-span: 12; }
 
 div.sn-sch-gs:last-child div {
   border-bottom-style: none; }

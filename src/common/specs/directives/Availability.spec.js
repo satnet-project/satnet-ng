@@ -115,17 +115,23 @@ describe('Testing Availability directive', function () {
     it('should create the times for the axis', function () {
 
         var $c_scope = $rootScope.$new(),
-            hours = [
+            x_hours = [
+                '00:00', '03:00', '06:00', '09:00',
+                '12:00', '15:00', '18:00', '21:00'
+            ],
+            /*
+            x_hours = [
                 '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
                 '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
                 '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
                 '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
             ],
-            day_1 = moment().hours(0).minutes(0).seconds(0),
-            day_2 = moment(day_1).add(1, 'days'),
-            x_axis = [
-                { d: moment(day_1).format(), hours: hours},
-                { d: moment(day_2).format(), hours: hours}
+            */
+            x_day_1 = moment().hours(0).minutes(0).seconds(0),
+            x_day_2 = moment(x_day_1).add(1, 'days'),
+            x_days = [
+                moment(x_day_1).format('DD-MM'),
+                moment(x_day_2).format('DD-MM')
             ],
             dlgCtrl = $controller("snAvailabilityDlgCtrl", {
                 $scope: $c_scope,
@@ -137,7 +143,8 @@ describe('Testing Availability directive', function () {
         $c_scope.init();
         $rootScope.$digest();
         
-        expect($c_scope.axisTimes).toEqual(x_axis);
+        expect($c_scope.days).toEqual(x_days);
+        expect($c_scope.hours).toEqual(x_hours);
 
     });
     

@@ -8,12 +8,23 @@
 
     <md-content id="sn-sch-md-content">
 
-        <div id="a-slots-timeline" style="height: 180px;">
+        <div id="a-slots-timeline" class="sn-sch-table">
 
-            <div class="sn-sch-axis" ng-repeat="(d, hours) in days">
-                <div class="sn-sch-axis-day">{{ d }}</div>
-                <div class="sn-sch-axis-hours" ng-repeat="h in hours">
-                    <!--<div></div>-->
+            <div class="sn-sch-header">
+                <div class="sn-sch-axis-day" ng-repeat="d in days">{{ d }}</div>
+            </div>
+
+            <!--
+            <div class="sn-sch-header">
+                <div class="sn-sch-header-corner"></div>
+                <div class="sn-sch-header-axis">
+                    <div class="sn-sch-axis-day" ng-repeat="d in days">{{ d }}</div>
+                </div>
+            </div>
+            <div class="sn-sch-header">
+                <div class="sn-sch-header-corner"></div>
+                <div class="sn-sch-header-axis-hours">
+                    <div class="sn-sch-hour" ng-repeat="h in hours">{{ h }}</div>
                 </div>
             </div>
 
@@ -25,6 +36,7 @@
                     <span></span>
                 </div>
             </div>
+            -->
 
         </div>
 

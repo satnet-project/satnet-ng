@@ -2817,10 +2817,11 @@ angular.module('snAvailabilityDirective', [
     'snJRPCServices'
 ])
 .constant('SN_SCH_TIMELINE_DAYS', '2')
+.constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
-    'SN_SCH_TIMELINE_DAYS',
+    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_DATE_FORMAT',
 
     /**
      * Controller function for handling the SatNet availability dialog.
@@ -2828,7 +2829,8 @@ angular.module('snAvailabilityDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $log, $mdDialog, satnetRPC, snDialog, SN_SCH_TIMELINE_DAYS
+        $scope, $log, $mdDialog, satnetRPC, snDialog,
+         SN_SCH_TIMELINE_DAYS, SN_SCH_DATE_FORMAT
     ) {
 
         $scope.slots = {};
@@ -2858,8 +2860,23 @@ angular.module('snAvailabilityDirective', [
         /** Minimum height of the timeline component */
         $scope.timeline_min_height = '180px';
 
+        $scope.dayColWidth = 0;
         /** Dictionary with the days and hours that have to be displayed */
-        $scope.axisTimes = [];
+        $scope.days = [];
+        $scope.hours = [
+            '00:00', '03:00',
+            '06:00', '09:00',
+            '12:00', '15:00',
+            '18:00', '21:00'
+        ];
+        /*
+        $scope.hours = [
+            '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+            '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
+            '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
+            '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
+        ];
+        */
 
         /**
          * Function that initializes the dictionary with the days and hours for
@@ -2871,16 +2888,10 @@ angular.module('snAvailabilityDirective', [
             var day = moment().hours(0).minutes(0).seconds(0),
                 last_day = moment(day).add(SN_SCH_TIMELINE_DAYS, 'days');
 
+            $scope.dayColWidth = '' + (100 / SN_SCH_TIMELINE_DAYS) + '%';
+
             while (day.isBefore(last_day)) {
-                $scope.axisTimes.push({
-                    d: moment(day).format(),
-                    hours: [
-                        '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
-                        '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
-                        '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-                        '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
-                    ]
-                });
+                $scope.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
                 day = moment(day).add(1, 'days');
             }
 
