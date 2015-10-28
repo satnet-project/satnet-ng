@@ -12,7 +12,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/availability/dialog.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><div id=\"a-slots-timeline\" class=\"sn-sch-table\"><div class=\"sn-sch-header\"><div class=\"sn-sch-axis-day\" ng-repeat=\"d in days\">{{ d }}</div></div><!--\n" +
+    "<md-dialog ng-init=\"init()\" aria-label=\"Availability Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Operational Slots</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><div id=\"a-slots-timeline\" class=\"sn-sch-table\"><div class=\"sn-sch-gs\" ng-repeat=\"(gs, slots) in slots\"><div class=\"sn-sch-gs-id\"><p>{{ gs }}</p></div></div><div class=\"sn-sch-header\"><div class=\"sn-sch-axis-day\" ng-repeat=\"d in days\">{{ d }}</div></div><!--\n" +
     "            <div class=\"sn-sch-header\">\n" +
     "                <div class=\"sn-sch-header-corner\"></div>\n" +
     "                <div class=\"sn-sch-header-axis\">\n" +

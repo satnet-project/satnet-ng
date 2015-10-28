@@ -57,26 +57,38 @@ $sch-padding: 5px;
     transform: rotate(-65deg);
 }
 
-@mixin sn-sch-p-content($padding) {
+@mixin sn-sch-cell($padding) {
     display: table-cell;
     text-align: center;
     padding: $padding;
     border-bottom: $sch-border-width solid $sch-border-color;
 }
 
+@mixin sn-sch-row($padding) {
+    display: table-row;
+    text-align: center;
+    padding: $padding;
+    border-bottom: $sch-border-width solid $sch-border-color;
+}
+
+.sn-sch-gs {
+    @include sn-sch-row($sch-padding);
+    width: 100%;
+}
+
 .sn-sch-gs-id {
-    @include sn-sch-p-content($sch-padding);
-    border-right: $sch-border-width solid $sch-border-color;
-    min-width: $sch-header-corner-width;
+    @include sn-sch-cell($sch-padding);
+    //column-span: all;
+    width: 100%;
 }
 
 .sn-sch-gs-content {
-    @include sn-sch-p-content($sch-padding);
+    @include sn-sch-row($sch-padding);
     width: 100%;
 }
 
 .sn-sch-axis-day {
-    @include sn-sch-p-content($sch-padding);
+    @include sn-sch-cell($sch-padding);
     column-span: 12;
 }
 

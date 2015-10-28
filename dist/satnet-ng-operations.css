@@ -376,16 +376,22 @@ div.m-app-loading p {
   font-style: italic;
   transform: rotate(-65deg); }
 
+.sn-sch-gs {
+  display: table-row;
+  text-align: center;
+  padding: 5px;
+  border-bottom: 3px solid lightgray;
+  width: 100%; }
+
 .sn-sch-gs-id {
   display: table-cell;
   text-align: center;
   padding: 5px;
   border-bottom: 3px solid lightgray;
-  border-right: 3px solid lightgray;
-  min-width: 75px; }
+  width: 100%; }
 
 .sn-sch-gs-content {
-  display: table-cell;
+  display: table-row;
   text-align: center;
   padding: 5px;
   border-bottom: 3px solid lightgray;
