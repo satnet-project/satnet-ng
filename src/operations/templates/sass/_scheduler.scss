@@ -22,23 +22,38 @@ $sch-padding: 5px;
 }
 
 .sn-sch-table {
-    display: table;
     min-width: 100%;
 }
 
 .sn-sch-gs {
-    display: table-row;
+    text-align: center;
+    padding: $sch-padding;
 }
 
-.sn-sch-header {
-    display: table-row;
+.sn-sch-timeline {
 }
 
-.sn-sch-header-corner {
-    display: table-cell;
-    background: black;
+.sn-sch-gs-id {
+    width: 100%;
+    column-span: all;
 }
 
+.sn-sch-axis-time {
+    border-bottom: $sch-border-width solid $sch-border-color;
+
+    div p {
+        font-size: 65%;
+        font-style: italic;
+        text-align: left;
+        font-style: italic;
+        padding: 0 0 1px 0;
+        max-width: 50px;
+    }
+
+}
+
+///////////////////////////////////////////
+/*
 .sn-sch-header-axis {
     display: table-cell;
     column-span: 24;
@@ -55,13 +70,6 @@ $sch-padding: 5px;
     font-size: 65%;
     font-style: italic;
     transform: rotate(-65deg);
-}
-
-@mixin sn-sch-cell($padding) {
-    display: table-cell;
-    text-align: center;
-    padding: $padding;
-    border-bottom: $sch-border-width solid $sch-border-color;
 }
 
 @mixin sn-sch-row($padding) {
@@ -87,11 +95,7 @@ $sch-padding: 5px;
     width: 100%;
 }
 
-.sn-sch-axis-day {
-    @include sn-sch-cell($sch-padding);
-    column-span: 12;
-}
-
 div.sn-sch-gs:last-child div {
     border-bottom-style: none;
 }
+*/

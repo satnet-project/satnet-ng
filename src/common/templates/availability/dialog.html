@@ -8,17 +8,21 @@
 
     <md-content id="sn-sch-md-content">
 
-        <div id="a-slots-timeline" class="sn-sch-table">
+        <table id="a-slots-timeline" class="sn-sch-table">
 
+            <tr class="sn-sch-timeline">
+                <td class="sn-sch-axis-time" ng-repeat="d in gui.days">
+                    <div><p>{{ d }}</p></div>
+                </td>
+            </tr>
+            <tr class="sn-sch-gs" ng-repeat="(gs, slots) in gui.slots">
+                <td colspan="4" class="sn-sch-gs-id">{{ gs }}</td>
+            </tr>
+
+<!--
             <div class="sn-sch-gs" ng-repeat="(gs, slots) in slots">
-                <div class="sn-sch-gs-id"><p>{{ gs }}</p></div>
+                {{ gs }}
             </div>
-
-            <div class="sn-sch-header">
-                <div class="sn-sch-axis-day" ng-repeat="d in days">{{ d }}</div>
-            </div>
-
-            <!--
             <div class="sn-sch-header">
                 <div class="sn-sch-header-corner"></div>
                 <div class="sn-sch-header-axis">
@@ -40,9 +44,9 @@
                     <span></span>
                 </div>
             </div>
-            -->
+-->
 
-        </div>
+        </table>
 
     </md-content>
 

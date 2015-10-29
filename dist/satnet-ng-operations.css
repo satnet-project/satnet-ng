@@ -349,62 +349,71 @@ div.m-app-loading p {
   padding: 5px; }
 
 .sn-sch-table {
-  display: table;
   min-width: 100%; }
 
 .sn-sch-gs {
-  display: table-row; }
-
-.sn-sch-header {
-  display: table-row; }
-
-.sn-sch-header-corner {
-  display: table-cell;
-  background: black; }
-
-.sn-sch-header-axis, .sn-sch-header-axis-hours {
-  display: table-cell;
-  column-span: 24;
-  width: 100%; }
-
-.sn-sch-header-axis-hours {
-  padding: 15px; }
-
-.sn-sch-hour {
-  display: table-cell;
-  font-size: 65%;
-  font-style: italic;
-  transform: rotate(-65deg); }
-
-.sn-sch-gs {
-  display: table-row;
   text-align: center;
-  padding: 5px;
-  border-bottom: 3px solid lightgray;
-  width: 100%; }
+  padding: 5px; }
 
 .sn-sch-gs-id {
-  display: table-cell;
-  text-align: center;
-  padding: 5px;
-  border-bottom: 3px solid lightgray;
-  width: 100%; }
+  width: 100%;
+  column-span: all; }
+
+.sn-sch-axis-time {
+  border-bottom: 3px solid lightgray; }
+  .sn-sch-axis-time div p {
+    font-size: 65%;
+    font-style: italic;
+    text-align: left;
+    font-style: italic;
+    padding: 0 0 1px 0;
+    max-width: 50px; }
+
+/*
+.sn-sch-header-axis {
+    display: table-cell;
+    column-span: 24;
+    width: 100%;
+}
+
+.sn-sch-header-axis-hours {
+    @extend .sn-sch-header-axis;
+    padding: 15px;
+}
+
+.sn-sch-hour {
+    display: table-cell;
+    font-size: 65%;
+    font-style: italic;
+    transform: rotate(-65deg);
+}
+
+@mixin sn-sch-row($padding) {
+    display: table-row;
+    text-align: center;
+    padding: $padding;
+    border-bottom: $sch-border-width solid $sch-border-color;
+}
+
+.sn-sch-gs {
+    @include sn-sch-row($sch-padding);
+    width: 100%;
+}
+
+.sn-sch-gs-id {
+    @include sn-sch-cell($sch-padding);
+    //column-span: all;
+    width: 100%;
+}
 
 .sn-sch-gs-content {
-  display: table-row;
-  text-align: center;
-  padding: 5px;
-  border-bottom: 3px solid lightgray;
-  width: 100%; }
-
-.sn-sch-axis-day {
-  display: table-cell;
-  text-align: center;
-  padding: 5px;
-  border-bottom: 3px solid lightgray;
-  column-span: 12; }
+    @include sn-sch-row($sch-padding);
+    width: 100%;
+}
 
 div.sn-sch-gs:last-child div {
-  border-bottom-style: none; }
+    border-bottom-style: none;
+}
+*/
 
 /*# sourceMappingURL=satnet-ng-operations.css.map */

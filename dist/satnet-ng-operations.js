@@ -2833,7 +2833,10 @@ angular.module('snAvailabilityDirective', [
          SN_SCH_TIMELINE_DAYS, SN_SCH_DATE_FORMAT
     ) {
 
-        $scope.slots = {};
+        $scope.gui = {
+            days: [],
+            slots: {}
+        };
 
         /**
          * Function that closes the dialog.
@@ -2852,31 +2855,8 @@ angular.module('snAvailabilityDirective', [
          * @param {Object} slots            Array with the operational slots
          */
         $scope._addGS = function (groundstation_id, slots) {
-            $scope.slots[groundstation_id] = angular.copy(slots);
+            $scope.gui.slots[groundstation_id] = angular.copy(slots);
         };
-
-        /** Identifier of the container wihere the timeline is to be drawn */
-        $scope.container_id = 'a-slots-timeline';
-        /** Minimum height of the timeline component */
-        $scope.timeline_min_height = '180px';
-
-        $scope.dayColWidth = 0;
-        /** Dictionary with the days and hours that have to be displayed */
-        $scope.days = [];
-        $scope.hours = [
-            '00:00', '03:00',
-            '06:00', '09:00',
-            '12:00', '15:00',
-            '18:00', '21:00'
-        ];
-        /*
-        $scope.hours = [
-            '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
-            '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
-            '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-            '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
-        ];
-        */
 
         /**
          * Function that initializes the dictionary with the days and hours for
@@ -2888,10 +2868,9 @@ angular.module('snAvailabilityDirective', [
             var day = moment().hours(0).minutes(0).seconds(0),
                 last_day = moment(day).add(SN_SCH_TIMELINE_DAYS, 'days');
 
-            $scope.dayColWidth = '' + (100 / SN_SCH_TIMELINE_DAYS) + '%';
-
             while (day.isBefore(last_day)) {
-                $scope.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
+                $scope.gui.days[$scope.gui.days.length] = moment(day).format(SN_SCH_DATE_FORMAT);
+                $scope.gui.days[$scope.gui.days.length] = '12:00';
                 day = moment(day).add(1, 'days');
             }
 
