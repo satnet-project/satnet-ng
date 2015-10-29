@@ -2869,8 +2869,10 @@ angular.module('snAvailabilityDirective', [
                 last_day = moment(day).add(SN_SCH_TIMELINE_DAYS, 'days');
 
             while (day.isBefore(last_day)) {
-                $scope.gui.days[$scope.gui.days.length] = moment(day).format(SN_SCH_DATE_FORMAT);
-                $scope.gui.days[$scope.gui.days.length] = '12:00';
+                $scope.gui.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
+                //$scope.gui.days[$scope.gui.days.length] = '1200';
+                $scope.gui.days.push('08:00');
+                $scope.gui.days.push('16:00');
                 day = moment(day).add(1, 'days');
             }
 

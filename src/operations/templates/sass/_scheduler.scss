@@ -15,39 +15,69 @@
 $sch-header-corner-width: 75px;
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
-$sch-padding: 5px;
+$sch-padding: 50px;
 
 #sn-sch-md-content {
-    padding: $sch-padding;
+    padding: 25px;
+}
+
+.sn-sch-gs-col {
+    border-right: $sch-border-width solid $sch-border-color;
+}
+
+.sn-sch-time-col {
+    border-right: 1px solid $sch-border-color;
+}
+
+.sn-sch-day-col {
+    border-right: $sch-border-width solid black;
 }
 
 .sn-sch-table {
     min-width: 100%;
-}
-
-.sn-sch-gs {
-    text-align: center;
-    padding: $sch-padding;
-}
-
-.sn-sch-timeline {
+    border-collapse:collapse;
 }
 
 .sn-sch-gs-id {
-    width: 100%;
-    column-span: all;
+    text-align: center;
+    padding: $sch-padding 0 $sch-padding 0;
+    width: 75px;
 }
 
-.sn-sch-axis-time {
+.sn-sch-corner-top {
+    border-bottom: $sch-border-width solid $sch-border-color;
+}
+
+.sn-sch-axis-time-top {
+
+    background-color: $sn-primary-color;
     border-bottom: $sch-border-width solid $sch-border-color;
 
-    div p {
+    span {
         font-size: 65%;
-        font-style: italic;
+        font-weight: bold;
+        color: white;
         text-align: left;
-        font-style: italic;
         padding: 0 0 1px 0;
-        max-width: 50px;
+    }
+
+}
+
+.sn-sch-corner-bottom {
+    border-top: $sch-border-width solid $sch-border-color;
+}
+
+.sn-sch-axis-time-bottom {
+
+    background-color: $sn-primary-color;
+    border-top: $sch-border-width solid $sch-border-color;
+
+    span {
+        font-size: 65%;
+        font-weight: bold;
+        color: white;
+        text-align: left;
+        padding: 0 0 1px 0;
     }
 
 }

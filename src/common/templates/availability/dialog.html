@@ -2,7 +2,7 @@
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
-            <span>Operational Slots</span>
+            <span>Availability Slots</span>
         </h2>
     </md-toolbar>
 
@@ -10,41 +10,36 @@
 
         <table id="a-slots-timeline" class="sn-sch-table">
 
-            <tr class="sn-sch-timeline">
-                <td class="sn-sch-axis-time" ng-repeat="d in gui.days">
-                    <div><p>{{ d }}</p></div>
+            <colgroup>
+                <col class="sn-sch-gs-col"/>
+                <col span="2" class="sn-sch-time-col"/>
+                <col class="sn-sch-day-col"/>
+                <col span="3" class="sn-sch-time-col"/>
+            </colgroup>
+
+            <tr>
+                <td class="sn-sch-corner-top"/>
+                <td class="sn-sch-axis-time-top" ng-repeat="d in gui.days track by $index">
+                    <span>{{ d }}</span>
                 </td>
             </tr>
-            <tr class="sn-sch-gs" ng-repeat="(gs, slots) in gui.slots">
-                <td colspan="4" class="sn-sch-gs-id">{{ gs }}</td>
+
+            <tr ng-repeat="(gs, slots) in gui.slots">
+                <td class="sn-sch-gs-id">{{ gs }}</td>
+                <td class="sn-sch-gs-slots"></td>
+                <td class="sn-sch-gs-slots"></td>
+                <td class="sn-sch-gs-slots"></td>
+                <td class="sn-sch-gs-slots"></td>
+                <td class="sn-sch-gs-slots"></td>
+                <td class="sn-sch-gs-slots"></td>
             </tr>
 
-<!--
-            <div class="sn-sch-gs" ng-repeat="(gs, slots) in slots">
-                {{ gs }}
-            </div>
-            <div class="sn-sch-header">
-                <div class="sn-sch-header-corner"></div>
-                <div class="sn-sch-header-axis">
-                    <div class="sn-sch-axis-day" ng-repeat="d in days">{{ d }}</div>
-                </div>
-            </div>
-            <div class="sn-sch-header">
-                <div class="sn-sch-header-corner"></div>
-                <div class="sn-sch-header-axis-hours">
-                    <div class="sn-sch-hour" ng-repeat="h in hours">{{ h }}</div>
-                </div>
-            </div>
-
-            <div class="sn-sch-gs" ng-repeat="(id, slots) in slots">
-                <div class="sn-sch-gs-id">
-                    <p>{{ id }}</p>
-                </div>
-                <div class="sn-sch-gs-content">
-                    <span></span>
-                </div>
-            </div>
--->
+            <tr>
+                <td class="sn-sch-corner-bottom"/>
+                <td class="sn-sch-axis-time-bottom" ng-repeat="d in gui.days track by $index">
+                    <span>{{ d }}</span>
+                </td>
+            </tr>
 
         </table>
 
