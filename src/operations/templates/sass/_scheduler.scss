@@ -44,6 +44,10 @@ $sch-padding: 50px;
     width: 75px;
 }
 
+.sn-sch-gs-slots {
+    position: relative;
+}
+
 .sn-sch-corner-top {
     border-bottom: $sch-border-width solid $sch-border-color;
 }
@@ -61,6 +65,17 @@ $sch-padding: 50px;
         padding: 0 0 1px 0;
     }
 
+}
+
+.sn-sch-row-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    //background: red;
+    //opacity: 0.0625;
+    z-index: 1000;
 }
 
 .sn-sch-corner-bottom {
