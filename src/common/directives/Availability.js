@@ -40,6 +40,11 @@ angular.module('snAvailabilityDirective', [
          SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
     ) {
 
+        $scope.animation = {
+            initial_width: '20%',
+            final_width: '70%'
+        };
+
         $scope.gui = {
             hours_per_day: -1,
             hour_step: null,
@@ -89,10 +94,6 @@ angular.module('snAvailabilityDirective', [
                 hour = moment().hours(0).minutes(0).seconds(0);
                 $scope.gui.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
 
-                //$scope.gui.days[$scope.gui.days.length] = '1200';
-                //$scope.gui.days.push('08:00');
-                //$scope.gui.days.push('16:00');
-
                 for (var i = 0; i < ( $scope.gui.hours_per_day - 1 ); i++) {
 
                     hour = moment(hour).add($scope.gui.hour_step, 'hours');
@@ -104,6 +105,13 @@ angular.module('snAvailabilityDirective', [
 
             }
 
+        };
+
+        // animation: sn-sch-table-overlay 5s linear;
+        $scope.getCSSAnimation = function () {
+            return {
+                animation: 'sn-sch-table-overlay 5s linear;'
+            };
         };
 
         /**
@@ -170,8 +178,8 @@ angular.module('snAvailabilityDirective', [
 .directive('snAvailability',
 
     /**
-     * Function that creates the directive itself returning the object
-     * required by Angular.
+     * Function that creates the directive itself returning the object required
+     * by Angular.
      *
      * @returns {Object} Object directive required by Angular, with
      *                   restrict and templateUrl

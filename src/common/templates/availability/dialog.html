@@ -1,5 +1,12 @@
 <md-dialog ng-init="init()" aria-label="Availability Dialog">
 
+    <style type="text/css">
+        @keyframes sn-sch-table-overlay {
+            from { width: {{ animation.initial_width }}; }
+            to { width: {{ animation.final_width }}; }
+        }
+    </style>
+
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
             <span>Availability Slots</span>
@@ -9,7 +16,7 @@
     <md-content id="sn-sch-md-content">
 
         <div class="sn-sch-table-wrap">
-            <div class="sn-sch-table-overlay"></div>
+            <div class="sn-sch-table-overlay" ng-style="{ 'animation': 'sn-sch-table-overlay 5s linear'}"></div>
 
         <table id="a-slots-timeline" class="sn-sch-table">
 
@@ -28,8 +35,6 @@
                 </td>
             </tr>
 
-            <!-- OVERLAYS: http://jsfiddle.net/h3ze620s/ -->
-            <!-- OVERLAYS: http://jsfiddle.net/rtubio/sohwqmzs/3/ -->
             <tr ng-repeat="(gs, slots) in gui.slots">
                 <td class="sn-sch-gs-id">{{ gs }}</td>
                 <td colspan="{{ gui.days.length }}" style="padding: 0; margin: 0">

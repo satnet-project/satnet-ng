@@ -143,9 +143,9 @@ $sch-padding: 40px;
 }
 
 .sn-sch-table-overlay {
+
     top: 0;
     left: $sch-header-corner-width;
-    width: 100px;
     height: 100%;
     position: absolute;
     background: grey;
@@ -153,52 +153,13 @@ $sch-padding: 40px;
     border-style: none solid none none;
     opacity: 0.25;
     z-index: 500;
+
+    //animation: sn-sch-table-overlay 5s linear;
+    //width: 70%;
+
 }
 
-///////////////////////////////////////////
-/*
-.sn-sch-header-axis {
-    display: table-cell;
-    column-span: 24;
-    width: 100%;
-}
-
-.sn-sch-header-axis-hours {
-    @extend .sn-sch-header-axis;
-    padding: 15px;
-}
-
-.sn-sch-hour {
-    display: table-cell;
-    font-size: 65%;
-    font-style: italic;
-    transform: rotate(-65deg);
-}
-
-@mixin sn-sch-row($padding) {
-    display: table-row;
-    text-align: center;
-    padding: $padding;
-    border-bottom: $sch-border-width solid $sch-border-color;
-}
-
-.sn-sch-gs {
-    @include sn-sch-row($sch-padding);
-    width: 100%;
-}
-
-.sn-sch-gs-id {
-    @include sn-sch-cell($sch-padding);
-    //column-span: all;
-    width: 100%;
-}
-
-.sn-sch-gs-content {
-    @include sn-sch-row($sch-padding);
-    width: 100%;
-}
-
-div.sn-sch-gs:last-child div {
-    border-bottom-style: none;
-}
-*/
+//@keyframes sn-sch-table-overlay {
+//    from { width: 10%; }
+//    to { width: 70%; }
+//}
