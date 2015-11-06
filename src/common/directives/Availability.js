@@ -20,11 +20,14 @@ angular.module('snAvailabilityDirective', [
     'snJRPCServices'
 ])
 .constant('SN_SCH_TIMELINE_DAYS', '2')
+.constant('SN_SCH_HOURS_DAY', '3')
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
+.constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
-    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_DATE_FORMAT',
+    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
+    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
 
     /**
      * Controller function for handling the SatNet availability dialog.
@@ -33,10 +36,14 @@ angular.module('snAvailabilityDirective', [
      */
     function (
         $scope, $log, $mdDialog, satnetRPC, snDialog,
-         SN_SCH_TIMELINE_DAYS, SN_SCH_DATE_FORMAT
+         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
+         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
     ) {
 
         $scope.gui = {
+            hours_per_day: -1,
+            hour_step: null,
+            no_cols: -1,
             days: [],
             slots: {}
         };
@@ -68,15 +75,33 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.initAxisTimes = function () {
 
-            var day = moment().hours(0).minutes(0).seconds(0),
+            var day = moment().hours(0).minutes(0).seconds(0), hour,
                 last_day = moment(day).add(SN_SCH_TIMELINE_DAYS, 'days');
 
+                $scope.gui.hours_per_day = 3;
+                $scope.gui.hour_step = moment.duration(
+                    24 / $scope.gui.hours_per_day, 'hours'
+                );
+                $scope.gui.no_cols = $scope.gui.hours_per_day - 1;
+
             while (day.isBefore(last_day)) {
+
+                hour = moment().hours(0).minutes(0).seconds(0);
                 $scope.gui.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
+
                 //$scope.gui.days[$scope.gui.days.length] = '1200';
-                $scope.gui.days.push('08:00');
-                $scope.gui.days.push('16:00');
+                //$scope.gui.days.push('08:00');
+                //$scope.gui.days.push('16:00');
+
+                for (var i = 0; i < ( $scope.gui.hours_per_day - 1 ); i++) {
+
+                    hour = moment(hour).add($scope.gui.hour_step, 'hours');
+                    $scope.gui.days.push(hour.format(SN_SCH_HOUR_FORMAT));
+
+                }
+
                 day = moment(day).add(1, 'days');
+
             }
 
         };

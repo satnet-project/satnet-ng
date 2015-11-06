@@ -8,13 +8,17 @@
 
     <md-content id="sn-sch-md-content">
 
+        <div class="sn-sch-table-wrap">
+            <div class="sn-sch-table-overlay"></div>
+
         <table id="a-slots-timeline" class="sn-sch-table">
 
             <colgroup>
                 <col class="sn-sch-gs-col"/>
-                <col span="2" class="sn-sch-time-col"/>
+                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
                 <col class="sn-sch-day-col"/>
-                <col span="3" class="sn-sch-time-col"/>
+                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
+                <col class="sn-sch-gs-col"/>
             </colgroup>
 
             <tr>
@@ -28,18 +32,34 @@
             <!-- OVERLAYS: http://jsfiddle.net/rtubio/sohwqmzs/3/ -->
             <tr ng-repeat="(gs, slots) in gui.slots">
                 <td class="sn-sch-gs-id">{{ gs }}</td>
-                <td class="sn-sch-gs-slots">
-                    <div class="sn-sch-row-div">
-                        <div style="height: 40%; background: black; opacity: 0.125;"></div>
-                        <div style="height: 20%"></div>
-                        <div style="height: 40%; background: black; opacity: 0.125;"></div>
+                <td colspan="{{ gui.days.length }}" style="padding: 0; margin: 0">
+                    <div class="sn-sch-row-container">
+
+                        <table class="sn-sch-row-table">
+
+                            <colgroup>
+                                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
+                                <col class="sn-sch-day-col"/>
+                                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
+                            </colgroup>
+
+                            <tr>
+                                <td ng-repeat="d in gui.days track by $index">
+                                    <span style="opacity: 0">{{ d }}</span>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <div class="sn-sch-row-overlay">
+                            <div class="sn-sch-slot-container" ng-repeat="s in slots">
+                                <div class="sn-sch-blank"></div>
+                                <div class="sn-sch-slot"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </td>
-                <td class="sn-sch-gs-slots"></td>
-                <td class="sn-sch-gs-slots"></td>
-                <td class="sn-sch-gs-slots"></td>
-                <td class="sn-sch-gs-slots"></td>
-                <td class="sn-sch-gs-slots"></td>
             </tr>
 
             <tr>
@@ -48,8 +68,9 @@
                     <span>{{ d }}</span>
                 </td>
             </tr>
-
+            
         </table>
+        </div>
 
     </md-content>
 

@@ -15,10 +15,10 @@
 $sch-header-corner-width: 75px;
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
-$sch-padding: 50px;
+$sch-padding: 40px;
 
 #sn-sch-md-content {
-    padding: 25px;
+    padding: 15px 0 15px 0;
 }
 
 .sn-sch-gs-col {
@@ -35,17 +35,13 @@ $sch-padding: 50px;
 
 .sn-sch-table {
     min-width: 100%;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .sn-sch-gs-id {
     text-align: center;
     padding: $sch-padding 0 $sch-padding 0;
     width: 75px;
-}
-
-.sn-sch-gs-slots {
-    position: relative;
 }
 
 .sn-sch-corner-top {
@@ -67,19 +63,64 @@ $sch-padding: 50px;
 
 }
 
-.sn-sch-row-div {
+.sn-sch-row-container {
+    position: relative;
+    height: 75px;
+}
+
+.sn-sch-row-overlay {
     position: absolute;
-    top: 0;
+    top: 10%;
     left: 0;
     width: 100%;
-    height: 100%;
-    //background: red;
-    //opacity: 0.0625;
+    height: 80%;
     z-index: 1000;
+    //background: #F0F0F0;
+    //opacity: 0.25;
+    //border: 1px solid lightgray;
+}
+
+.sn-sch-row-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
 }
 
 .sn-sch-corner-bottom {
     border-top: $sch-border-width solid $sch-border-color;
+}
+
+.sn-sch-slot-container {
+    height: 20%;
+    margin: 3px 0 3px 0;
+}
+
+.sn-sch-blank {
+    float: left;
+    height: 100%;
+    width: 15%;
+    z-index: 1001;
+    opacity: 0.2;
+}
+
+.sn-sch-slot {
+
+    @extend .sn-sch-blank;
+
+    background: $sn-primary-color;
+    border: 5px solid black;
+    border-style: none solid none solid;
+    opacity: 0.75;
+
+}
+
+.sn-sch-slot:hover {
+
+    background: black;
+    opacity: 1.0;
+    border: 5px solid $sn-primary-color;
+    cursor: pointer;
+
 }
 
 .sn-sch-axis-time-bottom {
@@ -95,6 +136,23 @@ $sch-padding: 50px;
         padding: 0 0 1px 0;
     }
 
+}
+
+.sn-sch-table-wrap {
+    position: relative;
+}
+
+.sn-sch-table-overlay {
+    top: 0;
+    left: $sch-header-corner-width;
+    width: 100px;
+    height: 100%;
+    position: absolute;
+    background: grey;
+    border: 5px solid red;
+    border-style: none solid none none;
+    opacity: 0.25;
+    z-index: 500;
 }
 
 ///////////////////////////////////////////

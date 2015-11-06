@@ -119,9 +119,11 @@ describe('Testing Availability directive', function () {
             x_day_2 = moment(x_day_1).add(1, 'days'),
             x_days = [
                 moment(x_day_1).format('DD-MM'),
-                '12:00',
+                '08:00',
+                '16:00',
                 moment(x_day_2).format('DD-MM'),
-                '12:00'
+                '08:00',
+                '16:00'
             ],
             dlgCtrl = $controller("snAvailabilityDlgCtrl", {
                 $scope: $c_scope,
