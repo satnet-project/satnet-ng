@@ -16,34 +16,28 @@
     <md-content id="sn-sch-md-content">
 
         <div class="sn-sch-table-wrap">
-            <div class="sn-sch-table-overlay">
-                <div class="sn-sch-table-overlay-left"></div>
-                <div class="sn-sch-table-overlay-container">
-                    <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
-                </div>
-            </div>
 
-        <table id="a-slots-timeline" class="sn-sch-table">
+            <table id="a-slots-timeline" class="sn-sch-table">
 
-            <colgroup>
-                <col class="sn-sch-gs-col"/>
-                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
-                <col class="sn-sch-day-col"/>
-                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
-                <col class="sn-sch-gs-col"/>
-            </colgroup>
+                <colgroup>
+                    <col class="sn-sch-gs-col"/>
+                    <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
+                    <col class="sn-sch-day-col"/>
+                    <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
+                    <col class="sn-sch-gs-col"/>
+                </colgroup>
 
-            <tr>
-                <td class="sn-sch-corner-top"/>
-                <td class="sn-sch-axis-time-top" ng-repeat="d in gui.days track by $index">
-                    <span>{{ d }}</span>
-                </td>
-            </tr>
+                <tr>
+                    <td class="sn-sch-corner-top"/>
+                    <td class="sn-sch-axis-time-top" ng-repeat="d in gui.days track by $index">
+                        <span>{{ d }}</span>
+                    </td>
+                </tr>
 
-            <tr ng-repeat="(gs, slots) in gui.slots">
-                <td class="sn-sch-gs-id"><p>{{ gs }}</p></td>
-                <td colspan="{{ gui.days.length }}" style="padding: 0; margin: 0">
-                    <div class="sn-sch-row-container">
+                <tr ng-repeat="(gs, slots) in gui.slots">
+                    <td class="sn-sch-gs-id"><p>{{ gs }}</p></td>
+                    <td colspan="{{ gui.days.length }}" style="padding: 0; margin: 0">
+                        <div class="sn-sch-row-container">
 
                         <table class="sn-sch-row-table">
 
@@ -62,24 +56,31 @@
                         </table>
 
                         <div class="sn-sch-row-overlay">
-                            <div class="sn-sch-slot-container" ng-repeat="s in slots">
-                                <div class="sn-sch-blank"></div>
-                                <div class="sn-sch-slot"></div>
+                            <div class="sn-sch-slot-container">
+                                <div class="sn-sch-slot" ng-repeat="s in slots"></div>
                             </div>
                         </div>
 
-                    </div>
-                </td>
-            </tr>
+                        </div>
+                    </td>
+                </tr>
 
-            <tr>
-                <td class="sn-sch-corner-bottom"/>
-                <td class="sn-sch-axis-time-bottom" ng-repeat="d in gui.days track by $index">
-                    <span>{{ d }}</span>
-                </td>
-            </tr>
+                <tr>
+                    <td class="sn-sch-corner-bottom"/>
+                    <td class="sn-sch-axis-time-bottom" ng-repeat="d in gui.days track by $index">
+                        <span>{{ d }}</span>
+                    </td>
+                </tr>
             
-        </table>
+            </table>
+
+            <div class="sn-sch-table-overlay">
+                <div class="sn-sch-table-overlay-left"></div>
+                <div class="sn-sch-table-overlay-container">
+                    <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
+                </div>
+            </div>
+
         </div>
 
     </md-content>

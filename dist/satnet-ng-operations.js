@@ -2926,6 +2926,7 @@ angular.module('snAvailabilityDirective', [
             return {
                 'animation': 'sn-sch-table-overlay-right  ' +
                     $scope.animation.duration + 's ' + ' linear',
+                'width': $scope.animation.initial_width
             };
         };
 
