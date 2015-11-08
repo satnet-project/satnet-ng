@@ -41,8 +41,9 @@ angular.module('snAvailabilityDirective', [
     ) {
 
         $scope.animation = {
-            initial_width: '20%',
-            final_width: '70%'
+            duration: '5',
+            initial_width: '0%',
+            final_width: '100%'
         };
 
         $scope.gui = {
@@ -80,18 +81,35 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.initAxisTimes = function () {
 
-            var day = moment().hours(0).minutes(0).seconds(0), hour,
-                last_day = moment(day).add(SN_SCH_TIMELINE_DAYS, 'days');
+            var start_d = moment().hours(0).minutes(0).seconds(0),
+                day = moment().hours(0).minutes(0).seconds(0),
+                now = moment(),
+                end_d = moment(start_d).add(SN_SCH_TIMELINE_DAYS, 'days'),
+                ellapsed_s = moment(now).unix() - moment(start_d).unix(),
+                total_s = moment(end_d).unix() - moment(start_d).unix(),
+                duration_s = moment(end_d).unix() - moment(now).unix();
 
-                $scope.gui.hours_per_day = 3;
-                $scope.gui.hour_step = moment.duration(
-                    24 / $scope.gui.hours_per_day, 'hours'
-                );
-                $scope.gui.no_cols = $scope.gui.hours_per_day - 1;
+            console.log('ZZZ NOW = ' + moment(now).unix());
+            console.log('ZZZ NOW = ' + moment(now).format('MM-DD-YYYY HH:mm Z'));
+            console.log('ZZZ start_d_s = ' + moment(start_d).unix());
+            console.log('ZZZ start_d = ' + moment(start_d).format('MM-DD-YYYY HH:mm Z'));
+            console.log('ZZZ ellapsed_s = ' + ellapsed_s);
+            console.log('ZZZ total_s = ' + total_s);
+            console.log('......................................');
 
-            while (day.isBefore(last_day)) {
+            $scope.gui.hours_per_day = 3;
+            $scope.gui.hour_step = moment.duration(
+                24 / $scope.gui.hours_per_day, 'hours'
+            );
+            $scope.gui.no_cols = $scope.gui.hours_per_day - 1;
 
-                hour = moment().hours(0).minutes(0).seconds(0);
+            $scope.animation.initial_width = '' +
+                ((ellapsed_s / total_s) * 100).toFixed(3) + '%';
+            $scope.animation.duration = '' + duration_s;
+
+            while (day.isBefore(end_d)) {
+
+                var hour = moment().hours(0).minutes(0).seconds(0);
                 $scope.gui.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
 
                 for (var i = 0; i < ( $scope.gui.hours_per_day - 1 ); i++) {
@@ -107,10 +125,18 @@ angular.module('snAvailabilityDirective', [
 
         };
 
-        // animation: sn-sch-table-overlay 5s linear;
-        $scope.getCSSAnimation = function () {
+        // animation: 'sn-sch-table-overlay 5s linear',
+
+        /**
+         * Function that returns the CSS animation decorator adapting it to the
+         * estimated duration.
+         * 
+         * @returns {Object} ng-style CSS animation object
+         */
+        $scope._getCSSAnimation = function () {
             return {
-                animation: 'sn-sch-table-overlay 5s linear;'
+                'animation': 'sn-sch-table-overlay-right  ' +
+                    $scope.animation.duration + 's ' + ' linear',
             };
         };
 

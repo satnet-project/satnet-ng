@@ -1,7 +1,7 @@
 <md-dialog ng-init="init()" aria-label="Availability Dialog">
 
     <style type="text/css">
-        @keyframes sn-sch-table-overlay {
+        @keyframes sn-sch-table-overlay-right {
             from { width: {{ animation.initial_width }}; }
             to { width: {{ animation.final_width }}; }
         }
@@ -16,7 +16,12 @@
     <md-content id="sn-sch-md-content">
 
         <div class="sn-sch-table-wrap">
-            <div class="sn-sch-table-overlay" ng-style="{ 'animation': 'sn-sch-table-overlay 5s linear'}"></div>
+            <div class="sn-sch-table-overlay">
+                <div class="sn-sch-table-overlay-left"></div>
+                <div class="sn-sch-table-overlay-container">
+                    <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
+                </div>
+            </div>
 
         <table id="a-slots-timeline" class="sn-sch-table">
 

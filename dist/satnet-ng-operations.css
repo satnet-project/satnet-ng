@@ -361,13 +361,14 @@ div.m-app-loading p {
   min-width: 100%;
   border-collapse: collapse; }
 
-.sn-sch-gs-id {
-  text-align: center;
-  padding: 40px 0 40px 0;
-  width: 75px; }
-
 .sn-sch-corner-top {
-  border-bottom: 3px solid lightgray; }
+  border-bottom: 3px solid lightgray;
+  width: 10%; }
+
+.sn-sch-gs-id {
+  @xtend .sn-sch-corner-top;
+  text-align: center;
+  padding: 40px 0 40px 0; }
 
 .sn-sch-axis-time-top {
   background-color: #607D8B;
@@ -397,6 +398,7 @@ div.m-app-loading p {
   border-collapse: collapse; }
 
 .sn-sch-corner-bottom {
+  max-width: 75px;
   border-top: 3px solid lightgray; }
 
 .sn-sch-slot-container {
@@ -436,14 +438,32 @@ div.m-app-loading p {
   position: relative; }
 
 .sn-sch-table-overlay {
-  top: 0;
-  left: 75px;
-  height: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1001; }
+
+.sn-sch-table-overlay-left {
+  float: left;
+  width: 10%;
+  height: 100%;
+  z-index: 1001; }
+
+.sn-sch-table-overlay-container {
+  float: left;
+  width: 90%;
+  height: 100%;
+  z-index: 1001;
+  border: 3px solid green; }
+
+.sn-sch-table-overlay-right {
   background: grey;
   border: 5px solid red;
   border-style: none solid none none;
   opacity: 0.25;
-  z-index: 500; }
+  height: 100%;
+  z-index: 1002; }
 
 /*# sourceMappingURL=satnet-ng-operations.css.map */

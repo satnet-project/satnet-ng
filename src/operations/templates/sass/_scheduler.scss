@@ -12,7 +12,8 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-$sch-header-corner-width: 75px;
+$sch-header-corner-width: 10%;
+$sch-header-corner-max-width: 75px;
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
 $sch-padding: 40px;
@@ -38,14 +39,20 @@ $sch-padding: 40px;
     border-collapse: collapse;
 }
 
-.sn-sch-gs-id {
-    text-align: center;
-    padding: $sch-padding 0 $sch-padding 0;
-    width: 75px;
+.sn-sch-corner-top {
+
+    border-bottom: $sch-border-width solid $sch-border-color;
+    width: $sch-header-corner-width;
+    //max-width: $sch-header-corner-max-width;
+
 }
 
-.sn-sch-corner-top {
-    border-bottom: $sch-border-width solid $sch-border-color;
+.sn-sch-gs-id {
+    @xtend .sn-sch-corner-top;
+
+    text-align: center;
+    padding: $sch-padding 0 $sch-padding 0;
+
 }
 
 .sn-sch-axis-time-top {
@@ -69,15 +76,14 @@ $sch-padding: 40px;
 }
 
 .sn-sch-row-overlay {
+
     position: absolute;
     top: 10%;
     left: 0;
     width: 100%;
     height: 80%;
     z-index: 1000;
-    //background: #F0F0F0;
-    //opacity: 0.25;
-    //border: 1px solid lightgray;
+
 }
 
 .sn-sch-row-table {
@@ -87,20 +93,27 @@ $sch-padding: 40px;
 }
 
 .sn-sch-corner-bottom {
+
+    max-width: $sch-header-corner-max-width;
     border-top: $sch-border-width solid $sch-border-color;
+
 }
 
 .sn-sch-slot-container {
+
     height: 20%;
     margin: 3px 0 3px 0;
+
 }
 
 .sn-sch-blank {
+
     float: left;
     height: 100%;
     width: 15%;
     z-index: 1001;
     opacity: 0.2;
+
 }
 
 .sn-sch-slot {
@@ -139,27 +152,52 @@ $sch-padding: 40px;
 }
 
 .sn-sch-table-wrap {
+
     position: relative;
+
 }
 
 .sn-sch-table-overlay {
 
-    top: 0;
-    left: $sch-header-corner-width;
-    height: 100%;
     position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1001;
+
+}
+
+.sn-sch-table-overlay-left {
+
+    float: left;
+    width: $sch-header-corner-width;
+    //max-width: $sch-header-corner-max-width;
+    height: 100%;
+    z-index: 1001;
+
+}
+
+.sn-sch-table-overlay-container {
+
+    float: left;
+    width: 100% - $sch-header-corner-width;
+    height: 100%;
+    z-index: 1001;
+    border: 3px solid green;
+
+}
+
+.sn-sch-table-overlay-right {
+
+    //overflow: hidden;
+
     background: grey;
     border: 5px solid red;
     border-style: none solid none none;
     opacity: 0.25;
-    z-index: 500;
 
-    //animation: sn-sch-table-overlay 5s linear;
-    //width: 70%;
+    height: 100%;
+    z-index: 1002;
 
 }
-
-//@keyframes sn-sch-table-overlay {
-//    from { width: 10%; }
-//    to { width: 70%; }
-//}

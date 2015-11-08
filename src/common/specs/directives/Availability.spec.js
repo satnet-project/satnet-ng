@@ -138,5 +138,41 @@ describe('Testing Availability directive', function () {
         expect($c_scope.gui.days).toEqual(x_days);
 
     });
-    
+
+    it('should create the values for the animation', function () {
+
+        var $c_scope = $rootScope.$new(),
+            x_day_1 = moment().hours(0).minutes(0).seconds(0),
+            end_d =  moment(x_day_1).add(2, 'days'),
+            now = moment(),
+            x_animation = {
+                duration: '',
+                initial_width: '',
+                final_width: '100%'
+            },
+            dlgCtrl = $controller("snAvailabilityDlgCtrl", {
+                $scope: $c_scope,
+                $mdDialog: $mdDialog
+            }),
+            ellapsed_s = moment(now).unix() - moment(x_day_1).unix(),
+            total_s = moment(end_d).unix() - moment(x_day_1).unix();
+
+        console.log('XXX NOW = ' + moment(now).unix());
+        console.log('XXX start_d_s = ' + moment(x_day_1).unix());
+        console.log('XXX ellapsed_s = ' + ellapsed_s);
+        console.log('XXX total_s = ' + total_s);
+
+        x_animation.duration = '' + ( total_s - ellapsed_s );
+        x_animation.initial_width = '' +
+            ( ( ellapsed_s / total_s ) * 100 ).toFixed(3) + '%';
+
+        expect(dlgCtrl).not.toBeNull();
+
+        $c_scope.init();
+        $rootScope.$digest();
+        
+        expect($c_scope.animation).toEqual(x_animation);
+
+    });
+
 });
