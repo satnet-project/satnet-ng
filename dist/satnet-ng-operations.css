@@ -368,7 +368,10 @@ div.m-app-loading p {
 .sn-sch-gs-id {
   @xtend .sn-sch-corner-top;
   text-align: center;
-  padding: 40px 0 40px 0; }
+  padding: 35px 0 35px 0; }
+  .sn-sch-gs-id p {
+    padding: 0;
+    transform: rotate(-90deg); }
 
 .sn-sch-axis-time-top {
   background-color: #607D8B;
@@ -455,8 +458,7 @@ div.m-app-loading p {
   float: left;
   width: 90%;
   height: 100%;
-  z-index: 1001;
-  border: 3px solid green; }
+  z-index: 1001; }
 
 .sn-sch-table-overlay-right {
   background: grey;

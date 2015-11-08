@@ -157,11 +157,6 @@ describe('Testing Availability directive', function () {
             ellapsed_s = moment(now).unix() - moment(x_day_1).unix(),
             total_s = moment(end_d).unix() - moment(x_day_1).unix();
 
-        console.log('XXX NOW = ' + moment(now).unix());
-        console.log('XXX start_d_s = ' + moment(x_day_1).unix());
-        console.log('XXX ellapsed_s = ' + ellapsed_s);
-        console.log('XXX total_s = ' + total_s);
-
         x_animation.duration = '' + ( total_s - ellapsed_s );
         x_animation.initial_width = '' +
             ( ( ellapsed_s / total_s ) * 100 ).toFixed(3) + '%';

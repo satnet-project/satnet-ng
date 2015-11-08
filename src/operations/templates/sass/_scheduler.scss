@@ -16,7 +16,7 @@ $sch-header-corner-width: 10%;
 $sch-header-corner-max-width: 75px;
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
-$sch-padding: 40px;
+$sch-padding: 35px;
 
 #sn-sch-md-content {
     padding: 15px 0 15px 0;
@@ -40,11 +40,8 @@ $sch-padding: 40px;
 }
 
 .sn-sch-corner-top {
-
     border-bottom: $sch-border-width solid $sch-border-color;
     width: $sch-header-corner-width;
-    //max-width: $sch-header-corner-max-width;
-
 }
 
 .sn-sch-gs-id {
@@ -52,6 +49,11 @@ $sch-padding: 40px;
 
     text-align: center;
     padding: $sch-padding 0 $sch-padding 0;
+
+    p {
+        padding: 0;
+        transform: rotate(-90deg);
+    }
 
 }
 
@@ -172,7 +174,6 @@ $sch-padding: 40px;
 
     float: left;
     width: $sch-header-corner-width;
-    //max-width: $sch-header-corner-max-width;
     height: 100%;
     z-index: 1001;
 
@@ -184,13 +185,10 @@ $sch-padding: 40px;
     width: 100% - $sch-header-corner-width;
     height: 100%;
     z-index: 1001;
-    border: 3px solid green;
 
 }
 
 .sn-sch-table-overlay-right {
-
-    //overflow: hidden;
 
     background: grey;
     border: 5px solid red;

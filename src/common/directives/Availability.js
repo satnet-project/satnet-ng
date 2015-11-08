@@ -89,14 +89,6 @@ angular.module('snAvailabilityDirective', [
                 total_s = moment(end_d).unix() - moment(start_d).unix(),
                 duration_s = moment(end_d).unix() - moment(now).unix();
 
-            console.log('ZZZ NOW = ' + moment(now).unix());
-            console.log('ZZZ NOW = ' + moment(now).format('MM-DD-YYYY HH:mm Z'));
-            console.log('ZZZ start_d_s = ' + moment(start_d).unix());
-            console.log('ZZZ start_d = ' + moment(start_d).format('MM-DD-YYYY HH:mm Z'));
-            console.log('ZZZ ellapsed_s = ' + ellapsed_s);
-            console.log('ZZZ total_s = ' + total_s);
-            console.log('......................................');
-
             $scope.gui.hours_per_day = 3;
             $scope.gui.hour_step = moment.duration(
                 24 / $scope.gui.hours_per_day, 'hours'
