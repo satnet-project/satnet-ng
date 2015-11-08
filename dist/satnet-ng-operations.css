@@ -392,8 +392,7 @@ div.m-app-loading p {
   top: 10%;
   left: 0;
   width: 100%;
-  height: 80%;
-  z-index: 1000; }
+  height: 80%; }
 
 .sn-sch-row-table {
   width: 100%;
@@ -413,20 +412,19 @@ div.m-app-loading p {
 .sn-sch-slot {
   position: absolute;
   left: 40%;
-  top: 20%;
-  height: 60%;
+  top: 35%;
+  height: 30%;
   width: 35%;
   opacity: 0.2;
   background: #607D8B;
   border: 5px solid black;
   border-style: none solid none solid;
-  opacity: 0.75;
-  z-index: 1500; }
+  opacity: 0.65; }
 
 .sn-sch-slot:hover {
   background: black;
   opacity: 1.0;
-  border: 5px solid #607D8B;
+  border: 10px solid #607D8B;
   cursor: pointer; }
 
 .sn-sch-axis-time-bottom {
@@ -460,11 +458,11 @@ div.m-app-loading p {
   height: 100%; }
 
 .sn-sch-table-overlay-right {
+  position: absolute;
   background: grey;
   border: 5px solid red;
   border-style: none solid none none;
   opacity: 0.25;
-  height: 100%;
-  z-index: 2000; }
+  height: 100%; }
 
 /*# sourceMappingURL=satnet-ng-operations.css.map */

@@ -86,7 +86,7 @@ $sch-padding: 35px;
     left: 0;
     width: 100%;
     height: 80%;
-    z-index: 1000;
+    //z-index: 1000;
 
 }
 
@@ -118,15 +118,15 @@ $sch-padding: 35px;
 
     position: absolute;
     left: 40%;
-    top: 20%;
-    height: 60%;
+    top: 35%;
+    height: 30%;
     width: 35%;
     opacity: 0.2;
     background: $sn-primary-color;
     border: 5px solid black;
     border-style: none solid none solid;
-    opacity: 0.75;
-    z-index: 1500;
+    opacity: 0.65;
+    //z-index: -1000;
 
 }
 
@@ -134,7 +134,7 @@ $sch-padding: 35px;
 
     background: black;
     opacity: 1.0;
-    border: 5px solid $sn-primary-color;
+    border: 10px solid $sn-primary-color;
     cursor: pointer;
 
 }
@@ -145,11 +145,13 @@ $sch-padding: 35px;
     border-top: $sch-border-width solid $sch-border-color;
 
     span {
+
         font-size: 65%;
         font-weight: bold;
         color: white;
         text-align: left;
         padding: 0 0 1px 0;
+
     }
 
 }
@@ -188,11 +190,12 @@ $sch-padding: 35px;
 
 .sn-sch-table-overlay-right {
 
+    position: absolute;
     background: grey;
     border: 5px solid red;
     border-style: none solid none none;
     opacity: 0.25;
     height: 100%;
-    z-index: 2000;
+    //z-index: 2000;
 
 }

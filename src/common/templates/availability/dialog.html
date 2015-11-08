@@ -17,6 +17,13 @@
 
         <div class="sn-sch-table-wrap">
 
+            <div class="sn-sch-table-overlay">
+                <div class="sn-sch-table-overlay-left"></div>
+                <div class="sn-sch-table-overlay-container">
+                    <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
+                </div>
+            </div>
+
             <table id="a-slots-timeline" class="sn-sch-table">
 
                 <colgroup>
@@ -57,7 +64,9 @@
 
                         <div class="sn-sch-row-overlay">
                             <div class="sn-sch-slot-container">
-                                <div class="sn-sch-slot" ng-repeat="s in slots"></div>
+                                <div class="sn-sch-slot" ng-repeat="s in slots | slotify">
+                                    <p>{{ s.raw_slot.identifier }}</p>
+                                </div>
                             </div>
                         </div>
 
@@ -73,13 +82,6 @@
                 </tr>
             
             </table>
-
-            <div class="sn-sch-table-overlay">
-                <div class="sn-sch-table-overlay-left"></div>
-                <div class="sn-sch-table-overlay-container">
-                    <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
-                </div>
-            </div>
 
         </div>
 

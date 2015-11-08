@@ -18,10 +18,16 @@
 
 describe("Testing Slot Filters", function () {
 
-    var slotifyFilter;
+    var slotifyFilter,
+        __mock__cookies = {};
 
     beforeEach(function () {
-        module('snSlotFilters');
+        module(
+            'snAvailabilityDirective',
+            function($provide) {
+                $provide.value('$cookies', __mock__cookies);
+            }
+        );
 
         inject(function ($injector) {
             slotifyFilter = $injector.get('slotifyFilter');
@@ -29,28 +35,33 @@ describe("Testing Slot Filters", function () {
 
     });
 
-    describe('slotify', function () {
+    describe('slotifyFilter', function () {
 
-        it('slotify available slots', function () {
+        it('should filter out availability slots', function () {
 
-            var slot = {
-                id: 'XXX',
-                starting: '',
-                ending: ''
-            },
-            x_slot = {
-                id: 'XXX',
-                blank: {
-                    left: '0%',
-                    width: '10%'
+            var today = moment(),
+                a_slot = {
+                    identifier: 1,
+                    date_start: moment(today).subtract(1, 'hours').format(),
+                    date_end: moment(today).add(1, 'hours').format()
                 },
-                slot: {
-                    left: '10%',
-                    width: '10%'
-                }       
-            };
+                duration_s = 2 * 24 * 60 * 60,
+                width_s = 1 * 60 * 60,
+                width = ((width_s / duration_s) * 100 ).toFixed(3),
+                x_slot = {
+                    raw_slot: a_slot,
+                    slot: {
+                        left: 0.000,
+                        width: width
+                    }
+                };
 
-            expect(slotifyFilter(slot)).toEqual(x_slot);
+            console.log('>>> duration_s = ' + duration_s);
+            console.log('>>> width_s = ' + width_s);
+            console.log('>>> width = ' + width);
+
+            console.log('>>> a_slot = ' + JSON.stringify(a_slot));
+            //expect(slotifyFilter(a_slot)).toEqual(x_slot);
 
         });
 

@@ -2820,6 +2820,67 @@ angular.module('snAvailabilityDirective', [
 .constant('SN_SCH_HOURS_DAY', '3')
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
+.filter('slotify', [
+    'SN_SCH_DATE_FORMAT', 'SN_SCH_TIMELINE_DAYS',
+
+    /**
+     * Filter that prints out a human-readable definition of the rule to be
+     * filtered.
+     * 
+     * @returns {String} Human-readable string
+     */
+    function (SN_SCH_DATE_FORMAT, SN_SCH_TIMELINE_DAYS) {
+        return function (items, search) {
+
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+            console.log('@@@@ slots = ' + JSON.stringify(items));
+
+            var start_d = moment().hours(0).minutes(0).seconds(0),
+                end_d = moment(start_d).add(SN_SCH_TIMELINE_DAYS, 'days'),
+                duration_s = moment(end_d).unix() - moment(start_d).unix(),
+                r_slots = [];
+
+            for ( var i = 0; i < items.length; i++ ) {
+
+                var slot = items[i],
+                    slot_start_d = moment(slot.date_start),
+                    slot_end_d = moment(slot.date_end);
+
+                console.log('@@@@ slot = ' + JSON.stringify(slot));
+
+                // 1) The dates are first normalized, so that the slots are
+                //      only displayed within the given start and end dates.
+                slot_start_d = moment(slot_start_d).isBefore(start_d) ?
+                    start_d : slot_start_d;
+                slot_end_d = moment(slot_end_d).isAfter(end_d) ?
+                    end_d : slot_end_d;
+
+                // 2) After normalizing the dates, we can calculate the position
+                //      and widths of the displayable slots.
+                var start_s = moment(slot_start_d).unix() - moment(start_d).unix(),
+                    slot_l = ( (start_s / duration_s) * 100 ).toFixed(3),
+                    slot_duration_s = ( moment(slot_end_d).unix() - moment(slot_start_d).unix() ),
+                    slot_w = ( (slot_duration_s / duration_s) * 100).toFixed(3);
+
+                r_slots.push({
+                    raw_slot: slot,
+                    slot: {
+                        left: slot_l,
+                        width: slot_w
+                    }
+                });
+
+            }
+
+            console.log('@@@@ r_slots = ' + JSON.stringify(r_slots));
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+
+            return r_slots;
+
+        };
+    }
+
+])
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
