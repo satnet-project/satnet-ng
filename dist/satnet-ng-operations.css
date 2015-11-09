@@ -348,7 +348,7 @@ div.m-app-loading p {
 #sn-sch-md-content {
   padding: 15px 0 15px 0; }
 
-.sn-sch-gs-col, .sn-sch-day-col:last-of-type {
+.sn-sch-gs-col {
   border-right: 3px solid lightgray; }
 
 .sn-sch-time-col {
@@ -357,33 +357,43 @@ div.m-app-loading p {
 .sn-sch-day-col {
   border-right: 3px solid black; }
 
+.sn-sch-day-col:last-of-type {
+  border-right: 3px solid black; }
+
 .sn-sch-table {
   min-width: 100%;
   border-collapse: collapse; }
 
-.sn-sch-corner {
+.sn-sch-cell-container {
+  padding: 0;
+  margin: 0;
+  border: 0px; }
+
+.sn-sch-corner-top {
   border-bottom: 3px solid lightgray; }
 
 .sn-sch-corner-bottom {
   border-top: 3px solid lightgray; }
 
 .sn-sch-gs-id {
-  @xtend .sn-sch-corner;
+  @xtend .sn-sch-corner-top;
   text-align: center;
   padding: 35px 0 35px 0; }
   .sn-sch-gs-id p {
     padding: 0;
     transform: rotate(-90deg); }
 
-.sn-sch-axis-time-top {
-  background-color: #607D8B;
-  border-bottom: 3px solid lightgray; }
-  .sn-sch-axis-time-top span {
+.sn-sch-axis-time {
+  background-color: #607D8B; }
+  .sn-sch-axis-time span {
     font-size: 65%;
     font-weight: bold;
     color: white;
     text-align: left;
     padding: 0 0 1px 0; }
+
+.sn-sch-row-hours-container {
+  position: relative; }
 
 .sn-sch-row-container {
   position: relative;
@@ -422,16 +432,6 @@ div.m-app-loading p {
   opacity: 1.0;
   border: 10px solid #607D8B;
   cursor: pointer; }
-
-.sn-sch-axis-time-bottom {
-  background-color: #607D8B;
-  border-top: 3px solid lightgray; }
-  .sn-sch-axis-time-bottom span {
-    font-size: 65%;
-    font-weight: bold;
-    color: white;
-    text-align: left;
-    padding: 0 0 1px 0; }
 
 .sn-sch-table-wrap {
   position: relative; }

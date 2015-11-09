@@ -33,7 +33,7 @@ $sch-padding: 35px;
 }
 
 .sn-sch-day-col:last-of-type {
-    @extend .sn-sch-gs-col;
+    border-right: $sch-border-width solid black;
 }
 
 .sn-sch-table {
@@ -41,7 +41,11 @@ $sch-padding: 35px;
     border-collapse: collapse;
 }
 
-.sn-sch-corner {
+.sn-sch-cell-container {
+    padding: 0; margin: 0; border: 0px;
+}
+
+.sn-sch-corner-top {
     border-bottom: $sch-border-width solid $sch-border-color;
 }
 
@@ -50,7 +54,7 @@ $sch-padding: 35px;
 }
 
 .sn-sch-gs-id {
-    @xtend .sn-sch-corner;
+    @xtend .sn-sch-corner-top;
 
     text-align: center;
     padding: $sch-padding 0 $sch-padding 0;
@@ -62,9 +66,8 @@ $sch-padding: 35px;
 
 }
 
-.sn-sch-axis-time-top {
+.sn-sch-axis-time {
     background-color: $sn-primary-color;
-    border-bottom: $sch-border-width solid $sch-border-color;
 
     span {
         font-size: 65%;
@@ -74,6 +77,10 @@ $sch-padding: 35px;
         padding: 0 0 1px 0;
     }
 
+}
+
+.sn-sch-row-hours-container {
+    position: relative;
 }
 
 .sn-sch-row-container {
@@ -118,23 +125,6 @@ $sch-padding: 35px;
     opacity: 1.0;
     border: 10px solid $sn-primary-color;
     cursor: pointer;
-}
-
-.sn-sch-axis-time-bottom {
-
-    background-color: $sn-primary-color;
-    border-top: $sch-border-width solid $sch-border-color;
-
-    span {
-
-        font-size: 65%;
-        font-weight: bold;
-        color: white;
-        text-align: left;
-        padding: 0 0 1px 0;
-
-    }
-
 }
 
 .sn-sch-table-wrap {

@@ -2873,8 +2873,8 @@ angular.module('snAvailabilityDirective', [
     'snControllers',
     'snJRPCServices'
 ])
-.constant('SN_SCH_TIMELINE_DAYS', 2)
-.constant('SN_SCH_HOURS_DAY', '3')
+.constant('SN_SCH_TIMELINE_DAYS', 3)
+.constant('SN_SCH_HOURS_DAY', 3)
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
 .constant('SN_SCH_GS_ID_WIDTH', 10)
@@ -2931,7 +2931,9 @@ angular.module('snAvailabilityDirective', [
         $scope.initAxisTimes = function () {
 
             $scope.gui.start_d = moment().hours(0).minutes(0).seconds(0);
-            $scope.gui.end_d =  moment($scope.gui.start_d).add(SN_SCH_TIMELINE_DAYS, 'days');
+            $scope.gui.end_d =  moment($scope.gui.start_d).add(
+                $scope.gui.no_days, 'days'
+            );
 
             var day = moment().hours(0).minutes(0).seconds(0),
                 now = moment(),
@@ -2950,9 +2952,6 @@ angular.module('snAvailabilityDirective', [
                 (((ellapsed_s / total_s) * scale_width) * 100).toFixed(3) + '%';
             $scope.animation.final_width = '' + (100-SN_SCH_GS_ID_WIDTH) + '%';
             $scope.animation.duration = '' + duration_s;
-
-            console.log('#################################, no_days = ' + $scope.gui.no_days);
-            console.log('#################################, end_d = ' + moment($scope.gui.end_d).format(SN_SCH_DATE_FORMAT));
 
             while (day.isBefore($scope.gui.end_d)) {
 
