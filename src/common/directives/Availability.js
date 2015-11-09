@@ -126,6 +126,20 @@ angular.module('snAvailabilityDirective', [
         };
 
         /**
+         * Function that returns the CSS style code for properly placing and
+         * displaying the given slot in a timeline as a float div.
+         * 
+         * @param   {Object} slot The slot to be displayed
+         * @returns {Object} CSS containing the left position and the width
+         */
+        $scope._getCSSSlot = function (slot) {
+            return {
+                'left': slot.slot.left,
+                'width': slot.slot.width
+            };
+        };
+
+        /**
          * This function filters all the slots for a given ground station and
          * creates slot objects that can be directly positioned and displayed
          * over a timeline.
