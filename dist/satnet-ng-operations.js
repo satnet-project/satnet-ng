@@ -3053,11 +3053,19 @@ angular.module('snAvailabilityDirective', [
 
             var r_slots = [];
 
+            console.log('%%%% PROCESSING WINDOW : start_d = ' + moment($scope.gui.start_d).format());
+            console.log('%%%% PROCESSING WINDOW :   end_d = ' + moment($scope.gui.end_d).format());
+
             for (var i = 0; i < slots.length; i++ ) {
+
                 var slot = slots[i],
                     slot_start_d = moment(slot.date_start),
                     slot_end_d = moment(slot.date_end),
                     duration_s = moment($scope.gui.end_d).unix() - moment($scope.gui.start_d).unix();
+
+                console.log('slot = ' + JSON.stringify(slot));
+                console.log('%%%% PROCESSING SLOT : start = ' + moment(slot_start_d).format());
+                console.log('%%%% PROCESSING SLOT :   end = ' + moment(slot_end_d).format());
 
                 // 0) Old or futuristic slots are discarded first.
                 if (moment(slot_end_d).isBefore($scope.gui.start_d)) {
@@ -3068,6 +3076,9 @@ angular.module('snAvailabilityDirective', [
                     $log.warn('Slot discarded, too futuristic!');
                     continue;
                 }
+
+                console.log('%%%% NORMALIZED SLOT : start = ' + moment(slot_start_d).format());
+                console.log('%%%% NORMALIZED SLOT :   end = ' + moment(slot_end_d).format());
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
@@ -3087,7 +3098,8 @@ angular.module('snAvailabilityDirective', [
                 r_slots.push({
                     raw_slot: slot,
                     slot: {
-                        left: slot_l, width: slot_w
+                        left: slot_l,
+                        width: slot_w
                     }
                 });
 

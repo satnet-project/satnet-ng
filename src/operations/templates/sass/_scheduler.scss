@@ -121,10 +121,22 @@ $sch-padding: 35px;
 }
 
 .sn-sch-slot:hover {
-    background: black;
-    opacity: 1.0;
-    border: 10px solid $sn-primary-color;
     cursor: pointer;
+}
+
+//.sn-sch-slot:hover .sn-sch-slot-info {
+//    opacity: 1.0;
+//}
+
+.sn-sch-slot-info {
+    position: absolute;
+    top: -10px;
+    background-color: lightgrey;
+    color: black;
+    border-radius: 5px;
+    opacity: 1.0;
+    //transition: opacity 0.5s;
+    max-width: 50px;
 }
 
 .sn-sch-table-wrap {
