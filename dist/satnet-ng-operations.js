@@ -2877,11 +2877,13 @@ angular.module('snAvailabilityDirective', [
 .constant('SN_SCH_HOURS_DAY', '3')
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
+.constant('SN_SCH_GS_ID_WIDTH', 10)
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
     'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
     'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
+    'SN_SCH_GS_ID_WIDTH',
 
     /**
      * Controller function for handling the SatNet availability dialog.
@@ -2891,22 +2893,26 @@ angular.module('snAvailabilityDirective', [
     function (
         $scope, $log, $mdDialog, satnetRPC, snDialog,
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
-        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
+        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
+        SN_SCH_GS_ID_WIDTH
     ) {
 
         $scope.animation = {
             duration: '5',
             initial_width: '0%',
-            final_width: '100%'
+            final_width: '0%'
         };
 
         $scope.gui = {
+            gs_id_width: SN_SCH_GS_ID_WIDTH + '%',
             start_d: null,
             end_d: null,
             hours_per_day: -1,
             hour_step: null,
             no_cols: -1,
             days: [],
+            no_days: SN_SCH_TIMELINE_DAYS,
+            times: [],
             slots: {}
         };
 
@@ -2924,16 +2930,15 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.initAxisTimes = function () {
 
-            $scope.start_d = moment().hours(0).minutes(0).seconds(0);
-            $scope.end_d =  moment($scope.start_d).add(
-                SN_SCH_TIMELINE_DAYS, 'days'
-            );
+            $scope.gui.start_d = moment().hours(0).minutes(0).seconds(0);
+            $scope.gui.end_d =  moment($scope.gui.start_d).add(2, 'days');
 
             var day = moment().hours(0).minutes(0).seconds(0),
                 now = moment(),
-                ellapsed_s = moment(now).unix() - moment($scope.start_d).unix(),
-                total_s = moment($scope.end_d).unix() - moment($scope.start_d).unix(),
-                duration_s = moment($scope.end_d).unix() - moment(now).unix();
+                ellapsed_s = moment(now).unix() - moment($scope.gui.start_d).unix(),
+                total_s = moment($scope.gui.end_d).unix() - moment($scope.gui.start_d).unix(),
+                duration_s = moment($scope.gui.end_d).unix() - moment(now).unix(),
+                scale_width = (100 - SN_SCH_GS_ID_WIDTH) / 100;
 
             $scope.gui.hours_per_day = 3;
             $scope.gui.hour_step = moment.duration(
@@ -2942,18 +2947,26 @@ angular.module('snAvailabilityDirective', [
             $scope.gui.no_cols = $scope.gui.hours_per_day - 1;
 
             $scope.animation.initial_width = '' +
-                ((ellapsed_s / total_s) * 100).toFixed(3) + '%';
+                (((ellapsed_s / total_s) * scale_width) * 100).toFixed(3) + '%';
+            $scope.animation.final_width = '' + (100-SN_SCH_GS_ID_WIDTH) + '%';
             $scope.animation.duration = '' + duration_s;
 
-            while (day.isBefore($scope.end_d)) {
+            console.log('#################################, no_days = ' + $scope.gui.no_days);
+            console.log('#################################, end_d = ' + moment($scope.gui.end_d).format(SN_SCH_DATE_FORMAT));
 
-                var hour = moment().hours(0).minutes(0).seconds(0);
-                $scope.gui.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
+            while (day.isBefore($scope.gui.end_d)) {
+
+                var hour = moment().hours(0).minutes(0).seconds(0),
+                    day_s = moment(day).format(SN_SCH_DATE_FORMAT);
+
+                console.log('############# day_s = ' + day_s);
+                $scope.gui.days.push(day_s);
+                $scope.gui.times.push(day_s);
 
                 for (var i = 0; i < ( $scope.gui.hours_per_day - 1 ); i++) {
 
                     hour = moment(hour).add($scope.gui.hour_step, 'hours');
-                    $scope.gui.days.push(hour.format(SN_SCH_HOUR_FORMAT));
+                    $scope.gui.times.push(hour.format(SN_SCH_HOUR_FORMAT));
 
                 }
 
@@ -2994,6 +3007,30 @@ angular.module('snAvailabilityDirective', [
         };
 
         /**
+         * Returns the CSS object for ng-style with the width of the cells
+         * within the column of the Ground Station ID.
+         * 
+         * @returns {Object} CSS object with the width
+         */
+        $scope._getCSSGsIdWidth = function () {
+            return {
+                'width': $scope.gui.gs_id_width
+            };
+        };
+
+        /**
+         * Returns the CSS object for ng-style with the width of the overlay for
+         * the time marker animation.
+         * 
+         * @returns {Object} CSS object with the width
+         */
+        $scope._getCSSOverlayWidth = function () {
+            return {
+                'width': (100 - SN_SCH_GS_ID_WIDTH) + '%'
+            };
+        };
+
+        /**
          * This function filters all the slots for a given ground station and
          * creates slot objects that can be directly positioned and displayed
          * over a timeline.
@@ -3016,28 +3053,28 @@ angular.module('snAvailabilityDirective', [
                 var slot = slots[i],
                     slot_start_d = moment(slot.date_start),
                     slot_end_d = moment(slot.date_end),
-                    duration_s = moment($scope.end_d).unix() - moment($scope.start_d).unix();
+                    duration_s = moment($scope.gui.end_d).unix() - moment($scope.gui.start_d).unix();
 
                 // 0) Old or futuristic slots are discarded first.
-                if (moment(slot_end_d).isBefore($scope.start_d)) {
+                if (moment(slot_end_d).isBefore($scope.gui.start_d)) {
                     $log.warn('Slot discarded, too old!');
                     continue;
                 }
-                if (moment(slot_start_d).isAfter($scope.end_d)) {
+                if (moment(slot_start_d).isAfter($scope.gui.end_d)) {
                     $log.warn('Slot discarded, too futuristic!');
                     continue;
                 }
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
-                slot_start_d = moment(slot_start_d).isBefore($scope.start_d) ?
-                    $scope.start_d : slot_start_d;
-                slot_end_d = moment(slot_end_d).isAfter($scope.end_d) ?
-                    $scope.end_d : slot_end_d;
+                slot_start_d = moment(slot_start_d).isBefore($scope.gui.start_d) ?
+                    $scope.gui.start_d : slot_start_d;
+                slot_end_d = moment(slot_end_d).isAfter($scope.gui.end_d) ?
+                    $scope.gui.end_d : slot_end_d;
 
                 // 2) After normalizing the dates, we can calculate the position
                 //      and widths of the displayable slots.
-                var start_s = moment(slot_start_d).unix() - moment($scope.start_d).unix(),
+                var start_s = moment(slot_start_d).unix() - moment($scope.gui.start_d).unix(),
                     slot_l = ( (start_s / duration_s) * 100 ).toFixed(3),
                     slot_duration_s = ( moment(slot_end_d).unix() - moment(slot_start_d).unix() ),
                     slot_w = ( (slot_duration_s / duration_s) * 100).toFixed(3);
@@ -3144,7 +3181,8 @@ angular.module('snAvailabilityDirective', [
         $scope.openDialog = function () {
             $mdDialog.show({
                 templateUrl: 'common/templates/availability/dialog.html',
-                controller: 'snAvailabilityDlgCtrl'
+                controller: 'snAvailabilityDlgCtrl',
+                hasBackdrop: true
             });
         };
 

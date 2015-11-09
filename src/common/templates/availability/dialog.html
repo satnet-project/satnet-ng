@@ -18,7 +18,7 @@
         <div class="sn-sch-table-wrap">
 
             <div class="sn-sch-table-overlay">
-                <div class="sn-sch-table-overlay-left"></div>
+                <div class="sn-sch-table-overlay-left" ng-style="_getCSSGsIdWidth()"></div>
                 <div class="sn-sch-table-overlay-container">
                     <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
                 </div>
@@ -28,22 +28,35 @@
 
                 <colgroup>
                     <col class="sn-sch-gs-col"/>
+                </colgroup>
+                <colgroup ng-repeat="d in gui.days">
+                    <!-- col decoration for {{ d }}-->
+                    <col id="{{ d }}-a" class="sn-sch-time-col" span="{{ gui.no_cols }}"/>
+                    <col id="{{ d }}-b" class="sn-sch-day-col"/>
+                </colgroup>
+                <!--
+                <colgroup>
                     <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
                     <col class="sn-sch-day-col"/>
+                </colgroup>
+                <colgroup>
                     <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
+                </colgroup>
+                <colgroup>
                     <col class="sn-sch-gs-col"/>
                 </colgroup>
+                -->
 
                 <tr>
-                    <td class="sn-sch-corner-top"/>
-                    <td class="sn-sch-axis-time-top" ng-repeat="d in gui.days track by $index">
-                        <span>{{ d }}</span>
+                    <td class="sn-sch-corner" ng-style="_getCSSGsIdWidth()"/>
+                    <td class="sn-sch-axis-time-top" ng-repeat="t in gui.times track by $index">
+                        <span>{{ t }}</span>
                     </td>
                 </tr>
 
                 <tr ng-repeat="(gs, slots) in gui.slots">
-                    <td class="sn-sch-gs-id"><p>{{ gs }}</p></td>
-                    <td colspan="{{ gui.days.length }}" style="padding: 0; margin: 0">
+                    <td class="sn-sch-gs-id" ng-style="_getCSSGsIdWidth()"><p>{{ gs }}</p></td>
+                    <td colspan="{{ gui.times.length }}" style="padding: 0; margin: 0">
                         <div class="sn-sch-row-container">
 
                         <table class="sn-sch-row-table">
@@ -55,8 +68,8 @@
                             </colgroup>
 
                             <tr>
-                                <td ng-repeat="d in gui.days track by $index">
-                                    <span style="opacity: 0">{{ d }}</span>
+                                <td ng-repeat="t in gui.times track by $index">
+                                    <span style="opacity: 0">{{ t }}</span>
                                 </td>
                             </tr>
 
@@ -75,9 +88,9 @@
                 </tr>
 
                 <tr>
-                    <td class="sn-sch-corner-bottom"/>
-                    <td class="sn-sch-axis-time-bottom" ng-repeat="d in gui.days track by $index">
-                        <span>{{ d }}</span>
+                    <td class="sn-sch-corner-bottom" ng-style="_getCSSGsIdWidth()"/>
+                    <td class="sn-sch-axis-time-bottom" ng-repeat="t in gui.times track by $index">
+                        <span>{{ t }}</span>
                     </td>
                 </tr>
             

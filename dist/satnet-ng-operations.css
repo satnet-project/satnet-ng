@@ -348,7 +348,7 @@ div.m-app-loading p {
 #sn-sch-md-content {
   padding: 15px 0 15px 0; }
 
-.sn-sch-gs-col {
+.sn-sch-gs-col, .sn-sch-day-col:last-of-type {
   border-right: 3px solid lightgray; }
 
 .sn-sch-time-col {
@@ -361,12 +361,14 @@ div.m-app-loading p {
   min-width: 100%;
   border-collapse: collapse; }
 
-.sn-sch-corner-top {
-  border-bottom: 3px solid lightgray;
-  width: 10%; }
+.sn-sch-corner {
+  border-bottom: 3px solid lightgray; }
+
+.sn-sch-corner-bottom {
+  border-top: 3px solid lightgray; }
 
 .sn-sch-gs-id {
-  @xtend .sn-sch-corner-top;
+  @xtend .sn-sch-corner;
   text-align: center;
   padding: 35px 0 35px 0; }
   .sn-sch-gs-id p {
@@ -399,10 +401,6 @@ div.m-app-loading p {
   height: 100%;
   border-collapse: collapse; }
 
-.sn-sch-corner-bottom {
-  max-width: 75px;
-  border-top: 3px solid lightgray; }
-
 .sn-sch-slot-container {
   position: relative;
   height: 100%;
@@ -411,10 +409,8 @@ div.m-app-loading p {
 
 .sn-sch-slot {
   position: absolute;
-  left: 40%;
   top: 35%;
   height: 30%;
-  width: 35%;
   opacity: 0.2;
   background: #607D8B;
   border: 5px solid black;
@@ -449,12 +445,10 @@ div.m-app-loading p {
 
 .sn-sch-table-overlay-left {
   float: left;
-  width: 10%;
   height: 100%; }
 
 .sn-sch-table-overlay-container {
   float: left;
-  width: 90%;
   height: 100%; }
 
 .sn-sch-table-overlay-right {

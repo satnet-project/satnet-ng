@@ -13,7 +13,7 @@
    limitations under the License. */
 
 $sch-header-corner-width: 10%;
-$sch-header-corner-max-width: 75px;
+//$sch-header-corner-max-width: 75px;
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
 $sch-padding: 35px;
@@ -34,18 +34,25 @@ $sch-padding: 35px;
     border-right: $sch-border-width solid black;
 }
 
+.sn-sch-day-col:last-of-type {
+    @extend .sn-sch-gs-col;
+}
+
 .sn-sch-table {
     min-width: 100%;
     border-collapse: collapse;
 }
 
-.sn-sch-corner-top {
+.sn-sch-corner {
     border-bottom: $sch-border-width solid $sch-border-color;
-    width: $sch-header-corner-width;
+}
+
+.sn-sch-corner-bottom {
+    border-top: $sch-border-width solid $sch-border-color;
 }
 
 .sn-sch-gs-id {
-    @xtend .sn-sch-corner-top;
+    @xtend .sn-sch-corner;
 
     text-align: center;
     padding: $sch-padding 0 $sch-padding 0;
@@ -73,10 +80,8 @@ $sch-padding: 35px;
 }
 
 .sn-sch-row-container {
-
     position: relative;
     height: 75px;
-
 }
 
 .sn-sch-row-overlay {
@@ -98,13 +103,6 @@ $sch-padding: 35px;
 
 }
 
-.sn-sch-corner-bottom {
-
-    max-width: $sch-header-corner-max-width;
-    border-top: $sch-border-width solid $sch-border-color;
-
-}
-
 .sn-sch-slot-container {
 
     position: relative;
@@ -117,10 +115,10 @@ $sch-padding: 35px;
 .sn-sch-slot {
 
     position: absolute;
-    left: 40%;
     top: 35%;
     height: 30%;
-    width: 35%;
+    //width: 35%;
+    //left: 40%;
     opacity: 0.2;
     background: $sn-primary-color;
     border: 5px solid black;
@@ -157,25 +155,21 @@ $sch-padding: 35px;
 }
 
 .sn-sch-table-wrap {
-
     position: relative;
-
 }
 
 .sn-sch-table-overlay {
-
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
-
 }
 
 .sn-sch-table-overlay-left {
 
     float: left;
-    width: $sch-header-corner-width;
+    //width: $sch-header-corner-width;
     height: 100%;
 
 }
@@ -183,7 +177,7 @@ $sch-padding: 35px;
 .sn-sch-table-overlay-container {
 
     float: left;
-    width: 100% - $sch-header-corner-width;
+    //width: 100% - $sch-header-corner-width;
     height: 100%;
 
 }
