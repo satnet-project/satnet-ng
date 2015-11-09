@@ -2878,7 +2878,7 @@ angular.module('snAvailabilityDirective', [
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
 .controller('snAvailabilityDlgCtrl', [
-    '$q', '$scope', '$log', '$mdDialog',
+    '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
     'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
     'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
@@ -2889,7 +2889,7 @@ angular.module('snAvailabilityDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $q, $scope, $log, $mdDialog, satnetRPC, snDialog,
+        $scope, $log, $mdDialog, satnetRPC, snDialog,
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
     ) {
@@ -2901,12 +2901,13 @@ angular.module('snAvailabilityDirective', [
         };
 
         $scope.gui = {
+            start_d: null,
+            end_d: null,
             hours_per_day: -1,
             hour_step: null,
             no_cols: -1,
             days: [],
-            slots: {},
-            tmp_slots: {}
+            slots: {}
         };
 
         /**
@@ -2923,13 +2924,16 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.initAxisTimes = function () {
 
-            var start_d = moment().hours(0).minutes(0).seconds(0),
-                day = moment().hours(0).minutes(0).seconds(0),
+            $scope.start_d = moment().hours(0).minutes(0).seconds(0);
+            $scope.end_d =  moment($scope.start_d).add(
+                SN_SCH_TIMELINE_DAYS, 'days'
+            );
+
+            var day = moment().hours(0).minutes(0).seconds(0),
                 now = moment(),
-                end_d = moment(start_d).add(SN_SCH_TIMELINE_DAYS, 'days'),
-                ellapsed_s = moment(now).unix() - moment(start_d).unix(),
-                total_s = moment(end_d).unix() - moment(start_d).unix(),
-                duration_s = moment(end_d).unix() - moment(now).unix();
+                ellapsed_s = moment(now).unix() - moment($scope.start_d).unix(),
+                total_s = moment($scope.end_d).unix() - moment($scope.start_d).unix(),
+                duration_s = moment($scope.end_d).unix() - moment(now).unix();
 
             $scope.gui.hours_per_day = 3;
             $scope.gui.hour_step = moment.duration(
@@ -2941,7 +2945,7 @@ angular.module('snAvailabilityDirective', [
                 ((ellapsed_s / total_s) * 100).toFixed(3) + '%';
             $scope.animation.duration = '' + duration_s;
 
-            while (day.isBefore(end_d)) {
+            while (day.isBefore($scope.end_d)) {
 
                 var hour = moment().hours(0).minutes(0).seconds(0);
                 $scope.gui.days.push(moment(day).format(SN_SCH_DATE_FORMAT));
@@ -2990,41 +2994,49 @@ angular.module('snAvailabilityDirective', [
          *                   Ground Stations as keys, whose values are the
          *                   filtered slots.
          */
-        $scope.filter_slots = function (
-            groundstation_id, slots, start_d, end_d
-        ) {
+        $scope.filter_slots = function (groundstation_id, slots) {
 
             var r_slots = [];
-            
-            angular.forEach(slots, function (slot) {
 
-                var slot_start_d = moment(slot.date_start),
+            for (var i = 0; i < slots.length; i++ ) {
+                var slot = slots[i],
+                    slot_start_d = moment(slot.date_start),
                     slot_end_d = moment(slot.date_end),
-                    duration_s = moment(end_d).unix() - moment(start_d).unix();
+                    duration_s = moment($scope.end_d).unix() - moment($scope.start_d).unix();
+
+                // 0) Old or futuristic slots are discarded first.
+                if (moment(slot_end_d).isBefore($scope.start_d)) {
+                    $log.warn('Slot discarded, too old!');
+                    continue;
+                }
+                if (moment(slot_start_d).isAfter($scope.end_d)) {
+                    $log.warn('Slot discarded, too futuristic!');
+                    continue;
+                }
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
-                slot_start_d = moment(slot_start_d).isBefore(start_d) ?
-                    start_d : slot_start_d;
-                slot_end_d = moment(slot_end_d).isAfter(end_d) ?
-                    end_d : slot_end_d;
+                slot_start_d = moment(slot_start_d).isBefore($scope.start_d) ?
+                    $scope.start_d : slot_start_d;
+                slot_end_d = moment(slot_end_d).isAfter($scope.end_d) ?
+                    $scope.end_d : slot_end_d;
 
                 // 2) After normalizing the dates, we can calculate the position
                 //      and widths of the displayable slots.
-                var start_s = moment(slot_start_d).unix() - moment(start_d).unix(),
+                var start_s = moment(slot_start_d).unix() - moment($scope.start_d).unix(),
                     slot_l = ( (start_s / duration_s) * 100 ).toFixed(3),
                     slot_duration_s = ( moment(slot_end_d).unix() - moment(slot_start_d).unix() ),
                     slot_w = ( (slot_duration_s / duration_s) * 100).toFixed(3);
 
                 // 3) The resulting slot is added to the results array
-                r_slots[groundstation_id] = {
+                r_slots.push({
                     raw_slot: slot,
                     slot: {
                         left: slot_l, width: slot_w
                     }
-                };
+                });
 
-            });
+            }
 
             return r_slots;
 
@@ -3036,7 +3048,7 @@ angular.module('snAvailabilityDirective', [
          * 
          * @param {String} groundstation_id Ground Station identifier
          */
-        $scope._addGS = function (groundstation_id) {
+        $scope.getGSSlots = function (groundstation_id) {
             return satnetRPC.rCall('gs.availability', [groundstation_id]).then(
                 function (results) {
                     return {
@@ -3069,34 +3081,27 @@ angular.module('snAvailabilityDirective', [
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
 
-                $log.info('XXXXX, gs list = ' + JSON.stringify(results));
+                angular.forEach(results, function (gs_id) {
+                    
+                    $scope.getGSSlots(gs_id).then(function (results) {
 
-                // 2.a> for each of the ground stations, a promise is created
-                var p = [];
-                angular.forEach(results, function (gs) {
-                    $log.info('>>> loading slots for <' + gs + '>');
-                    p.push($scope._addGS(gs));
-                });
-
-                // 2.b> the promises are resolved and only one all of them
-                //      have been executed, the to-be-filtered structure within
-                //      the controller's $scope is updated (avoids multiple
-                //      calls to the filter through Angular's $watch()).
-                $q.all(p).then(function (results) {
-                    var t_slots = {};
-                    console.log('>>>> results = '+ JSON.stringify(results));
-                    angular.forEach(results, function (gs_slots) {
-                        t_slots[gs_slots.groundstation_id] = angular.copy(
-                            gs_slots.slots
+                        $log.info(
+                            '>>> Slots for GS = ' + gs_id +
+                            ', RAW slots = ' + JSON.stringify(results)
                         );
+
+                        var filtered_s = $scope.filter_slots(
+                            gs_id, results.slots
+                        );
+
+                        $log.info(
+                            '>>> Slots for GS = ' + gs_id +
+                            ', FILTERED slots = ' + JSON.stringify(filtered_s)
+                        );
+
+                        $scope.gui.slots[gs_id] = filtered_s;
+
                     });
-                    console.log(
-                        '>>>> $scope.gui.slots = '+ JSON.stringify($scope.gui.slots)
-                    );
-                    $scope.gui.slots = $scope.filter_slots(t_slots);
-                    console.log(
-                        '>>>> $scope.gui.slots = '+ JSON.stringify($scope.gui.slots)
-                    );
                 });
 
             }).catch(function (cause) {
