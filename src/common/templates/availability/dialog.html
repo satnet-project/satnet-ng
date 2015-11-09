@@ -30,26 +30,13 @@
                     <col class="sn-sch-gs-col"/>
                 </colgroup>
                 <colgroup ng-repeat="d in gui.days">
-                    <!-- col decoration for {{ d }}-->
                     <col id="{{ d }}-a" class="sn-sch-time-col" span="{{ gui.no_cols }}"/>
                     <col id="{{ d }}-b" class="sn-sch-day-col"/>
                 </colgroup>
-                <!--
-                <colgroup>
-                    <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
-                    <col class="sn-sch-day-col"/>
-                </colgroup>
-                <colgroup>
-                    <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
-                </colgroup>
-                <colgroup>
-                    <col class="sn-sch-gs-col"/>
-                </colgroup>
-                -->
 
                 <tr>
                     <td class="sn-sch-corner" ng-style="_getCSSGsIdWidth()"/>
-                    <td class="sn-sch-axis-time-top" ng-repeat="t in gui.times track by $index">
+                    <td class="sn-sch-axis-time-top" ng-repeat="t in gui.times track by $index" ng-style="_getCSSHoursWidth()">
                         <span>{{ t }}</span>
                     </td>
                 </tr>
@@ -89,7 +76,7 @@
 
                 <tr>
                     <td class="sn-sch-corner-bottom" ng-style="_getCSSGsIdWidth()"/>
-                    <td class="sn-sch-axis-time-bottom" ng-repeat="t in gui.times track by $index">
+                    <td class="sn-sch-axis-time-bottom" ng-repeat="t in gui.times track by $index" ng-style="_getCSSHoursWidth()">
                         <span>{{ t }}</span>
                     </td>
                 </tr>

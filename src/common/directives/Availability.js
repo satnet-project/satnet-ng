@@ -19,7 +19,7 @@ angular.module('snAvailabilityDirective', [
     'snControllers',
     'snJRPCServices'
 ])
-.constant('SN_SCH_TIMELINE_DAYS', '2')
+.constant('SN_SCH_TIMELINE_DAYS', 2)
 .constant('SN_SCH_HOURS_DAY', '3')
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
@@ -77,7 +77,7 @@ angular.module('snAvailabilityDirective', [
         $scope.initAxisTimes = function () {
 
             $scope.gui.start_d = moment().hours(0).minutes(0).seconds(0);
-            $scope.gui.end_d =  moment($scope.gui.start_d).add(2, 'days');
+            $scope.gui.end_d =  moment($scope.gui.start_d).add(SN_SCH_TIMELINE_DAYS, 'days');
 
             var day = moment().hours(0).minutes(0).seconds(0),
                 now = moment(),
@@ -105,7 +105,6 @@ angular.module('snAvailabilityDirective', [
                 var hour = moment().hours(0).minutes(0).seconds(0),
                     day_s = moment(day).format(SN_SCH_DATE_FORMAT);
 
-                console.log('############# day_s = ' + day_s);
                 $scope.gui.days.push(day_s);
                 $scope.gui.times.push(day_s);
 
@@ -121,8 +120,6 @@ angular.module('snAvailabilityDirective', [
             }
 
         };
-
-        // animation: 'sn-sch-table-overlay 5s linear',
 
         /**
          * Function that returns the CSS animation decorator adapting it to the
@@ -173,6 +170,14 @@ angular.module('snAvailabilityDirective', [
         $scope._getCSSOverlayWidth = function () {
             return {
                 'width': (100 - SN_SCH_GS_ID_WIDTH) + '%'
+            };
+        };
+
+        $scope._getCSSHoursWidth = function () {
+            var max_width = 100 - SN_SCH_GS_ID_WIDTH,
+                max_no_cols = $scope.gui.hours_per_day * $scope.gui.no_days;
+            return {
+                'width': (max_width / max_no_cols).toFixed(3) + '%'
             };
         };
 

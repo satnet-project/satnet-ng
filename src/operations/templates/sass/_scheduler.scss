@@ -12,8 +12,6 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-$sch-header-corner-width: 10%;
-//$sch-header-corner-max-width: 75px;
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
 $sch-padding: 35px;
@@ -65,7 +63,6 @@ $sch-padding: 35px;
 }
 
 .sn-sch-axis-time-top {
-
     background-color: $sn-primary-color;
     border-bottom: $sch-border-width solid $sch-border-color;
 
@@ -85,56 +82,42 @@ $sch-padding: 35px;
 }
 
 .sn-sch-row-overlay {
-
     position: absolute;
     top: 10%;
     left: 0;
     width: 100%;
     height: 80%;
-    //z-index: 1000;
-
 }
 
 .sn-sch-row-table {
-
     width: 100%;
     height: 100%;
     border-collapse: collapse;
-
 }
 
 .sn-sch-slot-container {
-
     position: relative;
     height: 100%;
     width: 100%;
     padding: 3px 0 3px 0;
-
 }
 
 .sn-sch-slot {
-
     position: absolute;
     top: 35%;
     height: 30%;
-    //width: 35%;
-    //left: 40%;
     opacity: 0.2;
     background: $sn-primary-color;
     border: 5px solid black;
     border-style: none solid none solid;
     opacity: 0.65;
-    //z-index: -1000;
-
 }
 
 .sn-sch-slot:hover {
-
     background: black;
     opacity: 1.0;
     border: 10px solid $sn-primary-color;
     cursor: pointer;
-
 }
 
 .sn-sch-axis-time-bottom {
@@ -167,29 +150,20 @@ $sch-padding: 35px;
 }
 
 .sn-sch-table-overlay-left {
-
     float: left;
-    //width: $sch-header-corner-width;
     height: 100%;
-
 }
 
 .sn-sch-table-overlay-container {
-
     float: left;
-    //width: 100% - $sch-header-corner-width;
     height: 100%;
-
 }
 
 .sn-sch-table-overlay-right {
-
     position: absolute;
     background: grey;
     border: 5px solid red;
     border-style: none solid none none;
     opacity: 0.25;
     height: 100%;
-    //z-index: 2000;
-
 }
