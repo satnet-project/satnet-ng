@@ -2996,9 +2996,12 @@ angular.module('snAvailabilityDirective', [
          * @returns {Object} CSS containing the left position and the width
          */
         $scope._getCSSSlot = function (slot) {
+            console.log('>>> slot = ' + JSON.stringify(slot));
             return {
-                'left': slot.slot.left,
-                'width': slot.slot.width
+                //'margin-left': slot.slot.left,
+                //'left': slot.slot.left,
+                //'width': slot.slot.width
+                'left': slot.slot.left
             };
         };
 

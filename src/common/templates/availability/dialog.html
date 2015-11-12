@@ -65,16 +65,25 @@
                             </colgroup>
 
                             <tr>
-                                <td ng-repeat="t in gui.times track by $index" ng-style="_getCSSGsIdWidth()"/>
+                                <td ng-repeat="t in gui.times track by $index"
+                                    ng-style="_getCSSGsIdWidth()"/>
                             </tr>
 
                         </table>
 
                             <div class="sn-sch-row-overlay">
                                 <div class="sn-sch-slot-container">
-                                    <div class="sn-sch-slot" ng-repeat="s in slots" ng-style="_getCSSSlot(s)"></div>
-                                    <div class="sn-sch-slot-info">
-                                        <span>{{ s.raw_slot.identifier }}</span>
+                                    <div class="sn-sch-slot"
+                                         ng-repeat="s in slots"
+                                         ng-style="{'left': s.slot.left + '%', 'width': s.slot.width + '%'}">
+                                    </div>
+                                    <div class="sn-sch-slot-info"
+                                         ng-repeat="s in slots">
+                                        <ul>
+                                            <li>ID:{{ s.raw_slot.identifier }}</li>
+                                            <li><p><span>START: </span><span>{{ s.raw_slot.date_start }}</span></p></li>
+                                            <li><p><span>END: </span><span>{{ s.raw_slot.date_end }}</span></p></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

@@ -435,9 +435,11 @@ div.m-app-loading p {
   top: -10px;
   background-color: lightgrey;
   color: black;
-  border-radius: 5px;
+  border: 3px solid black;
+  border-style: none solid none none;
   opacity: 1.0;
-  max-width: 50px; }
+  min-width: 50px;
+  font-size: 70%; }
 
 .sn-sch-table-wrap {
   position: relative; }
