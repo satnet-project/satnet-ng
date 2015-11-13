@@ -57,6 +57,7 @@
                     </td>
                     <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
                         <div class="sn-sch-row-container">
+
                         <table class="sn-sch-row-table">
 
                             <colgroup ng-repeat="d in gui.days">
@@ -78,15 +79,18 @@
                                          ng-style="{'left': s.slot.left + '%', 'width': s.slot.width + '%'}">
                                     </div>
                                     <div class="sn-sch-slot-info"
-                                         ng-repeat="s in slots">
+                                         ng-repeat="s in slots"
+                                         ng-style="{'left': ( s.slot.left + 1) + '%'}">
                                         <ul>
-                                            <li>ID:{{ s.raw_slot.identifier }}</li>
-                                            <li><p><span>START: </span><span>{{ s.raw_slot.date_start }}</span></p></li>
-                                            <li><p><span>END: </span><span>{{ s.raw_slot.date_end }}</span></p></li>
+                                            <li>{{ s.slot.id }}</li>
+                                            <li>{{ s.slot.s_date }}</li>
+                                            <li>{{ s.slot.e_date }}</li>
                                         </ul>
                                     </div>
+
                                 </div>
                             </div>
+
                         </div>
                     </td>
                 </tr>

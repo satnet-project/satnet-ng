@@ -15,6 +15,7 @@
 $sch-border-width: 3px;
 $sch-border-color: lightgray;
 $sch-padding: 35px;
+$sch-margin: 7px;
 
 #sn-sch-md-content {
     padding: 15px 0 15px 0;
@@ -110,6 +111,7 @@ $sch-padding: 35px;
 }
 
 .sn-sch-slot {
+
     position: absolute;
     top: 35%;
     height: 30%;
@@ -118,27 +120,35 @@ $sch-padding: 35px;
     border: 5px solid black;
     border-style: none solid none solid;
     opacity: 0.65;
+
+}
+
+.sn-sch-slot-info {
+
+    position: absolute;
+    top: -75%;
+    background-color: lightgrey;
+    color: black;
+    border: 5px solid $sn-primary-color;
+    border-style: none none none solid;
+    opacity: 0.0;
+    transition: opacity 0.5s;
+    min-width: 50px;
+    font-size: 65%;
+
+    ul {
+        list-style: none;
+        padding: $sch-margin;
+    }
+    
 }
 
 .sn-sch-slot:hover {
     cursor: pointer;
 }
 
-//.sn-sch-slot:hover .sn-sch-slot-info {
-//    opacity: 1.0;
-//}
-
-.sn-sch-slot-info {
-    position: absolute;
-    top: -10px;
-    background-color: lightgrey;
-    color: black;
-    border: 3px solid black;
-    border-style: none solid none none;
+.sn-sch-slot-info:hover {
     opacity: 1.0;
-    //transition: opacity 0.5s;
-    min-width: 50px;
-    font-size: 70%;
 }
 
 .sn-sch-table-wrap {

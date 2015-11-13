@@ -427,19 +427,26 @@ div.m-app-loading p {
   border-style: none solid none solid;
   opacity: 0.65; }
 
+.sn-sch-slot-info {
+  position: absolute;
+  top: -75%;
+  background-color: lightgrey;
+  color: black;
+  border: 5px solid #607D8B;
+  border-style: none none none solid;
+  opacity: 0.0;
+  transition: opacity 0.5s;
+  min-width: 50px;
+  font-size: 65%; }
+  .sn-sch-slot-info ul {
+    list-style: none;
+    padding: 7px; }
+
 .sn-sch-slot:hover {
   cursor: pointer; }
 
-.sn-sch-slot-info {
-  position: absolute;
-  top: -10px;
-  background-color: lightgrey;
-  color: black;
-  border: 3px solid black;
-  border-style: none solid none none;
-  opacity: 1.0;
-  min-width: 50px;
-  font-size: 70%; }
+.sn-sch-slot-info:hover {
+  opacity: 1.0; }
 
 .sn-sch-table-wrap {
   position: relative; }

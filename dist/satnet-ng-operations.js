@@ -2878,6 +2878,7 @@ angular.module('snAvailabilityDirective', [
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
 .constant('SN_SCH_GS_ID_WIDTH', 10)
+.constant('SN_SCH_GS_ID_MAX_LENGTH', 6)
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
@@ -2894,7 +2895,7 @@ angular.module('snAvailabilityDirective', [
         $scope, $log, $mdDialog, satnetRPC, snDialog,
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
-        SN_SCH_GS_ID_WIDTH
+        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH
     ) {
 
         $scope.animation = {
@@ -2989,23 +2990,6 @@ angular.module('snAvailabilityDirective', [
         };
 
         /**
-         * Function that returns the CSS style code for properly placing and
-         * displaying the given slot in a timeline as a float div.
-         * 
-         * @param   {Object} slot The slot to be displayed
-         * @returns {Object} CSS containing the left position and the width
-         */
-        $scope._getCSSSlot = function (slot) {
-            console.log('>>> slot = ' + JSON.stringify(slot));
-            return {
-                //'margin-left': slot.slot.left,
-                //'left': slot.slot.left,
-                //'width': slot.slot.width
-                'left': slot.slot.left
-            };
-        };
-
-        /**
          * Returns the CSS object for ng-style with the width of the cells
          * within the column of the Ground Station ID.
          * 
@@ -3029,6 +3013,11 @@ angular.module('snAvailabilityDirective', [
             };
         };
 
+        /**
+         * Returns the CSS object with the width for the hours of the timeline.
+         * 
+         * @returns {Object} CSS object with the width
+         */
         $scope._getCSSHoursWidth = function () {
             var max_width = 100 - SN_SCH_GS_ID_WIDTH,
                 max_no_cols = $scope.gui.hours_per_day * $scope.gui.no_days;
@@ -3101,6 +3090,9 @@ angular.module('snAvailabilityDirective', [
                 r_slots.push({
                     raw_slot: slot,
                     slot: {
+                        id: slot.identifier.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                        s_date: moment(slot_start_d).format(),
+                        e_date: moment(slot_end_d).format(),
                         left: slot_l,
                         width: slot_w
                     }
@@ -3154,24 +3146,11 @@ angular.module('snAvailabilityDirective', [
                 angular.forEach(results, function (gs_id) {
                     
                     $scope.getGSSlots(gs_id).then(function (results) {
-
-                        $log.info(
-                            '>>> Slots for GS = ' + gs_id +
-                            ', RAW slots = ' + JSON.stringify(results)
-                        );
-
-                        var filtered_s = $scope.filter_slots(
+                        $scope.gui.slots[gs_id] = $scope.filter_slots(
                             gs_id, results.slots
                         );
-
-                        $log.info(
-                            '>>> Slots for GS = ' + gs_id +
-                            ', FILTERED slots = ' + JSON.stringify(filtered_s)
-                        );
-
-                        $scope.gui.slots[gs_id] = filtered_s;
-
                     });
+
                 });
 
             }).catch(function (cause) {
