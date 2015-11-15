@@ -3162,6 +3162,22 @@ angular.module('snAvailabilityDirective', [
     }
 
 ])
+.directive('snTimeline',
+
+    /**
+     * Function that creates the directive to include a timeline table row.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'common/templates/availability/timeline.html'
+        };
+    }
+
+)
 .controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
 
     /**

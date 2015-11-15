@@ -362,7 +362,9 @@ div.m-app-loading p {
 
 .sn-sch-table {
   min-width: 100%;
-  border-collapse: collapse; }
+  min-height: 100%;
+  border-collapse: collapse;
+  border-style: none; }
 
 .sn-sch-cell-container {
   padding: 0;
