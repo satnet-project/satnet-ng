@@ -2871,20 +2871,16 @@ angular.module('snAboutDirective', [
 angular.module('snAvailabilityDirective', [
     'ngMaterial',
     'snControllers',
-    'snJRPCServices'
+    'snJRPCServices',
+    'snTimelineDirective'
 ])
-.constant('SN_SCH_TIMELINE_DAYS', 3)
-.constant('SN_SCH_HOURS_DAY', 3)
-.constant('SN_SCH_DATE_FORMAT', 'DD-MM')
-.constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
-.constant('SN_SCH_GS_ID_WIDTH', 10)
-.constant('SN_SCH_GS_ID_MAX_LENGTH', 6)
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
     'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
     'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
     'SN_SCH_GS_ID_WIDTH',
+    'snTimelineService',
 
     /**
      * Controller function for handling the SatNet availability dialog.
@@ -2895,27 +2891,19 @@ angular.module('snAvailabilityDirective', [
         $scope, $log, $mdDialog, satnetRPC, snDialog,
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
-        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH
+        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
+        snTimelineService
     ) {
 
+        /** Object that holds the configuration for the timeline animation */
         $scope.animation = {
             duration: '5',
             initial_width: '0%',
             final_width: '0%'
         };
 
-        $scope.gui = {
-            gs_id_width: SN_SCH_GS_ID_WIDTH + '%',
-            start_d: null,
-            end_d: null,
-            hours_per_day: -1,
-            hour_step: null,
-            no_cols: -1,
-            days: [],
-            no_days: SN_SCH_TIMELINE_DAYS,
-            times: [],
-            slots: {}
-        };
+        /** Object with the configuration for the GUI */
+        $scope.gui = null;
 
         /**
          * Function that closes the dialog.
@@ -2925,53 +2913,20 @@ angular.module('snAvailabilityDirective', [
         };
 
         /**
-         * Function that initializes the dictionary with the days and hours for
-         * the axis of the timeline. It simply contains as many days as
-         * specified in the variable "SN_SCH_TIMELINE_DAYS".
+         * Initializes the animation to be displayed over the timeline.
          */
-        $scope.initAxisTimes = function () {
+        $scope.initAnimation = function () {
 
-            $scope.gui.start_d = moment().hours(0).minutes(0).seconds(0);
-            $scope.gui.end_d =  moment($scope.gui.start_d).add(
-                $scope.gui.no_days, 'days'
-            );
+            var now = moment(),
+                now_s = moment(now).unix(),
+                ellapsed_s = now_s - $scope.gui.start_d_s,
+                ellapsed_p = ellapsed_s /  $scope.gui.total_s,
+                scaled_p = ellapsed_p * $scope.gui.scale_width * 100,
+                scaled_w = $scope.gui.scaled_width;
 
-            var day = moment().hours(0).minutes(0).seconds(0),
-                now = moment(),
-                ellapsed_s = moment(now).unix() - moment($scope.gui.start_d).unix(),
-                total_s = moment($scope.gui.end_d).unix() - moment($scope.gui.start_d).unix(),
-                duration_s = moment($scope.gui.end_d).unix() - moment(now).unix(),
-                scale_width = (100 - SN_SCH_GS_ID_WIDTH) / 100;
-
-            $scope.gui.hours_per_day = 3;
-            $scope.gui.hour_step = moment.duration(
-                24 / $scope.gui.hours_per_day, 'hours'
-            );
-            $scope.gui.no_cols = $scope.gui.hours_per_day - 1;
-
-            $scope.animation.initial_width = '' +
-                (((ellapsed_s / total_s) * scale_width) * 100).toFixed(3) + '%';
-            $scope.animation.final_width = '' + (100-SN_SCH_GS_ID_WIDTH) + '%';
-            $scope.animation.duration = '' + duration_s;
-
-            while (day.isBefore($scope.gui.end_d)) {
-
-                var hour = moment().hours(0).minutes(0).seconds(0),
-                    day_s = moment(day).format(SN_SCH_DATE_FORMAT);
-
-                $scope.gui.days.push(day_s);
-                $scope.gui.times.push(day_s);
-
-                for (var i = 0; i < ( $scope.gui.hours_per_day - 1 ); i++) {
-
-                    hour = moment(hour).add($scope.gui.hour_step, 'hours');
-                    $scope.gui.times.push(hour.format(SN_SCH_HOUR_FORMAT));
-
-                }
-
-                day = moment(day).add(1, 'days');
-
-            }
+            $scope.animation.initial_width = '' + scaled_p.toFixed(3) + '%';
+            $scope.animation.final_width = '' + scaled_w.toFixed(3) + '%';
+            $scope.animation.duration = '' + $scope.gui.duration_s;
 
         };
 
@@ -3014,16 +2969,75 @@ angular.module('snAvailabilityDirective', [
         };
 
         /**
-         * Returns the CSS object with the width for the hours of the timeline.
+         * Function that discards the given slot depending on whether it is
+         * within the applicable window or outside.
          * 
-         * @returns {Object} CSS object with the width
+         * @param   {Object}  start moment.js slot start
+         * @param   {Object}  end   moment.js slot end
+         * @returns {Boolean} 'true' if the object has to be discarded
          */
-        $scope._getCSSHoursWidth = function () {
-            var max_width = 100 - SN_SCH_GS_ID_WIDTH,
-                max_no_cols = $scope.gui.hours_per_day * $scope.gui.no_days;
+        $scope.discardSlot = function (start, end) {
+
+            if (moment(start).isBefore($scope.gui.start_d)) {
+                $log.warn('Slot discarded, too old!');
+                return true;
+            }
+            if (moment(end).isAfter($scope.gui.end_d)) {
+                $log.warn('Slot discarded, too futuristic!');
+                return true;
+            }
+            return false;
+
+        };
+
+        /**
+         * Function that normalizes a given slot, restricting its start and end
+         * to the upper and lower limits for the applicable window.
+         * 
+         * @param   {Object}  start moment.js slot start
+         * @param   {Object}  end   moment.js slot end
+         */
+        $scope.normalizeSlot = function (start, end) {
+
+            start = moment(start).isBefore($scope.gui.start_d) ?
+                $scope.gui.start_d : start;
+            end = moment(end).isAfter($scope.gui.end_d) ?
+                $scope.gui.end_d : end;
+
             return {
-                'width': (max_width / max_no_cols).toFixed(3) + '%'
+                start: start,
+                end: end
             };
+
+        };
+
+        /**
+         * Creates a slot that can be displayed within the GUI.
+         * 
+         * @param {Object} raw_slot Non-modified original slot
+         * @param {Object} n_slot Normalized slot
+         * @returns {Object} GUI displayable slot
+         */
+        $scope.createSlot = function (raw_slot, n_slot) {
+
+            var slot_s_s = moment(n_slot.start).unix(),
+                slot_e_s = moment(n_slot.end).unix(),
+                start_s = slot_s_s - $scope.gui.start_d_s,
+                slot_l = (start_s / $scope.gui.total_s) * 100,
+                slot_duration_s = slot_e_s - slot_s_s,
+                slot_w = (slot_duration_s / $scope.gui.total_s) * 100;
+    
+            return {
+                raw_slot: raw_slot,
+                slot: {
+                    id: raw_slot.identifier.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                    s_date: moment(n_slot.start).format(),
+                    e_date: moment(n_slot.end).format(),
+                    left: slot_l.toFixed(3),
+                    width: slot_w.toFixed(3)
+                }
+            };
+
         };
 
         /**
@@ -3043,64 +3057,44 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.filter_slots = function (groundstation_id, slots) {
 
-            var r_slots = [];
+            var results = [];
 
-            console.log('%%%% PROCESSING WINDOW : start_d = ' + moment($scope.gui.start_d).format());
-            console.log('%%%% PROCESSING WINDOW :   end_d = ' + moment($scope.gui.end_d).format());
+            console.log(
+                '%%%% WINDOW: (' + moment($scope.gui.start_d).format() +
+                ', ' + moment($scope.gui.end_d).format() + ')'
+            );
 
             for (var i = 0; i < slots.length; i++ ) {
 
-                var slot = slots[i],
-                    slot_start_d = moment(slot.date_start),
-                    slot_end_d = moment(slot.date_end),
-                    duration_s = moment($scope.gui.end_d).unix() - moment($scope.gui.start_d).unix();
-
-                console.log('slot = ' + JSON.stringify(slot));
-                console.log('%%%% PROCESSING SLOT : start = ' + moment(slot_start_d).format());
-                console.log('%%%% PROCESSING SLOT :   end = ' + moment(slot_end_d).format());
+                var raw_slot = slots[i],
+                    slot_s = moment(raw_slot.date_start),
+                    slot_e = moment(raw_slot.date_end);
 
                 // 0) Old or futuristic slots are discarded first.
-                if (moment(slot_end_d).isBefore($scope.gui.start_d)) {
-                    $log.warn('Slot discarded, too old!');
-                    continue;
-                }
-                if (moment(slot_start_d).isAfter($scope.gui.end_d)) {
-                    $log.warn('Slot discarded, too futuristic!');
+                if ( $scope.discardSlot(slot_s, slot_e) ) {
                     continue;
                 }
 
-                console.log('%%%% NORMALIZED SLOT : start = ' + moment(slot_start_d).format());
-                console.log('%%%% NORMALIZED SLOT :   end = ' + moment(slot_end_d).format());
+                console.log(
+                    '%%%% PROCESSING: start = ' + moment(slot_s).format() +
+                    ', end = ' + moment(slot_e).format()
+                );
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
-                slot_start_d = moment(slot_start_d).isBefore($scope.gui.start_d) ?
-                    $scope.gui.start_d : slot_start_d;
-                slot_end_d = moment(slot_end_d).isAfter($scope.gui.end_d) ?
-                    $scope.gui.end_d : slot_end_d;
+                var n_slot = $scope.normalizeSlot(slot_s, slot_e);
 
-                // 2) After normalizing the dates, we can calculate the position
-                //      and widths of the displayable slots.
-                var start_s = moment(slot_start_d).unix() - moment($scope.gui.start_d).unix(),
-                    slot_l = ( (start_s / duration_s) * 100 ).toFixed(3),
-                    slot_duration_s = ( moment(slot_end_d).unix() - moment(slot_start_d).unix() ),
-                    slot_w = ( (slot_duration_s / duration_s) * 100).toFixed(3);
+                // 2) The resulting slot is added to the results array
+                results.push($scope.createSlot(raw_slot, n_slot));
 
-                // 3) The resulting slot is added to the results array
-                r_slots.push({
-                    raw_slot: slot,
-                    slot: {
-                        id: slot.identifier.substring(SN_SCH_GS_ID_MAX_LENGTH),
-                        s_date: moment(slot_start_d).format(),
-                        e_date: moment(slot_end_d).format(),
-                        left: slot_l,
-                        width: slot_w
-                    }
-                });
+                console.log(
+                    '%%%% RESULT: start = ' + moment(n_slot.start).format() +
+                    ', end = ' + moment(n_slot.end).format()
+                );
 
             }
 
-            return r_slots;
+            return results;
 
         };
 
@@ -3138,7 +3132,7 @@ angular.module('snAvailabilityDirective', [
         $scope.init = function () {
 
             // 1> init days and hours for the axis
-            $scope.initAxisTimes();
+            $scope.gui = snTimelineService.initScope();
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
@@ -3545,6 +3539,201 @@ angular.module('snSplashDirective', []).directive('mAppLoading', ['$animate',
         });
 
     }]);;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snTimelineDirective', [])
+.constant('SN_SCH_TIMELINE_DAYS', 3)
+.constant('SN_SCH_HOURS_DAY', 3)
+.constant('SN_SCH_DATE_FORMAT', 'DD-MM')
+.constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
+.constant('SN_SCH_GS_ID_WIDTH', 10)
+.constant('SN_SCH_GS_ID_MAX_LENGTH', 6)
+.service('snTimelineService', [
+    '$log',
+    'SN_SCH_TIMELINE_DAYS',
+    'SN_SCH_HOURS_DAY',
+    'SN_SCH_GS_ID_WIDTH',
+    'SN_SCH_DATE_FORMAT',
+    'SN_SCH_HOUR_FORMAT',
+
+    /**
+     * Function services to create reusable timeline services.
+     * 
+     * @param {Object} $log Angular JS $log services
+     */
+    function (
+        $log,
+        SN_SCH_TIMELINE_DAYS,
+        SN_SCH_HOURS_DAY,
+        SN_SCH_GS_ID_WIDTH,
+        SN_SCH_DATE_FORMAT,
+        SN_SCH_HOUR_FORMAT
+    ) {
+
+        /**
+         * Function that initializes the days within the given scope for the
+         * timeline.
+         * 
+         * @param {Object} x_scope Object with timeline's configuration
+         */
+        this.initScopeDays = function (x_scope) {
+
+            var day = moment().hours(0).minutes(0).seconds(0);
+
+            while (day.isBefore(x_scope.end_d)) {
+
+                var hour = moment().hours(0).minutes(0).seconds(0),
+                    day_s = moment(day).format(SN_SCH_DATE_FORMAT);
+
+                x_scope.days.push(day_s);
+                x_scope.times.push(day_s);
+
+                for (var i = 0; i < ( x_scope.hours_per_day - 1 ); i++) {
+
+                    hour = moment(hour).add(x_scope.hour_step, 'hours');
+                    x_scope.times.push(hour.format(SN_SCH_HOUR_FORMAT));
+
+                }
+
+                day = moment(day).add(1, 'days');
+
+            }
+
+        };
+            
+        /**
+         * Function that initializes the dictionary with the days and hours for
+         * the axis of the timeline. It simply contains as many days as
+         * specified in the variable "SN_SCH_TIMELINE_DAYS".
+         */
+        this.initScope = function () {
+
+            var x_scope = {
+                start_d: moment().hours(0).minutes(0).seconds(0),
+                start_d_s: -1,
+                end_d: null,
+                end_d_s: -1,
+                hour_step: null,
+                gs_id_width: SN_SCH_GS_ID_WIDTH + '%',
+                max_width: 100 - SN_SCH_GS_ID_WIDTH,
+                scaled_width: 100 - SN_SCH_GS_ID_WIDTH,
+                scale_width: (100 - SN_SCH_GS_ID_WIDTH) / 100,
+                hours_per_day: SN_SCH_HOURS_DAY,
+                no_days: SN_SCH_TIMELINE_DAYS,
+                total_s: -1,
+                no_cols: -1,
+                max_no_cols: -1,
+                days: [],
+                times: [],
+                slots: {}
+            };
+
+            x_scope.end_d = moment(x_scope.gui.start_d).add(
+                x_scope.gui.no_days, 'days'
+            );
+            x_scope.start_d_s = moment(x_scope.start_d).unix();
+            x_scope.end_d_s = moment(x_scope.end_d).unix();
+            x_scope.total_s = x_scope.end_d_s - x_scope.start_d_s;
+            x_scope.hour_step = moment.duration(
+                (24 / x_scope.hours_per_day), 'hours'
+            );
+            x_scope.no_cols = x_scope.hours_per_day - 1;
+            x_scope.max_no_cols = x_scope.hours_per_day * x_scope.no_days;
+
+            this.initScopeDays(x_scope);
+            
+            return x_scope;
+
+        };
+
+        /**
+         * Function that returns the width of a any column within the timeline.
+         * 
+         * @param   {Object} cfg Object containing timeline's configuration
+         * @returns {Object} CSS ng-style object with the calculated width
+         */
+        this.getCSSHoursWidth = function (cfg) {
+            return {
+                'width': (cfg.max_width / cfg.max_no_cols).toFixed(3) + '%'
+            };
+        };
+
+    }
+
+])
+.controller('snTimelineCtrl', [
+    '$scope', '$log',
+    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
+    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
+    'SN_SCH_GS_ID_WIDTH',
+    'snTimelineService',
+
+    /**
+     * Controller function for handling the SatNet availability dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $log,
+        SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
+        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
+        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
+        snTimelineService
+    ) {
+
+        $scope.gui = null;
+
+        /**
+         * Returns the CSS object with the width for the hours of the timeline.
+         * 
+         * @returns {Object} CSS object with the width
+         */
+        $scope._getCSSHoursWidth = function () {
+            snTimelineService.getCSSHoursWidth($scope.gui);
+        };
+
+        /**
+         * Function that initializes the object with the configuration for the
+         * GUI.
+         */
+        $scope.init = function () {
+            $scope.gui = snTimelineService.initScope();
+        };
+
+    }
+
+])
+.directive('snTimeline',
+
+    /**
+     * Function that creates the directive to include a timeline table row.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'common/templates/availability/timeline.html'
+        };
+    }
+
+)
+;
+;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
