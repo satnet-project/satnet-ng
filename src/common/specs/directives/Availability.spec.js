@@ -174,9 +174,10 @@ describe('Testing Availability directive', function () {
     // ************************************************************************
     // ************************************************************************
 
-        TODO :: use mocked common reference time instead of moment() both
-                for the test and for the code; otherwise, the moment()
-                objects will differ by miliseconds...
+    // TODO :: use mocked common reference time instead of moment() both
+    //          for the test and for the code; otherwise, the moment()
+    //          objects will differ by miliseconds...
+
     it('should create the values for the animation', function () {
 
         var $c_scope = $rootScope.$new(),
