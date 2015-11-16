@@ -25,7 +25,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/availability/timeline.html',
-    "<div class=\"sn-sch-row-hours-container\"><table class=\"sn-sch-row-table\"><colgroup ng-repeat=\"d in gui.days\"><col class=\"sn-sch-time-col\" span=\"{{ gui.no_cols }}\"><col class=\"sn-sch-day-col\"></colgroup><tr><td class=\"sn-sch-axis-time\" ng-repeat=\"t in gui.times track by $index\" ng-style=\"_getCSSHoursWidth()\"><span>{{ t }}</span></td></tr></table></div>"
+    "<div ng-init=\"init()\" class=\"sn-sch-row-hours-container\"><table class=\"sn-sch-row-table\"><colgroup ng-repeat=\"d in gui.days\"><col class=\"sn-sch-time-col\" span=\"{{ gui.no_cols }}\"><col class=\"sn-sch-day-col\"></colgroup><tr><td class=\"sn-sch-axis-time\" ng-repeat=\"t in gui.times track by $index\" ng-style=\"_getCSSHoursWidth()\"><span>{{ t }}</span></td></tr></table></div>"
   );
 
 

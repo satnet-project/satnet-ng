@@ -21,6 +21,14 @@ describe('Testing Availability directive', function () {
     var $compile, $directive, $mdDialog,
         $rootScope, $scope,
         __mock__cookies = {},
+        __mock__timeline = {
+            initScope: function () {
+                return {
+                    days: ['monday']
+                };
+            },
+            initDays: function () {},
+        },
         $controller, dialogCtrl,
         $body = $("body"),
         html = "<sn-availability></sn-availability>";
@@ -28,11 +36,13 @@ describe('Testing Availability directive', function () {
     beforeEach(function () {
 
         module(
-            'templates', 'snAvailabilityDirective', 'snJRPCMock',
-            function($provide) {
-                $provide.value('$cookies', __mock__cookies);
-            }
+            'templates', 'snAvailabilityDirective', 'snJRPCMock'
         );
+
+        module(function($provide) {
+                $provide.value('$cookies', __mock__cookies);
+                $provide.value('snTimelineService', __mock__timeline);
+        });
 
         inject(function ($injector) {
 
