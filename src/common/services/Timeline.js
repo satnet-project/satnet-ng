@@ -16,14 +16,14 @@
  * Created by rtubio on 10/24/14.
  */
 
-angular.module('snTimelineService', [])
+angular.module('snTimelineServices', [])
 .constant('SN_SCH_TIMELINE_DAYS', 3)
 .constant('SN_SCH_HOURS_DAY', 3)
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
 .constant('SN_SCH_GS_ID_WIDTH', 10)
 .constant('SN_SCH_GS_ID_MAX_LENGTH', 6)
-.service('snTimelineService', [
+.service('timeline', [
     '$log',
     'SN_SCH_TIMELINE_DAYS',
     'SN_SCH_HOURS_DAY',

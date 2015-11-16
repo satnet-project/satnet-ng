@@ -16,9 +16,9 @@
  * Created by rtubio on 10/24/14.
  */
 
-describe('Testing the Timeline Service', function () {
+describe('Testing the Timeline Services', function () {
 
-    var snTimelineService,
+    var timeline,
         SN_SCH_TIMELINE_DAYS,
         SN_SCH_HOURS_DAY,
         SN_SCH_GS_ID_WIDTH,
@@ -27,10 +27,11 @@ describe('Testing the Timeline Service', function () {
         SN_SCH_GS_ID_MAX_LENGTH;
 
     beforeEach(function () {
-        module('snTimelineService');
+
+        module('snTimelineServices');
 
         inject(function ($injector) {
-            snTimelineService = $injector.get('snTimelineService');
+            timeline = $injector.get('timeline');
             SN_SCH_TIMELINE_DAYS = $injector.get('SN_SCH_TIMELINE_DAYS');
             SN_SCH_HOURS_DAY = $injector.get('SN_SCH_HOURS_DAY');
             SN_SCH_GS_ID_WIDTH = $injector.get('SN_SCH_GS_ID_WIDTH');
@@ -42,8 +43,9 @@ describe('Testing the Timeline Service', function () {
     });
 
     it('should return a non-null valid snTimelineService object', function () {
-        expect(snTimelineService).not.toBeNull();
-        expect(snTimelineService.initScope).not.toBeNull();
+        expect(timeline).not.toBeNull();
+        expect(timeline.initScope).not.toBeNull();
+        expect(timeline.initScope).toBeDefined();
         expect(SN_SCH_TIMELINE_DAYS).toBe(3);
         expect(SN_SCH_HOURS_DAY).toBe(3);
         expect(SN_SCH_DATE_FORMAT).toBe('DD-MM');
@@ -100,7 +102,7 @@ describe('Testing the Timeline Service', function () {
             '16:00'
         ];
 
-        var a_scope = snTimelineService.initScope();
+        var a_scope = timeline.initScope();
 
         // TODO :: use mocked common reference time instead of moment() both
         //          for the test and for the code; otherwise, the moment()
@@ -134,7 +136,7 @@ describe('Testing the Timeline Service', function () {
             },
             x_width = '10.000%';
 
-        expect(snTimelineService.getCSSHoursWidth(cfg)).toEqual({
+        expect(timeline.getCSSHoursWidth(cfg)).toEqual({
             'width': x_width
         });
 

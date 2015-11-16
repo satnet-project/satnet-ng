@@ -16,21 +16,26 @@
  * Created by rtubio on 10/26/15.
  */
 
-describe('Testing Availability directive', function () {
+describe('Testing Timeline directive', function () {
 
-    var $compile, $directive,
+    var $compile, $directive, $log,
         $rootScope, $scope,
         __mock__cookies = {},
-        $controller, dialogCtrl,
-        snTimelineService,
+        $controller, controller,
+        timeline,
+        SN_SCH_TIMELINE_DAYS,
+        SN_SCH_HOURS_DAY,
+        SN_SCH_GS_ID_WIDTH,
+        SN_SCH_DATE_FORMAT,
+        SN_SCH_HOUR_FORMAT,
+        SN_SCH_GS_ID_MAX_LENGTH,
         $body = $("body"),
-        html = "<sn-timeline></sn-timeline>";
+        html = "<sn-timeline/>";
 
     beforeEach(function () {
 
         module(
-            'templates',
-            'snTimelineDirective',
+            'templates', 'snTimelineDirective', 'snTimelineServices',
             function($provide) {
                 $provide.value('$cookies', __mock__cookies);
             }
@@ -41,28 +46,49 @@ describe('Testing Availability directive', function () {
             $rootScope = $injector.get('$rootScope');
             $compile = $injector.get('$compile');
             $controller = $injector.get('$controller');
+            $log = $injector.get('$log');
 
-            $scope = $rootScope.$new();
-            $directive = $compile(angular.element(html))($scope);
+            SN_SCH_TIMELINE_DAYS = $injector.get('SN_SCH_TIMELINE_DAYS');
+            SN_SCH_HOURS_DAY = $injector.get('SN_SCH_HOURS_DAY');
+            SN_SCH_GS_ID_WIDTH = $injector.get('SN_SCH_GS_ID_WIDTH');
+            SN_SCH_DATE_FORMAT = $injector.get('SN_SCH_DATE_FORMAT');
+            SN_SCH_HOUR_FORMAT = $injector.get('SN_SCH_HOUR_FORMAT');
+            SN_SCH_GS_ID_MAX_LENGTH = $injector.get('SN_SCH_GS_ID_MAX_LENGTH');
 
-            snTimelineService = $injector.get('snTimelineService');
+            timeline = $injector.get('timeline');
 
         });
 
-        dialogCtrl = $controller("snTimelineCtrl", {
-            $scope: $scope
+        $scope = $rootScope.$new();
+        controller = $controller("snTimelineCtrl", {
+            $scope: $scope,
+            $log: $log,
+            SN_SCH_TIMELINE_DAYS: SN_SCH_TIMELINE_DAYS,
+            SN_SCH_HOURS_DAY: SN_SCH_HOURS_DAY,
+            SN_SCH_GS_ID_WIDTH: SN_SCH_GS_ID_WIDTH,
+            SN_SCH_DATE_FORMAT: SN_SCH_DATE_FORMAT,
+            SN_SCH_HOUR_FORMAT: SN_SCH_HOUR_FORMAT,
+            SN_SCH_GS_ID_MAX_LENGTH: SN_SCH_GS_ID_MAX_LENGTH,
+            timeline: timeline
         });
+
+        $directive = $compile(angular.element(html))($scope);
 
         $body.append($directive);
         $rootScope.$digest();
 
     });
 
-    it('Should create a valid snTimelineService object', function () {
-        expect(snTimelineService).not.toBeNull();
-        expect(snTimelineService.initScope).toBeDefined();
+    it('Should create a proper timeline', function () {
+
+        var row_container = $('.sn-sch-row-hours-container').eq(0),
+            row_table = $('.sn-sch-row-table').eq(0);
+
+        expect(row_container).toBeDefined();
+        expect(row_table).toBeDefined();
+
     });
-    
+
     afterEach(function () {
         $body.empty();
     });

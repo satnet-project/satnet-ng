@@ -18,15 +18,15 @@ angular.module('snAvailabilityDirective', [
     'ngMaterial',
     'snControllers',
     'snJRPCServices',
-    'snTimelineDirective'
+    'snTimelineServices'
 ])
 .controller('snAvailabilityDlgCtrl', [
     '$scope', '$log', '$mdDialog',
     'satnetRPC', 'snDialog',
     'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
     'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
-    'SN_SCH_GS_ID_WIDTH',
-    'snTimelineService',
+    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
+    'timeline',
 
     /**
      * Controller function for handling the SatNet availability dialog.
@@ -38,7 +38,7 @@ angular.module('snAvailabilityDirective', [
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
         SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
-        snTimelineService
+        timeline
     ) {
 
         /** Object that holds the configuration for the timeline animation */
@@ -171,12 +171,13 @@ angular.module('snAvailabilityDirective', [
                 start_s = slot_s_s - $scope.gui.start_d_s,
                 slot_l = (start_s / $scope.gui.total_s) * 100,
                 slot_duration_s = slot_e_s - slot_s_s,
-                slot_w = (slot_duration_s / $scope.gui.total_s) * 100;
-    
+                slot_w = (slot_duration_s / $scope.gui.total_s) * 100,
+                id = raw_slot.identifier + '';
+
             return {
                 raw_slot: raw_slot,
                 slot: {
-                    id: raw_slot.identifier.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
                     s_date: moment(n_slot.start).format(),
                     e_date: moment(n_slot.end).format(),
                     left: slot_l.toFixed(3),
@@ -221,10 +222,7 @@ angular.module('snAvailabilityDirective', [
                     continue;
                 }
 
-                console.log(
-                    '%%%% PROCESSING: start = ' + moment(slot_s).format() +
-                    ', end = ' + moment(slot_e).format()
-                );
+                console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
@@ -233,10 +231,7 @@ angular.module('snAvailabilityDirective', [
                 // 2) The resulting slot is added to the results array
                 results.push($scope.createSlot(raw_slot, n_slot));
 
-                console.log(
-                    '%%%% RESULT: start = ' + moment(n_slot.start).format() +
-                    ', end = ' + moment(n_slot.end).format()
-                );
+                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }
 
@@ -278,7 +273,7 @@ angular.module('snAvailabilityDirective', [
         $scope.init = function () {
 
             // 1> init days and hours for the axis
-            $scope.gui = snTimelineService.initScope();
+            $scope.gui = timeline.initScope();
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {

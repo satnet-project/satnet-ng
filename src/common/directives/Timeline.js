@@ -14,13 +14,13 @@
    limitations under the License.
 */
 
-angular.module('snTimelineDirective', ['snTimelineService'])
+angular.module('snTimelineDirective', ['snTimelineServices'])
 .controller('snTimelineCtrl', [
     '$scope', '$log',
     'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
     'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
-    'SN_SCH_GS_ID_WIDTH',
-    'snTimelineService',
+    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
+    'timeline',
 
     /**
      * Controller function for handling the SatNet availability dialog.
@@ -32,7 +32,7 @@ angular.module('snTimelineDirective', ['snTimelineService'])
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
         SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
-        snTimelineService
+        timeline
     ) {
 
         $scope.gui = null;
@@ -43,7 +43,7 @@ angular.module('snTimelineDirective', ['snTimelineService'])
          * @returns {Object} CSS object with the width
          */
         $scope._getCSSHoursWidth = function () {
-            snTimelineService.getCSSHoursWidth($scope.gui);
+            timeline.getCSSHoursWidth($scope.gui);
         };
 
         /**
@@ -51,7 +51,7 @@ angular.module('snTimelineDirective', ['snTimelineService'])
          * GUI.
          */
         $scope.init = function () {
-            $scope.gui = snTimelineService.initScope();
+            $scope.gui = timeline.initScope();
         };
 
     }
@@ -73,5 +73,4 @@ angular.module('snTimelineDirective', ['snTimelineService'])
         };
     }
 
-)
-;
+);

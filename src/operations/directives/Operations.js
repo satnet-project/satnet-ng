@@ -20,6 +20,8 @@ angular.module('snOperationsDirective', [
     'angular-loading-bar',
     'leaflet-directive',
     'snJRPCServices',
+    'snTimelineServices',
+    'snTimelineDirective',
     'snLoggerDirective',
     'snSplashDirective',
     'snAboutDirective',

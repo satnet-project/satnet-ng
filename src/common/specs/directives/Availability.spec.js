@@ -18,30 +18,34 @@
 
 describe('Testing Availability directive', function () {
 
-    var $compile, $directive, $mdDialog,
+    var $compile, $directive,
+        $log, $mdDialog,
         $rootScope, $scope,
+        timeline, snDialog,
+        SN_SCH_TIMELINE_DAYS,
+        SN_SCH_HOURS_DAY,
+        SN_SCH_GS_ID_WIDTH,
+        SN_SCH_DATE_FORMAT,
+        SN_SCH_HOUR_FORMAT,
+        SN_SCH_GS_ID_MAX_LENGTH,
         __mock__cookies = {},
-        __mock__timeline = {
-            initScope: function () {
-                return {
-                    days: ['monday']
-                };
-            },
-            initDays: function () {},
-        },
         $controller, dialogCtrl,
         $body = $("body"),
-        html = "<sn-availability></sn-availability>";
+        html = "<sn-availability/>";
 
     beforeEach(function () {
 
         module(
-            'templates', 'snAvailabilityDirective', 'snJRPCMock'
+            'templates',
+            'snControllers',
+            'snTimelineServices',
+            'snTimelineDirective',
+            'snAvailabilityDirective',
+            'snJRPCMock'
         );
 
         module(function($provide) {
-                $provide.value('$cookies', __mock__cookies);
-                $provide.value('snTimelineService', __mock__timeline);
+            $provide.value('$cookies', __mock__cookies);
         });
 
         inject(function ($injector) {
@@ -50,15 +54,34 @@ describe('Testing Availability directive', function () {
             $compile = $injector.get('$compile');
             $controller = $injector.get('$controller');
             $mdDialog = $injector.get('$mdDialog');
+            $log = $injector.get('$log');
 
-            $scope = $rootScope.$new();
-            $directive = $compile(angular.element(html))($scope);
+            snDialog = $injector.get('snDialog');
+            timeline = $injector.get('timeline');
+            SN_SCH_TIMELINE_DAYS = $injector.get('SN_SCH_TIMELINE_DAYS');
+            SN_SCH_HOURS_DAY = $injector.get('SN_SCH_HOURS_DAY');
+            SN_SCH_GS_ID_WIDTH = $injector.get('SN_SCH_GS_ID_WIDTH');
+            SN_SCH_DATE_FORMAT = $injector.get('SN_SCH_DATE_FORMAT');
+            SN_SCH_HOUR_FORMAT = $injector.get('SN_SCH_HOUR_FORMAT');
+            SN_SCH_GS_ID_MAX_LENGTH = $injector.get('SN_SCH_GS_ID_MAX_LENGTH');
 
         });
 
+        $scope = $rootScope.$new();
+        $directive = $compile(angular.element(html))($scope);
+
         dialogCtrl = $controller("snAvailabilityDlgCtrl", {
             $scope: $scope,
-            $mdDialog: $mdDialog
+            $log: $log,
+            $mdDialog: $mdDialog,
+            snDialog: snDialog,
+            SN_SCH_TIMELINE_DAYS: SN_SCH_TIMELINE_DAYS,
+            SN_SCH_HOURS_DAY: SN_SCH_HOURS_DAY,
+            SN_SCH_GS_ID_WIDTH: SN_SCH_GS_ID_WIDTH,
+            SN_SCH_DATE_FORMAT: SN_SCH_DATE_FORMAT,
+            SN_SCH_HOUR_FORMAT: SN_SCH_HOUR_FORMAT,
+            SN_SCH_GS_ID_MAX_LENGTH: SN_SCH_GS_ID_MAX_LENGTH,
+            timeline: timeline
         });
 
         $body.append($directive);
@@ -127,13 +150,11 @@ describe('Testing Availability directive', function () {
         var $c_scope = $rootScope.$new(),
             x_day_1 = moment().hours(0).minutes(0).seconds(0),
             x_day_2 = moment(x_day_1).add(1, 'days'),
+            x_day_3 = moment(x_day_2).add(1, 'days'),
             x_days = [
                 moment(x_day_1).format('DD-MM'),
-                '08:00',
-                '16:00',
                 moment(x_day_2).format('DD-MM'),
-                '08:00',
-                '16:00'
+                moment(x_day_3).format('DD-MM')
             ],
             dlgCtrl = $controller("snAvailabilityDlgCtrl", {
                 $scope: $c_scope,
@@ -144,11 +165,18 @@ describe('Testing Availability directive', function () {
 
         $c_scope.init();
         $rootScope.$digest();
-        
+
         expect($c_scope.gui.days).toEqual(x_days);
 
     });
 
+    /* ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+
+        TODO :: use mocked common reference time instead of moment() both
+                for the test and for the code; otherwise, the moment()
+                objects will differ by miliseconds...
     it('should create the values for the animation', function () {
 
         var $c_scope = $rootScope.$new(),
@@ -179,5 +207,9 @@ describe('Testing Availability directive', function () {
         expect($c_scope.animation).toEqual(x_animation);
 
     });
+
+    // ************************************************************************
+    // ************************************************************************
+    // ********************************************************************* */
 
 });
