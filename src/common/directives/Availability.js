@@ -72,8 +72,11 @@ angular.module('snAvailabilityDirective', [
 
             $scope.animation.initial_width = '' + scaled_p.toFixed(3) + '%';
             $scope.animation.final_width = '' + scaled_w.toFixed(3) + '%';
-            $scope.animation.duration = '' + $scope.gui.duration_s;
+            $scope.animation.duration = '' + $scope.gui.total_s;
 
+            console.log('>>>> duration_s = ' + $scope.gui.total_s);
+            console.log('>>>> animation duration = ' + $scope.animation.duration);
+            
         };
 
         /**
@@ -272,8 +275,10 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.init = function () {
 
-            // 1> init days and hours for the axis
+            // 1.a> init days and hours for the axis
             $scope.gui = timeline.initScope();
+            // 1.b> init the animation
+            $scope.initAnimation();
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {

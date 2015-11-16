@@ -488,7 +488,52 @@ angular.module('snMarkerModels', [
 
             };
 
+            /**
+             * Private function that helps processing the points of the ground
+             * tracks.
+             * 
+             * @param   {Array}  groundtrack Array with the ground track
+             * @param   {Number} t0          Timestamp for window's start
+             * @param   {Number} tf          Timestamp for window's end
+             * @returns {Object} Object containing the new groundtrack
+             */
+            this._processTrackPoints = function (groundtrack, t0, tf) {
 
+                var r = {
+                        positions: [],
+                        geopoints: [],
+                        durations: [],
+                        valid: false
+                    },
+                    first = true;
+                
+                for (var i = 0; i < groundtrack.length; i += 1) {
+
+                    var gt_i = groundtrack[i];
+                    if (gt_i.timestamp < t0) { continue; }
+                    if (gt_i.timestamp > tf) { break; }
+
+                    r.positions.push([gt_i.latitude, gt_i.longitude]);
+                    r.geopoints.push(
+                        new L.LatLng(gt_i.latitude, gt_i.longitude)
+                    );
+
+                    if (first === true) {
+                        first = false;
+                        continue;
+                    }
+
+                    r.durations.push(
+                        (gt_i.timestamp - groundtrack[i - 1].timestamp) / 1000
+                    );
+                    r.valid = true;
+
+                }
+
+                return r;
+
+            };
+            
             /**
              * Function that reads the RAW groundtrack from the server and
              * transforms it into a usable one for the JS client.
@@ -498,57 +543,22 @@ angular.module('snMarkerModels', [
              */
             this.readTrack = function (groundtrack) {
 
-                var i, gt_i,
-                    positions = [],
-                    durations = [],
-                    geopoints = [],
-                    first = true,
-                    valid = false,
-                    t0 = Date.now() * 1000,
+                var t0 = Date.now() * 1000,
                     tf = moment().add(
-                        _SIM_DAYS,
-                        "days"
+                        _SIM_DAYS, "days"
                     ).toDate().getTime() * 1000;
 
                 if ((groundtrack === null) || (groundtrack.length === 0)) {
                     throw '@readTrack: empty groundtrack';
                 }
 
-                for (i = 0; i < groundtrack.length; i += 1) {
+                var r = this._processTrackPoints(groundtrack, t0, tf);
 
-                    gt_i = groundtrack[i];
-
-                    if (gt_i.timestamp < t0) {
-                        continue;
-                    }
-                    if (gt_i.timestamp > tf) {
-                        break;
-                    }
-
-                    positions.push([gt_i.latitude, gt_i.longitude]);
-                    geopoints.push(new L.LatLng(gt_i.latitude, gt_i.longitude));
-
-                    if (first === true) {
-                        first = false;
-                        continue;
-                    }
-
-                    durations.push(
-                        (gt_i.timestamp - groundtrack[i - 1].timestamp) / 1000
-                    );
-                    valid = true;
-
-                }
-
-                if (valid === false) {
+                if (r.valid === false) {
                     throw '@readTrack: invalid groundtrack';
                 }
 
-                return {
-                    durations: durations,
-                    positions: positions,
-                    geopoints: geopoints
-                };
+                return r;
 
             };
 
