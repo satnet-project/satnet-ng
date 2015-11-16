@@ -17,62 +17,61 @@
 angular.module('snAboutDirective', [
     'ngMaterial'
 ])
-    .controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
+.controller('snAboutDlgCtrl', ['$scope', '$mdDialog',
+
+    /**
+     * Controller function for handling the SatNet about dialog itself.
+     *
+     * @param {Object} $scope $scope for the controller.
+     */
+    function ($scope, $mdDialog) {
 
         /**
-         * Controller function for handling the SatNet about dialog itself.
-         *
-         * @param {Object} $scope $scope for the controller.
+         * Function that closes the dialog.
          */
-        function ($scope, $mdDialog) {
+        $scope.closeDialog = function () {
+            $mdDialog.hide();
+        };
+    }
 
-            /**
-             * Function that closes the dialog.
-             */
-            $scope.closeDialog = function () {
-                $mdDialog.hide();
-            };
+])
+.controller('snAboutCtrl', ['$scope', '$mdDialog',
 
-        }
-
-    ])
-    .controller('snAboutCtrl', ['$scope', '$mdDialog',
+    /**
+     * Controller function for opening the SatNet About dialog.
+     *
+     * @param {Object} $scope    $scope for the controller.
+     * @param {Object} $mdDialog Angular material Dialog service.
+     */
+    function ($scope, $mdDialog) {
 
         /**
-         * Controller function for opening the SatNet About dialog.
-         *
-         * @param {Object} $scope    $scope for the controller.
-         * @param {Object} $mdDialog Angular material Dialog service.
+         * Function that opens the dialog when the snAbout button is
+         * clicked.
          */
-        function ($scope, $mdDialog) {
+        $scope.openSnAbout = function () {
+            $mdDialog.show({
+                templateUrl: 'common/templates/about/dialog.html'
+            });
+        };
 
-            /**
-             * Function that opens the dialog when the snAbout button is
-             * clicked.
-             */
-            $scope.openSnAbout = function () {
-                $mdDialog.show({
-                    templateUrl: 'common/templates/about/dialog.html'
-                });
-            };
+    }
 
-        }
+])
+.directive('snAbout',
 
-    ])
-    .directive('snAbout',
+    /**
+     * Function that creates the directive itself returning the object
+     * required by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl.
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'common/templates/about/menu.html'
+        };
+    }
 
-        /**
-         * Function that creates the directive itself returning the object
-         * required by Angular.
-         *
-         * @returns {Object} Object directive required by Angular, with
-         *                   restrict and templateUrl.
-         */
-        function () {
-            return {
-                restrict: 'E',
-                templateUrl: 'common/templates/about/menu.html'
-            };
-        }
-
-    );
+);

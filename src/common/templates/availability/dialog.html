@@ -1,12 +1,5 @@
 <md-dialog ng-init="init()" aria-label="Availability Dialog">
 
-    <style type="text/css">
-        @keyframes sn-sch-table-overlay-right {
-            from { width: {{ animation.initial_width }}; }
-            to { width: {{ animation.final_width }}; }
-        }
-    </style>
-
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
             <span>Availability Slots</span>
@@ -14,84 +7,7 @@
     </md-toolbar>
 
     <md-content id="sn-sch-md-content">
-
-        <div class="sn-sch-table-wrap">
-
-            <div class="sn-sch-table-overlay">
-                <div class="sn-sch-table-overlay-left" ng-style="_getCSSGsIdWidth()"></div>
-                <div class="sn-sch-table-overlay-container">
-                    <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
-                </div>
-            </div>
-
-            <table id="a-slots-timeline" class="sn-sch-table">
-
-                <colgroup>
-                    <col class="sn-sch-gs-col"/>
-                </colgroup>
-
-                <tr>
-                    <td class="sn-sch-corner-top" ng-style="_getCSSGsIdWidth()"/>
-                    <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
-                        <sn-timeline/>
-                    </td>
-                </tr>
-
-                <tr ng-repeat="(gs, slots) in gui.slots">
-                    <td class="sn-sch-gs-id" ng-style="_getCSSGsIdWidth()">
-                        <p>{{ gs }}</p>
-                    </td>
-                    <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
-                        <div class="sn-sch-row-container">
-
-                        <table class="sn-sch-row-table">
-
-                            <colgroup ng-repeat="d in gui.days">
-                                <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
-                                <col class="sn-sch-day-col"/>
-                            </colgroup>
-
-                            <tr>
-                                <td ng-repeat="t in gui.times track by $index"
-                                    ng-style="_getCSSGsIdWidth()"/>
-                            </tr>
-
-                        </table>
-
-                            <div class="sn-sch-row-overlay">
-                                <div class="sn-sch-slot-container">
-                                    <div class="sn-sch-slot"
-                                         ng-repeat="s in slots"
-                                         ng-style="{'left': s.slot.left + '%', 'width': s.slot.width + '%'}">
-                                    </div>
-                                    <div class="sn-sch-slot-info"
-                                         ng-repeat="s in slots"
-                                         ng-style="{'left': ( s.slot.left + 1) + '%'}">
-                                        <ul>
-                                            <li>{{ s.slot.id }}</li>
-                                            <li>{{ s.slot.s_date }}</li>
-                                            <li>{{ s.slot.e_date }}</li>
-                                        </ul>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="sn-sch-corner-bottom" ng-style="_getCSSGsIdWidth()"/>
-                    <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
-                        <sn-timeline/>
-                    </td>
-                </tr>
-
-            </table>
-
-        </div>
-
+        <sn-availability-scheduler/>
     </md-content>
 
     <md-content class="add-gs-dialog menu-list">

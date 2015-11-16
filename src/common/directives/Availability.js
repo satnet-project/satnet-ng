@@ -20,8 +20,8 @@ angular.module('snAvailabilityDirective', [
     'snJRPCServices',
     'snTimelineServices'
 ])
-.controller('snAvailabilityDlgCtrl', [
-    '$scope', '$log', '$mdDialog',
+.controller('snAvailabilitySchCtrl', [
+    '$scope', '$log',
     'satnetRPC', 'snDialog',
     'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
     'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
@@ -29,17 +29,19 @@ angular.module('snAvailabilityDirective', [
     'timeline',
 
     /**
-     * Controller function for handling the SatNet availability dialog.
+     * Controller function for handling the SatNet availability scheduler.
      *
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $log, $mdDialog, satnetRPC, snDialog,
+        $scope, $log,
+        satnetRPC, snDialog,
         SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
         SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
         SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
         timeline
     ) {
+
 
         /** Object that holds the configuration for the timeline animation */
         $scope.animation = {
@@ -50,13 +52,6 @@ angular.module('snAvailabilityDirective', [
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Function that closes the dialog.
-         */
-        $scope.close = function () {
-            $mdDialog.hide();
-        };
 
         /**
          * Initializes the animation to be displayed over the timeline.
@@ -74,9 +69,6 @@ angular.module('snAvailabilityDirective', [
             $scope.animation.final_width = '' + scaled_w.toFixed(3) + '%';
             $scope.animation.duration = '' + $scope.gui.total_s;
 
-            console.log('>>>> duration_s = ' + $scope.gui.total_s);
-            console.log('>>>> animation duration = ' + $scope.animation.duration);
-            
         };
 
         /**
@@ -298,6 +290,40 @@ angular.module('snAvailabilityDirective', [
             });
 
         };
+
+    }
+])
+.directive('snAvailabilityScheduler',
+
+    /**
+     * Function that creates the directive to embed the availability scheduler
+     * wherever it is necessary within the application.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'common/templates/availability/scheduler.html'
+        };
+    }
+
+)
+.controller('snAvailabilityDlgCtrl', [
+    '$scope', '$mdDialog',
+
+    /**
+     * Controller function for handling the SatNet availability dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $mdDialog) {
+
+        /**
+         * Function that closes the dialog.
+         */
+        $scope.close = function () { $mdDialog.hide(); };
 
     }
 

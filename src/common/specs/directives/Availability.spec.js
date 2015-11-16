@@ -29,7 +29,7 @@ describe('Testing Availability directive', function () {
         SN_SCH_HOUR_FORMAT,
         SN_SCH_GS_ID_MAX_LENGTH,
         __mock__cookies = {},
-        $controller, dialogCtrl,
+        $controller, dialogCtrl, schedulerCtrl,
         $body = $("body"),
         html = "<sn-availability/>";
 
@@ -72,8 +72,12 @@ describe('Testing Availability directive', function () {
 
         dialogCtrl = $controller("snAvailabilityDlgCtrl", {
             $scope: $scope,
+            $mdDialog: $mdDialog
+        });
+
+        schedulerCtrl = $controller("snAvailabilitySchCtrl", {
+            $scope: $scope,
             $log: $log,
-            $mdDialog: $mdDialog,
             snDialog: snDialog,
             SN_SCH_TIMELINE_DAYS: SN_SCH_TIMELINE_DAYS,
             SN_SCH_HOURS_DAY: SN_SCH_HOURS_DAY,
@@ -82,7 +86,7 @@ describe('Testing Availability directive', function () {
             SN_SCH_HOUR_FORMAT: SN_SCH_HOUR_FORMAT,
             SN_SCH_GS_ID_MAX_LENGTH: SN_SCH_GS_ID_MAX_LENGTH,
             timeline: timeline
-        });
+        })
 
         $body.append($directive);
         $rootScope.$digest();
@@ -156,7 +160,7 @@ describe('Testing Availability directive', function () {
                 moment(x_day_2).format('DD-MM'),
                 moment(x_day_3).format('DD-MM')
             ],
-            dlgCtrl = $controller("snAvailabilityDlgCtrl", {
+            dlgCtrl = $controller("snAvailabilitySchCtrl", {
                 $scope: $c_scope,
                 $mdDialog: $mdDialog
             });
