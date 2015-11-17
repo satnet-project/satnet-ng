@@ -128,18 +128,47 @@ describe('Testing the Timeline Services', function () {
 
     });
 
-    it('should return the width for the hours column', function () {
+    /* ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
 
-        var cfg = {
-                max_width: 90,
-                max_no_cols: 9
+    // TODO :: use mocked common reference time instead of moment() both
+    //          for the test and for the code; otherwise, the moment()
+    //          objects will differ by miliseconds...
+
+    it('should create the values for the animation', function () {
+
+        var $c_scope = $rootScope.$new(),
+            x_day_1 = moment().hours(0).minutes(0).seconds(0),
+            end_d =  moment(x_day_1).add(2, 'days'),
+            now = moment(),
+            x_animation = {
+                duration: '',
+                initial_width: '',
+                final_width: '100%'
             },
-            x_width = '10.000%';
+            dlgCtrl = $controller("snAvailabilityDlgCtrl", {
+                $scope: $c_scope,
+                $mdDialog: $mdDialog
+            }),
+            ellapsed_s = moment(now).unix() - moment(x_day_1).unix(),
+            total_s = moment(end_d).unix() - moment(x_day_1).unix();
 
-        expect(timeline.getCSSHoursWidth(cfg)).toEqual({
-            'width': x_width
-        });
+        x_animation.duration = '' + ( total_s - ellapsed_s );
+        x_animation.initial_width = '' +
+            ( ( ellapsed_s / total_s ) * 100 ).toFixed(3) + '%';
+
+        expect(dlgCtrl).not.toBeNull();
+
+        $c_scope.init();
+        $rootScope.$digest();
+        
+        expect($c_scope.animation).toEqual(x_animation);
 
     });
+
+    // ************************************************************************
+    // ************************************************************************
+    // ********************************************************************* */
 
 });

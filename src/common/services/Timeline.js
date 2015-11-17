@@ -146,18 +146,6 @@ angular.module('snTimelineServices', [])
         };
 
         /**
-         * Function that returns the width of a any column within the timeline.
-         * 
-         * @param   {Object} cfg Object containing timeline's configuration
-         * @returns {Object} CSS ng-style object with the calculated width
-         */
-        this.getCSSHoursWidth = function (cfg) {
-            return {
-                'width': (cfg.max_width / cfg.max_no_cols).toFixed(3) + '%'
-            };
-        };
-
-        /**
          * Function that returns the CSS animation decorator adapting it to the
          * estimated duration.
          * 

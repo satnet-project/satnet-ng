@@ -1,11 +1,11 @@
-<div ng-controller="snAvailabilitySchCtrl"
+<div ng-controller="snOperationalSchCtrl"
      ng-init="init()"
      class="sn-sch-table-wrap">
 
     <style type="text/css">
         @keyframes sn-sch-table-overlay-right {
-            from { width: {{ gui.animation.initial_width }}; }
-            to { width: {{ gui.animation.final_width }}; }
+            from { width: {{ animation.initial_width }}; }
+            to { width: {{ animation.final_width }}; }
         }
     </style>
 
@@ -14,7 +14,7 @@
              ng-style="{'width': '' + gui.gs_id_width}"></div>
         <div class="sn-sch-table-overlay-container">
             <div class="sn-sch-table-overlay-right"
-                 ng-style="{ 'animation': 'sn-sch-table-overlay-right  ' + gui.animation.duration + 's ' + ' linear', 'width': gui.animation.initial_width }"></div>
+                 ng-style="{ 'animation': 'sn-sch-table-overlay-right  ' + $scope.animation.duration + 's ' + ' linear', 'width': $scope.animation.initial_width }"></div>
         </div>
     </div>
 

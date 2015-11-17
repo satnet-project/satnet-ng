@@ -7,7 +7,7 @@
         <tr>
             <td class="sn-sch-axis-time"
                 ng-repeat="t in gui.times track by $index"
-                ng-style="_getCSSHoursWidth()">
+                ng-style="{'width': '' + gui.gs_id_width}">
                 <span>{{ t }}</span>
             </td>
         </tr>

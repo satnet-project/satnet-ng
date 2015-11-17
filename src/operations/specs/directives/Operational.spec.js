@@ -16,22 +16,16 @@
  * Created by rtubio on 10/26/15.
  */
 
-describe('Testing Availability directive', function () {
+describe('Testing Operational directive', function () {
 
     var $compile, $directive,
         $log, $mdDialog,
         $rootScope, $scope,
-        timeline, snDialog,
-        SN_SCH_TIMELINE_DAYS,
-        SN_SCH_HOURS_DAY,
-        SN_SCH_GS_ID_WIDTH,
-        SN_SCH_DATE_FORMAT,
-        SN_SCH_HOUR_FORMAT,
-        SN_SCH_GS_ID_MAX_LENGTH,
+        snDialog,
         __mock__cookies = {},
-        $controller, dialogCtrl, schedulerCtrl,
+        $controller, dialogCtrl,
         $body = $("body"),
-        html = "<sn-availability></sn-availability>";
+        html = "<sn-operational></sn-operational>";
 
     beforeEach(function () {
 
@@ -40,7 +34,7 @@ describe('Testing Availability directive', function () {
             'snControllers',
             'snTimelineServices',
             'snTimelineDirective',
-            'snAvailabilityDirective',
+            'snOperationalDirective',
             'snJRPCMock'
         );
 
@@ -57,35 +51,15 @@ describe('Testing Availability directive', function () {
             $log = $injector.get('$log');
 
             snDialog = $injector.get('snDialog');
-            timeline = $injector.get('timeline');
-            SN_SCH_TIMELINE_DAYS = $injector.get('SN_SCH_TIMELINE_DAYS');
-            SN_SCH_HOURS_DAY = $injector.get('SN_SCH_HOURS_DAY');
-            SN_SCH_GS_ID_WIDTH = $injector.get('SN_SCH_GS_ID_WIDTH');
-            SN_SCH_DATE_FORMAT = $injector.get('SN_SCH_DATE_FORMAT');
-            SN_SCH_HOUR_FORMAT = $injector.get('SN_SCH_HOUR_FORMAT');
-            SN_SCH_GS_ID_MAX_LENGTH = $injector.get('SN_SCH_GS_ID_MAX_LENGTH');
 
         });
 
         $scope = $rootScope.$new();
         $directive = $compile(angular.element(html))($scope);
 
-        dialogCtrl = $controller("snAvailabilityDlgCtrl", {
+        dialogCtrl = $controller("snOperationalDlgCtrl", {
             $scope: $scope,
             $mdDialog: $mdDialog
-        });
-
-        schedulerCtrl = $controller("snAvailabilitySchCtrl", {
-            $scope: $scope,
-            $log: $log,
-            snDialog: snDialog,
-            SN_SCH_TIMELINE_DAYS: SN_SCH_TIMELINE_DAYS,
-            SN_SCH_HOURS_DAY: SN_SCH_HOURS_DAY,
-            SN_SCH_GS_ID_WIDTH: SN_SCH_GS_ID_WIDTH,
-            SN_SCH_DATE_FORMAT: SN_SCH_DATE_FORMAT,
-            SN_SCH_HOUR_FORMAT: SN_SCH_HOUR_FORMAT,
-            SN_SCH_GS_ID_MAX_LENGTH: SN_SCH_GS_ID_MAX_LENGTH,
-            timeline: timeline
         });
 
         $body.append($directive);
@@ -100,29 +74,29 @@ describe('Testing Availability directive', function () {
         $body.empty();
     });
 
-    it('should add a COMPAT button on the menu with an icon', function () {
+    it('should add a button on the menu with an icon', function () {
 
-        var button = $('#menuAvailability'),
-            icon = $('.fa-clock-o'),
-            label = $('#menuAvailability div b');
+        var button = $('#menuOperational'),
+            icon = $('.fa-skyatlas'),
+            label = $('#menuOperational div b');
         expect(button.length).toBe(1);
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
-        expect(label.text()).toBe('availability');
+        expect(label.text()).toBe('operational');
 
     });
 
-    it('should show the COMPAT dialog and hide it', function () {
+    it('should show the dialog and hide it', function () {
 
-        var button = $('#menuAvailability').eq(0);
+        var button = $('#menuOperational').eq(0);
         expect(button).toBeDefined();
 
         expect($mdDialog.show).not.toHaveBeenCalled();
         expect($mdDialog.hide).not.toHaveBeenCalled();
         button.click();
         expect($mdDialog.show).toHaveBeenCalledWith({
-            templateUrl: 'common/templates/availability/dialog.html',
-            controller: 'snAvailabilityDlgCtrl'
+            templateUrl: 'operations/templates/operational/dialog.html',
+            controller: 'snOperationalDlgCtrl'
         });
         expect($mdDialog.hide).not.toHaveBeenCalled();
 
@@ -131,23 +105,6 @@ describe('Testing Availability directive', function () {
 
         $scope.close();
         expect($mdDialog.hide).toHaveBeenCalled();
-
-    });
-
-    it('should initialize the controller for the scheduler', function () {
-
-        var $c_scope = $rootScope.$new(),
-            schedulerCtrl = $controller("snAvailabilitySchCtrl", {
-                $scope: $c_scope,
-                $mdDialog: $mdDialog
-            });
-
-        expect(schedulerCtrl).not.toBeNull();
-
-        $c_scope.init();
-        $rootScope.$digest();
-
-        expect(Object.keys($c_scope.gui.slots).length).toEqual(3);
 
     });
 

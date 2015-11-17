@@ -38,15 +38,6 @@ angular.module('snTimelineDirective', ['snTimelineServices'])
         $scope.gui = null;
 
         /**
-         * Returns the CSS object with the width for the hours of the timeline.
-         * 
-         * @returns {Object} CSS object with the width
-         */
-        $scope._getCSSHoursWidth = function () {
-            timeline.getCSSHoursWidth($scope.gui);
-        };
-
-        /**
          * Function that initializes the object with the configuration for the
          * GUI.
          */

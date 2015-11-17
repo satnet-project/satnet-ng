@@ -1654,18 +1654,6 @@ angular.module('snTimelineServices', [])
         };
 
         /**
-         * Function that returns the width of a any column within the timeline.
-         * 
-         * @param   {Object} cfg Object containing timeline's configuration
-         * @returns {Object} CSS ng-style object with the calculated width
-         */
-        this.getCSSHoursWidth = function (cfg) {
-            return {
-                'width': (cfg.max_width / cfg.max_no_cols).toFixed(3) + '%'
-            };
-        };
-
-        /**
          * Function that returns the CSS animation decorator adapting it to the
          * estimated duration.
          * 
@@ -3083,72 +3071,8 @@ angular.module('snAvailabilityDirective', [
         timeline
     ) {
 
-
-        /** Object that holds the configuration for the timeline animation */
-        $scope.animation = {
-            duration: '5',
-            initial_width: '0%',
-            final_width: '0%'
-        };
-
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Initializes the animation to be displayed over the timeline.
-         */
-        $scope.initAnimation = function () {
-
-            var now = moment(),
-                now_s = moment(now).unix(),
-                ellapsed_s = now_s - $scope.gui.start_d_s,
-                ellapsed_p = ellapsed_s /  $scope.gui.total_s,
-                scaled_p = ellapsed_p * $scope.gui.scale_width * 100,
-                scaled_w = $scope.gui.scaled_width;
-
-            $scope.animation.initial_width = '' + scaled_p.toFixed(3) + '%';
-            $scope.animation.final_width = '' + scaled_w.toFixed(3) + '%';
-            $scope.animation.duration = '' + $scope.gui.total_s;
-
-        };
-
-        /**
-         * Function that returns the CSS animation decorator adapting it to the
-         * estimated duration.
-         * 
-         * @returns {Object} ng-style CSS animation object
-         */
-        $scope._getCSSAnimation = function () {
-            return {
-                'animation': 'sn-sch-table-overlay-right  ' +
-                    $scope.animation.duration + 's ' + ' linear',
-                'width': $scope.animation.initial_width
-            };
-        };
-
-        /**
-         * Returns the CSS object for ng-style with the width of the cells
-         * within the column of the Ground Station ID.
-         * 
-         * @returns {Object} CSS object with the width
-         */
-        $scope._getCSSGsIdWidth = function () {
-            return {
-                'width': $scope.gui.gs_id_width
-            };
-        };
-
-        /**
-         * Returns the CSS object for ng-style with the width of the overlay for
-         * the time marker animation.
-         * 
-         * @returns {Object} CSS object with the width
-         */
-        $scope._getCSSOverlayWidth = function () {
-            return {
-                'width': (100 - SN_SCH_GS_ID_WIDTH) + '%'
-            };
-        };
 
         /**
          * Function that discards the given slot depending on whether it is
@@ -3234,17 +3158,21 @@ angular.module('snAvailabilityDirective', [
          *                                  date of the timeline
          * @param   {Object} end_d            moment.js object with th end
          *                                  date of the timeline
+         * @param {Function} createSlot Function that creates a slot with the
+         *                              given processed data
          * @returns {Object} Dictionary addressed with the identifiers of the
          *                   Ground Stations as keys, whose values are the
          *                   filtered slots.
          */
-        $scope.filter_slots = function (groundstation_id, slots) {
+        $scope.filter_slots = function (
+            groundstation_id, slots, start_d, end_d, createSlot
+        ) {
 
             var results = [];
 
             console.log(
-                '%%%% WINDOW: (' + moment($scope.gui.start_d).format() +
-                ', ' + moment($scope.gui.end_d).format() + ')'
+                '%%%% WINDOW: (' + moment(start_d).format() +
+                ', ' + moment(end_d).format() + ')'
             );
 
             for (var i = 0; i < slots.length; i++ ) {
@@ -3265,7 +3193,7 @@ angular.module('snAvailabilityDirective', [
                 var n_slot = $scope.normalizeSlot(slot_s, slot_e);
 
                 // 2) The resulting slot is added to the results array
-                results.push($scope.createSlot(raw_slot, n_slot));
+                results.push(createSlot(raw_slot, n_slot));
 
                 console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
@@ -3308,22 +3236,20 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.init = function () {
 
-            // 1.a> init days and hours for the axis
+            // 1> init days and hours for the axis
             $scope.gui = timeline.initScope();
-            // 1.b> init the animation
-            $scope.initAnimation();
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
 
                 angular.forEach(results, function (gs_id) {
-                    
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = $scope.filter_slots(
-                            gs_id, results.slots
+                            gs_id, results.slots,
+                            $scope.gui.start_d, $scope.gui.end_d,
+                            $scope.createSlot
                         );
                     });
-
                 });
 
             }).catch(function (cause) {
@@ -3772,15 +3698,6 @@ angular.module('snTimelineDirective', ['snTimelineServices'])
     ) {
 
         $scope.gui = null;
-
-        /**
-         * Returns the CSS object with the width for the hours of the timeline.
-         * 
-         * @returns {Object} CSS object with the width
-         */
-        $scope._getCSSHoursWidth = function () {
-            timeline.getCSSHoursWidth($scope.gui);
-        };
 
         /**
          * Function that initializes the object with the configuration for the
@@ -5479,7 +5396,88 @@ angular.module('snOperationsMap', [
     }
 
 );
-;;/*
+;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snOperationalDirective', [
+    'ngMaterial',
+    'snControllers',
+    'snJRPCServices',
+    'snTimelineServices'
+])
+.controller('snOperationalDlgCtrl', [
+    '$scope', '$mdDialog',
+
+    /**
+     * Controller function for handling the SatNet operational dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $mdDialog) {
+
+        /**
+         * Function that closes the dialog.
+         */
+        $scope.close = function () { $mdDialog.hide(); };
+
+    }
+
+])
+.controller('snOperationalCtrl', ['$scope', '$mdDialog',
+
+    /**
+     * Controller function for opening the SatNet operational dialog.
+     *
+     * @param {Object} $scope    $scope for the controller
+     * @param {Object} $mdDialog Angular material Dialog service
+     */
+    function ($scope, $mdDialog) {
+
+        /**
+         * Function that opens the dialog when the snOperational button is
+         * clicked.
+         */
+        $scope.openDialog = function () {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/operational/dialog.html',
+                controller: 'snOperationalDlgCtrl'
+            });
+        };
+
+    }
+
+])
+.directive('snOperational',
+
+    /**
+     * Function that creates the directive itself returning the object required
+     * by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with restrict
+     *                   and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/operational/menu.html'
+        };
+    }
+
+);
+;/*
    Copyright 2015 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -5508,6 +5506,7 @@ angular.module('snOperationsDirective', [
     'snAboutDirective',
     'snCompatibilityDirective',
     'snAvailabilityDirective',
+    'snOperationalDirective',
     'snRuleFilters',
     'snLoggerFilters',
     'snControllers',
@@ -5531,16 +5530,15 @@ angular.module('snOperationsDirective', [
      *                              Material.
      */
     function ($scope, $mdSidenav) {
-            /**
+
+        /**
          * Handler to toggle the menu on and off. It is based on the
          * $mdSidenav service provided by Angular Material. Its main
          * objective is to provide a button overlayed over the map so that
          * in case the menu is hidden (due to the small size of the screen),
          * the menu can still be shown.
          */
-        $scope.toggleMenu = function () {
-            $mdSidenav("menu").toggle();
-        };
+        $scope.toggleMenu = function () { $mdSidenav("menu").toggle(); };
 
     }
 

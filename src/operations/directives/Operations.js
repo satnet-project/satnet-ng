@@ -27,6 +27,7 @@ angular.module('snOperationsDirective', [
     'snAboutDirective',
     'snCompatibilityDirective',
     'snAvailabilityDirective',
+    'snOperationalDirective',
     'snRuleFilters',
     'snLoggerFilters',
     'snControllers',
@@ -50,16 +51,15 @@ angular.module('snOperationsDirective', [
      *                              Material.
      */
     function ($scope, $mdSidenav) {
-            /**
+
+        /**
          * Handler to toggle the menu on and off. It is based on the
          * $mdSidenav service provided by Angular Material. Its main
          * objective is to provide a button overlayed over the map so that
          * in case the menu is hidden (due to the small size of the screen),
          * the menu can still be shown.
          */
-        $scope.toggleMenu = function () {
-            $mdSidenav("menu").toggle();
-        };
+        $scope.toggleMenu = function () { $mdSidenav("menu").toggle(); };
 
     }
 

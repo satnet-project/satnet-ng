@@ -42,72 +42,8 @@ angular.module('snAvailabilityDirective', [
         timeline
     ) {
 
-
-        /** Object that holds the configuration for the timeline animation */
-        $scope.animation = {
-            duration: '5',
-            initial_width: '0%',
-            final_width: '0%'
-        };
-
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Initializes the animation to be displayed over the timeline.
-         */
-        $scope.initAnimation = function () {
-
-            var now = moment(),
-                now_s = moment(now).unix(),
-                ellapsed_s = now_s - $scope.gui.start_d_s,
-                ellapsed_p = ellapsed_s /  $scope.gui.total_s,
-                scaled_p = ellapsed_p * $scope.gui.scale_width * 100,
-                scaled_w = $scope.gui.scaled_width;
-
-            $scope.animation.initial_width = '' + scaled_p.toFixed(3) + '%';
-            $scope.animation.final_width = '' + scaled_w.toFixed(3) + '%';
-            $scope.animation.duration = '' + $scope.gui.total_s;
-
-        };
-
-        /**
-         * Function that returns the CSS animation decorator adapting it to the
-         * estimated duration.
-         * 
-         * @returns {Object} ng-style CSS animation object
-         */
-        $scope._getCSSAnimation = function () {
-            return {
-                'animation': 'sn-sch-table-overlay-right  ' +
-                    $scope.animation.duration + 's ' + ' linear',
-                'width': $scope.animation.initial_width
-            };
-        };
-
-        /**
-         * Returns the CSS object for ng-style with the width of the cells
-         * within the column of the Ground Station ID.
-         * 
-         * @returns {Object} CSS object with the width
-         */
-        $scope._getCSSGsIdWidth = function () {
-            return {
-                'width': $scope.gui.gs_id_width
-            };
-        };
-
-        /**
-         * Returns the CSS object for ng-style with the width of the overlay for
-         * the time marker animation.
-         * 
-         * @returns {Object} CSS object with the width
-         */
-        $scope._getCSSOverlayWidth = function () {
-            return {
-                'width': (100 - SN_SCH_GS_ID_WIDTH) + '%'
-            };
-        };
 
         /**
          * Function that discards the given slot depending on whether it is
@@ -193,17 +129,21 @@ angular.module('snAvailabilityDirective', [
          *                                  date of the timeline
          * @param   {Object} end_d            moment.js object with th end
          *                                  date of the timeline
+         * @param {Function} createSlot Function that creates a slot with the
+         *                              given processed data
          * @returns {Object} Dictionary addressed with the identifiers of the
          *                   Ground Stations as keys, whose values are the
          *                   filtered slots.
          */
-        $scope.filter_slots = function (groundstation_id, slots) {
+        $scope.filter_slots = function (
+            groundstation_id, slots, start_d, end_d, createSlot
+        ) {
 
             var results = [];
 
             console.log(
-                '%%%% WINDOW: (' + moment($scope.gui.start_d).format() +
-                ', ' + moment($scope.gui.end_d).format() + ')'
+                '%%%% WINDOW: (' + moment(start_d).format() +
+                ', ' + moment(end_d).format() + ')'
             );
 
             for (var i = 0; i < slots.length; i++ ) {
@@ -224,7 +164,7 @@ angular.module('snAvailabilityDirective', [
                 var n_slot = $scope.normalizeSlot(slot_s, slot_e);
 
                 // 2) The resulting slot is added to the results array
-                results.push($scope.createSlot(raw_slot, n_slot));
+                results.push(createSlot(raw_slot, n_slot));
 
                 console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
@@ -267,22 +207,20 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.init = function () {
 
-            // 1.a> init days and hours for the axis
+            // 1> init days and hours for the axis
             $scope.gui = timeline.initScope();
-            // 1.b> init the animation
-            $scope.initAnimation();
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
 
                 angular.forEach(results, function (gs_id) {
-                    
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = $scope.filter_slots(
-                            gs_id, results.slots
+                            gs_id, results.slots,
+                            $scope.gui.start_d, $scope.gui.end_d,
+                            $scope.createSlot
                         );
                     });
-
                 });
 
             }).catch(function (cause) {
