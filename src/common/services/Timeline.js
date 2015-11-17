@@ -51,22 +51,22 @@ angular.module('snTimelineServices', [])
          * 
          * @param {Object} x_scope Object with timeline's configuration
          */
-        this.initScopeTimes = function (x_scope) {
+        this.initTimeScope = function (scope) {
 
             var day = moment().hours(0).minutes(0).seconds(0);
 
-            while (day.isBefore(x_scope.end_d)) {
+            while (day.isBefore(scope.end_d)) {
 
                 var hour = moment().hours(0).minutes(0).seconds(0),
                     day_s = moment(day).format(SN_SCH_DATE_FORMAT);
 
-                x_scope.days.push(day_s);
-                x_scope.times.push(day_s);
+                scope.days.push(day_s);
+                scope.times.push(day_s);
 
-                for (var i = 0; i < ( x_scope.hours_per_day - 1 ); i++) {
+                for (var i = 0; i < ( scope.hours_per_day - 1 ); i++) {
 
-                    hour = moment(hour).add(x_scope.hour_step, 'hours');
-                    x_scope.times.push(hour.format(SN_SCH_HOUR_FORMAT));
+                    hour = moment(hour).add(scope.hour_step, 'hours');
+                    scope.times.push(hour.format(SN_SCH_HOUR_FORMAT));
 
                 }
 
@@ -76,6 +76,26 @@ angular.module('snTimelineServices', [])
 
         };
 
+        /**
+         * Initializes the animation to be displayed over the timeline.
+         */
+        this.initAnimationScope = function (scope) {
+
+            var now = moment(),
+                now_s = moment(now).unix(),
+                ellapsed_s = now_s - scope.start_d_s,
+                ellapsed_p = ellapsed_s /  scope.total_s,
+                scaled_p = ellapsed_p * scope.scale_width * 100,
+                scaled_w = scope.scaled_width;
+
+            scope.animation = {
+                initial_width: '' + scaled_p.toFixed(3) + '%',
+                final_width: '' + scaled_w.toFixed(3) + '%',
+                duration: '' + scope.total_s
+            };
+
+        };
+  
         /**
          * Function that initializes the dictionary with the days and hours for
          * the axis of the timeline. It simply contains as many days as
@@ -100,7 +120,12 @@ angular.module('snTimelineServices', [])
                 max_no_cols: -1,
                 days: [],
                 times: [],
-                slots: {}
+                slots: {},
+                animation: {
+                    initial_width: '',
+                    final_width: '',
+                    duration: ''
+                }
             };
 
             scope.end_d = moment(scope.start_d).add(scope.no_days, 'days');
@@ -113,7 +138,8 @@ angular.module('snTimelineServices', [])
             scope.no_cols = scope.hours_per_day - 1;
             scope.max_no_cols = scope.hours_per_day * scope.no_days;
 
-            this.initScopeTimes(scope);
+            this.initTimeScope(scope);
+            this.initAnimationScope(scope);
 
             return scope;
 
@@ -128,6 +154,21 @@ angular.module('snTimelineServices', [])
         this.getCSSHoursWidth = function (cfg) {
             return {
                 'width': (cfg.max_width / cfg.max_no_cols).toFixed(3) + '%'
+            };
+        };
+
+        /**
+         * Function that returns the CSS animation decorator adapting it to the
+         * estimated duration.
+         * 
+         * @param   {Object} cfg Object containing timeline's configuration
+         * @returns {Object} ng-style CSS animation object
+         */
+        this.getCSSAnimation = function (cfg) {
+            return {
+                'animation': 'sn-sch-table-overlay-right  ' +
+                    cfg.animation.duration + 's ' + ' linear',
+                'width': cfg.animation.initial_width
             };
         };
 

@@ -1,4 +1,4 @@
-<div ng-controller="snAvailabilitySchCtrl" class="sn-sch-table-wrap">
+<div ng-controller="snAvailabilitySchCtrl" ng-init="init()" class="sn-sch-table-wrap">
 
     <style type="text/css">
         @keyframes sn-sch-table-overlay-right {
@@ -8,9 +8,11 @@
     </style>
 
     <div class="sn-sch-table-overlay">
-        <div class="sn-sch-table-overlay-left" ng-style="_getCSSGsIdWidth()"></div>
+        <div class="sn-sch-table-overlay-left"
+             ng-style="{'width': '' + gui.gs_id_width}"></div>
         <div class="sn-sch-table-overlay-container">
-            <div class="sn-sch-table-overlay-right" ng-style="_getCSSAnimation()"></div>
+            <div class="sn-sch-table-overlay-right"
+                 ng-style="_getCSSAnimation()"></div>
         </div>
     </div>
 
@@ -21,14 +23,16 @@
         </colgroup>
 
         <tr>
-            <td class="sn-sch-corner-top" ng-style="_getCSSGsIdWidth()"/>
+            <td class="sn-sch-corner-top"
+                ng-style="{'width': '' + gui.gs_id_width}"/>
             <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
                 <sn-timeline/>
             </td>
         </tr>
 
         <tr ng-repeat="(gs, slots) in gui.slots">
-            <td class="sn-sch-gs-id" ng-style="_getCSSGsIdWidth()">
+            <td class="sn-sch-gs-id"
+                ng-style="{'width': '' + gui.gs_id_width}">
                 <p>{{ gs }}</p>
             </td>
             <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
@@ -43,7 +47,7 @@
 
                     <tr>
                         <td ng-repeat="t in gui.times track by $index"
-                            ng-style="_getCSSGsIdWidth()"/>
+                            ng-style="{'width': '' + gui.gs_id_width}"/>
                     </tr>
 
                 </table>
@@ -72,7 +76,8 @@
         </tr>
 
         <tr>
-            <td class="sn-sch-corner-bottom" ng-style="_getCSSGsIdWidth()"/>
+            <td class="sn-sch-corner-bottom"
+                ng-style="{'width': '' + gui.gs_id_width}"/>
             <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
                 <sn-timeline/>
             </td>

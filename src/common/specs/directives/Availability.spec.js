@@ -86,7 +86,7 @@ describe('Testing Availability directive', function () {
             SN_SCH_HOUR_FORMAT: SN_SCH_HOUR_FORMAT,
             SN_SCH_GS_ID_MAX_LENGTH: SN_SCH_GS_ID_MAX_LENGTH,
             timeline: timeline
-        })
+        });
 
         $body.append($directive);
         $rootScope.$digest();
@@ -101,6 +101,7 @@ describe('Testing Availability directive', function () {
     });
 
     it('should add a COMPAT button on the menu with an icon', function () {
+
         var button = $('#menuAvailability'),
             icon = $('.fa-clock-o'),
             label = $('#menuAvailability div b');
@@ -108,6 +109,7 @@ describe('Testing Availability directive', function () {
         expect(icon.length).toBe(1);
         expect(label.length).toBe(1);
         expect(label.text()).toBe('availability');
+
     });
 
     it('should show the COMPAT dialog and hide it', function () {
@@ -132,48 +134,23 @@ describe('Testing Availability directive', function () {
 
     });
 
-    it('should load the availability information for all GSs', function () {
+    it('should initialize the controller for the scheduler', function () {
 
         var $c_scope = $rootScope.$new(),
-            dlgCtrl = $controller("snAvailabilityDlgCtrl", {
+            schedulerCtrl = $controller("snAvailabilitySchCtrl", {
                 $scope: $c_scope,
                 $mdDialog: $mdDialog
             });
 
-        expect(dlgCtrl).not.toBeNull();
+        expect(schedulerCtrl).not.toBeNull();
 
         $c_scope.init();
         $rootScope.$digest();
 
-        expect();
+        expect(Object.keys($c_scope.gui.slots).length).toEqual(3);
 
     });
-
-    it('should create the times for the axis', function () {
-
-        var $c_scope = $rootScope.$new(),
-            x_day_1 = moment().hours(0).minutes(0).seconds(0),
-            x_day_2 = moment(x_day_1).add(1, 'days'),
-            x_day_3 = moment(x_day_2).add(1, 'days'),
-            x_days = [
-                moment(x_day_1).format('DD-MM'),
-                moment(x_day_2).format('DD-MM'),
-                moment(x_day_3).format('DD-MM')
-            ],
-            dlgCtrl = $controller("snAvailabilitySchCtrl", {
-                $scope: $c_scope,
-                $mdDialog: $mdDialog
-            });
-
-        expect(dlgCtrl).not.toBeNull();
-
-        $c_scope.init();
-        $rootScope.$digest();
-
-        expect($c_scope.gui.days).toEqual(x_days);
-
-    });
-
+    
     /* ************************************************************************
     // ************************************************************************
     // ************************************************************************
