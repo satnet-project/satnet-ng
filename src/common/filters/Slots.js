@@ -32,8 +32,6 @@ angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
 
         return function (slots) {
 
-            console.log('FFFF slots = ' + JSON.stringify(slots));
-
             if (!slots) { return []; }
             if (slots.length === 0) { return []; }
 
@@ -47,7 +45,6 @@ angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
                 );
             });
 
-            console.log('FFFF R_SLOTS = ' + JSON.stringify(slots));
             return r_slots;
 
         };

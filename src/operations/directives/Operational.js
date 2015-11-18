@@ -20,6 +20,129 @@ angular.module('snOperationalDirective', [
     'snJRPCServices',
     'snTimelineServices'
 ])
+.controller('snOperationalSchCtrl', [
+    '$scope', '$log',
+    'satnetRPC', 'snDialog',
+    'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
+
+    /**
+     * Controller function for handling the SatNet availability scheduler.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $log,
+        satnetRPC, snDialog,
+        SN_SCH_GS_ID_MAX_LENGTH, timeline
+    ) {
+
+        /** Object with the configuration for the GUI */
+        $scope.gui = null;
+
+        /**
+         * Creates a slot that can be displayed within the GUI.
+         * 
+         * @param {Object} raw_slot Non-modified original slot
+         * @param {Object} n_slot Normalized slot
+         * @returns {Object} GUI displayable slot
+         */
+        $scope.createSlot = function (raw_slot, n_slot) {
+
+            var slot_s_s = moment(n_slot.start).unix(),
+                slot_e_s = moment(n_slot.end).unix(),
+                start_s = slot_s_s - $scope.gui.start_d_s,
+                slot_l = (start_s / $scope.gui.total_s) * 100,
+                slot_duration_s = slot_e_s - slot_s_s,
+                slot_w = (slot_duration_s / $scope.gui.total_s) * 100,
+                id = raw_slot.identifier + '';
+
+            return {
+                raw_slot: raw_slot,
+                slot: {
+                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                    s_date: moment(n_slot.start).format(),
+                    e_date: moment(n_slot.end).format(),
+                    left: slot_l.toFixed(3),
+                    width: slot_w.toFixed(3)
+                }
+            };
+
+        };
+
+        /**
+         * Promise function that should be used to retrieve the availability
+         * slots for each of the Ground Stations.
+         * 
+         * @param {String} groundstation_id Ground Station identifier
+         */
+        $scope.getGSSlots = function (groundstation_id) {
+            return satnetRPC.rCall('gs.availability', [groundstation_id]).then(
+                function (results) {
+                    return {
+                        groundstation_id: groundstation_id,
+                        slots: results
+                    };
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception(
+                        'gs.availability', groundstation_id, cause
+                    );
+                }
+            );
+        };
+
+        /**
+         * Function that initializes the data structures for the visualization
+         * of the available operational slots. The following data structures
+         * have to be pulled out of the server:
+         * 
+         * 1) retrieve all the ground station identifiers from the server,
+         * 2) retrieve the operatonal slots for the ground stations.
+         */
+        $scope.init = function () {
+
+            // 1> init days and hours for the axis
+            $scope.gui = timeline.initScope();
+
+            // 2> all the Ground Stations are retrieved
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+
+                angular.forEach(results, function (gs_id) {
+                    $scope.getGSSlots(gs_id).then(function (results) {
+                        $scope.gui.slots[gs_id] = timeline.filterSlots(
+                            $scope.gui,
+                            gs_id, results.slots,
+                            $scope.createSlot
+                        );
+                    });
+                });
+
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', [], cause);
+            });
+
+        };
+
+    }
+])
+.directive('snOperationalScheduler',
+
+    /**
+     * Function that creates the directive to embed the availability scheduler
+     * wherever it is necessary within the application.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/operational/scheduler.html'
+        };
+    }
+
+)
 .controller('snOperationalDlgCtrl', [
     '$scope', '$mdDialog',
 

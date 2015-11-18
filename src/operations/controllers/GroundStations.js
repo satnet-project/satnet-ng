@@ -292,8 +292,6 @@ angular.module(
          */
         $scope.init = function () {
 
-            console.log('init!!!');
-
             if (isEditing) {
                 $scope.loadConfiguration();
             } else {

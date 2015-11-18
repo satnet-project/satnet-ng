@@ -46,6 +46,100 @@ angular.module('snTimelineServices', [])
     ) {
 
         /**
+         * Function that discards the given slot depending on whether it is
+         * within the applicable window or outside.
+         * 
+         * @param   {Object} cfg    Configuration object by this service
+         * @param   {Object} start  moment.js slot start
+         * @param   {Object} end    moment.js slot end
+         * @returns {Boolean} 'true' if the object has to be discarded
+         */
+        this.discardSlot = function (cfg, start, end) {
+
+            if (moment(start).isBefore(cfg.start_d)) {
+                $log.warn('Slot discarded, too old!');
+                return true;
+            }
+            if (moment(end).isAfter(cfg.end_d)) {
+                $log.warn('Slot discarded, too futuristic!');
+                return true;
+            }
+            return false;
+
+        };
+
+        /**
+         * Function that normalizes a given slot, restricting its start and end
+         * to the upper and lower limits for the applicable window.
+         * 
+         * @param   {Object} cfg    Configuration object by this service
+         * @param   {Object} start  moment.js slot start
+         * @param   {Object} end    moment.js slot end
+         */
+        this.normalizeSlot = function (cfg, start, end) {
+
+            start = moment(start).isBefore(cfg.start_d) ? cfg.start_d : start;
+            end = moment(end).isAfter(cfg.end_d) ? cfg.end_d : end;
+
+            return { start: start, end: end };
+
+        };
+
+        /**
+         * This function filters all the slots for a given ground station and
+         * creates slot objects that can be directly positioned and displayed
+         * over a timeline.
+         * 
+         * @param   {String}   groundstation_id Identifier of the Ground Station
+         * @param   {Array}    slots            Array with the slots
+         * @param   {Object}   start_d          moment.js object with the start
+         *                                      date of the timeline
+         * @param   {Object}   end_d            moment.js object with th end
+         *                                      date of the timeline
+         * @param   {Function} createSlot       Function that creates a slot
+         *                                      with the given processed data
+         * @returns {Object}   Dictionary addressed with the identifiers of the
+         *                                      Ground Stations as keys, whose
+         *                                      values are the filtered slots
+         */
+        this.filterSlots = function (cfg, groundstation_id, slots, createSlot) {
+
+            var results = [];
+
+            console.log(
+                '%%%% WINDOW: (' + moment(cfg.start_d).format() +
+                ', ' + moment(cfg.end_d).format() + ')'
+            );
+
+            for (var i = 0; i < slots.length; i++ ) {
+
+                var raw_slot = slots[i],
+                    slot_s = moment(raw_slot.date_start),
+                    slot_e = moment(raw_slot.date_end);
+
+                // 0) Old or futuristic slots are discarded first.
+                if ( this.discardSlot(cfg, slot_s, slot_e) ) {
+                    continue;
+                }
+
+                console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
+
+                // 1) The dates are first normalized, so that the slots are
+                //      only displayed within the given start and end dates.
+                var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
+
+                // 2) The resulting slot is added to the results array
+                results.push(createSlot(raw_slot, n_slot));
+
+                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
+
+            }
+
+            return results;
+
+        };
+
+        /**
          * Function that initializes the days within the given scope for the
          * timeline.
          * 
@@ -143,21 +237,6 @@ angular.module('snTimelineServices', [])
 
             return scope;
 
-        };
-
-        /**
-         * Function that returns the CSS animation decorator adapting it to the
-         * estimated duration.
-         * 
-         * @param   {Object} cfg Object containing timeline's configuration
-         * @returns {Object} ng-style CSS animation object
-         */
-        this.getCSSAnimation = function (cfg) {
-            return {
-                'animation': 'sn-sch-table-overlay-right  ' +
-                    cfg.animation.duration + 's ' + ' linear',
-                'width': cfg.animation.initial_width
-            };
         };
 
     }

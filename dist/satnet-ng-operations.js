@@ -1554,6 +1554,100 @@ angular.module('snTimelineServices', [])
     ) {
 
         /**
+         * Function that discards the given slot depending on whether it is
+         * within the applicable window or outside.
+         * 
+         * @param   {Object} cfg    Configuration object by this service
+         * @param   {Object} start  moment.js slot start
+         * @param   {Object} end    moment.js slot end
+         * @returns {Boolean} 'true' if the object has to be discarded
+         */
+        this.discardSlot = function (cfg, start, end) {
+
+            if (moment(start).isBefore(cfg.start_d)) {
+                $log.warn('Slot discarded, too old!');
+                return true;
+            }
+            if (moment(end).isAfter(cfg.end_d)) {
+                $log.warn('Slot discarded, too futuristic!');
+                return true;
+            }
+            return false;
+
+        };
+
+        /**
+         * Function that normalizes a given slot, restricting its start and end
+         * to the upper and lower limits for the applicable window.
+         * 
+         * @param   {Object} cfg    Configuration object by this service
+         * @param   {Object} start  moment.js slot start
+         * @param   {Object} end    moment.js slot end
+         */
+        this.normalizeSlot = function (cfg, start, end) {
+
+            start = moment(start).isBefore(cfg.start_d) ? cfg.start_d : start;
+            end = moment(end).isAfter(cfg.end_d) ? cfg.end_d : end;
+
+            return { start: start, end: end };
+
+        };
+
+        /**
+         * This function filters all the slots for a given ground station and
+         * creates slot objects that can be directly positioned and displayed
+         * over a timeline.
+         * 
+         * @param   {String}   groundstation_id Identifier of the Ground Station
+         * @param   {Array}    slots            Array with the slots
+         * @param   {Object}   start_d          moment.js object with the start
+         *                                      date of the timeline
+         * @param   {Object}   end_d            moment.js object with th end
+         *                                      date of the timeline
+         * @param   {Function} createSlot       Function that creates a slot
+         *                                      with the given processed data
+         * @returns {Object}   Dictionary addressed with the identifiers of the
+         *                                      Ground Stations as keys, whose
+         *                                      values are the filtered slots
+         */
+        this.filterSlots = function (cfg, groundstation_id, slots, createSlot) {
+
+            var results = [];
+
+            console.log(
+                '%%%% WINDOW: (' + moment(cfg.start_d).format() +
+                ', ' + moment(cfg.end_d).format() + ')'
+            );
+
+            for (var i = 0; i < slots.length; i++ ) {
+
+                var raw_slot = slots[i],
+                    slot_s = moment(raw_slot.date_start),
+                    slot_e = moment(raw_slot.date_end);
+
+                // 0) Old or futuristic slots are discarded first.
+                if ( this.discardSlot(cfg, slot_s, slot_e) ) {
+                    continue;
+                }
+
+                console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
+
+                // 1) The dates are first normalized, so that the slots are
+                //      only displayed within the given start and end dates.
+                var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
+
+                // 2) The resulting slot is added to the results array
+                results.push(createSlot(raw_slot, n_slot));
+
+                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
+
+            }
+
+            return results;
+
+        };
+
+        /**
          * Function that initializes the days within the given scope for the
          * timeline.
          * 
@@ -1653,21 +1747,6 @@ angular.module('snTimelineServices', [])
 
         };
 
-        /**
-         * Function that returns the CSS animation decorator adapting it to the
-         * estimated duration.
-         * 
-         * @param   {Object} cfg Object containing timeline's configuration
-         * @returns {Object} ng-style CSS animation object
-         */
-        this.getCSSAnimation = function (cfg) {
-            return {
-                'animation': 'sn-sch-table-overlay-right  ' +
-                    cfg.animation.duration + 's ' + ' linear',
-                'width': cfg.animation.initial_width
-            };
-        };
-
     }
 
 ]);
@@ -1705,8 +1784,6 @@ angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
 
         return function (slots) {
 
-            console.log('FFFF slots = ' + JSON.stringify(slots));
-
             if (!slots) { return []; }
             if (slots.length === 0) { return []; }
 
@@ -1720,7 +1797,6 @@ angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
                 );
             });
 
-            console.log('FFFF R_SLOTS = ' + JSON.stringify(slots));
             return r_slots;
 
         };
@@ -3052,10 +3128,7 @@ angular.module('snAvailabilityDirective', [
 .controller('snAvailabilitySchCtrl', [
     '$scope', '$log',
     'satnetRPC', 'snDialog',
-    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
-    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
-    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
-    'timeline',
+    'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability scheduler.
@@ -3065,57 +3138,11 @@ angular.module('snAvailabilityDirective', [
     function (
         $scope, $log,
         satnetRPC, snDialog,
-        SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
-        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
-        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
-        timeline
+        SN_SCH_GS_ID_MAX_LENGTH, timeline
     ) {
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Function that discards the given slot depending on whether it is
-         * within the applicable window or outside.
-         * 
-         * @param   {Object}  start moment.js slot start
-         * @param   {Object}  end   moment.js slot end
-         * @returns {Boolean} 'true' if the object has to be discarded
-         */
-        $scope.discardSlot = function (start, end) {
-
-            if (moment(start).isBefore($scope.gui.start_d)) {
-                $log.warn('Slot discarded, too old!');
-                return true;
-            }
-            if (moment(end).isAfter($scope.gui.end_d)) {
-                $log.warn('Slot discarded, too futuristic!');
-                return true;
-            }
-            return false;
-
-        };
-
-        /**
-         * Function that normalizes a given slot, restricting its start and end
-         * to the upper and lower limits for the applicable window.
-         * 
-         * @param   {Object}  start moment.js slot start
-         * @param   {Object}  end   moment.js slot end
-         */
-        $scope.normalizeSlot = function (start, end) {
-
-            start = moment(start).isBefore($scope.gui.start_d) ?
-                $scope.gui.start_d : start;
-            end = moment(end).isAfter($scope.gui.end_d) ?
-                $scope.gui.end_d : end;
-
-            return {
-                start: start,
-                end: end
-            };
-
-        };
 
         /**
          * Creates a slot that can be displayed within the GUI.
@@ -3144,62 +3171,6 @@ angular.module('snAvailabilityDirective', [
                     width: slot_w.toFixed(3)
                 }
             };
-
-        };
-
-        /**
-         * This function filters all the slots for a given ground station and
-         * creates slot objects that can be directly positioned and displayed
-         * over a timeline.
-         * 
-         * @param   {String} groundstation_id Identifier of the Ground Station
-         * @param   {Array}  slots            Array with the slots
-         * @param   {Object} start_d          moment.js object with the start
-         *                                  date of the timeline
-         * @param   {Object} end_d            moment.js object with th end
-         *                                  date of the timeline
-         * @param {Function} createSlot Function that creates a slot with the
-         *                              given processed data
-         * @returns {Object} Dictionary addressed with the identifiers of the
-         *                   Ground Stations as keys, whose values are the
-         *                   filtered slots.
-         */
-        $scope.filter_slots = function (
-            groundstation_id, slots, start_d, end_d, createSlot
-        ) {
-
-            var results = [];
-
-            console.log(
-                '%%%% WINDOW: (' + moment(start_d).format() +
-                ', ' + moment(end_d).format() + ')'
-            );
-
-            for (var i = 0; i < slots.length; i++ ) {
-
-                var raw_slot = slots[i],
-                    slot_s = moment(raw_slot.date_start),
-                    slot_e = moment(raw_slot.date_end);
-
-                // 0) Old or futuristic slots are discarded first.
-                if ( $scope.discardSlot(slot_s, slot_e) ) {
-                    continue;
-                }
-
-                console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
-
-                // 1) The dates are first normalized, so that the slots are
-                //      only displayed within the given start and end dates.
-                var n_slot = $scope.normalizeSlot(slot_s, slot_e);
-
-                // 2) The resulting slot is added to the results array
-                results.push(createSlot(raw_slot, n_slot));
-
-                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
-
-            }
-
-            return results;
 
         };
 
@@ -3244,9 +3215,9 @@ angular.module('snAvailabilityDirective', [
 
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
-                        $scope.gui.slots[gs_id] = $scope.filter_slots(
+                        $scope.gui.slots[gs_id] = timeline.filterSlots(
+                            $scope.gui,
                             gs_id, results.slots,
-                            $scope.gui.start_d, $scope.gui.end_d,
                             $scope.createSlot
                         );
                     });
@@ -4406,8 +4377,6 @@ angular.module(
          */
         $scope.init = function () {
 
-            console.log('init!!!');
-
             if (isEditing) {
                 $scope.loadConfiguration();
             } else {
@@ -5418,6 +5387,129 @@ angular.module('snOperationalDirective', [
     'snJRPCServices',
     'snTimelineServices'
 ])
+.controller('snOperationalSchCtrl', [
+    '$scope', '$log',
+    'satnetRPC', 'snDialog',
+    'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
+
+    /**
+     * Controller function for handling the SatNet availability scheduler.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $log,
+        satnetRPC, snDialog,
+        SN_SCH_GS_ID_MAX_LENGTH, timeline
+    ) {
+
+        /** Object with the configuration for the GUI */
+        $scope.gui = null;
+
+        /**
+         * Creates a slot that can be displayed within the GUI.
+         * 
+         * @param {Object} raw_slot Non-modified original slot
+         * @param {Object} n_slot Normalized slot
+         * @returns {Object} GUI displayable slot
+         */
+        $scope.createSlot = function (raw_slot, n_slot) {
+
+            var slot_s_s = moment(n_slot.start).unix(),
+                slot_e_s = moment(n_slot.end).unix(),
+                start_s = slot_s_s - $scope.gui.start_d_s,
+                slot_l = (start_s / $scope.gui.total_s) * 100,
+                slot_duration_s = slot_e_s - slot_s_s,
+                slot_w = (slot_duration_s / $scope.gui.total_s) * 100,
+                id = raw_slot.identifier + '';
+
+            return {
+                raw_slot: raw_slot,
+                slot: {
+                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                    s_date: moment(n_slot.start).format(),
+                    e_date: moment(n_slot.end).format(),
+                    left: slot_l.toFixed(3),
+                    width: slot_w.toFixed(3)
+                }
+            };
+
+        };
+
+        /**
+         * Promise function that should be used to retrieve the availability
+         * slots for each of the Ground Stations.
+         * 
+         * @param {String} groundstation_id Ground Station identifier
+         */
+        $scope.getGSSlots = function (groundstation_id) {
+            return satnetRPC.rCall('gs.availability', [groundstation_id]).then(
+                function (results) {
+                    return {
+                        groundstation_id: groundstation_id,
+                        slots: results
+                    };
+                }
+            ).catch(
+                function (cause) {
+                    snDialog.exception(
+                        'gs.availability', groundstation_id, cause
+                    );
+                }
+            );
+        };
+
+        /**
+         * Function that initializes the data structures for the visualization
+         * of the available operational slots. The following data structures
+         * have to be pulled out of the server:
+         * 
+         * 1) retrieve all the ground station identifiers from the server,
+         * 2) retrieve the operatonal slots for the ground stations.
+         */
+        $scope.init = function () {
+
+            // 1> init days and hours for the axis
+            $scope.gui = timeline.initScope();
+
+            // 2> all the Ground Stations are retrieved
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+
+                angular.forEach(results, function (gs_id) {
+                    $scope.getGSSlots(gs_id).then(function (results) {
+                        $scope.gui.slots[gs_id] = timeline.filterSlots(
+                            $scope.gui,
+                            gs_id, results.slots,
+                            $scope.createSlot
+                        );
+                    });
+                });
+
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', [], cause);
+            });
+
+        };
+
+    }
+])
+.directive('snOperationalScheduler',
+
+    /**
+     * Function that creates the directive to embed the availability scheduler
+     * wherever it is necessary within the application.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/operational/scheduler.html'
+        };
+    }
+
+)
 .controller('snOperationalDlgCtrl', [
     '$scope', '$mdDialog',
 
