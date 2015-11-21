@@ -46,7 +46,6 @@
     "grunt-mkdir": "^0.1.2",
     "grunt-open": "^0.2.3",
     "grunt-preview": "0.0.1",
-    "grunt-template-jasmine-requirejs": "^0.2.0",
     "jasmine-core": "^2.3.4",
     "jquery": "^2.1.4",
     "karma": "^0.12.31",
@@ -64,8 +63,7 @@
     "leaflet": "^0.7.3",
     "moment": "^2.10.3",
     "phantomjs": "^1.9.13",
-    "pusher-angular": "^0.1.5",
-    "require.js": "^0.3.97"
+    "pusher-angular": "^0.1.5"
   },
   "scripts": {
     "pretest": "grunt libs",
