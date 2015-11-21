@@ -72,7 +72,8 @@ module.exports = function (grunt) {
                     'src/common/models/Spacecraft.js',
                     'src/common/directives/*.js',
                     'src/operations/controllers/*.js',
-                    'src/operations/directives/*.js'
+                    'src/operations/directives/*.js',
+                    'src/operations/Operations.js'
                 ],
                 dest: 'dist/<%= pkg.name %>-operations.js'
             }

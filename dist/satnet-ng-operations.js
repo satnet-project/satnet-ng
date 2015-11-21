@@ -950,7 +950,7 @@ angular.module('snJRPCServices', [
                     .createMethod('gs.availability'),
                 'sc.compatibility': this._scheduling
                     .createMethod('sc.compatibility'),
-                'gs.slots': this._scheduling
+                'gs.operational': this._scheduling
                     .createMethod('gs.operational')
             };
 
@@ -3120,14 +3120,10 @@ angular.module('snAboutDirective', [
 */
 
 angular.module('snAvailabilityDirective', [
-    'ngMaterial',
-    'snControllers',
-    'snJRPCServices',
-    'snTimelineServices'
+    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snAvailabilitySchCtrl', [
-    '$scope', '$log',
-    'satnetRPC', 'snDialog',
+    '$scope', '$log', 'satnetRPC', 'snDialog',
     'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
 
     /**
@@ -3136,9 +3132,7 @@ angular.module('snAvailabilityDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $log,
-        satnetRPC, snDialog,
-        SN_SCH_GS_ID_MAX_LENGTH, timeline
+        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
     ) {
 
         /** Object with the configuration for the GUI */
@@ -3188,13 +3182,9 @@ angular.module('snAvailabilityDirective', [
                         slots: results
                     };
                 }
-            ).catch(
-                function (cause) {
-                    snDialog.exception(
-                        'gs.availability', groundstation_id, cause
-                    );
-                }
-            );
+            ).catch(function (c) {
+                snDialog.exception('gs.availability', groundstation_id, c);
+            });
         };
 
         /**
@@ -3212,7 +3202,6 @@ angular.module('snAvailabilityDirective', [
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
-
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
@@ -3222,10 +3211,7 @@ angular.module('snAvailabilityDirective', [
                         );
                     });
                 });
-
-            }).catch(function (cause) {
-                snDialog.exception('gs.list', [], cause);
-            });
+            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
 
         };
 
@@ -3649,24 +3635,14 @@ angular.module('snSplashDirective', []).directive('mAppLoading', ['$animate',
 
 angular.module('snTimelineDirective', ['snTimelineServices'])
 .controller('snTimelineCtrl', [
-    '$scope', '$log',
-    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
-    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
-    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
-    'timeline',
+    '$scope', '$log', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $log,
-        SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
-        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
-        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
-        timeline
-    ) {
+    function ($scope, $log, timeline) {
 
         $scope.gui = null;
 
@@ -3674,9 +3650,7 @@ angular.module('snTimelineDirective', ['snTimelineServices'])
          * Function that initializes the object with the configuration for the
          * GUI.
          */
-        $scope.init = function () {
-            $scope.gui = timeline.initScope();
-        };
+        $scope.init = function () { $scope.gui = timeline.initScope(); };
 
     }
 
@@ -5382,14 +5356,10 @@ angular.module('snOperationsMap', [
 */
 
 angular.module('snOperationalDirective', [
-    'ngMaterial',
-    'snControllers',
-    'snJRPCServices',
-    'snTimelineServices'
+    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snOperationalSchCtrl', [
-    '$scope', '$log',
-    'satnetRPC', 'snDialog',
+    '$scope', '$log', 'satnetRPC', 'snDialog',
     'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
 
     /**
@@ -5398,9 +5368,7 @@ angular.module('snOperationalDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $log,
-        satnetRPC, snDialog,
-        SN_SCH_GS_ID_MAX_LENGTH, timeline
+        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
     ) {
 
         /** Object with the configuration for the GUI */
@@ -5443,20 +5411,16 @@ angular.module('snOperationalDirective', [
          * @param {String} groundstation_id Ground Station identifier
          */
         $scope.getGSSlots = function (groundstation_id) {
-            return satnetRPC.rCall('gs.availability', [groundstation_id]).then(
+            return satnetRPC.rCall('gs.operational', [groundstation_id]).then(
                 function (results) {
                     return {
                         groundstation_id: groundstation_id,
                         slots: results
                     };
                 }
-            ).catch(
-                function (cause) {
-                    snDialog.exception(
-                        'gs.availability', groundstation_id, cause
-                    );
-                }
-            );
+            ).catch(function (c) {
+                snDialog.exception('gs.operational', groundstation_id, c);
+            });
         };
 
         /**
@@ -5474,7 +5438,6 @@ angular.module('snOperationalDirective', [
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
-
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
@@ -5485,9 +5448,7 @@ angular.module('snOperationalDirective', [
                     });
                 });
 
-            }).catch(function (cause) {
-                snDialog.exception('gs.list', [], cause);
-            });
+            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
 
         };
 

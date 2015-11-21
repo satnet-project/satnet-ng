@@ -16,24 +16,14 @@
 
 angular.module('snTimelineDirective', ['snTimelineServices'])
 .controller('snTimelineCtrl', [
-    '$scope', '$log',
-    'SN_SCH_TIMELINE_DAYS', 'SN_SCH_HOURS_DAY',
-    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
-    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
-    'timeline',
+    '$scope', '$log', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $log,
-        SN_SCH_TIMELINE_DAYS, SN_SCH_HOURS_DAY,
-        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT,
-        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
-        timeline
-    ) {
+    function ($scope, $log, timeline) {
 
         $scope.gui = null;
 
@@ -41,9 +31,7 @@ angular.module('snTimelineDirective', ['snTimelineServices'])
          * Function that initializes the object with the configuration for the
          * GUI.
          */
-        $scope.init = function () {
-            $scope.gui = timeline.initScope();
-        };
+        $scope.init = function () { $scope.gui = timeline.initScope(); };
 
     }
 

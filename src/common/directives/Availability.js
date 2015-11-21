@@ -15,14 +15,10 @@
 */
 
 angular.module('snAvailabilityDirective', [
-    'ngMaterial',
-    'snControllers',
-    'snJRPCServices',
-    'snTimelineServices'
+    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snAvailabilitySchCtrl', [
-    '$scope', '$log',
-    'satnetRPC', 'snDialog',
+    '$scope', '$log', 'satnetRPC', 'snDialog',
     'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
 
     /**
@@ -31,9 +27,7 @@ angular.module('snAvailabilityDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $log,
-        satnetRPC, snDialog,
-        SN_SCH_GS_ID_MAX_LENGTH, timeline
+        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
     ) {
 
         /** Object with the configuration for the GUI */
@@ -83,13 +77,9 @@ angular.module('snAvailabilityDirective', [
                         slots: results
                     };
                 }
-            ).catch(
-                function (cause) {
-                    snDialog.exception(
-                        'gs.availability', groundstation_id, cause
-                    );
-                }
-            );
+            ).catch(function (c) {
+                snDialog.exception('gs.availability', groundstation_id, c);
+            });
         };
 
         /**
@@ -107,7 +97,6 @@ angular.module('snAvailabilityDirective', [
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
-
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
@@ -117,10 +106,7 @@ angular.module('snAvailabilityDirective', [
                         );
                     });
                 });
-
-            }).catch(function (cause) {
-                snDialog.exception('gs.list', [], cause);
-            });
+            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
 
         };
 

@@ -217,7 +217,7 @@ angular.module('snJRPCServices', [
                     .createMethod('gs.availability'),
                 'sc.compatibility': this._scheduling
                     .createMethod('sc.compatibility'),
-                'gs.slots': this._scheduling
+                'gs.operational': this._scheduling
                     .createMethod('gs.operational')
             };
 

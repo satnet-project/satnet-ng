@@ -15,14 +15,10 @@
 */
 
 angular.module('snOperationalDirective', [
-    'ngMaterial',
-    'snControllers',
-    'snJRPCServices',
-    'snTimelineServices'
+    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snOperationalSchCtrl', [
-    '$scope', '$log',
-    'satnetRPC', 'snDialog',
+    '$scope', '$log', 'satnetRPC', 'snDialog',
     'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
 
     /**
@@ -31,9 +27,7 @@ angular.module('snOperationalDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $log,
-        satnetRPC, snDialog,
-        SN_SCH_GS_ID_MAX_LENGTH, timeline
+        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
     ) {
 
         /** Object with the configuration for the GUI */
@@ -76,20 +70,16 @@ angular.module('snOperationalDirective', [
          * @param {String} groundstation_id Ground Station identifier
          */
         $scope.getGSSlots = function (groundstation_id) {
-            return satnetRPC.rCall('gs.availability', [groundstation_id]).then(
+            return satnetRPC.rCall('gs.operational', [groundstation_id]).then(
                 function (results) {
                     return {
                         groundstation_id: groundstation_id,
                         slots: results
                     };
                 }
-            ).catch(
-                function (cause) {
-                    snDialog.exception(
-                        'gs.availability', groundstation_id, cause
-                    );
-                }
-            );
+            ).catch(function (c) {
+                snDialog.exception('gs.operational', groundstation_id, c);
+            });
         };
 
         /**
@@ -107,7 +97,6 @@ angular.module('snOperationalDirective', [
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
-
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
@@ -118,9 +107,7 @@ angular.module('snOperationalDirective', [
                     });
                 });
 
-            }).catch(function (cause) {
-                snDialog.exception('gs.list', [], cause);
-            });
+            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
 
         };
 
