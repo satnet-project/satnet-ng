@@ -46,6 +46,7 @@
     "grunt-mkdir": "^0.1.2",
     "grunt-open": "^0.2.3",
     "grunt-preview": "0.0.1",
+    "istanbul": "^0.4.1",
     "jasmine-core": "^2.3.4",
     "jquery": "^2.1.4",
     "karma": "^0.12.31",

@@ -283,6 +283,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-reload');
 
+    // ************************************************************************
     // TASKS
     grunt.registerTask(
         'test', [
