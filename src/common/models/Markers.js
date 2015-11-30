@@ -489,6 +489,36 @@ angular.module('snMarkerModels', [
             };
 
             /**
+             * Small helper function to update the next point in the ground
+             * track.
+             * 
+             * @param {object} track The object with the position arrays
+             * @param {number} lat   Latitude position of the point
+             * @param {number} lng   Longitude position of the point
+             */
+            this._addPositions = function (track, lat, lng) {
+                track.positions.push([lat, lng]);
+                track.geopoints.push(new L.LatLng(lat, lng));
+            };
+
+            /**
+             * Updates the duration for the just added point in the track. This
+             * function must be called only after the second point has been
+             * added to the track object, since the durations have to be
+             * calculated in between 2 points at last.
+             * 
+             * @param {object} track         The object with the position arrays
+             * @param {object} currentPoint  Current point of the track
+             * @param {object} previousPoint Previous point of the track
+             */
+            this._addDurations = function (track, currentPoint, previousPoint) {
+                track.durations.push(
+                    (currentPoint.timestamp - previousPoint.timestamp) / 1000
+                );
+                track.valid = true;
+            };
+            
+            /**
              * Private function that helps processing the points of the ground
              * tracks.
              * 
@@ -500,9 +530,7 @@ angular.module('snMarkerModels', [
             this._processTrackPoints = function (groundtrack, t0, tf) {
 
                 var r = {
-                        positions: [],
-                        geopoints: [],
-                        durations: [],
+                        positions: [], geopoints: [], durations: [],
                         valid: false
                     },
                     first = true;
@@ -510,23 +538,17 @@ angular.module('snMarkerModels', [
                 for (var i = 0; i < groundtrack.length; i += 1) {
 
                     var gt_i = groundtrack[i];
+
+                    // 1) groundtrack point applicability window check
                     if (gt_i.timestamp < t0) { continue; }
                     if (gt_i.timestamp > tf) { break; }
 
-                    r.positions.push([gt_i.latitude, gt_i.longitude]);
-                    r.geopoints.push(
-                        new L.LatLng(gt_i.latitude, gt_i.longitude)
-                    );
+                    // 2) transformation of the lat/lng pair
+                    this._addPositions(r, gt_i.latitude, gt_i.longitude);
+                    if (first === true) { first = false; continue; }
 
-                    if (first === true) {
-                        first = false;
-                        continue;
-                    }
-
-                    r.durations.push(
-                        (gt_i.timestamp - groundtrack[i - 1].timestamp) / 1000
-                    );
-                    r.valid = true;
+                    // 3) creation of the duration for the animation
+                    this._addDurations(r, gt_i, groundtrack[i - 1]);
 
                 }
 

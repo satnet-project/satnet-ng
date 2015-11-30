@@ -16,11 +16,9 @@
  * Created by rtubio on 10/24/14.
  */
 
-angular.module('snJRPCServices', [
-    'jsonrpc', 'ngCookies'
-])
-    .run([
-    '$http', '$cookies',
+angular
+.module('snJRPCServices', ['jsonrpc', 'ngCookies'])
+.run(['$http', '$cookies',
 
     /**
      * This function configures the JSONRPC service by changing some of the
