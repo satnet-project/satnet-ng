@@ -1,60 +1,90 @@
-<div class="operations-main"
-     ng-controller="operationsAppCtrl"
+<div class="operations-main" ng-controller="operationsAppCtrl"
      layout="column" layout-fill>
 
     <section layout="row" flex>
+
         <md-sidenav class="md-sidenav-left md-whiteframe-z2"
                     md-component-id="menu"
-                    md-is-locked-open="$mdMedia('gt-md')">
+                    md-is-locked-open="$mdMedia('gt-md')"
+                    style="overflow: hidden">
+        <div layout="column">
 
-            <md-content class="md-padding"
-                        ng-controller="operationsMenuCtrl">
+            <div flex="66" layout="row">
 
-                <md-button id="menuExit"
-                           ng-click="close()"
-                           aria-label="exit" class="md-primary menu-button">
-                    <div layout="row" layout-fill>
-                        <i class="fa fa-power-off"></i>
-                        <b>exit</b>
+                <div flex="10" layout="column" layout-align="center left">
+                    <div flex></div>
+                    <div flex>
+                        <div style="min-height: 100%; min-width: 100%;
+                                    margin: 0;"
+                             layout-fill>
+                            <div style="z-index: 1001;">
+                                SATNET
+                            </div>
+                        </div>
                     </div>
-                </md-button>
+                    <div flex></div>
+                </div>
 
-                <md-divider></md-divider>
+                <div style="overflow: hidden;" flex="90">
 
-                <md-button id="menuGS"
-                           ng-click="showGsMenu()"
-                           aria-label="ground stations"
-                           class="md-primary menu-button">
-                    <div layout="row" layout-fill>
-                        <i class="fa fa-home"></i>
-                        <b>ground stations</b>
-                    </div>
-                </md-button>
+                    <md-content class="md-padding"
+                                ng-controller="operationsMenuCtrl">
+            
+                        <md-button id="menuExit"
+                                   ng-click="close()"
+                                   aria-label="exit"
+                                   class="md-primary menu-button">
+                            <div layout="row" layout-fill>
+                                <i class="fa fa-power-off"></i>
+                                <b>exit</b>
+                            </div>
+                        </md-button>
 
-                <md-button id="menuSC"
-                           ng-click="showScMenu()"
-                           aria-label="spacecraft"
-                           class="md-primary menu-button">
-                    <div layout="row" layout-fill>
-                        <i class="fa fa-space-shuttle"></i>
-                        <b>spacecraft</b>
-                    </div>
-                </md-button>
+                        <md-divider></md-divider>
 
-                <md-divider></md-divider>
-                <sn-compatibility></sn-compatibility>
-                <sn-availability></sn-availability>
-                <sn-operational></sn-operational>
+                        <md-button id="menuGS"
+                                   ng-click="showGsMenu()"
+                                   aria-label="ground stations"
+                                   class="md-primary menu-button">
+                            <div layout="row" layout-fill>
+                                <i class="fa fa-home"></i>
+                                <b>ground stations</b>
+                            </div>
+                        </md-button>
 
-                <md-divider></md-divider>
-                <sn-about></sn-about>
+                        <md-button id="menuSC"
+                                   ng-click="showScMenu()"
+                                   aria-label="spacecraft"
+                                   class="md-primary menu-button">
+                            <div layout="row" layout-fill>
+                                <i class="fa fa-space-shuttle"></i>
+                                <b>spacecraft</b>
+                            </div>
+                        </md-button>
 
-                <md-divider></md-divider>
+                        <md-divider></md-divider>
+                        <sn-compatibility></sn-compatibility>
+                        <sn-availability></sn-availability>
+                        <sn-operational></sn-operational>
+
+                        <md-divider></md-divider>
+                        <sn-about></sn-about>
+
+                        <md-divider></md-divider>
+
+                    </md-content>
+
+                </div>
+
+            </div>
+
+            <div flex="34">
                 <sn-logger></sn-logger>
+            </div>
 
-            </md-content>
-
+        </div>
         </md-sidenav>
+
         <md-content flex class="md-padding">
 
             <div layout="column" layout-fill layout-align="center center">

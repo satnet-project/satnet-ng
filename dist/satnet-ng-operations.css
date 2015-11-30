@@ -85,7 +85,7 @@ md-content .md-button {
 .menu-button {
   width: 100%; }
   .menu-button b {
-    margin: 3px 0 0 10%;
+    margin: 3px 0 0 7%;
     vertical-align: middle; }
   .menu-button i {
     width: 15%;
@@ -285,7 +285,7 @@ div.m-app-loading p {
   font-size: 70%; }
 
 .sn-logger-area {
-  margin-top: 100px;
+  margin: 10% 5% 0% 5%;
   overflow: hidden; }
 
 .sn-logger-content {
