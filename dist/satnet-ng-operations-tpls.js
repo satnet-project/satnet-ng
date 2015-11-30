@@ -50,8 +50,23 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/app.html',
-    "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\" style=\"overflow: hidden\"><div layout=\"column\"><div flex=\"66\" layout=\"row\"><div flex=\"10\" layout=\"column\" layout-align=\"center left\"><div flex></div><div flex><div style=\"min-height: 100%; min-width: 100%;\n" +
-    "                                    margin: 0\" layout-fill><div style=\"z-index: 1001\">SATNET</div></div></div><div flex></div></div><div style=\"overflow: hidden\" flex=\"90\"><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"close()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-compatibility></sn-compatibility><sn-availability></sn-availability><sn-operational></sn-operational><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider></md-content></div></div><div flex=\"34\"><sn-logger></sn-logger></div></div></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
+    "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\" style=\"overflow: hidden\"><div layout=\"column\"><div flex=\"66\" layout=\"row\"><!--\n" +
+    "                <div layout=\"column\" layout-align=\"center left\"\n" +
+    "                     flex=\"15\">\n" +
+    "                    <div flex></div>\n" +
+    "                    <div class=\"sn-rotated sn-rotated-text\"\n" +
+    "                         layout-fill\n" +
+    "                         flex>\n" +
+    "                        <p class=\"sn-rotated-inner\">SATNET</p>\n" +
+    "                    </div>\n" +
+    "                    <div flex></div>\n" +
+    "                </div>\n" +
+    "\n" +
+    "                <div style=\"overflow: hidden\"\n" +
+    "                     flex=\"85\">\n" +
+    "                --><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"close()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-compatibility></sn-compatibility><sn-availability></sn-availability><sn-operational></sn-operational><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider></md-content><!--\n" +
+    "                </div>\n" +
+    "                --></div><div flex=\"34\"><sn-logger></sn-logger></div></div></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
   );
 
 

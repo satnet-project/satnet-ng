@@ -45,7 +45,7 @@ $sch-margin: 7px;
 }
 
 .sn-sch-cell-container {
-    padding: 0; margin: 0; border: 0px;
+    padding: 0; margin: 0; border: 0;
 }
 
 .sn-sch-corner-top {
@@ -57,7 +57,7 @@ $sch-margin: 7px;
 }
 
 .sn-sch-gs-id {
-    @xtend .sn-sch-corner-top;
+    @extend .sn-sch-corner-top;
 
     text-align: center;
     padding: $sch-padding 0 $sch-padding 0;
@@ -117,7 +117,6 @@ $sch-margin: 7px;
     position: absolute;
     top: 35%;
     height: 30%;
-    opacity: 0.2;
     background: $sn-primary-color;
     border: 5px solid black;
     border-style: none solid none solid;

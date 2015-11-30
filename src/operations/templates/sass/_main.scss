@@ -21,6 +21,35 @@ md-content {
     }
 }
 
+.sn-rotated {
+    display: inline-block;
+    overflow: hidden;
+    width: 2.5em;
+    line-height: 2.5;
+}
+
+.sn-rotated-inner {
+    display: inline-block;
+    white-space: nowrap;
+    transform: translate(0, 100%) rotate(-90deg);
+    transform-origin: 0 0;
+}
+
+.sn-rotated-inner:after {
+    content: "";
+    float: left;
+    margin-top: 100%;
+}
+
+.sn-rotated-text {
+    margin: 50% 0 50% 0;
+
+    p {
+        font-size: 175%; z-index: 1001;
+        color: $sn-primary-color;
+    }
+}
+
 .sn-margin {
     margin: 10px;
 }
@@ -32,7 +61,7 @@ md-content {
 .sn-box-placement {
     text-align: center;
     vertical-align: middle;
-    margin: 0px 2px 0px 2px;
+    margin: 0 2px 0 2px;
     padding: 5px;
 }
 

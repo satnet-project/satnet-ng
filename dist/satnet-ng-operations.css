@@ -45,6 +45,30 @@ md-content md-divider {
 md-content .md-button {
   margin: 5px 0 5px 0; }
 
+.sn-rotated {
+  display: inline-block;
+  overflow: hidden;
+  width: 2.5em;
+  line-height: 2.5; }
+
+.sn-rotated-inner {
+  display: inline-block;
+  white-space: nowrap;
+  transform: translate(0, 100%) rotate(-90deg);
+  transform-origin: 0 0; }
+
+.sn-rotated-inner:after {
+  content: "";
+  float: left;
+  margin-top: 100%; }
+
+.sn-rotated-text {
+  margin: 50% 0 50% 0; }
+  .sn-rotated-text p {
+    font-size: 175%;
+    z-index: 1001;
+    color: #607D8B; }
+
 .sn-margin {
   margin: 10px; }
 
@@ -54,7 +78,7 @@ md-content .md-button {
 .sn-box-placement, .sn-box-100 {
   text-align: center;
   vertical-align: middle;
-  margin: 0px 2px 0px 2px;
+  margin: 0 2px 0 2px;
   padding: 5px; }
 
 .sn-box-format {
@@ -118,43 +142,42 @@ div.m-app-loading {
 
 div.m-app-loading div.animated-container {
   background-color: #607D8B;
-  bottom: 0px;
-  left: 0px;
+  bottom: 0;
+  left: 0;
   opacity: 1.0;
   position: fixed;
-  right: 0px;
-  top: 0px;
+  right: 0;
+  top: 0;
   z-index: 999999; }
 
 /* Used to initialize the ng-leave animation state. */
-div.m-app-loading div.animated-container.ng-leave {
+div.m-app-loading .ng-leave {
   opacity: 1.0;
-  transition: all linear 200ms;
-  -webkit-transition: all linear 200ms; }
+  transition: all linear 200ms; }
 
 /* Used to set the end properties of the ng-leave animation state. */
-div.m-app-loading div.animated-container.ng-leave-active {
+div.m-app-loading .ng-leave-active {
   opacity: 0; }
 
-div.m-app-loading div.messaging {
+div.m-app-loading .messaging {
   color: #FFFFFF;
   font-family: RobotoDraft;
-  left: 0px;
+  left: 0;
   margin-top: -37px;
   position: absolute;
-  right: 0px;
+  right: 0;
   text-align: center;
   top: 50%; }
 
 div.m-app-loading h1 {
   font-size: 26px;
   line-height: 35px;
-  margin: 0px 0px 20px 0px; }
+  margin: 0 0 20px 0; }
 
 div.m-app-loading p {
   font-size: 18px;
   line-height: 14px;
-  margin: 20px 0px 0px 0px; }
+  margin: 20px 0 0 0; }
 
 /* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
 
@@ -285,7 +308,7 @@ div.m-app-loading p {
   font-size: 70%; }
 
 .sn-logger-area {
-  margin: 10% 5% 0% 5%;
+  margin: 10% 5% 0 5%;
   overflow: hidden; }
 
 .sn-logger-content {
@@ -294,7 +317,7 @@ div.m-app-loading p {
 
 .sn-logger-list {
   list-style-type: none;
-  padding: 0px; }
+  padding: 0; }
 
 .sn-logger-row {
   margin: 5px; }
@@ -369,16 +392,15 @@ div.m-app-loading p {
 .sn-sch-cell-container {
   padding: 0;
   margin: 0;
-  border: 0px; }
+  border: 0; }
 
-.sn-sch-corner-top {
+.sn-sch-corner-top, .sn-sch-gs-id {
   border-bottom: 3px solid lightgray; }
 
 .sn-sch-corner-bottom {
   border-top: 3px solid lightgray; }
 
 .sn-sch-gs-id {
-  @xtend .sn-sch-corner-top;
   text-align: center;
   padding: 35px 0 35px 0; }
   .sn-sch-gs-id p {
@@ -423,7 +445,6 @@ div.m-app-loading p {
   position: absolute;
   top: 35%;
   height: 30%;
-  opacity: 0.2;
   background: #607D8B;
   border: 5px solid black;
   border-style: none solid none solid;
