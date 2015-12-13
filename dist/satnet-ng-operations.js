@@ -1027,8 +1027,8 @@ angular
             };
 
             /**
-             * Simple convenience method for invoking the remote keep alive of the
-             * network sevice.
+             * Simple convenience method for invoking the remote keep alive of
+             * the network sevice.
              *
              * @returns {*} Promise that returns True.
              */
@@ -1584,8 +1584,14 @@ angular.module('snTimelineServices', [])
          */
         this.normalizeSlot = function (cfg, start, end) {
 
+            console.log('>>1> start = ' + start.toISOString());
+            console.log('>>1> end = ' + end.toISOString());
+            
             start = moment(start).isBefore(cfg.start_d) ? cfg.start_d : start;
             end = moment(end).isAfter(cfg.end_d) ? cfg.end_d : end;
+
+            console.log('>>2> start = ' + start.toISOString());
+            console.log('>>2> end = ' + end.toISOString());
 
             return { start: start, end: end };
 
@@ -1627,7 +1633,6 @@ angular.module('snTimelineServices', [])
                 if ( this.discardSlot(cfg, slot_s, slot_e) ) {
                     continue;
                 }
-
                 console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
 
                 // 1) The dates are first normalized, so that the slots are
@@ -1636,7 +1641,6 @@ angular.module('snTimelineServices', [])
 
                 // 2) The resulting slot is added to the results array
                 results.push(createSlot(raw_slot, n_slot));
-
                 console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }
@@ -1876,6 +1880,15 @@ angular.module('snRuleFilters', [])
     rule_periodicity_daily: 'D',
     rule_periodicity_weekly: 'W'
 })
+.service('snDates', [
+    '$log', function ($log) {
+
+        this.isoformat = function (datetime) {
+            return datetime.toISOString().split('Z')[0] + '+00:00';
+        };
+
+    }
+])
 .filter('printRule', [
     'RULE_PERIODICITIES', 'SHORT_RULE_PERIODICITIES',
 
@@ -1893,7 +1906,12 @@ angular.module('snRuleFilters', [])
                 date_str;
 
             if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_once ) {
-                date_str = '' + rule.rule_dates.rule_once_date.split('T')[0];
+                date_str = '' +
+                    rule.rule_dates.rule_once_starting_time.split('T')[0] +
+                    ':' +
+                    rule.rule_dates.rule_once_starting_time.split('T')[1] +
+                    '>' +
+                    rule.rule_dates.rule_once_ending_time.split('T')[1];
             }
             if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_daily ) {
                 date_str = '' +
@@ -1903,7 +1921,7 @@ angular.module('snRuleFilters', [])
             }
 
             return '' + 
-                '(' + rule.rule_operation + ', ' + p + ') [' + date_str + ']';
+                '(' + rule.rule_operation + ',' + p + ')[' + date_str + ']';
 
         };
     }
@@ -4519,7 +4537,7 @@ angular.module(
     ]
     )
     .controller('ruleListCtrl', [
-    '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
+        '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
 
     /**
      * Controller for the list with the Availability Rules for a given Ground
@@ -4901,19 +4919,21 @@ angular.module(
                         rule_once_date: $scope.rule.start_date
                             .toISOString(),
                         rule_once_starting_time: $scope.rule.onceCfg.start_time
-                            .toISOString().split('T')[1],
+                            .toISOString(),
                         rule_once_ending_time: $scope.rule.onceCfg.end_time
-                            .toISOString().split('T')[1]
+                            .toISOString()
                     };
                 } else {
                     cfg.rule_periodicity = DAILY_PERIODICITY_SERIAL;
                     cfg[DATES_SERIAL] = {
-                        rule_daily_initial_date: $scope.rule.start_date.toISOString(),
-                        rule_daily_final_date: $scope.rule.end_date.toISOString(),
+                        rule_daily_initial_date: $scope.rule.start_date
+                            .toISOString(),
+                        rule_daily_final_date: $scope.rule.end_date
+                            .toISOString(),
                         rule_starting_time: $scope.rule.dailyCfg.start_time
-                            .toISOString().split('T')[1],
+                            .toISOString(),
                         rule_ending_time: $scope.rule.dailyCfg.end_time
-                            .toISOString().split('T')[1]
+                            .toISOString()
                     };
                 }
 

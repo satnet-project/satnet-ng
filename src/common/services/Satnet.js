@@ -294,8 +294,8 @@ angular
             };
 
             /**
-             * Simple convenience method for invoking the remote keep alive of the
-             * network sevice.
+             * Simple convenience method for invoking the remote keep alive of
+             * the network sevice.
              *
              * @returns {*} Promise that returns True.
              */

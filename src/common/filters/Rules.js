@@ -25,6 +25,15 @@ angular.module('snRuleFilters', [])
     rule_periodicity_daily: 'D',
     rule_periodicity_weekly: 'W'
 })
+.service('snDates', [
+    '$log', function ($log) {
+
+        this.isoformat = function (datetime) {
+            return datetime.toISOString().split('Z')[0] + '+00:00';
+        };
+
+    }
+])
 .filter('printRule', [
     'RULE_PERIODICITIES', 'SHORT_RULE_PERIODICITIES',
 
@@ -42,7 +51,12 @@ angular.module('snRuleFilters', [])
                 date_str;
 
             if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_once ) {
-                date_str = '' + rule.rule_dates.rule_once_date.split('T')[0];
+                date_str = '' +
+                    rule.rule_dates.rule_once_starting_time.split('T')[0] +
+                    ':' +
+                    rule.rule_dates.rule_once_starting_time.split('T')[1] +
+                    '>' +
+                    rule.rule_dates.rule_once_ending_time.split('T')[1];
             }
             if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_daily ) {
                 date_str = '' +
@@ -52,7 +66,7 @@ angular.module('snRuleFilters', [])
             }
 
             return '' + 
-                '(' + rule.rule_operation + ', ' + p + ') [' + date_str + ']';
+                '(' + rule.rule_operation + ',' + p + ')[' + date_str + ']';
 
         };
     }

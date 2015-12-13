@@ -23,7 +23,7 @@ angular.module(
     ]
     )
     .controller('ruleListCtrl', [
-    '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
+        '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
 
     /**
      * Controller for the list with the Availability Rules for a given Ground
@@ -405,19 +405,21 @@ angular.module(
                         rule_once_date: $scope.rule.start_date
                             .toISOString(),
                         rule_once_starting_time: $scope.rule.onceCfg.start_time
-                            .toISOString().split('T')[1],
+                            .toISOString(),
                         rule_once_ending_time: $scope.rule.onceCfg.end_time
-                            .toISOString().split('T')[1]
+                            .toISOString()
                     };
                 } else {
                     cfg.rule_periodicity = DAILY_PERIODICITY_SERIAL;
                     cfg[DATES_SERIAL] = {
-                        rule_daily_initial_date: $scope.rule.start_date.toISOString(),
-                        rule_daily_final_date: $scope.rule.end_date.toISOString(),
+                        rule_daily_initial_date: $scope.rule.start_date
+                            .toISOString(),
+                        rule_daily_final_date: $scope.rule.end_date
+                            .toISOString(),
                         rule_starting_time: $scope.rule.dailyCfg.start_time
-                            .toISOString().split('T')[1],
+                            .toISOString(),
                         rule_ending_time: $scope.rule.dailyCfg.end_time
-                            .toISOString().split('T')[1]
+                            .toISOString()
                     };
                 }
 

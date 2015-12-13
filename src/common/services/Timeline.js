@@ -78,8 +78,14 @@ angular.module('snTimelineServices', [])
          */
         this.normalizeSlot = function (cfg, start, end) {
 
+            console.log('>>1> start = ' + start.toISOString());
+            console.log('>>1> end = ' + end.toISOString());
+            
             start = moment(start).isBefore(cfg.start_d) ? cfg.start_d : start;
             end = moment(end).isAfter(cfg.end_d) ? cfg.end_d : end;
+
+            console.log('>>2> start = ' + start.toISOString());
+            console.log('>>2> end = ' + end.toISOString());
 
             return { start: start, end: end };
 
@@ -121,7 +127,6 @@ angular.module('snTimelineServices', [])
                 if ( this.discardSlot(cfg, slot_s, slot_e) ) {
                     continue;
                 }
-
                 console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
 
                 // 1) The dates are first normalized, so that the slots are
@@ -130,7 +135,6 @@ angular.module('snTimelineServices', [])
 
                 // 2) The resulting slot is added to the results array
                 results.push(createSlot(raw_slot, n_slot));
-
                 console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }

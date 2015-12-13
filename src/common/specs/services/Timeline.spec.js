@@ -101,7 +101,7 @@ describe('Testing the Timeline Services', function () {
             '08:00',
             '16:00'
         ];
-
+        
         var a_scope = timeline.initScope();
 
         // TODO :: use mocked common reference time instead of moment() both

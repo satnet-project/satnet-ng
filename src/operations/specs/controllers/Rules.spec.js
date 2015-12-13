@@ -255,8 +255,8 @@ describe('Testing Rules controllers', function () {
                 rule_periodicity: 'rule_periodicity_once',
                 rule_dates: {
                     rule_once_date: today.toISOString(),
-                    rule_once_starting_time: time,
-                    rule_once_ending_time: time
+                    rule_once_starting_time: today.toISOString(),
+                    rule_once_ending_time: today.toISOString()
                 }
             },
             x_daily_cfg = {
@@ -265,8 +265,8 @@ describe('Testing Rules controllers', function () {
                 rule_dates: {
                     rule_daily_initial_date: today.toISOString(),
                     rule_daily_final_date: tomorrow.toISOString(),
-                    rule_starting_time: today.toISOString().split('T')[1],
-                    rule_ending_time: today.toISOString().split('T')[1]
+                    rule_starting_time: today.toISOString(),
+                    rule_ending_time: today.toISOString()
                 }
             };
 
