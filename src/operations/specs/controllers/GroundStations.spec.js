@@ -27,7 +27,7 @@ describe('Testing Ground Station controllers', function () {
 
     beforeEach(function () {
 
-        module('snGsControllers', 'snRuleControllers');
+        module('snGsControllers', 'snRuleControllers', 'snPusherMock');
         module(function ($provide) {
             $provide.value('$cookies', __mock__cookies);
             $provide.value('satnetRPC', __mock__satnetRPC);

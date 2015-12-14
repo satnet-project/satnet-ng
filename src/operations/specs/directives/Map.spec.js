@@ -29,7 +29,7 @@ describe('Testing Maps directive', function () {
     beforeEach(function () {
 
         module(
-            'templates', 'snOperationsMap', 'snMapServices',
+            'templates', 'snOperationsMap', 'snMapServices', 'snPusherMock',
             function($provide) {
                 $provide.value('$cookies', __mock__cookies);
             }

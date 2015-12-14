@@ -137,8 +137,8 @@ module.exports = function (grunt) {
                     'https://rawgit.com/Leaflet/Leaflet.label/master/dist/leaflet.label.js',
                     'https://rawgit.com/ewoken/Leaflet.MovingMarker/master/MovingMarker.js',
                     'https://rawgit.com/henrythasler/Leaflet.Geodesic/master/Leaflet.Geodesic.min.js',
-                    'https://cdn.rawgit.com/g00fy-/angular-datepicker/master/dist/angular-datepicker.min.js',
-                    'https://rawgit.com/pusher/pusher-js-test-stub/master/build/bin/pusher-test-stub.js'
+                    'https://rawgit.com/g00fy-/angular-datepicker/master/dist/angular-datepicker.min.js',
+                    'https://rawgit.com/pusher-community/pusher-js-test-stub/master/dist/pusher-test-stub.js'
                 ],
                 dest: 'node_modules/libs'
             }

@@ -21,7 +21,7 @@ describe('Testing Pusher Service', function () {
     var $rootScope, $log, $pusher, satnetPush;
 
     beforeEach(function () {
-        module('snPushServices');
+        module('snPushServices', 'snPusherMock');
 
         inject(function ($injector) {
             $rootScope = $injector.get('$rootScope');

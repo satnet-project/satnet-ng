@@ -43,6 +43,7 @@ describe("Testing Operations Interface", function () {
             'templates',
             'snOperationsDirective',
             'snJRPCServices',
+            'snPusherMock',
             function ($provide) {
                 $provide.value('$cookies', mock__cookies);
                 $provide.value('serverModels', mock__server);

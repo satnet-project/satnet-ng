@@ -37,7 +37,8 @@ describe('Testing Channel controllers', function () {
             'snChannelControllers',
             'snControllers',
             'snBroadcasterServices',
-            'snJRPCMock'
+            'snJRPCMock',
+            'snPusherMock'
         );
         module(function ($provide) {
             $provide.value('$cookies', __mock__cookies);
