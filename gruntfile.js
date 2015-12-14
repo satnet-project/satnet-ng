@@ -137,8 +137,7 @@ module.exports = function (grunt) {
                     'https://rawgit.com/Leaflet/Leaflet.label/master/dist/leaflet.label.js',
                     'https://rawgit.com/ewoken/Leaflet.MovingMarker/master/MovingMarker.js',
                     'https://rawgit.com/henrythasler/Leaflet.Geodesic/master/Leaflet.Geodesic.min.js',
-                    'https://rawgit.com/g00fy-/angular-datepicker/master/dist/angular-datepicker.min.js',
-                    'https://rawgit.com/pusher-community/pusher-js-test-stub/master/dist/pusher-test-stub.js'
+                    'https://rawgit.com/g00fy-/angular-datepicker/master/dist/angular-datepicker.min.js'
                 ],
                 dest: 'node_modules/libs'
             }
@@ -220,8 +219,9 @@ module.exports = function (grunt) {
                         return defaultMiddleware;
                     },
                     open: {
-                        target: 'http://localhost:8081/operations/operations-index.html',
-                        appName: 'chromium'
+                        target:
+                        'http://localhost:8081/operations/operations-index.html',
+                        appName: 'google-chrome'
                     }
                 },
                 proxies: [
