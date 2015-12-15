@@ -269,9 +269,6 @@ describe('Testing Rules controllers', function () {
                 }
             };
 
-        console.log('@today = ' + today.toISOString());
-        console.log('@tomorrow = ' + tomorrow.toISOString());
-
         $controller('ruleDialogCtrl', {
             $scope: $scope,
             $mdDialog: $mdDialog,
