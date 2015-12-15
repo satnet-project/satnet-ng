@@ -20,8 +20,8 @@
         "lib",
         "dist",
         ".git",
-        ".complexity",
-        ".coverage",
-        ".sass-cache"
+        ".complexity/",
+        ".coverage/",
+        ".sass-cache/"
     ]
 }
