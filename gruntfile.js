@@ -221,7 +221,7 @@ module.exports = function (grunt) {
                     open: {
                         target:
                         'http://localhost:8081/operations/operations-index.html',
-                        appName: 'firefox'
+                        appName: 'chromium'
                     }
                 },
                 proxies: [

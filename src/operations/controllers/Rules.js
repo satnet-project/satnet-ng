@@ -38,7 +38,7 @@ angular.module(
      * @param {String} identifier    Identifier of the Ground Station
      */
     function (
-            $scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
+        $scope, $log, $mdDialog, satnetRPC, snDialog, identifier) {
 
             $scope.identifier = identifier;
             $scope.ruleList = [];
