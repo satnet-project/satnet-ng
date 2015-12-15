@@ -249,7 +249,6 @@ describe('Testing Rules controllers', function () {
             tomorrow = new Date(
                 moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
             ),
-            time = today.toISOString().split('T')[1],
             x_once_cfg = {
                 rule_operation: CREATE_OPERATION,
                 rule_periodicity: 'rule_periodicity_once',
