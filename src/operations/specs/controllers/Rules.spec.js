@@ -255,7 +255,7 @@ describe('Testing Rules controllers', function () {
                 rule_periodicity: 'rule_periodicity_once',
                 rule_dates: {
                     rule_once_starting_time: today.toISOString(),
-                    rule_once_ending_time: tomorrow.toISOString()
+                    rule_once_ending_time: today.toISOString()
                 }
             },
             x_daily_cfg = {
@@ -268,6 +268,9 @@ describe('Testing Rules controllers', function () {
                     rule_ending_time: today.toISOString()
                 }
             };
+
+        console.log('@today = ' + today.toISOString());
+        console.log('@tomorrow = ' + tomorrow.toISOString());
 
         $controller('ruleDialogCtrl', {
             $scope: $scope,
