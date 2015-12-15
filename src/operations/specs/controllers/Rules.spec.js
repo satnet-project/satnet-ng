@@ -254,9 +254,8 @@ describe('Testing Rules controllers', function () {
                 rule_operation: CREATE_OPERATION,
                 rule_periodicity: 'rule_periodicity_once',
                 rule_dates: {
-                    rule_once_date: today.toISOString(),
                     rule_once_starting_time: today.toISOString(),
-                    rule_once_ending_time: today.toISOString()
+                    rule_once_ending_time: tomorrow.toISOString()
                 }
             },
             x_daily_cfg = {

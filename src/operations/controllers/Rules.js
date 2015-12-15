@@ -401,14 +401,27 @@ angular.module(
 
                 if ($scope.rule.periodicity === ONCE_PERIODICITY) {
                     cfg.rule_periodicity = ONCE_PERIODICITY_SERIAL;
+
+                    var start_dt = new Date($scope.rule.start_date),
+                        end_dt = new Date($scope.rule.start_date);
+                    start_dt.setHours(
+                        $scope.rule.onceCfg.start_time.getHours()
+                    );
+                    start_dt.setMinutes(
+                        $scope.rule.onceCfg.start_time.getMinutes()
+                    );
+                    end_dt.setHours(
+                        $scope.rule.onceCfg.end_time.getHours()
+                    );
+                    end_dt.setMinutes(
+                        $scope.rule.onceCfg.end_time.getMinutes()
+                    );
+
                     cfg[DATES_SERIAL] = {
-                        rule_once_date: $scope.rule.start_date
-                            .toISOString(),
-                        rule_once_starting_time: $scope.rule.onceCfg.start_time
-                            .toISOString(),
-                        rule_once_ending_time: $scope.rule.onceCfg.end_time
-                            .toISOString()
+                        rule_once_starting_time: start_dt.toISOString(),
+                        rule_once_ending_time: end_dt.toISOString()
                     };
+
                 } else {
                     cfg.rule_periodicity = DAILY_PERIODICITY_SERIAL;
                     cfg[DATES_SERIAL] = {
@@ -452,7 +465,7 @@ angular.module(
                         moment().utc().add(1, 'hours').format(NG_DATE_FORMAT)
                     ),
                     minDate = new Date(
-                        moment().utc().subtract(1, 'days').format(NG_DATE_FORMAT)
+                        moment().utc().format(NG_DATE_FORMAT)
                     ).toISOString().split('T')[0],
                     maxDate = new Date(
                         moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
