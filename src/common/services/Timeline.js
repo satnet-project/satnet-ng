@@ -58,7 +58,7 @@ angular.module('snTimelineServices', [])
 
             if (moment(start).isBefore(cfg.start_d)) {
                 $log.warn(
-                    'Discarded, too OLD!' +
+                    'Discarded, too OLD! ' +
                     'slot = (' + start.toISOString() +
                     ', ' + end.toISOString() +
                     '), interval = (' + cfg.start_d.toISOString() +
@@ -68,7 +68,7 @@ angular.module('snTimelineServices', [])
             }
             if (moment(end).isAfter(cfg.end_d)) {
                 $log.warn(
-                    'Discarded, too FUTURISTIC!' +
+                    'Discarded, too FUTURISTIC! ' +
                     'slot = (' + start.toISOString() +
                     ', ' + end.toISOString() +
                     '), interval = (' + cfg.start_d.toISOString() +
