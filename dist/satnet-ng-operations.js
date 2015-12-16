@@ -4896,6 +4896,65 @@ angular.module(
         };
 
         /**
+         * Function that combines the given date and time JavaScript Date()
+         * objects by setting the hours and minutes properties of the given
+         * date time with the values from the given time object.
+         * @param {Object} date Date() object with the date, used as a base
+         * @param {Object} date Date() object with the time
+         * @returns Date() object with the date and time combined
+         */
+        $scope.combineDates = function (date, time) {
+            var dt = new Date(date);
+            dt.setHours(time.getHours());
+            dt.setMinutes(time.getMinutes());
+            return dt;
+        };
+
+        /**
+         * Function that creates the dates for the ONCE rule configuration.
+         * 
+         * @param {Object} configuration Object that holds rule's configuration
+         */
+        $scope.createOnceDates = function (configuration) {
+
+            var start_dt = $scope.combineDates(
+                    $scope.rule.start_date, $scope.rule.onceCfg.start_time
+                ),
+                end_dt = $scope.combineDates(
+                    $scope.rule.start_date, $scope.rule.onceCfg.end_time
+                );
+
+            configuration[DATES_SERIAL] = {
+                rule_once_starting_time: start_dt.toISOString(),
+                rule_once_ending_time: end_dt.toISOString()
+            };
+
+        };
+
+        /**
+         * Function that creates the dates for the DAILY rule configuration.
+         * 
+         * @param {Object} configuration Object that holds rule's configuration
+         */
+        $scope.createDailyDates = function (configuration) {
+
+            var start_dt = $scope.combineDates(
+                    $scope.rule.start_date, $scope.rule.dailyCfg.start_time
+                ),
+                end_dt = $scope.combineDates(
+                    $scope.rule.start_date, $scope.rule.dailyCfg.end_time
+                );
+
+            configuration[DATES_SERIAL] = {
+                rule_daily_initial_date: $scope.rule.start_date.toISOString(),
+                rule_daily_final_date: $scope.rule.end_date.toISOString(),
+                rule_starting_time: start_dt.toISOString(),
+                rule_ending_time: end_dt.toISOString()
+            };
+
+        };
+
+        /**
          * Function that handles the creation of the rule in the remote server.
          * Its main responsibilities are the serialization of the configuration
          * that has been input by the user into an object that can be properly
@@ -4908,39 +4967,12 @@ angular.module(
 
             if ($scope.rule.periodicity === ONCE_PERIODICITY) {
                 cfg.rule_periodicity = ONCE_PERIODICITY_SERIAL;
-                var start_dt = new Date($scope.rule.start_date),
-                    end_dt = new Date($scope.rule.start_date);
-                start_dt.setHours(
-                    $scope.rule.onceCfg.start_time.getHours()
-                );
-                start_dt.setMinutes(
-                    $scope.rule.onceCfg.start_time.getMinutes()
-                );
-                end_dt.setHours(
-                    $scope.rule.onceCfg.end_time.getHours()
-                );
-                end_dt.setMinutes(
-                    $scope.rule.onceCfg.end_time.getMinutes()
-                );
-
-                cfg[DATES_SERIAL] = {
-                    rule_once_starting_time: start_dt.toISOString(),
-                    rule_once_ending_time: end_dt.toISOString()
-                };
-
+                $scope.createOnceDates(cfg);
             } else {
                 cfg.rule_periodicity = DAILY_PERIODICITY_SERIAL;
-                cfg[DATES_SERIAL] = {
-                    rule_daily_initial_date: $scope.rule.start_date
-                        .toISOString(),
-                    rule_daily_final_date: $scope.rule.end_date
-                        .toISOString(),
-                    rule_starting_time: $scope.rule.dailyCfg.start_time
-                        .toISOString(),
-                    rule_ending_time: $scope.rule.dailyCfg.end_time
-                        .toISOString()
-                };
+                $scope.createDailyDates(cfg);
             }
+
             satnetRPC.rCall('rules.add', [identifier, cfg]).then(
                 function (response) {
                     var id = response.spacecraft_id;
