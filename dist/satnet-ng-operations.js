@@ -1563,11 +1563,23 @@ angular.module('snTimelineServices', [])
         this.discardSlot = function (cfg, start, end) {
 
             if (moment(start).isBefore(cfg.start_d)) {
-                $log.warn('Slot discarded, too old!');
+                $log.warn(
+                    'Discarded, too OLD!' +
+                    'slot = (' + start.toISOString() +
+                    ', ' + end.toISOString() +
+                    '), interval = (' + cfg.start_d.toISOString() +
+                    ', ' + cfg.end_d.toISOString() + ')'
+                );
                 return true;
             }
             if (moment(end).isAfter(cfg.end_d)) {
-                $log.warn('Slot discarded, too futuristic!');
+                $log.warn(
+                    'Discarded, too FUTURISTIC!' +
+                    'slot = (' + start.toISOString() +
+                    ', ' + end.toISOString() +
+                    '), interval = (' + cfg.start_d.toISOString() +
+                    ', ' + cfg.end_d.toISOString() + ')'
+                );
                 return true;
             }
             return false;
