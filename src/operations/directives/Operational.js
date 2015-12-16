@@ -140,6 +140,10 @@ angular.module('snOperationalDirective', [
      */
     function ($scope, $mdDialog) {
 
+        $scope.uiCtrl = {
+            detachable: false,
+        };
+
         /**
          * Function that closes the dialog.
          */

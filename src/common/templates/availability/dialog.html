@@ -21,7 +21,11 @@
                 </div>
             </md-button>
 
-            <md-button id="detach" ng-click="detach()" aria-label="Detach" class="md-primary menu-button" style="width: 125px">
+            <md-button id="detach"
+                       ng-disabled="{{ !(uiCtrl.detachable) }}"
+                       ng-click="detach()"
+                       aria-label="Detach"
+                       class="md-primary menu-button" style="width: 125px">
                 <div layout="row" style="sn-margin">
                     <i class="fa fa-clone"></i>
                     <b style="margin-left: 15px">detach</b>

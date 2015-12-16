@@ -3307,6 +3307,10 @@ angular.module('snAvailabilityDirective', [
      */
     function ($scope, $mdDialog) {
 
+        $scope.uiCtrl = {
+            detachable: false,
+        };
+
         /**
          * Function that closes the dialog.
          */
@@ -5581,6 +5585,10 @@ angular.module('snOperationalDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function ($scope, $mdDialog) {
+
+        $scope.uiCtrl = {
+            detachable: false,
+        };
 
         /**
          * Function that closes the dialog.
