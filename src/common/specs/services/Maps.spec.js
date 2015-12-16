@@ -50,6 +50,19 @@ describe('Testing snMapServices Service', function () {
         expected_MIN_ZOOM = 2,
         expected_MAX_ZOOM = 12,
         x_baselayers = {
+            cartodb_baselayer: {
+                name: 'CartoDB Base Layer',
+                type: 'xyz',
+                url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                layerOptions: {
+                    noWrap: false,
+                    continuousWorld: false,
+                    subdomains: 'abcd',
+                    minZoom: expected_MIN_ZOOM,
+                    maxZoom: expected_MAX_ZOOM,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+                }
+            },
             esri_baselayer: {
                 name: 'ESRI Base Layer',
                 type: 'xyz',

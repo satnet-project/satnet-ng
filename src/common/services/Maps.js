@@ -198,6 +198,19 @@ angular.module('snMapServices', [
              */
             this.getBaseLayers = function () {
                 return {
+                    cartodb_baselayer: {
+                        name: 'CartoDB Base Layer',
+                        type: 'xyz',
+                        url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            subdomains: 'abcd',
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+                        }
+                    },
                     esri_baselayer: {
                         name: 'ESRI Base Layer',
                         type: 'xyz',
