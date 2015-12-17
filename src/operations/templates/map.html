@@ -1,5 +1,7 @@
 <div ng-controller="mapCtrl" ng-init="init()">
-    <leaflet id="mainMap" defaults="defaults" center="center" markers="markers"
+    <leaflet id="mainMap" defaults="defaults"
+             center="center" markers="markers"
+             maxbounds="maxbounds"
              layers="layers" paths="paths"
              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
     </leaflet>

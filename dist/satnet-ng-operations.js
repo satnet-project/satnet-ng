@@ -1909,9 +1909,34 @@ angular.module('snRuleFilters', [])
     '$log', function ($log) {
 
         this.isoformat = function (datetime) {
+            $log.info('>>>');
             return datetime.toISOString().split('Z')[0] + '+00:00';
         };
 
+    }
+])
+.filter('printRuleTitle', [
+    'RULE_PERIODICITIES', 'SHORT_RULE_PERIODICITIES',
+
+    /**
+     * Filter that prints out a human-readable title of the given rule.
+     * 
+     * @param   {Object} RULE_PERIODICITIES Dictionary with the conversion
+     * @param   {Object} SHORT_RULE_PERIODICITIES Dictionary with the conversion
+     * @returns {String} Human-readable string
+     */
+    function (RULE_PERIODICITIES, SHORT_RULE_PERIODICITIES) {
+        return function (rule) {
+            var p = SHORT_RULE_PERIODICITIES[rule.rule_periodicity];
+
+            if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_once ) {
+                return '(' + rule.rule_operation + ', ONCE)';
+            }
+            if ( p === SHORT_RULE_PERIODICITIES.rule_periodicity_daily ) {
+                return '(' + rule.rule_operation + ', DAILY)';
+            }
+
+        };
     }
 ])
 .filter('printRule', [
@@ -1978,7 +2003,7 @@ angular.module('snMarkerModels', [
     .constant('_SIM_DAYS', 1)
     .constant('_GEOLINE_STEPS', 1)
     .service('markers', [
-        '$log',
+        '$log', 'leafletBoundsHelpers',
         'mapServices', 'LAT', 'LNG', 'ZOOM',
         '_SIM_DAYS', '_GEOLINE_STEPS',
 
@@ -1998,7 +2023,10 @@ angular.module('snMarkerModels', [
          *                                       the GeoLines
          * @returns {Object|String} Object that provides this service
          */
-        function ($log, mapServices, LAT, LNG, ZOOM, _SIM_DAYS, _GEOLINE_STEPS) {
+        function (
+            $log, leafletBoundsHelpers,
+            mapServices, LAT, LNG, ZOOM, _SIM_DAYS, _GEOLINE_STEPS
+        ) {
 
             /******************************************************************/
             /****************************************************** MAP SCOPE */

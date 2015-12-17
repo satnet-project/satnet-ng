@@ -19,21 +19,51 @@
             </md-list-item>
             <md-list-item ng-hide="!ruleList.length" ng-repeat="r in ruleList">
 
+                <!--
+                <md-card style="width: 90%">
+                    <md-card-title>
+                        <md-card-title-text class="md-primary">
+                            <b>{{ r | printRuleTitle }}</b>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        {{ r | printRuleDates }}
+                    </md-card-content>
+                    <md-card-actions layout="row" layout-align="center end">
+                        <md-button id="{{ r }}-delete"
+                                   ng-click="delete(r)"
+                                   aria-label="delete rule {{ r }}"
+                                   class="md-primary menu-button" flex>
+                            <div layout="row" layout-fill>
+                                <i class="fa fa-close"></i>
+                            </div>
+                        </md-button>
+                    </md-card-actions>
+                </md-card>
+                -->
+
+                <!-- -->
                 <div layout="row" layout-fill>
 
-                    <md-button id="{{ r }}-edit" aria-label="edit availability rule {{ r }}" class="md-primary menu-button" style="width: 90%">
+                    <md-button id="{{ r }}-edit"
+                               aria-label="edit availability rule {{ r }}"
+                               class="md-primary menu-button"
+                               style="width: 90%">
                         <div layout="row" layout-fill>
                             <b style="font-size: 75%">{{ r | printRule }}</b>
                         </div>
                     </md-button>
 
-                    <md-button id="{{ r }}-delete" ng-click="delete(r)" aria-label="delete rule {{ r }}" class="md-primary menu-button" flex>
+                    <md-button id="{{ r }}-delete" ng-click="delete(r)"
+                               aria-label="delete rule {{ r }}"
+                               class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-close"></i>
                         </div>
                     </md-button>
 
                 </div>
+                <!-- -->
 
             </md-list-item>
         </md-list>

@@ -2,7 +2,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
   'use strict';
 
   $templateCache.put('common/templates/about/dialog.html',
-    "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\" style=\"width: 50%\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><div class=\"sn-about\"><img class=\"sn-logo\" src=\"/images/logo.png\"><p>The SatNet Network is a cooperative Open Source project hosted at (<a href=\"https://github.com/satnet-project\">GitHub</a>). Its objective is to provide a communications network that enables sharing the Ground Stations of the members of the CubeSat developers community.</p><p>All the documentation is edited online in a collaborative wiki website hosted also at GitHub: <a href=\"https://github.com/satnet-project/documentation/wiki\">SatNet Wiki</a>. Frozen versions of the documents can be downloaded in PDF format.</p></div></md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
+    "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\" style=\"width: 50%\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><div class=\"sn-about\"><div class=\"sn-about-logo\"></div><div class=\"sn-about-content\"><p>The SatNet Network is a cooperative Open Source project hosted at (<a href=\"https://github.com/satnet-project\">GitHub</a>). Its objective is to provide a communications network that enables sharing the Ground Stations of the members of the CubeSat developers community.</p><p>All the documentation is edited online in a collaborative wiki website hosted also at GitHub: <a href=\"https://github.com/satnet-project/documentation/wiki\">SatNet Wiki</a>. Frozen versions of the documents can be downloaded in PDF format.</p></div></div></md-content><div class=\"md-actions\"><md-button id=\"closeAbout\" ng-click=\"closeDialog()\">Close</md-button></div></md-dialog>"
   );
 
 
@@ -86,7 +86,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/map.html',
-    "<div ng-controller=\"mapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" defaults=\"defaults\" center=\"center\" markers=\"markers\" layers=\"layers\" paths=\"paths\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
+    "<div ng-controller=\"mapCtrl\" ng-init=\"init()\"><leaflet id=\"mainMap\" defaults=\"defaults\" center=\"center\" markers=\"markers\" maxbounds=\"maxbounds\" layers=\"layers\" paths=\"paths\" style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%\"></leaflet></div>"
   );
 
 
@@ -114,7 +114,28 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/rules/list.html',
-    "<md-dialog aria-label=\"Availability Rules Menu\"><md-content class=\"menu-list\"><md-button id=\"addRule\" ng-click=\"showAddDialog()\" aria-label=\"add rule\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>availability rule</b></div></md-button><md-divider></md-divider><md-list><md-list-item ng-hide=\"ruleList.length\"><span class=\"sn-no-item\" flex>(no rules)</span></md-list-item><md-list-item ng-hide=\"!ruleList.length\" ng-repeat=\"r in ruleList\"><div layout=\"row\" layout-fill><md-button id=\"{{ r }}-edit\" aria-label=\"edit availability rule {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\">{{ r | printRule }}</b></div></md-button><md-button id=\"{{ r }}-delete\" ng-click=\"delete(r)\" aria-label=\"delete rule {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-close\"></i></div></md-button></div></md-list-item></md-list></md-content></md-dialog>"
+    "<md-dialog aria-label=\"Availability Rules Menu\"><md-content class=\"menu-list\"><md-button id=\"addRule\" ng-click=\"showAddDialog()\" aria-label=\"add rule\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>availability rule</b></div></md-button><md-divider></md-divider><md-list><md-list-item ng-hide=\"ruleList.length\"><span class=\"sn-no-item\" flex>(no rules)</span></md-list-item><md-list-item ng-hide=\"!ruleList.length\" ng-repeat=\"r in ruleList\"><!--\n" +
+    "                <md-card style=\"width: 90%\">\n" +
+    "                    <md-card-title>\n" +
+    "                        <md-card-title-text class=\"md-primary\">\n" +
+    "                            <b>{{ r | printRuleTitle }}</b>\n" +
+    "                        </md-card-title-text>\n" +
+    "                    </md-card-title>\n" +
+    "                    <md-card-content>\n" +
+    "                        {{ r | printRuleDates }}\n" +
+    "                    </md-card-content>\n" +
+    "                    <md-card-actions layout=\"row\" layout-align=\"center end\">\n" +
+    "                        <md-button id=\"{{ r }}-delete\"\n" +
+    "                                   ng-click=\"delete(r)\"\n" +
+    "                                   aria-label=\"delete rule {{ r }}\"\n" +
+    "                                   class=\"md-primary menu-button\" flex>\n" +
+    "                            <div layout=\"row\" layout-fill>\n" +
+    "                                <i class=\"fa fa-close\"></i>\n" +
+    "                            </div>\n" +
+    "                        </md-button>\n" +
+    "                    </md-card-actions>\n" +
+    "                </md-card>\n" +
+    "                --><!-- --><div layout=\"row\" layout-fill><md-button id=\"{{ r }}-edit\" aria-label=\"edit availability rule {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\">{{ r | printRule }}</b></div></md-button><md-button id=\"{{ r }}-delete\" ng-click=\"delete(r)\" aria-label=\"delete rule {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-close\"></i></div></md-button></div><!-- --></md-list-item></md-list></md-content></md-dialog>"
   );
 
 

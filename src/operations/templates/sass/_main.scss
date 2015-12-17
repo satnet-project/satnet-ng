@@ -73,15 +73,17 @@ md-content {
     background-color: $sn-secondary-color;
 }
 
-.sn-logo {
-    @extend .sn-padding;
-    margin-right: 25px;
-    float: left;
-    width: 25%;
+.sn-about {
 }
 
-.sn-about {
-    @extend .sn-padding;
+.sn-about-logo {
+    min-height: 100%;
+    width: 100%;
+    background-image: url('/images/satnet-logo-x.png');
+}
+
+.sn-about-content {
+    margin-left: 15%;
     text-align: justify;
 }
 

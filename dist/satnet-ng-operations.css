@@ -72,7 +72,7 @@ md-content .md-button {
 .sn-margin {
   margin: 10px; }
 
-.sn-padding, .sn-logo, .sn-about {
+.sn-padding {
   padding: 5px; }
 
 .sn-box-placement, .sn-box-100 {
@@ -88,12 +88,13 @@ md-content .md-button {
   border-color: #607D8B;
   background-color: #CFD8DC; }
 
-.sn-logo {
-  margin-right: 25px;
-  float: left;
-  width: 25%; }
+.sn-about-logo {
+  min-height: 100%;
+  width: 100%;
+  background-image: url("/images/satnet-logo-x.png"); }
 
-.sn-about {
+.sn-about-content {
+  margin-left: 15%;
   text-align: justify; }
 
 .sn-box-100 {
