@@ -235,6 +235,19 @@ angular.module('snMapServices', [
                             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         }
                     },
+                    cartodbdark_baselayer: {
+                        name: 'CartoDB Dark Matter',
+                        type: 'xyz',
+                        url: 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+                        layerOptions: {
+                            noWrap: false,
+                            continuousWorld: false,
+                            minZoom: MIN_ZOOM,
+                            maxZoom: MAX_ZOOM,
+                            subdomains: 'abcd',
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+                        }
+                    },
                 };
             };
 
