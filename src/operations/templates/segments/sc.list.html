@@ -8,7 +8,9 @@
 
     <md-content class="menu-list">
 
-        <md-button id="addSc" ng-click="showAddDialog()" aria-label="add spacecraft" class="md-primary menu-button">
+        <md-button id="addSc" ng-click="showAddDialog()"
+                   aria-label="add spacecraft"
+                   class="md-primary menu-button">
 
             <div layout="row" layout-fill>
                 <i class="fa fa-plus"></i>
@@ -26,22 +28,38 @@
             <md-list-item ng-repeat="sc in scList">
                 <div layout="row" layout-fill>
 
-                    <md-button id="{{ sc }}-edit" ng-click="showEditDialog(sc)" aria-label="edit spacecraft {{ sc }}" class="md-primary menu-button" style="text-align:center; width: 70%">
+                    <md-button id="{{ sc }}-edit"
+                               ng-click="showEditDialog(sc)"
+                               aria-label="edit spacecraft {{ sc }}"
+                               class="md-primary menu-button"
+                               style="text-align:center; width: 70%">
                         <div layout="row" layout-fill>
                             <b>{{ sc }}</b>
                         </div>
+                        <md-tooltip md-direction="top">Edit</md-tooltip>
                     </md-button>
 
-                    <md-button id="{{ sc }}-channels" ng-click="showChannelList(sc)" aria-label="spacecraft channels {{ sc }}" class="md-primary menu-button" flex>
+                    <sn-passes segment-id="{{ sc }}" is-spacecraft="true">
+                    </sn-passes>
+
+                    <md-button id="{{ sc }}-channels"
+                               ng-click="showChannelList(sc)"
+                               aria-label="spacecraft channels {{ sc }}"
+                               class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-rss"></i>
                         </div>
+                        <md-tooltip md-direction="top">Channels</md-tooltip>
                     </md-button>
 
-                    <md-button id="{{ sc }}-delete" ng-click="delete(sc)" aria-label="delete spacecraft {{ sc }}" class="md-primary menu-button" flex>
+                    <md-button id="{{ sc }}-delete"
+                               ng-click="delete(sc)"
+                               aria-label="delete spacecraft {{ sc }}"
+                               class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-close"></i>
                         </div>
+                        <md-tooltip md-direction="top">Delete</md-tooltip>
                     </md-button>
 
                 </div>

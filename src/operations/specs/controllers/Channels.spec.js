@@ -342,7 +342,7 @@ describe('Testing Channel controllers', function () {
         });
         expect(function () {
             $scope_sc.init();
-        }).toThrow('@channelDialogCtrl: no channel identifier provided');
+        }).toThrow('@channelDialogCtrl: no channel id provided');
 
     });
 

@@ -14,25 +14,40 @@
             <div layout="row">
                 <md-input-container style="width: 50%">
                     <label>Identifier</label>
-                    <input name="identifier" ng-disabled="uiCtrl.editing" ng-remote-validate="/configuration/spacecraft/valid_id" ng-remote-throttle="200" ng-remote-method="GET" ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/" ng-model="configuration.identifier" required>
+                    <input name="identifier"
+                           ng-disabled="uiCtrl.editing"
+                           ng-remote-validate="/configuration/spacecraft/valid_id"
+                           ng-remote-throttle="200" ng-remote-method="GET"
+                           ng-pattern="/^[a-zA-Z0-9.\-_]{5,8}$/"
+                           ng-model="configuration.identifier" required>
                 </md-input-container>
                 <md-input-container style="width: 50%">
                     <label>Callsign</label>
-                    <input name="callsign" ng-pattern="/^[a-zA-Z0-9]{3,8}$/" ng-model="configuration.callsign" required>
+                    <input name="callsign"
+                           ng-pattern="/^[a-zA-Z0-9]{3,8}$/"
+                           ng-model="configuration.callsign" required>
                 </md-input-container>
             </div>
 
             <div layout="row">
                 <md-input-container style="width: 50%">
-                    <md-select ng-model="configuration.tle_group" ng-change="updateTles()" required>
+                    <md-select ng-model="configuration.tle_group"
+                               ng-change="updateTles()" required>
                         <md-select-label>{{ configuration.tle_group ? configuration.tle_group.subsection : 'Select Group' }}</md-select-label>
-                        <md-option ng-value="group" ng-repeat="group in uiCtrl.tle_groups">{{ group.subsection }}</md-option>
+                        <md-option ng-value="group"
+                                   ng-repeat="group in uiCtrl.tle_groups">
+                            {{ group.subsection }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container style="width: 50%">
-                    <md-select ng-model="configuration.tle" ng-change="updateTles()" required>
+                    <md-select ng-model="configuration.tle"
+                               ng-change="updateTles()" required>
                         <md-select-label>{{ configuration.tle ? configuration.tle.spacecraft_tle_id : 'Select TLE' }}</md-select-label>
-                        <md-option ng-value="tle" ng-repeat="tle in uiCtrl.tles">{{ tle.spacecraft_tle_id }}</md-option>
+                        <md-option ng-value="tle"
+                                   ng-repeat="tle in uiCtrl.tles">
+                            {{ tle.spacecraft_tle_id }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
             </div>
@@ -41,21 +56,28 @@
 
         <div layout="row">
 
-            <md-button id="add" ng-show="!uiCtrl.editing" ng-click="add()" ng-disabled="scCfg.$pristine || scCfg.$invalid" aria-label="Add Spacecraft" class="md-primary menu-button">
+            <md-button id="add" ng-show="!uiCtrl.editing" ng-click="add()"
+                       ng-disabled="scCfg.$pristine || scCfg.$invalid"
+                       aria-label="Add Spacecraft"
+                       class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-plus"></i>
                     <b>add</b>
                 </div>
             </md-button>
 
-            <md-button id="edit" ng-show="uiCtrl.editing" ng-click="update()" ng-disabled="scCfg.$pristine || scCfg.$invalid" aria-label="Edit Spacecraft" class="md-primary menu-button">
+            <md-button id="edit" ng-show="uiCtrl.editing" ng-click="update()"
+                       ng-disabled="scCfg.$pristine || scCfg.$invalid"
+                       aria-label="Edit Spacecraft"
+                       class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-floppy-o"></i>
                     <b>save</b>
                 </div>
             </md-button>
 
-            <md-button id="cancel" ng-click="cancel()" aria-label="Cancel" class="md-primary menu-button">
+            <md-button id="cancel" ng-click="cancel()"
+                       aria-label="Cancel" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-times"></i>
                     <b>cancel</b>

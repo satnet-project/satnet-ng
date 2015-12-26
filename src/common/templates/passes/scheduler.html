@@ -1,6 +1,4 @@
-<div ng-controller="snAvailabilitySchCtrl"
-     ng-init="init()"
-     class="sn-sch-table-wrap">
+<div class="sn-sch-table-wrap">
 
     <style type="text/css">
         @keyframes sn-sch-table-overlay-right {
@@ -64,7 +62,7 @@
                                  ng-repeat="s in slots"
                                  ng-style="{'left': ( s.slot.left + 1) + '%'}">
                                 <ul>
-                                    <!--<li>{{ s.slot.id }}</li>-->
+                                    <li>{{ s.slot.id }}</li>
                                     <li>{{ s.slot.s_date }}</li>
                                     <li>{{ s.slot.e_date }}</li>
                                 </ul>

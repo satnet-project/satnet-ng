@@ -767,10 +767,10 @@ angular
     }
 
 ])
-    .constant('RPC_GS_PREFIX', 'gs')
-    .constant('RPC_SC_PREFIX', 'sc')
-    .constant('TEST_PORT', 8000)
-    .service('satnetRPC', [
+.constant('RPC_GS_PREFIX', 'gs')
+.constant('RPC_SC_PREFIX', 'sc')
+.constant('TEST_PORT', 8000)
+.service('satnetRPC', [
     'jsonrpc', '$location', '$log', '$q', '$http', 'TEST_PORT',
 
     /**
@@ -786,356 +786,354 @@ angular
      */
     function (jsonrpc, $location, $log, $q, $http, TEST_PORT) {
 
-            /**
-             * PRIVATE METHOD
-             *
-             * Returns the complete address to connect to the sever where the
-             * SatNet services are running. This can be use as the base for any
-             * of the offered services, regardless of whether they are offered
-             * over JRPC or over HTTP (AJAX requests).
-             *
-             * If the current connection address is "localhost", it assumes
-             * debug mode and the URL that it returns has the port changed so
-             * that it re-routes the calls to the port 8000. At that port, the
-             * code for the SatNet server is supposed to be running.
-             *
-             * The latter policy for automatic test detection might incurr in
-             * further Cross-Reference connection problems.
-             *
-             * @returns {String} Corrected address for the remote SatNet server.
-             */
-            this._getSatNetAddress = function () {
-                var protocol = $location.protocol(),
-                    hostname = $location.host(),
-                    port = $location.port();
-                if (hostname === 'localhost') {
-                    port = TEST_PORT;
+        /**
+         * PRIVATE METHOD
+         *
+         * Returns the complete address to connect to the sever where the
+         * SatNet services are running. This can be use as the base for any
+         * of the offered services, regardless of whether they are offered
+         * over JRPC or over HTTP (AJAX requests).
+         *
+         * If the current connection address is "localhost", it assumes
+         * debug mode and the URL that it returns has the port changed so
+         * that it re-routes the calls to the port 8000. At that port, the
+         * code for the SatNet server is supposed to be running.
+         *
+         * The latter policy for automatic test detection might incurr in
+         * further Cross-Reference connection problems.
+         *
+         * @returns {String} Corrected address for the remote SatNet server.
+         */
+        this._getSatNetAddress = function () {
+            var protocol = $location.protocol(),
+                hostname = $location.host(),
+                port = $location.port();
+            if (hostname === 'localhost') {
+                port = TEST_PORT;
+            }
+            return '' + protocol + '://' + hostname + ':' + port;
+        };
+
+        /**
+         * PRIVATE METHOD
+         *
+         * Returns the complete address to connect with the remote server
+         * that implements the remote SATNET API over JRPC.
+         *
+         * If the current connection address is "localhost", it assumes
+         * debug mode and the URL that it returns has the port changed so
+         * that it re-routes the calls to the port 8000. At that port, the
+         * code for the SatNet server is supposed to be running.
+         *
+         * The latter policy for automatic test detection might incurr in
+         * further Cross-Reference connection problems.
+         *
+         * @returns {String} Corrected address for the remote SatNet server.
+         */
+        this._getRPCAddress = function () {
+            return this._getSatNetAddress() + '/jrpc/';
+        };
+
+        var _rpc = this._getRPCAddress();
+        this._configuration = jsonrpc.newService('configuration', _rpc);
+        this._simulation = jsonrpc.newService('simulation', _rpc);
+        this._leop = jsonrpc.newService('leop', _rpc);
+        this._network = jsonrpc.newService('network', _rpc);
+        this._scheduling = jsonrpc.newService('scheduling', _rpc);
+
+        this._services = {
+            'channels.options': this._configuration
+                .createMethod('bands.available'),
+            // Configuration methods (Ground Stations)
+            'gs.list': this._configuration
+                .createMethod('gs.list'),
+            'gs.add': this._configuration
+                .createMethod('gs.create'),
+            'gs.get': this._configuration
+                .createMethod('gs.get'),
+            'gs.update': this._configuration
+                .createMethod('gs.set'),
+            'gs.delete': this._configuration
+                .createMethod('gs.delete'),
+            'gs.channel.list': this._configuration
+                .createMethod('gs.channel.list'),
+            'gs.channel.add': this._configuration
+                .createMethod('gs.channel.create'),
+            'gs.channel.get': this._configuration
+                .createMethod('gs.channel.get'),
+            'gs.channel.set': this._configuration
+                .createMethod('gs.channel.set'),
+            'gs.channel.delete': this._configuration
+                .createMethod('gs.channel.delete'),
+            // Rules management
+            'rules.list': this._configuration
+                .createMethod('gs.rules.list'),
+            'rules.add': this._configuration
+                .createMethod('gs.rules.add'),
+            'rules.delete': this._configuration
+                .createMethod('gs.rules.delete'),
+            // Configuration methods (Spacecraft)
+            'sc.list': this._configuration
+                .createMethod('sc.list'),
+            'sc.add': this._configuration
+                .createMethod('sc.create'),
+            'sc.get': this._configuration
+                .createMethod('sc.get'),
+            'sc.update': this._configuration
+                .createMethod('sc.set'),
+            'sc.delete': this._configuration
+                .createMethod('sc.delete'),
+            'sc.channel.list': this._configuration
+                .createMethod('sc.channel.list'),
+            'sc.channel.add': this._configuration
+                .createMethod('sc.channel.create'),
+            'sc.channel.get': this._configuration
+                .createMethod('sc.channel.get'),
+            'sc.channel.set': this._configuration
+                .createMethod('sc.channel.set'),
+            'sc.channel.delete': this._configuration
+                .createMethod('sc.channel.delete'),
+            // User configuration
+            'user.getLocation': this._configuration
+                .createMethod('user.getLocation'),
+            // TLE methods
+            'tle.celestrak.getSections': this._configuration
+                .createMethod('tle.celestrak.sections'),
+            'tle.celestrak.getResource': this._configuration
+                .createMethod('tle.celestrak.resource'),
+            'tle.celestrak.getTle': this._configuration
+                .createMethod('tle.celestrak.tle'),
+            // Simulation methods
+            'sc.getGroundtrack': this._simulation
+                .createMethod('sc.groundtrack'),
+            'sc.getPasses': this._simulation
+                .createMethod('sc.passes'),
+            'gs.getPasses': this._simulation
+                .createMethod('gs.passes'),
+            /* LEOP services
+            'leop.getCfg': this._leop
+                .createMethod('getConfiguration'),
+            'leop.setCfg': this._leop
+                .createMethod('setConfiguration'),
+            'leop.getPasses': this._leop
+                .createMethod('getPasses'),
+            'leop.gs.list': this._leop
+                .createMethod('gs.list'),
+            'leop.sc.list': this._leop
+                .createMethod('sc.list'),
+            'leop.gs.add': this._leop
+                .createMethod('gs.add'),
+            'leop.gs.remove': this._leop
+                .createMethod('gs.remove'),
+            'leop.ufo.add': this._leop
+                .createMethod('launch.addUnknown'),
+            'leop.ufo.remove': this._leop
+                .createMethod('launch.removeUnknown'),
+            'leop.ufo.identify': this._leop
+                .createMethod('launch.identify'),
+            'leop.ufo.forget': this._leop
+                .createMethod('launch.forget'),
+            'leop.ufo.update': this._leop
+                .createMethod('launch.update'),
+            'leop.getMessages': this._leop
+                .createMethod('getMessages'),
+            */
+            // NETWORK services
+            'net.alive': this._network
+                .createMethod('alive'),
+            'net.geoip': this._network
+                .createMethod('geoip'),
+            // SCHEDULING services
+            'gs.availability': this._scheduling
+                .createMethod('gs.availability'),
+            'sc.compatibility': this._scheduling
+                .createMethod('sc.compatibility'),
+            'gs.operational': this._scheduling
+                .createMethod('gs.operational')
+        };
+
+        /**
+         * PRIVATE function that is used only by this service in order to
+         * generate in the same way all possible errors produced by the
+         * remote invokation of the SatNet services.
+         *
+         * @param {String} service Name of the SatNet JRPC service that
+         *                         has just been invoked.
+         * @param {Array}  params  Array with the parameters for the
+         *                         service to be invoked.
+         * @param {String} code    Error code.
+         * @param {String} message Messsage description.
+         */
+        this._generateError = function (service, params, code, message) {
+
+            var msg = 'Satnet.js@_generateError: invoking = <' + service +
+                '>, with params = <' + JSON.stringify(params) +
+                '>, code = <' + JSON.stringify(code) +
+                '>, description = <' + JSON.stringify(message) + '>';
+            $log.warn(msg);
+            throw msg;
+
+        };
+
+        /**
+         * Method for calling the remote service through JSON-RPC.
+         *
+         * @param service The name of the service, as per the internal
+         * services name definition.
+         * @param params The parameters for the service (as an array).
+         * @returns {*}
+         */
+        this.rCall = function (service, params) {
+            var error_fn = this._generateError;
+            if ((this._services.hasOwnProperty(service)) === false) {
+                throw '@rCall: service not found, id = <' + service + '>';
+            }
+            $log.info(
+                '@rCall: Invoked service = <' + service + '>' +
+                ', params = ' + JSON.stringify(params)
+            );
+            return this._services[service](params).then(function (data) {
+
+                // TODO Workaround for the JSON-RPC library.
+                if (data.data.name === 'JSONRPCError') {
+                    error_fn(
+                        service, params, data.data.code, data.data.message
+                    );
                 }
-                return '' + protocol + '://' + hostname + ':' + port;
-            };
 
-            /**
-             * PRIVATE METHOD
-             *
-             * Returns the complete address to connect with the remote server
-             * that implements the remote SATNET API over JRPC.
-             *
-             * If the current connection address is "localhost", it assumes
-             * debug mode and the URL that it returns has the port changed so
-             * that it re-routes the calls to the port 8000. At that port, the
-             * code for the SatNet server is supposed to be running.
-             *
-             * The latter policy for automatic test detection might incurr in
-             * further Cross-Reference connection problems.
-             *
-             * @returns {String} Corrected address for the remote SatNet server.
-             */
-            this._getRPCAddress = function () {
-                return this._getSatNetAddress() + '/jrpc/';
-            };
-
-            var _rpc = this._getRPCAddress();
-            this._configuration = jsonrpc.newService('configuration', _rpc);
-            this._simulation = jsonrpc.newService('simulation', _rpc);
-            this._leop = jsonrpc.newService('leop', _rpc);
-            this._network = jsonrpc.newService('network', _rpc);
-            this._scheduling = jsonrpc.newService('scheduling', _rpc);
-
-            this._services = {
-                'channels.options': this._configuration
-                    .createMethod('bands.available'),
-                // Configuration methods (Ground Stations)
-                'gs.list': this._configuration
-                    .createMethod('gs.list'),
-                'gs.add': this._configuration
-                    .createMethod('gs.create'),
-                'gs.get': this._configuration
-                    .createMethod('gs.get'),
-                'gs.update': this._configuration
-                    .createMethod('gs.set'),
-                'gs.delete': this._configuration
-                    .createMethod('gs.delete'),
-                'gs.channel.list': this._configuration
-                    .createMethod('gs.channel.list'),
-                'gs.channel.add': this._configuration
-                    .createMethod('gs.channel.create'),
-                'gs.channel.get': this._configuration
-                    .createMethod('gs.channel.get'),
-                'gs.channel.set': this._configuration
-                    .createMethod('gs.channel.set'),
-                'gs.channel.delete': this._configuration
-                    .createMethod('gs.channel.delete'),
-                // Rules management
-                'rules.list': this._configuration
-                    .createMethod('gs.rules.list'),
-                'rules.add': this._configuration
-                    .createMethod('gs.rules.add'),
-                'rules.delete': this._configuration
-                    .createMethod('gs.rules.delete'),
-                // Configuration methods (Spacecraft)
-                'sc.list': this._configuration
-                    .createMethod('sc.list'),
-                'sc.add': this._configuration
-                    .createMethod('sc.create'),
-                'sc.get': this._configuration
-                    .createMethod('sc.get'),
-                'sc.update': this._configuration
-                    .createMethod('sc.set'),
-                'sc.delete': this._configuration
-                    .createMethod('sc.delete'),
-                'sc.channel.list': this._configuration
-                    .createMethod('sc.channel.list'),
-                'sc.channel.add': this._configuration
-                    .createMethod('sc.channel.create'),
-                'sc.channel.get': this._configuration
-                    .createMethod('sc.channel.get'),
-                'sc.channel.set': this._configuration
-                    .createMethod('sc.channel.set'),
-                'sc.channel.delete': this._configuration
-                    .createMethod('sc.channel.delete'),
-                // User configuration
-                'user.getLocation': this._configuration
-                    .createMethod('user.getLocation'),
-                // TLE methods
-                'tle.celestrak.getSections': this._configuration
-                    .createMethod('tle.celestrak.sections'),
-                'tle.celestrak.getResource': this._configuration
-                    .createMethod('tle.celestrak.resource'),
-                'tle.celestrak.getTle': this._configuration
-                    .createMethod('tle.celestrak.tle'),
-                // Simulation methods
-                'sc.getGroundtrack': this._simulation
-                    .createMethod('sc.groundtrack'),
-                'sc.getPasses': this._simulation
-                    .createMethod('sc.passes'),
-                'gs.getPasses': this._simulation
-                    .createMethod('gs.passes'),
-                /* LEOP services
-                'leop.getCfg': this._leop
-                    .createMethod('getConfiguration'),
-                'leop.setCfg': this._leop
-                    .createMethod('setConfiguration'),
-                'leop.getPasses': this._leop
-                    .createMethod('getPasses'),
-                'leop.gs.list': this._leop
-                    .createMethod('gs.list'),
-                'leop.sc.list': this._leop
-                    .createMethod('sc.list'),
-                'leop.gs.add': this._leop
-                    .createMethod('gs.add'),
-                'leop.gs.remove': this._leop
-                    .createMethod('gs.remove'),
-                'leop.ufo.add': this._leop
-                    .createMethod('launch.addUnknown'),
-                'leop.ufo.remove': this._leop
-                    .createMethod('launch.removeUnknown'),
-                'leop.ufo.identify': this._leop
-                    .createMethod('launch.identify'),
-                'leop.ufo.forget': this._leop
-                    .createMethod('launch.forget'),
-                'leop.ufo.update': this._leop
-                    .createMethod('launch.update'),
-                'leop.getMessages': this._leop
-                    .createMethod('getMessages'),
-                */
-                // NETWORK services
-                'net.alive': this._network
-                    .createMethod('alive'),
-                'net.geoip': this._network
-                    .createMethod('geoip'),
-                // SCHEDULING services
-                'gs.availability': this._scheduling
-                    .createMethod('gs.availability'),
-                'sc.compatibility': this._scheduling
-                    .createMethod('sc.compatibility'),
-                'gs.operational': this._scheduling
-                    .createMethod('gs.operational')
-            };
-
-            /**
-             * PRIVATE function that is used only by this service in order to
-             * generate in the same way all possible errors produced by the
-             * remote invokation of the SatNet services.
-             *
-             * @param {String} service Name of the SatNet JRPC service that
-             *                         has just been invoked.
-             * @param {Array}  params  Array with the parameters for the
-             *                         service to be invoked.
-             * @param {String} code    Error code.
-             * @param {String} message Messsage description.
-             */
-            this._generateError = function (service, params, code, message) {
-
-                var msg = 'Satnet.js@_generateError: invoking = <' + service +
-                    '>, with params = <' + JSON.stringify(params) +
-                    '>, code = <' + JSON.stringify(code) +
-                    '>, description = <' + JSON.stringify(message) + '>';
-                $log.warn(msg);
-                throw msg;
-
-            };
-
-            /**
-             * Method for calling the remote service through JSON-RPC.
-             *
-             * @param service The name of the service, as per the internal
-             * services name definition.
-             * @param params The parameters for the service (as an array).
-             * @returns {*}
-             */
-            this.rCall = function (service, params) {
-                var error_fn = this._generateError;
-                if ((this._services.hasOwnProperty(service)) === false) {
-                    throw '@rCall: service not found, id = <' + service + '>';
+                // NOTICE GroundTracks are not displayed completely...
+                var result_msg = ', result = <';
+                if (service === 'sc.getGroundtrack') {
+                    result_msg += '$GT_TOO_LONG$>';
+                } else {
+                    result_msg += JSON.stringify(data) + '>';
                 }
                 $log.info(
                     '@rCall: Invoked service = <' + service + '>' +
-                    ', params = ' + JSON.stringify(params)
+                    ', params = <' + JSON.stringify(params) + '>, ' +
+                    ', result = <' + result_msg
                 );
-                return this._services[service](params).then(
-                    function (data) {
-                        // TODO Workaround for the JSON-RPC library.
-                        if (data.data.name === 'JSONRPCError') {
-                            error_fn(
-                                service, params,
-                                data.data.code, data.data.message
-                            );
-                        }
+                return data.data;
 
-                        // NOTICE GroundTracks are not displayed completely...
-                        var result_msg = ', result = <';
-                        if (service === 'sc.getGroundtrack') {
-                            result_msg += '$GT_TOO_LONG$>';
-                        } else {
-                            result_msg += JSON.stringify(data) + '>';
-                        }
-                        $log.info(
-                            '@rCall: Invoked service = <' + service + '>' +
-                            ', params = <' + JSON.stringify(params) + '>, ' +
-                            ', result = <' + result_msg
-                        );
+            }, function (error) {
+                console.log("error = " + JSON.stringify(error));
+                error_fn(service, params, 'NONE', error);
+            });
 
-                        return data.data;
+        };
 
-                    },
-                    function (error) {
-                        console.log("error = " + JSON.stringify(error));
-                        error_fn(service, params, 'NONE', error);
-                    }
+        /**
+         * Simple convenience method for invoking the remote keep alive of
+         * the network sevice.
+         *
+         * @returns {*} Promise that returns True.
+         */
+        this.alive = function () {
+            return this.rCall('net.alive', []).then(function () {
+                return true;
+            });
+        };
 
+        /**
+         * Retrieves the user location using an available Internet service.
+         *
+         * @returns Promise that returns a { latitude, longitude } object.
+         */
+        this.getUserLocation = function () {
+            var url = this._getSatNetAddress() + '/configuration/user/geoip';
+            return $http.get(url).then(function (data) {
+                $log.info(
+                    'Satnet.js@getUserLocation: user@(' +
+                    JSON.stringify(data.data) + ')'
                 );
-            };
+                return {
+                    latitude: parseFloat(data.data.latitude),
+                    longitude: parseFloat(data.data.longitude)
+                };
+            });
+        };
 
-            /**
-             * Simple convenience method for invoking the remote keep alive of
-             * the network sevice.
-             *
-             * @returns {*} Promise that returns True.
-             */
-            this.alive = function () {
-                return this.rCall('net.alive', []).then(function () {
-                    return true;
-                });
-            };
+        /**
+         * Retrieves the server location using an available Internet
+         * service.
+         *
+         * @returns Promise that returns a { latitude, longitude } object.
+         */
+        this.getServerLocation = function (hostname) {
+            return this.rCall('net.geoip', [hostname])
+                .then(function (location) { return location; });
+        };
 
-            /**
-             * Retrieves the user location using an available Internet service.
-             *
-             * @returns Promise that returns a { latitude, longitude } object.
-             */
-            this.getUserLocation = function () {
-                var url = this._getSatNetAddress() +
-                    '/configuration/user/geoip';
-                return $http.get(url).then(function (data) {
-                    $log.info('Satnet.js@getUserLocation: user@(' + JSON
-                        .stringify(data.data) + ')');
-                    return {
-                        latitude: parseFloat(data.data.latitude),
-                        longitude: parseFloat(data.data.longitude)
-                    };
-                });
-            };
-
-            /**
-             * Retrieves the server location using an available Internet
-             * service.
-             *
-             * @returns Promise that returns a { latitude, longitude } object.
-             */
-            this.getServerLocation = function (hostname) {
-                return this.rCall('net.geoip', [hostname])
-                    .then(function (location) {
-                        return location;
-                    });
-            };
-
-            /**
-             * Reads the configuration for a given spacecraft, including the
-             * estimated groundtrack.
-             *
-             * @param scId The identifier of the spacecraft.
-             * @returns Promise that resturns the Spacecraft configuration
-             * object.
-             */
-            this.readSCCfg = function (scId) {
-                var cfg = {},
-                    p = [
+        /**
+         * Reads the configuration for a given spacecraft, including the
+         * estimated groundtrack.
+         *
+         * @param scId The identifier of the spacecraft.
+         * @returns Promise that resturns the Spacecraft configuration
+         * object.
+         */
+        this.readSCCfg = function (scId) {
+            var cfg = {},
+                p = [
                     this.rCall('sc.get', [scId]),
                     this.rCall('sc.getGroundtrack', [scId]),
                     this.rCall('tle.celestrak.getTle', [scId])
                 ];
-                return $q.all(p).then(function (results) {
-                    cfg = results[0];
-                    cfg.groundtrack = results[1];
-                    cfg.tle = results[2];
-                    angular.extend(cfg, results[0]);
-                    angular.extend(cfg.groundtrack, results[1]);
-                    angular.extend(cfg.tle, results[2]);
-                    return cfg;
-                });
-            };
 
-            /**
-             * Reads the configuration for all the GroundStations associated
-             * with this LEOP cluster.
-             *
-             * @param leop_id Identifier of the LEOP cluster.
-             * @returns Promise to be resolved with the result.
-             */
-            this.readAllLEOPGS = function (leop_id) {
-                var self = this;
-                return this.rCall('leop.gs.list', [leop_id])
-                    .then(function (gss) {
-                        var p = [];
-                        angular.forEach(gss.leop_gs_available, function (gs) {
-                            p.push(self.rCall('gs.get', [gs]));
-                        });
-                        angular.forEach(gss.leop_gs_inuse, function (gs) {
-                            p.push(self.rCall('gs.get', [gs]));
-                        });
-                        return $q.all(p).then(function (results) {
-                            var a_cfgs = [],
-                                u_cfgs = [],
-                                j, r_j, r_j_id;
-                            for (j = 0; j < results.length; j += 1) {
-                                r_j = results[j];
-                                r_j_id = r_j.groundstation_id;
-                                if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
-                                    a_cfgs.push(r_j);
-                                } else {
-                                    u_cfgs.push(r_j);
-                                }
-                            }
-                            return {
-                                leop_gs_available: a_cfgs,
-                                leop_gs_inuse: u_cfgs
-                            };
-                        });
+            return $q.all(p).then(function (results) {
+                cfg = results[0];
+                cfg.groundtrack = results[1];
+                cfg.tle = results[2];
+                angular.extend(cfg, results[0]);
+                angular.extend(cfg.groundtrack, results[1]);
+                angular.extend(cfg.tle, results[2]);
+                return cfg;
+            });
+        };
+
+        /**
+         * Reads the configuration for all the GroundStations associated
+         * with this LEOP cluster.
+         *
+         * @param leop_id Identifier of the LEOP cluster.
+         * @returns Promise to be resolved with the result.
+         */
+        this.readAllLEOPGS = function (leop_id) {
+            var self = this;
+            return this.rCall('leop.gs.list', [leop_id])
+                .then(function (gss) {
+                    var p = [];
+                    angular.forEach(gss.leop_gs_available, function (gs) {
+                        p.push(self.rCall('gs.get', [gs]));
                     });
-            };
+                    angular.forEach(gss.leop_gs_inuse, function (gs) {
+                        p.push(self.rCall('gs.get', [gs]));
+                    });
+                    return $q.all(p).then(function (results) {
+                        var a_cfgs = [],
+                            u_cfgs = [],
+                            j, r_j, r_j_id;
+                        for (j = 0; j < results.length; j += 1) {
+                            r_j = results[j];
+                            r_j_id = r_j.groundstation_id;
+                            if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
+                                a_cfgs.push(r_j);
+                            } else {
+                                u_cfgs.push(r_j);
+                            }
+                        }
+                        return {
+                            leop_gs_available: a_cfgs,
+                            leop_gs_inuse: u_cfgs
+                        };
+                    });
+                }
+            );
+        };
     }
 
-]);;/**
+]);
+;/**
  * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1559,9 +1557,8 @@ angular.module('snTimelineServices', [])
     '$log',
     'SN_SCH_TIMELINE_DAYS',
     'SN_SCH_HOURS_DAY',
-    'SN_SCH_GS_ID_WIDTH',
-    'SN_SCH_DATE_FORMAT',
-    'SN_SCH_HOUR_FORMAT',
+    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
+    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
 
     /**
      * Function services to create reusable timeline services.
@@ -1572,9 +1569,8 @@ angular.module('snTimelineServices', [])
         $log,
         SN_SCH_TIMELINE_DAYS,
         SN_SCH_HOURS_DAY,
-        SN_SCH_GS_ID_WIDTH,
-        SN_SCH_DATE_FORMAT,
-        SN_SCH_HOUR_FORMAT
+        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
+        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
     ) {
 
         /**
@@ -1630,6 +1626,37 @@ angular.module('snTimelineServices', [])
         };
 
         /**
+         * Creates a slot that can be displayed within the GUI.
+         * 
+         * @param {Object} cfg Configuration of the controller
+         * @param {Object} raw_slot Non-modified original slot
+         * @param {Object} n_slot Normalized slot
+         * @returns {Object} GUI displayable slot
+         */
+        this.createSlot = function (cfg, raw_slot, n_slot) {
+
+            var slot_s_s = moment(n_slot.start).unix(),
+                slot_e_s = moment(n_slot.end).unix(),
+                start_s = slot_s_s - cfg.start_d_s,
+                slot_l = (start_s / cfg.total_s) * 100,
+                slot_duration_s = slot_e_s - slot_s_s,
+                slot_w = (slot_duration_s / cfg.total_s) * 100,
+                id = raw_slot.identifier + '';
+
+            return {
+                raw_slot: raw_slot,
+                slot: {
+                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                    s_date: moment(n_slot.start).format(),
+                    e_date: moment(n_slot.end).format(),
+                    left: slot_l.toFixed(3),
+                    width: slot_w.toFixed(3)
+                }
+            };
+
+        };
+
+        /**
          * This function filters all the slots for a given ground station and
          * creates slot objects that can be directly positioned and displayed
          * over a timeline.
@@ -1640,13 +1667,11 @@ angular.module('snTimelineServices', [])
          *                                      date of the timeline
          * @param   {Object}   end_d            moment.js object with th end
          *                                      date of the timeline
-         * @param   {Function} createSlot       Function that creates a slot
-         *                                      with the given processed data
          * @returns {Object}   Dictionary addressed with the identifiers of the
          *                                      Ground Stations as keys, whose
          *                                      values are the filtered slots
          */
-        this.filterSlots = function (cfg, groundstation_id, slots, createSlot) {
+        this.filterSlots = function (cfg, groundstation_id, slots) {
 
             var results = [];
 
@@ -1672,7 +1697,7 @@ angular.module('snTimelineServices', [])
                 var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
 
                 // 2) The resulting slot is added to the results array
-                results.push(createSlot(raw_slot, n_slot));
+                results.push(this.createSlot(cfg, raw_slot, n_slot));
                 console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }
@@ -3221,50 +3246,17 @@ angular.module('snAvailabilityDirective', [
     'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snAvailabilitySchCtrl', [
-    '$scope', '$log', 'satnetRPC', 'snDialog',
-    'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
+    '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability scheduler.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
-    ) {
+    function ($scope, $log, satnetRPC, snDialog, timeline) {
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Creates a slot that can be displayed within the GUI.
-         * 
-         * @param {Object} raw_slot Non-modified original slot
-         * @param {Object} n_slot Normalized slot
-         * @returns {Object} GUI displayable slot
-         */
-        $scope.createSlot = function (raw_slot, n_slot) {
-
-            var slot_s_s = moment(n_slot.start).unix(),
-                slot_e_s = moment(n_slot.end).unix(),
-                start_s = slot_s_s - $scope.gui.start_d_s,
-                slot_l = (start_s / $scope.gui.total_s) * 100,
-                slot_duration_s = slot_e_s - slot_s_s,
-                slot_w = (slot_duration_s / $scope.gui.total_s) * 100,
-                id = raw_slot.identifier + '';
-
-            return {
-                raw_slot: raw_slot,
-                slot: {
-                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
-                    s_date: moment(n_slot.start).format(),
-                    e_date: moment(n_slot.end).format(),
-                    left: slot_l.toFixed(3),
-                    width: slot_w.toFixed(3)
-                }
-            };
-
-        };
 
         /**
          * Promise function that should be used to retrieve the availability
@@ -3303,9 +3295,7 @@ angular.module('snAvailabilityDirective', [
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
-                            $scope.gui,
-                            gs_id, results.slots,
-                            $scope.createSlot
+                            $scope.gui, gs_id, results.slots
                         );
                     });
                 });
@@ -3354,7 +3344,8 @@ angular.module('snAvailabilityDirective', [
     }
 
 ])
-.controller('snAvailabilityCtrl', ['$scope', '$mdDialog',
+.controller('snAvailabilityCtrl', [
+    '$scope', '$mdDialog',
 
     /**
      * Controller function for opening the SatNet availability dialog.
@@ -3657,6 +3648,209 @@ angular.module('snLoggerDirective', [])
 
 ]);
 ;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snPassesDirective', [
+    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
+])
+.controller('snPassesSchCtrl', [
+    '$scope', '$log',
+    'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
+    'satnetRPC', 'snDialog', 'timeline',
+
+    /**
+     * Controller function for handling the SatNet availability scheduler.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $log,
+        RPC_GS_PREFIX, RPC_SC_PREFIX,
+        satnetRPC, snDialog, timeline
+    ) {
+
+        /** Object with the configuration for the GUI */
+        $scope.gui = null;
+
+        /**
+         * Promise function that should be used to retrieve the availability
+         * slots for each of the Ground Stations.
+         * 
+         * @param {String} groundstation_id Ground Station identifier
+         */
+        $scope.getGSSlots = function (groundstation_id) {
+            return satnetRPC.rCall('gs.availability', [groundstation_id]).then(
+                function (results) {
+                    return {
+                        groundstation_id: groundstation_id,
+                        slots: results
+                    };
+                }
+            ).catch(function (c) {
+                snDialog.exception('gs.availability', groundstation_id, c);
+            });
+        };
+
+        /**
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            var rpc_service = $scope.gui.rpcPrefix + '.getPasses';
+            satnetRPC.rCall(
+                rpc_service, [$scope.segmentId, []]
+            ).then(function (results) {
+                angular.forEach(results, function (value, key) {
+                    $scope.gui.slots[key] = timeline.filterSlots(
+                        $scope.gui, key, value
+                    );
+                });
+                console.log('>>> slots = ' + JSON.stringify(
+                    $scope.gui.slots, null, "    "
+                ));
+            }).catch(function (c) { snDialog.exception(rpc_service, [], c); });
+        };
+
+        /**
+         * Function that initializes the data structures for the visualization
+         * of the available operational slots. The following data structures
+         * have to be pulled out of the server:
+         * 
+         * 1) retrieve all the ground station identifiers from the server,
+         * 2) retrieve the operatonal slots for the ground stations.
+         */
+        $scope.init = function () {
+
+            // 1> init days and hours for the axis
+            $scope.gui = timeline.initScope();
+
+            // 2> copy to the "gui" object the attributes of the element
+            $scope.gui.segmentId = $scope.segmentId;
+            $scope.gui.isSpacecraft = ( $scope.isSpacecraft === "true" );
+            $scope.gui.rpcPrefix = ( $scope.gui.isSpacecraft === true ) ?
+                RPC_SC_PREFIX : RPC_GS_PREFIX;
+
+            // 3> slots retrieved for this spacecraft and all the gss
+            $scope.refresh();
+
+        };
+
+        $scope.init();
+
+    }
+])
+.directive('snPassesScheduler',
+
+    /**
+     * Function that creates the directive to embed the availability scheduler
+     * wherever it is necessary within the application.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'common/templates/passes/scheduler.html',
+            controller: 'snPassesSchCtrl',
+            scope: {
+                segmentId: '@',
+                isSpacecraft: '@',
+            }
+        };
+    }
+
+)
+.controller('snPassesDlgCtrl', [
+    '$scope', '$mdDialog', 'segmentId', 'isSpacecraft',
+
+    /**
+     * Controller function for handling the SatNet availability dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $mdDialog, segmentId, isSpacecraft) {
+
+        $scope.uiCtrl = {
+            detachable: false,
+            segmentId: segmentId,
+            isSpacecraft: isSpacecraft
+        };
+
+        /**
+         * Function that closes the dialog.
+         */
+        $scope.close = function () { $mdDialog.hide(); };
+
+        console.log('>>> segmentId = ' + segmentId);
+        console.log('>>> isSpacecraft = ' + isSpacecraft);
+
+    }
+
+])
+.controller('snPassesCtrl', [
+    '$scope', '$mdDialog',
+
+    /**
+     * Controller function for opening the SatNet availability dialog.
+     *
+     * @param {Object} $scope    $scope for the controller
+     * @param {Object} $mdDialog Angular material Dialog service
+     */
+    function ($scope, $mdDialog) {
+
+        /**
+         * Function that opens the dialog when the snAvailability button is
+         * clicked.
+         */
+        $scope.openDialog = function () {
+            $mdDialog.show({
+                templateUrl: 'common/templates/passes/dialog.html',
+                controller: 'snPassesDlgCtrl',
+                locals: {
+                    segmentId: $scope.segmentId,
+                    isSpacecraft: $scope.isSpacecraft
+                }
+            });
+        };
+
+    }
+
+])
+.directive('snPasses',
+
+    /**
+     * Function that creates the directive itself returning the object required
+     * by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            scope: {
+                segmentId: '@',
+                isSpacecraft: '@',
+            },
+            templateUrl: 'common/templates/passes/menu.html'
+        };
+    }
+
+);
+;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -3795,15 +3989,16 @@ angular.module('snChannelControllers', [
     'snJRPCServices',
     'snControllers'
 ])
-    .constant('CH_LIST_TPL', 'operations/templates/channels/list.html')
-    .constant('CH_DLG_GS_TPL', 'operations/templates/channels/gs.dialog.html')
-    .constant('CH_DLG_SC_TPL', 'operations/templates/channels/sc.dialog.html')
-    .controller('channelListCtrl', [
-        '$scope', '$log', '$mdDialog',
-        'satnetRPC', 'snDialog',
-        'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
-        'CH_DLG_GS_TPL', 'CH_DLG_SC_TPL',
-        'segmentId', 'isSpacecraft',
+.constant('CH_LIST_TPL', 'operations/templates/channels/list.html')
+.constant('CH_DLG_GS_TPL', 'operations/templates/channels/gs.dialog.html')
+.constant('CH_DLG_SC_TPL', 'operations/templates/channels/sc.dialog.html')
+
+.controller('channelListCtrl', [
+    '$scope', '$log', '$mdDialog',
+    'satnetRPC', 'snDialog',
+    'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
+    'CH_DLG_GS_TPL', 'CH_DLG_SC_TPL',
+    'segmentId', 'isSpacecraft',
 
     /**
      * Controller for the list of the channels for this given segment (either
@@ -3823,117 +4018,109 @@ angular.module('snChannelControllers', [
      * @param {Boolean} isSpacecraft  Flag that defines the type of segment
      */
     function (
-            $scope, $log, $mdDialog,
-            satnetRPC, snDialog,
-            RPC_GS_PREFIX, RPC_SC_PREFIX,
-            CH_DLG_GS_TPL, CH_DLG_SC_TPL,
-            segmentId, isSpacecraft
-        ) {
+        $scope, $log, $mdDialog,
+        satnetRPC, snDialog,
+        RPC_GS_PREFIX, RPC_SC_PREFIX,
+        CH_DLG_GS_TPL, CH_DLG_SC_TPL,
+        segmentId, isSpacecraft
+    ) {
 
-            $scope.channelList = [];
+        $scope.channelList = [];
 
-            $scope.uiCtrl = {
-                segmentId: segmentId,
-                isSpacecraft: isSpacecraft,
-                rpcPrefix: RPC_GS_PREFIX,
-                channelDlgTplUrl: CH_DLG_GS_TPL
-            };
+        $scope.uiCtrl = {
+            segmentId: segmentId,
+            isSpacecraft: isSpacecraft,
+            rpcPrefix: RPC_GS_PREFIX,
+            channelDlgTplUrl: CH_DLG_GS_TPL
+        };
 
-            /**
-             * Function that triggers the opening of a window to add a new
-             * channel associated with a given segment.
-             */
-            $scope.showAddDialog = function () {
-                $mdDialog.hide();
-                $mdDialog.show({
-                    templateUrl: $scope.uiCtrl.channelDlgTplUrl,
-                    controller: 'channelDialogCtrl',
-                    locals: {
-                        segmentId: $scope.uiCtrl.segmentId,
-                        channelId: '',
-                        isSpacecraft: $scope.uiCtrl.isSpacecraft,
-                        isEditing: false
-                    }
-                });
-            };
-
-            /**
-             * Function that handles the display of the Dialog that permits the
-             * edition of the channels.
-             *
-             * @param {String} channelId Identifier of the channel
-             */
-            $scope.showEditDialog = function (channelId) {
-                $mdDialog.hide();
-                $mdDialog.show({
-                    templateUrl: $scope.uiCtrl.channelDlgTplUrl,
-                    controller: 'channelDialogCtrl',
-                    locals: {
-                        segmentId: $scope.uiCtrl.segmentId,
-                        channelId: channelId,
-                        isSpacecraft: $scope.uiCtrl.isSpacecraft,
-                        isEditing: true
-                    }
-                });
-            };
-
-            /**
-             * Function that handles the removal of the specific channel for the
-             * given segment.
-             *
-             * @param {String} channelId Identifier of the channel
-             */
-            $scope.delete = function (channelId) {
-                var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.delete';
-                satnetRPC.rCall(
-                    rpc_service, [$scope.uiCtrl.segmentId, channelId]
-                ).then(
-                    function (results) {
-                        // TODO broadcaster.channelRemoved(gs_id, channelId);
-                        snDialog.success(rpc_service, channelId, results, null);
-                        $scope.refresh();
-                    }
-                ).catch(
-                    function (cause) {
-                        snDialog.exception(rpc_service, channelId, cause);
-                    }
-                );
-            };
-
-            /**
-             * Function that refreshes the list of registered ground stations.
-             */
-            $scope.refresh = function () {
-                var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.list';
-                satnetRPC.rCall(rpc_service, [$scope.uiCtrl.segmentId]).then(
-                    function (results) {
-                        if (results !== null) {
-                            $scope.channelList = results.slice(0);
-                        }
-                    }
-                ).catch(
-                    function (cause) {
-                        snDialog.exception(rpc_service, '-', cause);
-                    }
-                );
-            };
-
-            /**
-             * Function that initializes the list of ground stations that are
-             * to be displayed. This initialization function checks whether the
-             * Dialog is suppose to display the channel list for a Spacecraft
-             * or a Ground Station in order to call the proper JRPC method.
-             */
-            $scope.init = function () {
-                if ($scope.uiCtrl.isSpacecraft === true) {
-                    $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
-                    $scope.uiCtrl.channelDlgTplUrl = CH_DLG_SC_TPL;
+        /**
+         * Function that triggers the opening of a window to add a new
+         * channel associated with a given segment.
+         */
+        $scope.showAddDialog = function () {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: $scope.uiCtrl.channelDlgTplUrl,
+                controller: 'channelDialogCtrl',
+                locals: {
+                    segmentId: $scope.uiCtrl.segmentId,
+                    channelId: '',
+                    isSpacecraft: $scope.uiCtrl.isSpacecraft,
+                    isEditing: false
                 }
-                $scope.refresh();
-            };
+            });
+        };
 
-            // INITIALIZATION: avoids using ng-init within the template
-            $scope.init();
+        /**
+         * Function that handles the display of the Dialog that permits the
+         * edition of the channels.
+         *
+         * @param {String} channelId Identifier of the channel
+         */
+        $scope.showEditDialog = function (channelId) {
+            $mdDialog.hide();
+            $mdDialog.show({
+                templateUrl: $scope.uiCtrl.channelDlgTplUrl,
+                controller: 'channelDialogCtrl',
+                locals: {
+                    segmentId: $scope.uiCtrl.segmentId,
+                    channelId: channelId,
+                    isSpacecraft: $scope.uiCtrl.isSpacecraft,
+                    isEditing: true
+                }
+            });
+        };
+
+        /**
+         * Function that handles the removal of the specific channel for
+         * the given segment.
+         *
+         * @param {String} channelId Identifier of the channel
+         */
+        $scope.delete = function (channelId) {
+            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.delete';
+            satnetRPC.rCall(
+                rpc_service, [$scope.uiCtrl.segmentId, channelId]
+            ).then(function (results) {
+                // TODO broadcaster.channelRemoved(gs_id, channelId);
+                snDialog.success(rpc_service, channelId, results, null);
+                $scope.refresh();
+            }).catch(function (cause) {
+                snDialog.exception(rpc_service, channelId, cause);
+            });
+        };
+
+        /**
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.list';
+            satnetRPC.rCall(
+                rpc_service, [$scope.uiCtrl.segmentId]
+            ).then(function (results) {
+                if (results !== null) {
+                    $scope.channelList = results.slice(0);
+                }
+            }).catch(function (c) { snDialog.exception(rpc_service, '-', c); });
+        };
+
+        /**
+         * Function that initializes the list of ground stations that are
+         * to be displayed. This initialization function checks whether the
+         * Dialog is suppose to display the channel list for a Spacecraft
+         * or a Ground Station in order to call the proper JRPC method.
+         */
+        $scope.init = function () {
+            if ($scope.uiCtrl.isSpacecraft === true) {
+                $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
+                $scope.uiCtrl.channelDlgTplUrl = CH_DLG_SC_TPL;
+            }
+            $scope.refresh();
+        };
+
+        // INITIALIZATION: avoids using ng-init within the template
+        $scope.init();
 
     }
 
@@ -3964,198 +4151,183 @@ angular.module('snChannelControllers', [
      * @param {Boolean} isEditing     Flag that indicates the type of dialog
      */
     function (
-            $log, $scope, $mdDialog, $mdToast,
-            broadcaster, satnetRPC, snDialog,
-            RPC_GS_PREFIX, RPC_SC_PREFIX,
-            CH_LIST_TPL,
-            segmentId, channelId, isSpacecraft, isEditing
+        $log, $scope, $mdDialog, $mdToast,
+        broadcaster, satnetRPC, snDialog,
+        RPC_GS_PREFIX, RPC_SC_PREFIX,
+        CH_LIST_TPL,
+        segmentId, channelId, isSpacecraft, isEditing
     ) {
 
-            $scope.gsCfg = {
-                channel_id: channelId,
-                band: '',
-                automated: false,
+        $scope.gsCfg = {
+            channel_id: channelId,
+            band: '',
+            automated: false,
+            modulations: [],
+            polarizations: [],
+            bitrates: [],
+            bandwidths: []
+        };
+        $scope.scCfg = {
+            channel_id: channelId,
+            frequency: 0.0,
+            modulation: '',
+            polarization: '',
+            bitrate: '',
+            bandwidth: ''
+        };
+
+        $scope.uiCtrl = {
+            add: {
+                disabled: true
+            },
+            segmentId: segmentId,
+            isSpacecraft: isSpacecraft,
+            isEditing: isEditing,
+            rpcPrefix: RPC_GS_PREFIX,
+            listTplOptions: {
+                tempalteUrl: CH_LIST_TPL,
+                controller: 'channelListCtrl',
+                locals: {
+                    segmentId: segmentId,
+                    isSpacecraft: isSpacecraft
+                }
+            },
+            configuration: $scope.gsCfg,
+            options: {
+                bands: [],
                 modulations: [],
                 polarizations: [],
-                bitrates: [],
                 bandwidths: []
-            };
-            $scope.scCfg = {
-                channel_id: channelId,
-                frequency: 0.0,
-                modulation: '',
-                polarization: '',
-                bitrate: '',
-                bandwidth: ''
-            };
+            }
+        };
 
-            $scope.uiCtrl = {
-                add: {
-                    disabled: true
-                },
-                segmentId: segmentId,
-                isSpacecraft: isSpacecraft,
-                isEditing: isEditing,
-                rpcPrefix: RPC_GS_PREFIX,
-                listTplOptions: {
-                    tempalteUrl: CH_LIST_TPL,
-                    controller: 'channelListCtrl',
-                    locals: {
-                        segmentId: segmentId,
-                        isSpacecraft: isSpacecraft
-                    }
-                },
-                configuration: $scope.gsCfg,
-                options: {
-                    bands: [],
-                    modulations: [],
-                    polarizations: [],
-                    bandwidths: []
-                }
-            };
+        /**
+         * Function that handles the creation of a new channel as part of the
+         * selected segment.
+         */
+        $scope.add = function () {
 
-            /**
-             * Function that handles the creation of a new channel as part of the
-             * selected segment.
-             */
-            $scope.add = function () {
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
 
-                var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.add';
+            if ($scope.uiCtrl.isSpacecraft === true) {
+                $scope.uiCtrl.configuration.frequency *= 1e6;
+            }
 
-                if ($scope.uiCtrl.isSpacecraft === true) {
-                    $scope.uiCtrl.configuration.frequency *= 1e6;
-                }
-
-                satnetRPC.rCall(rpcService, [
+            satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
                 $scope.uiCtrl.configuration.channel_id,
                 $scope.uiCtrl.configuration
-            ]).then(
-                    function (results) {
-                        // TODO broadcaster.channelAdded(segmentId, channelId);
-                        $mdDialog.hide();
-                        snDialog.success(
-                            rpcService, $scope.uiCtrl.segmentId,
-                            results, null //$scope.uiCtrl.listTplOptions
-                        );
-                    }
-                ).catch(
-                    function (cause) {
-                        snDialog.exception(rpcService, '-', cause);
-                    }
-                );
-            };
-
-            /**
-             * Function that handles the update of the configuration for the channel
-             * of the selected segment.
-             */
-            $scope.update = function () {
-
-                var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.set';
-
-                if ($scope.uiCtrl.isSpacecraft === true) {
-                    $scope.uiCtrl.configuration.frequency *= 1e6;
-                }
-
-                satnetRPC.rCall(rpcService, [
-                $scope.uiCtrl.segmentId,
-                $scope.uiCtrl.configuration.channel_id,
-                $scope.uiCtrl.configuration
-            ]).then(
-                    function (results) {
-                        // TODO broadcaster.channelUpdated(segmentId, channelId);
-                        $mdDialog.hide();
-                        snDialog.success(
-                            rpcService, $scope.uiCtrl.segmentId,
-                            results, null //$scope.uiCtrl.listTplOptions
-                        );
-                    }
-                ).catch(
-                    function (cause) {
-                        snDialog.exception(rpcService, '-', cause);
-                    }
-                );
-            };
-
-            /**
-             * Function that closes the current dialog and goes back to the
-             * original list.
-             */
-            $scope.cancel = function () {
+            ]).then(function (results) {
+                // TODO broadcaster.channelAdded(segmentId, channelId);
                 $mdDialog.hide();
-                // FIXME ISSUE #10: Error while showing the $mdDialog
-                // $mdDialog.show($scope.uiCtrl.listTplOptions);
-            };
+                snDialog.success(
+                    rpcService, $scope.uiCtrl.segmentId,
+                    results, null //$scope.uiCtrl.listTplOptions
+                );
+            }).catch(function (cause) {
+                snDialog.exception(rpcService, '-', cause);
+            });
+        };
 
-            /**
-             * Initializes the Dialog with the correct values. It handles the self
-             * configuration and detection of the mode in which the Dialog should
-             * operate, either for adding a new channel to any segment or to update
-             * the configuration of that given channel.
-             */
-            $scope.init = function () {
-                if (!segmentId) {
-                    throw '@channelDialogCtrl: no segment identifier provided';
-                }
-                if ($scope.uiCtrl.isSpacecraft === true) {
-                    $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
-                    $scope.uiCtrl.configuration = $scope.scCfg;
-                }
-                if (isEditing === null) {
-                    throw '@channelDialogCtrl: no editing flag provided';
-                }
-                if ($scope.uiCtrl.isEditing === true) {
-                    if (!channelId) {
-                        throw '@channelDialogCtrl: no channel identifier provided';
-                    }
-                    $scope.loadConfiguration();
-                }
-                $scope.loadOptions();
-            };
+        /**
+         * Function that handles the update of the configuration for the
+         * channel of the selected segment.
+         */
+        $scope.update = function () {
 
-            /**
-             * Function that loads the configuration of the object to be edited.
-             */
-            $scope.loadConfiguration = function () {
-                var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.get';
-                satnetRPC.rCall(rpcService, [
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.set';
+            if ($scope.uiCtrl.isSpacecraft === true) {
+                $scope.uiCtrl.configuration.frequency *= 1e6;
+            }
+
+            satnetRPC.rCall(rpcService, [
+                $scope.uiCtrl.segmentId,
+                $scope.uiCtrl.configuration.channel_id,
+                $scope.uiCtrl.configuration
+            ]).then(function (results) {
+                // TODO broadcaster.channelUpdated(segmentId, channelId);
+                $mdDialog.hide();
+                snDialog.success(
+                    rpcService, $scope.uiCtrl.segmentId,
+                    results, null
+                );}
+            ).catch(function (cause) {
+                snDialog.exception(rpcService, '-', cause);
+            });
+        };
+
+        /**
+         * Function that closes the current dialog and goes back to the
+         * original list.
+         */
+        $scope.cancel = function () {
+            $mdDialog.hide();
+            // FIXME ISSUE #10: Error while showing the $mdDialog
+            // $mdDialog.show($scope.uiCtrl.listTplOptions);
+        };
+
+        /**
+         * Initializes the Dialog with the correct values. It handles the self
+         * configuration and detection of the mode in which the Dialog should
+         * operate, either for adding a new channel to any segment or to update
+         * the configuration of that given channel.
+         */
+        $scope.init = function () {
+            if (!segmentId) {
+                throw '@channelDialogCtrl: no segment identifier provided';
+            }
+            if ($scope.uiCtrl.isSpacecraft === true) {
+                $scope.uiCtrl.rpcPrefix = RPC_SC_PREFIX;
+                $scope.uiCtrl.configuration = $scope.scCfg;
+            }
+            if (isEditing === null) {
+                throw '@channelDialogCtrl: no editing flag provided';
+            }
+            if ($scope.uiCtrl.isEditing === true) {
+                if (!channelId) {
+                    throw '@channelDialogCtrl: no channel id provided';
+                }
+                $scope.loadConfiguration();
+            }
+            $scope.loadOptions();
+        };
+
+        /**
+         * Function that loads the configuration of the object to be edited.
+         */
+        $scope.loadConfiguration = function () {
+            var rpcService = $scope.uiCtrl.rpcPrefix + '.channel.get';
+            satnetRPC.rCall(rpcService, [
                 $scope.uiCtrl.segmentId,
                 $scope.uiCtrl.configuration.channel_id
-            ]).then(
-                    function (results) {
-                        if ($scope.uiCtrl.isSpacecraft === true) {
-                            results.frequency = parseFloat(results.frequency);
-                            results.frequency /= 1e6;
-                            $scope.scCfg = angular.copy(results);
-                            $scope.uiCtrl.configuration = $scope.scCfg;
-                        } else {
-                            $scope.gsCfg = angular.copy(results);
-                            $scope.uiCtrl.configuration = $scope.gsCfg;
-                        }
-                    }
-                ).catch(
-                    function (cause) {
-                        snDialog.exception(rpcService, '-', cause);
-                    }
-                );
-            };
+            ]).then(function (results) {
+                if ($scope.uiCtrl.isSpacecraft === true) {
+                    results.frequency = parseFloat(results.frequency);
+                    results.frequency /= 1e6;
+                    $scope.scCfg = angular.copy(results);
+                    $scope.uiCtrl.configuration = $scope.scCfg;
+                } else {
+                    $scope.gsCfg = angular.copy(results);
+                    $scope.uiCtrl.configuration = $scope.gsCfg;
+                }
+            }).catch(function (cause) {
+                snDialog.exception(rpcService, '-', cause);
+            });
+        };
 
-            /**
-             * Function that loads the options for creating the channels.
-             */
-            $scope.loadOptions = function () {
-                var rpc_service = 'channels.options';
-                satnetRPC.rCall(rpc_service, []).then(
-                    function (results) {
-                        $scope.uiCtrl.options = angular.copy(results);
-                    }
-                ).catch(
-                    function (cause) {
-                        snDialog.exception(rpc_service, '-', cause);
-                    }
-                );
-            };
+        /**
+         * Function that loads the options for creating the channels.
+         */
+        $scope.loadOptions = function () {
+            var rpc_service = 'channels.options';
+            satnetRPC.rCall(rpc_service, []).then(
+                function (results) {
+                    $scope.uiCtrl.options = angular.copy(results);
+                }
+            ).catch(function (cause) {
+                snDialog.exception(rpc_service, '-', cause);
+            });
+        };
 
     }
 
@@ -4175,19 +4347,18 @@ angular.module('snChannelControllers', [
    limitations under the License.
 */
 
-angular.module(
-    'snGsControllers', [
-        'ngMaterial',
-        'remoteValidation',
-        'leaflet-directive',
-        'snBroadcasterServices',
-        'snJRPCServices',
-        'snControllers',
-        'snChannelControllers',
-        'snRuleControllers',
-        'snMapServices'
-    ]
-).controller('gsListCtrl', [
+angular.module('snGsControllers', [
+    'ngMaterial',
+    'remoteValidation',
+    'leaflet-directive',
+    'snBroadcasterServices',
+    'snJRPCServices',
+    'snControllers',
+    'snChannelControllers',
+    'snRuleControllers',
+    'snMapServices'
+])
+.controller('gsListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC', 'snDialog',
 
@@ -4213,10 +4384,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/gs.dialog.html',
                 controller: 'gsDialogCtrl',
-                locals: {
-                    identifier: '',
-                    isEditing: false
-                }
+                locals: { identifier: '', isEditing: false }
             });
         };
 
@@ -4230,10 +4398,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/gs.dialog.html',
                 controller: 'gsDialogCtrl',
-                locals: {
-                    identifier: identifier,
-                    isEditing: true
-                }
+                locals: { identifier: identifier, isEditing: true }
             });
         };
 
@@ -4247,10 +4412,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/channels/list.html',
                 controller: 'channelListCtrl',
-                locals: {
-                    segmentId: identifier,
-                    isSpacecraft: false
-                }
+                locals: { segmentId: identifier, isSpacecraft: false }
             });
         };
 
@@ -4264,9 +4426,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/rules/list.html',
                 controller: 'ruleListCtrl',
-                locals: {
-                    identifier: identifier
-                }
+                locals: { identifier: identifier }
             });
         };
 
@@ -4592,15 +4752,14 @@ angular.module('snOperationsMenuControllers', [
    limitations under the License.
 */
 
-angular.module(
-        'snRuleControllers', [
-        'ngMaterial',
-        'snJRPCServices',
-        'snControllers',
-        'snRuleFilters'
-    ]
-    )
-    .controller('ruleListCtrl', [
+angular.module('snRuleControllers', [
+    'ngMaterial',
+    'snJRPCServices',
+    'snControllers',
+    'snRuleFilters'
+])
+
+.controller('ruleListCtrl', [
         '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
 
     /**
@@ -5104,17 +5263,17 @@ angular.module(
    limitations under the License.
 */
 
-angular.module(
-    'snScControllers', [
-        'ngMaterial',
-        'remoteValidation',
-        'leaflet-directive',
-        'snBroadcasterServices',
-        'snMapServices',
-        'snControllers',
-        'snCelestrakServices'
-    ]
-).controller('scListCtrl', [
+angular.module('snScControllers', [
+    'ngMaterial',
+    'remoteValidation',
+    'leaflet-directive',
+    'snBroadcasterServices',
+    'snMapServices',
+    'snControllers',
+    'snPassesDirective',
+    'snCelestrakServices'
+])
+.controller('scListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC', 'snDialog',
 
@@ -5140,10 +5299,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/sc.dialog.html',
                 controller: 'scDialogCtrl',
-                locals: {
-                    identifier: '',
-                    editing: false
-                }
+                locals: { identifier: '', editing: false }
             });
         };
 
@@ -5157,10 +5313,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/sc.dialog.html',
                 controller: 'scDialogCtrl',
-                locals: {
-                    identifier: identifier,
-                    editing: true
-                }
+                locals: { identifier: identifier, editing: true }
             });
         };
 
@@ -5174,10 +5327,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/channels/list.html',
                 controller: 'channelListCtrl',
-                locals: {
-                    segmentId: identifier,
-                    isSpacecraft: true
-                }
+                locals: { segmentId: identifier, isSpacecraft: true }
             });
         };
 
@@ -5499,50 +5649,17 @@ angular.module('snOperationalDirective', [
     'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snOperationalSchCtrl', [
-    '$scope', '$log', 'satnetRPC', 'snDialog',
-    'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
+    '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability scheduler.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
-    ) {
+    function ($scope, $log, satnetRPC, snDialog, timeline) {
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Creates a slot that can be displayed within the GUI.
-         * 
-         * @param {Object} raw_slot Non-modified original slot
-         * @param {Object} n_slot Normalized slot
-         * @returns {Object} GUI displayable slot
-         */
-        $scope.createSlot = function (raw_slot, n_slot) {
-
-            var slot_s_s = moment(n_slot.start).unix(),
-                slot_e_s = moment(n_slot.end).unix(),
-                start_s = slot_s_s - $scope.gui.start_d_s,
-                slot_l = (start_s / $scope.gui.total_s) * 100,
-                slot_duration_s = slot_e_s - slot_s_s,
-                slot_w = (slot_duration_s / $scope.gui.total_s) * 100,
-                id = raw_slot.identifier + '';
-
-            return {
-                raw_slot: raw_slot,
-                slot: {
-                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
-                    s_date: moment(n_slot.start).format(),
-                    e_date: moment(n_slot.end).format(),
-                    left: slot_l.toFixed(3),
-                    width: slot_w.toFixed(3)
-                }
-            };
-
-        };
 
         /**
          * Promise function that should be used to retrieve the availability
@@ -5581,9 +5698,7 @@ angular.module('snOperationalDirective', [
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
-                            $scope.gui,
-                            gs_id, results.slots,
-                            $scope.createSlot
+                            $scope.gui, gs_id, results.slots
                         );
                     });
                 });
@@ -5633,7 +5748,8 @@ angular.module('snOperationalDirective', [
     }
 
 ])
-.controller('snOperationalCtrl', ['$scope', '$mdDialog',
+.controller('snOperationalCtrl', [
+    '$scope', '$mdDialog',
 
     /**
      * Controller function for opening the SatNet operational dialog.

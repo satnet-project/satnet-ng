@@ -14,17 +14,17 @@
    limitations under the License.
 */
 
-angular.module(
-    'snScControllers', [
-        'ngMaterial',
-        'remoteValidation',
-        'leaflet-directive',
-        'snBroadcasterServices',
-        'snMapServices',
-        'snControllers',
-        'snCelestrakServices'
-    ]
-).controller('scListCtrl', [
+angular.module('snScControllers', [
+    'ngMaterial',
+    'remoteValidation',
+    'leaflet-directive',
+    'snBroadcasterServices',
+    'snMapServices',
+    'snControllers',
+    'snPassesDirective',
+    'snCelestrakServices'
+])
+.controller('scListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC', 'snDialog',
 
@@ -50,10 +50,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/sc.dialog.html',
                 controller: 'scDialogCtrl',
-                locals: {
-                    identifier: '',
-                    editing: false
-                }
+                locals: { identifier: '', editing: false }
             });
         };
 
@@ -67,10 +64,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/sc.dialog.html',
                 controller: 'scDialogCtrl',
-                locals: {
-                    identifier: identifier,
-                    editing: true
-                }
+                locals: { identifier: identifier, editing: true }
             });
         };
 
@@ -84,10 +78,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/channels/list.html',
                 controller: 'channelListCtrl',
-                locals: {
-                    segmentId: identifier,
-                    isSpacecraft: true
-                }
+                locals: { segmentId: identifier, isSpacecraft: true }
             });
         };
 

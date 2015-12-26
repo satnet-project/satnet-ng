@@ -14,19 +14,18 @@
    limitations under the License.
 */
 
-angular.module(
-    'snGsControllers', [
-        'ngMaterial',
-        'remoteValidation',
-        'leaflet-directive',
-        'snBroadcasterServices',
-        'snJRPCServices',
-        'snControllers',
-        'snChannelControllers',
-        'snRuleControllers',
-        'snMapServices'
-    ]
-).controller('gsListCtrl', [
+angular.module('snGsControllers', [
+    'ngMaterial',
+    'remoteValidation',
+    'leaflet-directive',
+    'snBroadcasterServices',
+    'snJRPCServices',
+    'snControllers',
+    'snChannelControllers',
+    'snRuleControllers',
+    'snMapServices'
+])
+.controller('gsListCtrl', [
     '$log', '$scope', '$mdDialog', '$mdToast',
     'broadcaster', 'satnetRPC', 'snDialog',
 
@@ -52,10 +51,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/gs.dialog.html',
                 controller: 'gsDialogCtrl',
-                locals: {
-                    identifier: '',
-                    isEditing: false
-                }
+                locals: { identifier: '', isEditing: false }
             });
         };
 
@@ -69,10 +65,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/segments/gs.dialog.html',
                 controller: 'gsDialogCtrl',
-                locals: {
-                    identifier: identifier,
-                    isEditing: true
-                }
+                locals: { identifier: identifier, isEditing: true }
             });
         };
 
@@ -86,10 +79,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/channels/list.html',
                 controller: 'channelListCtrl',
-                locals: {
-                    segmentId: identifier,
-                    isSpacecraft: false
-                }
+                locals: { segmentId: identifier, isSpacecraft: false }
             });
         };
 
@@ -103,9 +93,7 @@ angular.module(
             $mdDialog.show({
                 templateUrl: 'operations/templates/rules/list.html',
                 controller: 'ruleListCtrl',
-                locals: {
-                    identifier: identifier
-                }
+                locals: { identifier: identifier }
             });
         };
 

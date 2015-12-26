@@ -14,18 +14,24 @@
    limitations under the License.
 */
 
-angular.module('snAvailabilityDirective', [
+angular.module('snPassesDirective', [
     'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
-.controller('snAvailabilitySchCtrl', [
-    '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
+.controller('snPassesSchCtrl', [
+    '$scope', '$log',
+    'RPC_GS_PREFIX', 'RPC_SC_PREFIX',
+    'satnetRPC', 'snDialog', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability scheduler.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $log, satnetRPC, snDialog, timeline) {
+    function (
+        $scope, $log,
+        RPC_GS_PREFIX, RPC_SC_PREFIX,
+        satnetRPC, snDialog, timeline
+    ) {
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
@@ -50,6 +56,25 @@ angular.module('snAvailabilityDirective', [
         };
 
         /**
+         * Function that refreshes the list of registered ground stations.
+         */
+        $scope.refresh = function () {
+            var rpc_service = $scope.gui.rpcPrefix + '.getPasses';
+            satnetRPC.rCall(
+                rpc_service, [$scope.segmentId, []]
+            ).then(function (results) {
+                angular.forEach(results, function (value, key) {
+                    $scope.gui.slots[key] = timeline.filterSlots(
+                        $scope.gui, key, value
+                    );
+                });
+                console.log('>>> slots = ' + JSON.stringify(
+                    $scope.gui.slots, null, "    "
+                ));
+            }).catch(function (c) { snDialog.exception(rpc_service, [], c); });
+        };
+
+        /**
          * Function that initializes the data structures for the visualization
          * of the available operational slots. The following data structures
          * have to be pulled out of the server:
@@ -62,22 +87,22 @@ angular.module('snAvailabilityDirective', [
             // 1> init days and hours for the axis
             $scope.gui = timeline.initScope();
 
-            // 2> all the Ground Stations are retrieved
-            satnetRPC.rCall('gs.list', []).then(function (results) {
-                angular.forEach(results, function (gs_id) {
-                    $scope.getGSSlots(gs_id).then(function (results) {
-                        $scope.gui.slots[gs_id] = timeline.filterSlots(
-                            $scope.gui, gs_id, results.slots
-                        );
-                    });
-                });
-            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
+            // 2> copy to the "gui" object the attributes of the element
+            $scope.gui.segmentId = $scope.segmentId;
+            $scope.gui.isSpacecraft = ( $scope.isSpacecraft === "true" );
+            $scope.gui.rpcPrefix = ( $scope.gui.isSpacecraft === true ) ?
+                RPC_SC_PREFIX : RPC_GS_PREFIX;
+
+            // 3> slots retrieved for this spacecraft and all the gss
+            $scope.refresh();
 
         };
 
+        $scope.init();
+
     }
 ])
-.directive('snAvailabilityScheduler',
+.directive('snPassesScheduler',
 
     /**
      * Function that creates the directive to embed the availability scheduler
@@ -89,23 +114,30 @@ angular.module('snAvailabilityDirective', [
     function () {
         return {
             restrict: 'E',
-            templateUrl: 'common/templates/availability/scheduler.html'
+            templateUrl: 'common/templates/passes/scheduler.html',
+            controller: 'snPassesSchCtrl',
+            scope: {
+                segmentId: '@',
+                isSpacecraft: '@',
+            }
         };
     }
 
 )
-.controller('snAvailabilityDlgCtrl', [
-    '$scope', '$mdDialog',
+.controller('snPassesDlgCtrl', [
+    '$scope', '$mdDialog', 'segmentId', 'isSpacecraft',
 
     /**
      * Controller function for handling the SatNet availability dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $mdDialog) {
+    function ($scope, $mdDialog, segmentId, isSpacecraft) {
 
         $scope.uiCtrl = {
             detachable: false,
+            segmentId: segmentId,
+            isSpacecraft: isSpacecraft
         };
 
         /**
@@ -113,10 +145,13 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.close = function () { $mdDialog.hide(); };
 
+        console.log('>>> segmentId = ' + segmentId);
+        console.log('>>> isSpacecraft = ' + isSpacecraft);
+
     }
 
 ])
-.controller('snAvailabilityCtrl', [
+.controller('snPassesCtrl', [
     '$scope', '$mdDialog',
 
     /**
@@ -133,15 +168,19 @@ angular.module('snAvailabilityDirective', [
          */
         $scope.openDialog = function () {
             $mdDialog.show({
-                templateUrl: 'common/templates/availability/dialog.html',
-                controller: 'snAvailabilityDlgCtrl'
+                templateUrl: 'common/templates/passes/dialog.html',
+                controller: 'snPassesDlgCtrl',
+                locals: {
+                    segmentId: $scope.segmentId,
+                    isSpacecraft: $scope.isSpacecraft
+                }
             });
         };
 
     }
 
 ])
-.directive('snAvailability',
+.directive('snPasses',
 
     /**
      * Function that creates the directive itself returning the object required
@@ -153,7 +192,11 @@ angular.module('snAvailabilityDirective', [
     function () {
         return {
             restrict: 'E',
-            templateUrl: 'common/templates/availability/menu.html'
+            scope: {
+                segmentId: '@',
+                isSpacecraft: '@',
+            },
+            templateUrl: 'common/templates/passes/menu.html'
         };
     }
 

@@ -18,50 +18,17 @@ angular.module('snOperationalDirective', [
     'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
 ])
 .controller('snOperationalSchCtrl', [
-    '$scope', '$log', 'satnetRPC', 'snDialog',
-    'SN_SCH_GS_ID_MAX_LENGTH', 'timeline',
+    '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability scheduler.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $log, satnetRPC, snDialog, SN_SCH_GS_ID_MAX_LENGTH, timeline
-    ) {
+    function ($scope, $log, satnetRPC, snDialog, timeline) {
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
-
-        /**
-         * Creates a slot that can be displayed within the GUI.
-         * 
-         * @param {Object} raw_slot Non-modified original slot
-         * @param {Object} n_slot Normalized slot
-         * @returns {Object} GUI displayable slot
-         */
-        $scope.createSlot = function (raw_slot, n_slot) {
-
-            var slot_s_s = moment(n_slot.start).unix(),
-                slot_e_s = moment(n_slot.end).unix(),
-                start_s = slot_s_s - $scope.gui.start_d_s,
-                slot_l = (start_s / $scope.gui.total_s) * 100,
-                slot_duration_s = slot_e_s - slot_s_s,
-                slot_w = (slot_duration_s / $scope.gui.total_s) * 100,
-                id = raw_slot.identifier + '';
-
-            return {
-                raw_slot: raw_slot,
-                slot: {
-                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
-                    s_date: moment(n_slot.start).format(),
-                    e_date: moment(n_slot.end).format(),
-                    left: slot_l.toFixed(3),
-                    width: slot_w.toFixed(3)
-                }
-            };
-
-        };
 
         /**
          * Promise function that should be used to retrieve the availability
@@ -100,9 +67,7 @@ angular.module('snOperationalDirective', [
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
-                            $scope.gui,
-                            gs_id, results.slots,
-                            $scope.createSlot
+                            $scope.gui, gs_id, results.slots
                         );
                     });
                 });
@@ -152,7 +117,8 @@ angular.module('snOperationalDirective', [
     }
 
 ])
-.controller('snOperationalCtrl', ['$scope', '$mdDialog',
+.controller('snOperationalCtrl', [
+    '$scope', '$mdDialog',
 
     /**
      * Controller function for opening the SatNet operational dialog.

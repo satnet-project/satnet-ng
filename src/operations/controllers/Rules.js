@@ -14,15 +14,14 @@
    limitations under the License.
 */
 
-angular.module(
-        'snRuleControllers', [
-        'ngMaterial',
-        'snJRPCServices',
-        'snControllers',
-        'snRuleFilters'
-    ]
-    )
-    .controller('ruleListCtrl', [
+angular.module('snRuleControllers', [
+    'ngMaterial',
+    'snJRPCServices',
+    'snControllers',
+    'snRuleFilters'
+])
+
+.controller('ruleListCtrl', [
         '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'identifier',
 
     /**

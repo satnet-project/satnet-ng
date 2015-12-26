@@ -27,9 +27,8 @@ angular.module('snTimelineServices', [])
     '$log',
     'SN_SCH_TIMELINE_DAYS',
     'SN_SCH_HOURS_DAY',
-    'SN_SCH_GS_ID_WIDTH',
-    'SN_SCH_DATE_FORMAT',
-    'SN_SCH_HOUR_FORMAT',
+    'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
+    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
 
     /**
      * Function services to create reusable timeline services.
@@ -40,9 +39,8 @@ angular.module('snTimelineServices', [])
         $log,
         SN_SCH_TIMELINE_DAYS,
         SN_SCH_HOURS_DAY,
-        SN_SCH_GS_ID_WIDTH,
-        SN_SCH_DATE_FORMAT,
-        SN_SCH_HOUR_FORMAT
+        SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
+        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
     ) {
 
         /**
@@ -98,6 +96,37 @@ angular.module('snTimelineServices', [])
         };
 
         /**
+         * Creates a slot that can be displayed within the GUI.
+         * 
+         * @param {Object} cfg Configuration of the controller
+         * @param {Object} raw_slot Non-modified original slot
+         * @param {Object} n_slot Normalized slot
+         * @returns {Object} GUI displayable slot
+         */
+        this.createSlot = function (cfg, raw_slot, n_slot) {
+
+            var slot_s_s = moment(n_slot.start).unix(),
+                slot_e_s = moment(n_slot.end).unix(),
+                start_s = slot_s_s - cfg.start_d_s,
+                slot_l = (start_s / cfg.total_s) * 100,
+                slot_duration_s = slot_e_s - slot_s_s,
+                slot_w = (slot_duration_s / cfg.total_s) * 100,
+                id = raw_slot.identifier + '';
+
+            return {
+                raw_slot: raw_slot,
+                slot: {
+                    id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
+                    s_date: moment(n_slot.start).format(),
+                    e_date: moment(n_slot.end).format(),
+                    left: slot_l.toFixed(3),
+                    width: slot_w.toFixed(3)
+                }
+            };
+
+        };
+
+        /**
          * This function filters all the slots for a given ground station and
          * creates slot objects that can be directly positioned and displayed
          * over a timeline.
@@ -108,13 +137,11 @@ angular.module('snTimelineServices', [])
          *                                      date of the timeline
          * @param   {Object}   end_d            moment.js object with th end
          *                                      date of the timeline
-         * @param   {Function} createSlot       Function that creates a slot
-         *                                      with the given processed data
          * @returns {Object}   Dictionary addressed with the identifiers of the
          *                                      Ground Stations as keys, whose
          *                                      values are the filtered slots
          */
-        this.filterSlots = function (cfg, groundstation_id, slots, createSlot) {
+        this.filterSlots = function (cfg, groundstation_id, slots) {
 
             var results = [];
 
@@ -140,7 +167,7 @@ angular.module('snTimelineServices', [])
                 var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
 
                 // 2) The resulting slot is added to the results array
-                results.push(createSlot(raw_slot, n_slot));
+                results.push(this.createSlot(cfg, raw_slot, n_slot));
                 console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }

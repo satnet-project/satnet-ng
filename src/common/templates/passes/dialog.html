@@ -1,13 +1,15 @@
-<md-dialog ng-init="init()" aria-label="Availability Dialog">
+<md-dialog aria-label="Passes Dialog">
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
-            <span>Availability Slots</span>
+            <span>Pass Slots ({{ uiCtrl.segmentId }})</span>
         </h2>
     </md-toolbar>
 
     <md-content id="sn-sch-md-content">
-        <sn-availability-scheduler></sn-availability-scheduler>
+        <sn-passes-scheduler segment-id="{{ uiCtrl.segmentId }}"
+                             is-spacecraft="{{ uiCtrl.isSpacecraft }}">
+        </sn-passes-scheduler>
     </md-content>
 
     <md-content class="add-gs-dialog menu-list">
