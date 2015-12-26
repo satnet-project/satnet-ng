@@ -349,11 +349,11 @@ describe('Testing Markers Service', function () {
         }).toThrow('@readTrack: empty groundtrack');
 
         sc_cfg.groundtrack = [{
-            timestamp: Date.now() * 1000 + 1000,
+            timestamp: Date.now() / 1000 + 1000,
             latitude: 5.0,
             longitude: 6.0
         }, {
-            timestamp: Date.now() * 1000 + 1001,
+            timestamp: Date.now() / 1000 + 1001,
             latitude: 6.0,
             longitude: 7.0
         }];
@@ -424,11 +424,11 @@ describe('Testing Markers Service', function () {
             sc_cfg = {
                 spacecraft_id: sc_id,
                 groundtrack: [{
-                    timestamp: Date.now() * 1000 + 1000,
+                    timestamp: Date.now() / 1000 + 10,
                     latitude: 5.0,
                     longitude: 6.0
                 }, {
-                    timestamp: Date.now() * 1000 + 1001,
+                    timestamp: Date.now() / 1000 + 11,
                     latitude: 6.0,
                     longitude: 7.0
                 }]
@@ -539,7 +539,7 @@ describe('Testing Markers Service', function () {
     it('extended readTrack tests', function () {
 
         var _result, groundtrack = [],
-            nowUs = Date.now() * 1000;
+            nowUs = Date.now() / 1000;
 
         groundtrack.push(
             { timestamp:  nowUs - 10000, latitude: 12.00, longitude: 145.00 }
@@ -556,24 +556,24 @@ describe('Testing Markers Service', function () {
         }).toThrow('@readTrack: invalid groundtrack');
 
         groundtrack.push(
-            { timestamp: nowUs + 40000000000, latitude: 14.00, longitude: 147.00 }
+            { timestamp: nowUs + 40000, latitude: 14.00, longitude: 147.00 }
         );
         expect(function () {
             markers.readTrack(groundtrack);
         }).toThrow('@readTrack: invalid groundtrack');
 
         groundtrack.push(
-            { timestamp: nowUs + 50000000000, latitude: 15.00, longitude: 148.00 }
+            { timestamp: nowUs + 50000, latitude: 15.00, longitude: 148.00 }
         );
         _result = markers.readTrack(groundtrack);
-        expect(_result.durations).toEqual([10000000]);
+        expect(_result.durations).toEqual([10]);
         expect(_result.positions).toEqual([[14, 147], [15, 148]]);
 
         groundtrack.push(
-            { timestamp: nowUs + 400000000000, latitude: 16.00, longitude: 149.00 }
+            { timestamp: nowUs + 400000, latitude: 16.00, longitude: 149.00 }
         );
         _result = markers.readTrack(groundtrack);
-        expect(_result.durations).toEqual([10000000]);
+        expect(_result.durations).toEqual([10]);
         expect(_result.positions).toEqual([[14, 147], [15, 148]]);
 
     });

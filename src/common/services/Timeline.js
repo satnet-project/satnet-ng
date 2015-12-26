@@ -90,14 +90,8 @@ angular.module('snTimelineServices', [])
          */
         this.normalizeSlot = function (cfg, start, end) {
 
-            console.log('>>1> start = ' + start.toISOString());
-            console.log('>>1> end = ' + end.toISOString());
-            
             start = moment(start).isBefore(cfg.start_d) ? cfg.start_d : start;
             end = moment(end).isAfter(cfg.end_d) ? cfg.end_d : end;
-
-            console.log('>>2> start = ' + start.toISOString());
-            console.log('>>2> end = ' + end.toISOString());
 
             return { start: start, end: end };
 

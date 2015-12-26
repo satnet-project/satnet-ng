@@ -568,10 +568,10 @@ angular.module('snMarkerModels', [
              */
             this.readTrack = function (groundtrack) {
 
-                var t0 = Date.now() * 1000,
+                var t0 = Date.now() / 1000,
                     tf = moment().add(
                         _SIM_DAYS, "days"
-                    ).toDate().getTime() * 1000;
+                    ).toDate().getTime() / 1000;
 
                 if ((groundtrack === null) || (groundtrack.length === 0)) {
                     throw '@readTrack: empty groundtrack';

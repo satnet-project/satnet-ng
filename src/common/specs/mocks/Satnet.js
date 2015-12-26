@@ -88,7 +88,11 @@ angular.module('snJRPCMock', [])
   ]
 })
 .constant('GS_AVAILABILITY_MOCK', [
-    { identifier: 1, slot_start: '2014-09-08T06:00:00-05:00', slot_end: '2014-09-08T09:00:00-05:00'}
+    {
+        identifier: 1,
+        slot_start: '2014-09-08T06:00:00-05:00',
+        slot_end: '2014-09-08T09:00:00-05:00'
+    }
 ])
 .constant('CHANNELS_OPTIONS_MOCK', {
     bands: ['UHF', 'VHF'],

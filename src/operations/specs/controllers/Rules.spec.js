@@ -191,54 +191,6 @@ describe('Testing Rules controllers', function () {
 
     });
 
-    /* BUG IN THE TEST!!! how to parse a 2 digit data and decrease it by 1.
-    it('should initialize the scope of the controler', function () {
-
-        var $scope = $rootScope.$new(),
-            gs_id = 'gs-test',
-            today_array = new Date().toISOString().split('T')[0].split('-'),
-            min_day_i = (today_array[2].length > 1) ?
-                today_array[2] :
-                parseInt(today_array[2]) - 1,
-            //min_day_s = (min_day_i < 10) ? '0' + min_day_i : '' + min_day_i,
-            x_min_date = '' + today_array[0] + '-' + today_array[1] + '-' + min_day_i,
-            x_max_date = '' + (parseInt(today_array[0]) + 1) + '-' + today_array[1] + '-' + today_array[2];
-
-        console.log('>>>> ' + JSON.stringify(today_array));
-        console.log('>>>> x = ' + parseInt(today_array[2]));
-        console.log('>>>> today_array[2] = ' + today_array[2]);
-        console.log('>>>> ta.length = ' + today_array[2].length);
-        console.log('>>>> parseInt(today_array[2]) = ' + parseInt(today_array[2]));
-        console.log('>>>> min_day_i = ' + min_day_i);
-       // console.log('>>>> min_day_s = ' + min_day_s);
-
-        $controller('ruleDialogCtrl', {
-            $scope: $scope,
-            $mdDialog: $mdDialog,
-            identifier: gs_id,
-            isEditing: true
-        });
-
-        expect($scope.uiCtrl).toEqual({
-            activeTab: 0,
-            endDateDisabled: true,
-            invalidDate: false,
-            invalidOnceTime: false,
-            invalidDailyTime: false,
-            invalidWeeklyTime: false,
-            identifier: gs_id,
-            isEditing: true,
-            minDate: x_min_date,
-            maxDate: x_max_date
-        });
-
-        expect($scope.rule.operation).toEqual(CREATE_OPERATION);
-        expect($scope.rule.periodicity).toEqual(ONCE_PERIODICITY);
-        expect($scope.rule.weeklyCfg).toEqual({});
-
-    });
-    */
-
     it('should add a new rule to the system', function () {
 
         var $scope = $rootScope.$new(),
