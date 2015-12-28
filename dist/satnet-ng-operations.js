@@ -2029,170 +2029,165 @@ angular.module('snRuleFilters', [])
 
 /** Module definition (empty array is vital!). */
 angular.module('snMarkerModels', [
-        'snMapServices'
-    ])
-    .constant('_RATE', 1)
-    .constant('_SIM_DAYS', 1)
-    .constant('_GEOLINE_STEPS', 1)
-    .service('markers', [
-        '$log', 'leafletBoundsHelpers',
-        'mapServices', 'LAT', 'LNG', 'ZOOM',
-        '_SIM_DAYS', '_GEOLINE_STEPS',
+    'snMapServices'
+])
+.constant('_RATE', 1)
+.constant('_SIM_DAYS', 1)
+.constant('_GEOLINE_STEPS', 1)
+.service('markers', [
+    '$log', 'leafletBoundsHelpers',
+    'mapServices', 'LAT', 'LNG', 'ZOOM',
+    '_SIM_DAYS', '_GEOLINE_STEPS',
+
+    /**
+     * Service that provides the basic functions for handling the markers over
+     * the Leaflet map. In order to add new markers, update or remove the ones
+     * on the map, the functions provided by this service must be used. They
+     * automatically handle additional features like the addition of the
+     * connection lines among Ground Stations and Servers, or the labels for
+     * each of the markers.
+     *
+     * @param   {Object}        $log           Angular logging service
+     * @param   {Object}        mapServices    SatNet map services
+     * @param   {Number}        _SIM_DAYS      Number of days for the simulation
+     * @param   {Number}        _GEOLINE_STEPS Number of steps
+     * @returns {Object|String} Object that provides this service
+     */
+    function (
+        $log, leafletBoundsHelpers,
+        mapServices, LAT, LNG, ZOOM, _SIM_DAYS, _GEOLINE_STEPS
+    ) {
+
+        /******************************************************************/
+        /****************************************************** MAP SCOPE */
+        /******************************************************************/
+
+        // Structure that holds a reference to the map and to the
+        // associated structures.
+        this._mapInfo = {};
+        // Scope where the leaflet angular pluing has its variables.
+        this._mapScope = null;
 
         /**
-         * Service that provides the basic functions for handling the markers
-         * over the Leaflet map. In order to add new markers, update or remove
-         * the ones on the map, the functions provided by this service must be
-         * used. They automatically handle additional features like the
-         * addition of the connection lines among Ground Stations and Servers,
-         * or the labels for each of the markers.
-         *
-         * @param   {Object}        $log           Angular logging service
-         * @param   {Object}        mapServices    SatNet map services
-         * @param   {Number}        _SIM_DAYS      Number of days for the
-         *                                       simulation
-         * @param   {Number}        _GEOLINE_STEPS Number of steps for each of
-         *                                       the GeoLines
-         * @returns {Object|String} Object that provides this service
+         * Returns the current scope to which this markers service is bound
+         * to.
+         * @returns {null|*} The _mapScope object.
          */
-        function (
-            $log, leafletBoundsHelpers,
-            mapServices, LAT, LNG, ZOOM, _SIM_DAYS, _GEOLINE_STEPS
-        ) {
+        this.getScope = function () {
+            if (this._mapScope === null) {
+                throw '<_mapScope> has not been set.';
+            }
+            return this._mapScope;
+        };
 
-            /******************************************************************/
-            /****************************************************** MAP SCOPE */
-            /******************************************************************/
+        /**
+         * Configures the scope of the Map controller to set the variables for
+         * the angular-leaflet plugin.
+         *
+         * @param scope Scope ($scope) of the controller for the
+         *                              angular-leaflet plugin.
+         */
+        this.configureMapScope = function (scope) {
 
-            // Structure that holds a reference to the map and to the
-            // associated structures.
-            this._mapInfo = {};
-            // Scope where the leaflet angular pluing has its variables.
-            this._mapScope = null;
-
-            /**
-             * Returns the current scope to which this markers service is bound
-             * to.
-             * @returns {null|*} The _mapScope object.
-             */
-            this.getScope = function () {
-                if (this._mapScope === null) {
-                    throw '<_mapScope> has not been set.';
+            this._mapScope = scope;
+            angular.extend(
+                this._mapScope, {
+                    center: {
+                        lat: LAT,
+                        lng: LNG,
+                        zoom: ZOOM
+                    },
+                    layers: {
+                        baselayers: {},
+                        overlays: {}
+                    },
+                    markers: {},
+                    paths: {},
+                    maxbounds: {}
                 }
-                return this._mapScope;
-            };
+            );
+            angular.extend(
+                this._mapScope.layers.baselayers,
+                mapServices.getBaseLayers()
+            );
+            angular.extend(
+                this._mapScope.layers.overlays,
+                mapServices.getOverlays()
+            );
 
-            /**
-             * Configures the scope of the Map controller to set the variables
-             * for the angular-leaflet plugin.
-             *
-             * @param scope Scope ($scope) of the controller for the
-             *              angular-leaflet plugin.
-             */
-            this.configureMapScope = function (scope) {
-
-                this._mapScope = scope;
-
-                angular.extend(
-                    this._mapScope, {
-                        center: {
-                            lat: LAT,
-                            lng: LNG,
-                            zoom: ZOOM
-                        },
-                        layers: {
-                            baselayers: {},
-                            overlays: {}
-                        },
-                        markers: {},
-                        paths: {},
-                        maxbounds: {}
-                    }
+            var mapInfo = this._mapInfo;
+            mapServices.createTerminatorMap(true).then(function (data) {
+                $log.log(
+                    'markers.js@configureMapScope: Created map = <' +
+                    mapServices.asString(data) + '>'
                 );
-                angular.extend(
-                    this._mapScope.layers.baselayers,
-                    mapServices.getBaseLayers()
-                );
-                angular.extend(
-                    this._mapScope.layers.overlays,
-                    mapServices.getOverlays()
-                );
+                angular.extend(mapInfo, data);
+                return mapInfo;
+            });
 
-                var mapInfo = this._mapInfo;
-                mapServices.createTerminatorMap(true).then(function (data) {
-                    $log.log(
-                        'markers.js@configureMapScope: Created map = <' +
-                        mapServices.asString(data) + '>'
-                    );
-                    angular.extend(mapInfo, data);
-                    return mapInfo;
-                });
+        };
 
-            };
+        /******************************************************************/
+        /**************************************************** MARKER KEYS */
+        /******************************************************************/
 
-            /******************************************************************/
-            /**************************************************** MARKER KEYS */
-            /******************************************************************/
+        this._KEY_HEADER = 'MK'; // "MK" stands for "marker key"
+        this._key_number = 0;
 
-            this._KEY_HEADER = 'MK'; // "MK" stands for "marker key"
-            this._key_number = 0;
+        /**
+         * Dictionary that contains the relation between the identifiers of the
+         * objects and the keys for the markers that represent those objects.
+         *
+         * @type {{}}
+         */
+        this._ids2keys = {};
 
-            /**
-             * Dictionary that contains the relation between the identifiers
-             * of the objects and the keys for the markers that represent those
-             * objects.
-             *
-             * @type {{}}
-             */
-            this._ids2keys = {};
+        /**
+         * Creates a new key for the given identifier and adds it to the
+         * dictionary of identifiers and keys.
+         *
+         * @param identifier Identifier of the marker.
+         * @returns {string} Key for accessing to the marker.
+         */
+        this.createMarkerKey = function (identifier) {
 
-            /**
-             * Creates a new key for the given identifier and adds it to the
-             * dictionary of identifiers and keys.
-             *
-             * @param identifier Identifier of the marker.
-             * @returns {string} Key for accessing to the marker.
-             */
-            this.createMarkerKey = function (identifier) {
+            if (this._ids2keys[identifier] !== undefined) {
+                return this.getMarkerKey(identifier);
+            }
 
-                if (this._ids2keys[identifier] !== undefined) {
-                    return this.getMarkerKey(identifier);
-                }
+            var key = this._KEY_HEADER + this._key_number;
+            this._key_number += 1;
+            this._ids2keys[identifier] = key;
+            return key;
 
-                var key = this._KEY_HEADER + this._key_number;
-                this._key_number += 1;
-                this._ids2keys[identifier] = key;
-                return key;
+        };
 
-            };
+        /**
+         * Returns the key for the given object that holds a marker.
+         *
+         * @param identifier Identifier of the object
+         * @returns {string} Key for accessing to the marker
+         */
+        this.getMarkerKey = function (identifier) {
+            if (this._ids2keys.hasOwnProperty(identifier) === false) {
+                throw '@getMarkerKey: No key for <' + identifier + '>';
+            }
+            return this._ids2keys[identifier];
+        };
 
-            /**
-             * Returns the key for the given object that holds a marker.
-             *
-             * @param identifier Identifier of the object
-             * @returns {string} Key for accessing to the marker
-             */
-            this.getMarkerKey = function (identifier) {
-                if (this._ids2keys.hasOwnProperty(identifier) === false) {
-                    throw '@getMarkerKey: No key for <' + identifier + '>';
-                }
-                return this._ids2keys[identifier];
-            };
-
-            /**
-             * Returns the marker for the server, in case it exists!
-             *
-             * @param gs_identifier Identifier of the GroundStation object that
-             *                      is bound to the server
-             * @returns {null|*} String with the key for the marker of the
-             *                      server
-             */
-            this.getServerMarker = function (gs_id) {
-                if (this._serverMarkerKey === null) {
-                    throw '@getServerMarker: no server for <' + gs_id + '>';
-                }
-                return this.getScope().markers[this._serverMarkerKey];
-            };
+        /**
+         * Returns the marker for the server, in case it exists!
+         *
+         * @param gs_identifier Identifier of the GroundStation object that is
+         *                      bound to the server
+         * @returns {null|*} String with the key for the marker of the server
+         */
+        this.getServerMarker = function (gs_id) {
+            if (this._serverMarkerKey === null) {
+                throw '@getServerMarker: no server for <' + gs_id + '>';
+            }
+            return this.getScope().markers[this._serverMarkerKey];
+        };
 
             /**
              * Returns the marker for the object with the given identifier.
@@ -2521,17 +2516,16 @@ angular.module('snMarkerModels', [
              * added to the track object, since the durations have to be
              * calculated in between 2 points at last.
              * 
-             * @param {object} track         The object with the position arrays
-             * @param {object} currentPoint  Current point of the track
-             * @param {object} previousPoint Previous point of the track
+             * @param {object} track    The object with the position arrays
+             * @param {object} current  Current point of the track
+             * @param {object} previous Previous point of the track
              */
-            this._addDurations = function (track, currentPoint, previousPoint) {
-                track.durations.push(
-                    (currentPoint.timestamp - previousPoint.timestamp) / 1000
-                );
+            this._addDurations = function (track, current, previous) {
+                var duration = (current.timestamp - previous.timestamp) * 1000;
+                track.durations.push(duration);
                 track.valid = true;
             };
-            
+
             /**
              * Private function that helps processing the points of the ground
              * tracks.

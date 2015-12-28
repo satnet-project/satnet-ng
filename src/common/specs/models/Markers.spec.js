@@ -566,14 +566,14 @@ describe('Testing Markers Service', function () {
             { timestamp: nowUs + 50000, latitude: 15.00, longitude: 148.00 }
         );
         _result = markers.readTrack(groundtrack);
-        expect(_result.durations).toEqual([10]);
+        expect(_result.durations).toEqual([10000000]);
         expect(_result.positions).toEqual([[14, 147], [15, 148]]);
 
         groundtrack.push(
             { timestamp: nowUs + 400000, latitude: 16.00, longitude: 149.00 }
         );
         _result = markers.readTrack(groundtrack);
-        expect(_result.durations).toEqual([10]);
+        expect(_result.durations).toEqual([10000000]);
         expect(_result.positions).toEqual([[14, 147], [15, 148]]);
 
     });
