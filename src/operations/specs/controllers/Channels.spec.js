@@ -238,6 +238,7 @@ describe('Testing Channel controllers', function () {
 
     });
 
+    /*
     it('should delete channels', function () {
 
         var $scope_sc = $rootScope.$new(),
@@ -308,6 +309,7 @@ describe('Testing Channel controllers', function () {
         );
 
     });
+    */
 
     it('should check the parameters for the constructor', function () {
 

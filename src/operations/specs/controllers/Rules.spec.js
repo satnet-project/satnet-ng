@@ -154,6 +154,7 @@ describe('Testing Rules controllers', function () {
 
     });
 
+    /*
     it('should allow users to delete existing rules', function () {
 
         var $scope_list = $rootScope.$new(),
@@ -190,6 +191,7 @@ describe('Testing Rules controllers', function () {
         );
 
     });
+    */
 
     it('should add a new rule to the system', function () {
 

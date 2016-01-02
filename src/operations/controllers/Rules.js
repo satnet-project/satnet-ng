@@ -99,6 +99,7 @@ angular.module('snRuleControllers', [
                 }).catch(function (cause) {
                     snDialog.exception('rules.delete', identifier, cause);
                 });
+
             }, function () {
                 console.log('Rule removal canceled');
             });

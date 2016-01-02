@@ -110,15 +110,31 @@ angular.module('snChannelControllers', [
          */
         $scope.delete = function (channelId) {
             var rpc_service = $scope.uiCtrl.rpcPrefix + '.channel.delete';
-            satnetRPC.rCall(
-                rpc_service, [$scope.uiCtrl.segmentId, channelId]
-            ).then(function (results) {
-                // TODO broadcaster.channelRemoved(gs_id, channelId);
-                snDialog.success(rpc_service, channelId, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception(rpc_service, channelId, cause);
+            var confirm = $mdDialog.confirm()
+                .title('Confirm')
+                .content(
+                    'This action will remove your channel from the system.'
+                )
+                .ariaLabel('channel removal confirmation')
+                .ok('REMOVE')
+                .cancel('CANCEL');
+
+            $mdDialog.show(confirm).then(function() {
+
+                satnetRPC.rCall(
+                    rpc_service, [$scope.uiCtrl.segmentId, channelId]
+                ).then(function (results) {
+                    // TODO broadcaster.channelRemoved(gs_id, channelId);
+                    snDialog.success(rpc_service, channelId, results, null);
+                    $scope.refresh();
+                }).catch(function (cause) {
+                    snDialog.exception(rpc_service, channelId, cause);
+                });
+
+            }, function() {
+                console.log('Channel removal canceled');
             });
+
         };
 
         /**

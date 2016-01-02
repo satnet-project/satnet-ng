@@ -34,9 +34,10 @@
                     </md-button>
 
                     <md-button id="{{ c }}-delete" ng-click="delete(c)" aria-label="delete channel {{ c }}" class="md-primary menu-button" flex>
-                        <div layout="row" layout-fill>
+                        <div layout="row" layout-fill class="sn-red-action">
                             <i class="fa fa-close"></i>
                         </div>
+                        <md-tooltip md-direction="top">Delete</md-tooltip>
                     </md-button>
 
                 </div>
