@@ -45,6 +45,9 @@ md-content md-divider {
 md-content .md-button {
   margin: 5px 0 5px 0; }
 
+.sn-red-action {
+  color: #DE413C; }
+
 .sn-rotated {
   display: inline-block;
   overflow: hidden;

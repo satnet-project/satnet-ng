@@ -26,6 +26,17 @@
             <md-list-item ng-repeat="gs in gsList">
                 <div layout="row" layout-fill>
 
+                    <md-button id="{{ gs }}-delete"
+                               ng-click="delete(gs)"
+                               aria-label="delete ground station {{ gs }}"
+                               class="md-primary menu-button"
+                               flex>
+                        <div layout="row" layout-fill class="sn-red-action">
+                            <i class="fa fa-close"></i>
+                        </div>
+                        <md-tooltip md-direction="top">Delete</md-tooltip>
+                    </md-button>
+
                     <md-button id="{{ gs }}-edit"
                                ng-click="showEditDialog(gs)"
                                aria-label="edit ground station {{ gs }}"
@@ -58,16 +69,6 @@
                             <i class="fa fa-rss"></i>
                         </div>
                         <md-tooltip md-direction="top">Channels</md-tooltip>
-                    </md-button>
-
-                    <md-button id="{{ gs }}-delete"
-                               ng-click="delete(gs)"
-                               aria-label="delete ground station {{ gs }}"
-                               class="md-primary menu-button" flex>
-                        <div layout="row" layout-fill>
-                            <i class="fa fa-close"></i>
-                        </div>
-                        <md-tooltip md-direction="top">Delete</md-tooltip>
                     </md-button>
 
                 </div>

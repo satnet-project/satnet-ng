@@ -28,6 +28,16 @@
             <md-list-item ng-repeat="sc in scList">
                 <div layout="row" layout-fill>
 
+                    <md-button id="{{ sc }}-delete"
+                               ng-click="delete(sc)"
+                               aria-label="delete spacecraft {{ sc }}"
+                               class="md-primary menu-button" flex>
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-close sn-red-action"></i>
+                        </div>
+                        <md-tooltip md-direction="top">Delete</md-tooltip>
+                    </md-button>
+
                     <md-button id="{{ sc }}-edit"
                                ng-click="showEditDialog(sc)"
                                aria-label="edit spacecraft {{ sc }}"
@@ -50,16 +60,6 @@
                             <i class="fa fa-rss"></i>
                         </div>
                         <md-tooltip md-direction="top">Channels</md-tooltip>
-                    </md-button>
-
-                    <md-button id="{{ sc }}-delete"
-                               ng-click="delete(sc)"
-                               aria-label="delete spacecraft {{ sc }}"
-                               class="md-primary menu-button" flex>
-                        <div layout="row" layout-fill>
-                            <i class="fa fa-close"></i>
-                        </div>
-                        <md-tooltip md-direction="top">Delete</md-tooltip>
                     </md-button>
 
                 </div>

@@ -4433,13 +4433,35 @@ angular.module('snGsControllers', [
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.delete = function (identifier) {
-            satnetRPC.rCall('gs.delete', [identifier]).then(function (results) {
-                broadcaster.gsRemoved(identifier);
-                snDialog.success('gs.delete', identifier, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception('gs.delete', identifier, cause);
+
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove this Ground Station?')
+                .content(
+                    'This action will remove your Ground Station named <' +
+                    identifier + '> and all its associated resources'
+                )
+                .ariaLabel('ground station removal confirmation')
+                .ok('REMOVE')
+                .cancel('CANCEL');
+
+            $mdDialog.show(confirm).then(function() {
+
+                satnetRPC.rCall('gs.delete', [identifier]).then(
+                    function (results) {
+                        broadcaster.gsRemoved(identifier);
+                        snDialog.success(
+                            'gs.delete', identifier, results, null
+                        );
+                        $scope.refresh();
+                    }
+                ).catch(function (cause) {
+                    snDialog.exception('gs.delete', identifier, cause);
+                });
+
+            }, function() {
+                console.log('Ground Station removal canceled');
             });
+
         };
 
         /**
@@ -5341,15 +5363,33 @@ angular.module('snScControllers', [
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.delete = function (identifier) {
-            satnetRPC.rCall('sc.delete', [
-                identifier
-            ]).then(function (results) {
-                broadcaster.scRemoved(identifier);
-                snDialog.success('sc.delete', identifier, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception('sc.delete', identifier, cause);
+            
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove this Spacecraft?')
+                .content(
+                    'This action will remove your Spacecraft named <' +
+                    identifier + '> and all its associated resources'
+                )
+                .ariaLabel('spacecraft removal confirmation')
+                .ok('REMOVE')
+                .cancel('CANCEL');
+
+            $mdDialog.show(confirm).then(function() {
+
+                satnetRPC.rCall('sc.delete', [identifier]).then(
+                    function (results) {
+                        broadcaster.scRemoved(identifier);
+                        snDialog.success('sc.delete', identifier, results, null);
+                        $scope.refresh();
+                    }
+                ).catch(function (cause) {
+                    snDialog.exception('sc.delete', identifier, cause);
+                });
+
+            },  function () {
+                console.log('Spacecraft removal canceled');
             });
+
         };
 
         /**

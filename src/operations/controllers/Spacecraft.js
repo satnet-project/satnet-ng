@@ -90,15 +90,33 @@ angular.module('snScControllers', [
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.delete = function (identifier) {
-            satnetRPC.rCall('sc.delete', [
-                identifier
-            ]).then(function (results) {
-                broadcaster.scRemoved(identifier);
-                snDialog.success('sc.delete', identifier, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception('sc.delete', identifier, cause);
+            
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove this Spacecraft?')
+                .content(
+                    'This action will remove your Spacecraft named <' +
+                    identifier + '> and all its associated resources'
+                )
+                .ariaLabel('spacecraft removal confirmation')
+                .ok('REMOVE')
+                .cancel('CANCEL');
+
+            $mdDialog.show(confirm).then(function() {
+
+                satnetRPC.rCall('sc.delete', [identifier]).then(
+                    function (results) {
+                        broadcaster.scRemoved(identifier);
+                        snDialog.success('sc.delete', identifier, results, null);
+                        $scope.refresh();
+                    }
+                ).catch(function (cause) {
+                    snDialog.exception('sc.delete', identifier, cause);
+                });
+
+            },  function () {
+                console.log('Spacecraft removal canceled');
             });
+
         };
 
         /**
