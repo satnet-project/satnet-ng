@@ -154,7 +154,7 @@ describe('Testing Rules controllers', function () {
 
     });
 
-    /*
+    /* TODO: Fix problem with $mdDialog blocking the test execution
     it('should allow users to delete existing rules', function () {
 
         var $scope_list = $rootScope.$new(),

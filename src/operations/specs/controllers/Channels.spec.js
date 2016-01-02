@@ -238,7 +238,7 @@ describe('Testing Channel controllers', function () {
 
     });
 
-    /*
+    /* TODO: Fix problem with $mdDialog blocking the test execution
     it('should delete channels', function () {
 
         var $scope_sc = $rootScope.$new(),
