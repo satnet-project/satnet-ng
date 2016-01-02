@@ -50,7 +50,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('common/templates/passes/menu.html',
-    "<md-button ng-controller=\"snPassesCtrl\" ng-click=\"openDialog(segmentId, isSpacecraft)\" aria-label=\"passes\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-indent\"></i></div><md-tooltip md-direction=\"top\">View Passes</md-tooltip></md-button>"
+    "<md-button ng-controller=\"snPassesCtrl\" ng-click=\"openDialog(segmentId, isSpacecraft)\" aria-label=\"passes\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-indent\"></i></div><md-tooltip md-direction=\"top\">Passes</md-tooltip></md-button>"
   );
 
 
