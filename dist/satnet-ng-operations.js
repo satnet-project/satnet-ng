@@ -1677,7 +1677,8 @@ angular.module('snTimelineServices', [])
 
             console.log(
                 '%%%% WINDOW: (' + moment(cfg.start_d).format() +
-                ', ' + moment(cfg.end_d).format() + ')'
+                ', ' + moment(cfg.end_d).format() + '), no_slots = ' +
+                slots.length
             );
 
             for (var i = 0; i < slots.length; i++ ) {
@@ -5027,8 +5028,10 @@ angular.module('snRuleControllers', [
                 $scope.configuration.$setValidity('', true);
             }
 
-            $scope.configuration.once_start_time.$valid = !($scope.uiCtrl.invalidOnceTime);
-            $scope.configuration.once_end_time.$valid = !($scope.uiCtrl.invalidOnceTime);
+            $scope.configuration.once_start_time.$valid =
+                !($scope.uiCtrl.invalidOnceTime);
+            $scope.configuration.once_end_time.$valid =
+                !($scope.uiCtrl.invalidOnceTime);
             $scope.configuration.once_start_time.$invalid =
                 $scope.uiCtrl.invalidOnceTime;
             $scope.configuration.once_end_time.$invalid =
@@ -5051,8 +5054,10 @@ angular.module('snRuleControllers', [
                 $scope.configuration.$setValidity('', true);
             }
 
-            $scope.configuration.once_start_time.$valid = !($scope.uiCtrl.invalidDailyTime);
-            $scope.configuration.once_end_time.$valid = !($scope.uiCtrl.invalidDailyTime);
+            $scope.configuration.once_start_time.$valid =
+                !($scope.uiCtrl.invalidDailyTime);
+            $scope.configuration.once_end_time.$valid =
+                !($scope.uiCtrl.invalidDailyTime);
             $scope.configuration.once_start_time.$invalid =
                 $scope.uiCtrl.invalidDailyTime;
             $scope.configuration.once_end_time.$invalid =
@@ -5215,6 +5220,9 @@ angular.module('snRuleControllers', [
                 tomorrow = new Date(
                     moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
                 ),
+                initial_end_date = new Date(
+                    moment().utc().add(2, 'days').format(NG_DATE_FORMAT)
+                ),
                 today_1h = new Date(
                     moment().utc().add(1, 'hours').format(NG_DATE_FORMAT)
                 ),
@@ -5225,8 +5233,8 @@ angular.module('snRuleControllers', [
                     moment().utc().add(1, 'years').format(NG_DATE_FORMAT)
                 ).toISOString().split('T')[0];
 
-            $scope.rule.start_date = today;
-            $scope.rule.end_date = tomorrow;
+            $scope.rule.start_date = tomorrow;
+            $scope.rule.end_date = initial_end_date;
             $scope.rule.onceCfg.start_time = today;
             $scope.rule.onceCfg.end_time = today_1h;
             $scope.rule.dailyCfg.start_time = today;
@@ -5691,8 +5699,19 @@ angular.module('snOperationalDirective', [
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
-                        $scope.gui.slots[gs_id] = timeline.filterSlots(
-                            $scope.gui, gs_id, results.slots
+                        angular.forEach(results.slots, function (slots, sc_id) {
+                            console.log('>>> sc_id = ' + sc_id);
+                            console.log('>>> slots = ' + JSON.stringify(slots));
+                            var filt= timeline.filterSlots(
+                                $scope.gui, sc_id, slots
+                            );
+                            $scope.gui.slots[sc_id] = filt;
+                            console.log('>>> filt = ' + JSON.stringify(filt));
+                        });
+                        console.log(
+                            '>>> $scope.gui.slots = ' + JSON.stringify(
+                                $scope.gui.slots
+                            )
                         );
                     });
                 });

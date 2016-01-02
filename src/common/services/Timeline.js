@@ -147,7 +147,8 @@ angular.module('snTimelineServices', [])
 
             console.log(
                 '%%%% WINDOW: (' + moment(cfg.start_d).format() +
-                ', ' + moment(cfg.end_d).format() + ')'
+                ', ' + moment(cfg.end_d).format() + '), no_slots = ' +
+                slots.length
             );
 
             for (var i = 0; i < slots.length; i++ ) {

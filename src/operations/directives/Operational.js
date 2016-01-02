@@ -66,8 +66,19 @@ angular.module('snOperationalDirective', [
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
-                        $scope.gui.slots[gs_id] = timeline.filterSlots(
-                            $scope.gui, gs_id, results.slots
+                        angular.forEach(results.slots, function (slots, sc_id) {
+                            console.log('>>> sc_id = ' + sc_id);
+                            console.log('>>> slots = ' + JSON.stringify(slots));
+                            var filt= timeline.filterSlots(
+                                $scope.gui, sc_id, slots
+                            );
+                            $scope.gui.slots[sc_id] = filt;
+                            console.log('>>> filt = ' + JSON.stringify(filt));
+                        });
+                        console.log(
+                            '>>> $scope.gui.slots = ' + JSON.stringify(
+                                $scope.gui.slots
+                            )
                         );
                     });
                 });

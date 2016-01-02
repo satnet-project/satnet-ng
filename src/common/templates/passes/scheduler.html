@@ -52,24 +52,21 @@
 
                 </table>
 
-                    <div class="sn-sch-row-overlay">
-                        <div class="sn-sch-slot-container">
-                            <div class="sn-sch-slot"
-                                 ng-repeat="s in slots"
-                                 ng-style="{'left': s.slot.left + '%', 'width': s.slot.width + '%'}">
-                            </div>
-                            <div class="sn-sch-slot-info"
-                                 ng-repeat="s in slots"
-                                 ng-style="{'left': ( s.slot.left + 1) + '%'}">
-                                <ul>
-                                    <li>{{ s.slot.id }}</li>
-                                    <li>{{ s.slot.s_date }}</li>
-                                    <li>{{ s.slot.e_date }}</li>
-                                </ul>
-                            </div>
-
+                <div class="sn-sch-row-overlay">
+                    <div class="sn-sch-slot-container">
+                        <div class="sn-sch-slot" ng-repeat="s in slots"
+                             ng-style="{'left': s.slot.left + '%', 'width': s.slot.width + '%'}">
+                        </div>
+                        <div class="sn-sch-slot-info" ng-repeat="s in slots"
+                             ng-style="{'left': ( s.slot.left + 1) + '%'}">
+                            <ul>
+                                <!-- <li>{{ s.slot.id }}</li> -->
+                                <li>{{ s.slot.s_date }}</li>
+                                <li>{{ s.slot.e_date }}</li>
+                            </ul>
                         </div>
                     </div>
+                </div>
 
                 </div>
             </td>

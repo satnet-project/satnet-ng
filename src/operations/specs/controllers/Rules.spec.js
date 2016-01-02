@@ -196,10 +196,10 @@ describe('Testing Rules controllers', function () {
         var $scope = $rootScope.$new(),
             gs_id = 'gs-test',
             today = new Date(
-                moment().utc().format(NG_DATE_FORMAT)
+                moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
             ),
             tomorrow = new Date(
-                moment().utc().add(1, 'days').format(NG_DATE_FORMAT)
+                moment().utc().add(2, 'days').format(NG_DATE_FORMAT)
             ),
             x_once_cfg = {
                 rule_operation: CREATE_OPERATION,
