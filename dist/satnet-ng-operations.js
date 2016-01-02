@@ -4435,7 +4435,7 @@ angular.module('snGsControllers', [
         $scope.delete = function (identifier) {
 
             var confirm = $mdDialog.confirm()
-                .title('Would you like to remove this Ground Station?')
+                .title('Confirm')
                 .content(
                     'This action will remove your Ground Station named <' +
                     identifier + '> and all its associated resources'
@@ -4835,15 +4835,29 @@ angular.module('snRuleControllers', [
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.delete = function (rule) {
-            satnetRPC.rCall('rules.delete', [
-            $scope.identifier, rule.key
-        ]).then(function (results) {
-                // TODO broadcaster.ruleRemoved(identifier);
-                snDialog.success('rules.delete', identifier, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception('rules.delete', identifier, cause);
+
+            var confirm = $mdDialog.confirm()
+                .title('Confirm')
+                .content('This action will remove your rule from the system.')
+                .ariaLabel('rule removal confirmation')
+                .ok('REMOVE')
+                .cancel('CANCEL');
+
+            $mdDialog.show(confirm).then(function() {
+            
+                satnetRPC.rCall('rules.delete', [
+                    $scope.identifier, rule.key
+                ]).then(function (results) {
+                    // TODO broadcaster.ruleRemoved(identifier);
+                    snDialog.success('rules.delete', identifier, results, null);
+                    $scope.refresh();
+                }).catch(function (cause) {
+                    snDialog.exception('rules.delete', identifier, cause);
+                });
+            }, function () {
+                console.log('Rule removal canceled');
             });
+
         };
 
         /**
@@ -5365,7 +5379,7 @@ angular.module('snScControllers', [
         $scope.delete = function (identifier) {
             
             var confirm = $mdDialog.confirm()
-                .title('Would you like to remove this Spacecraft?')
+                .title('Confirm')
                 .content(
                     'This action will remove your Spacecraft named <' +
                     identifier + '> and all its associated resources'

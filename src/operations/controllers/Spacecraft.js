@@ -92,7 +92,7 @@ angular.module('snScControllers', [
         $scope.delete = function (identifier) {
             
             var confirm = $mdDialog.confirm()
-                .title('Would you like to remove this Spacecraft?')
+                .title('Confirm')
                 .content(
                     'This action will remove your Spacecraft named <' +
                     identifier + '> and all its associated resources'

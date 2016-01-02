@@ -107,7 +107,7 @@ angular.module('snGsControllers', [
         $scope.delete = function (identifier) {
 
             var confirm = $mdDialog.confirm()
-                .title('Would you like to remove this Ground Station?')
+                .title('Confirm')
                 .content(
                     'This action will remove your Ground Station named <' +
                     identifier + '> and all its associated resources'

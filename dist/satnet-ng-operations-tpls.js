@@ -153,7 +153,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
     "                        </md-button>\n" +
     "                    </md-card-actions>\n" +
     "                </md-card>\n" +
-    "                --><!-- --><div layout=\"row\" layout-fill><md-button id=\"{{ r }}-edit\" aria-label=\"edit availability rule {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\">{{ r | printRule }}</b></div></md-button><md-button id=\"{{ r }}-delete\" ng-click=\"delete(r)\" aria-label=\"delete rule {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-close\"></i></div></md-button></div><!-- --></md-list-item></md-list></md-content></md-dialog>"
+    "                --><!-- --><div layout=\"row\" layout-fill><md-button id=\"{{ r }}-edit\" aria-label=\"edit availability rule {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\">{{ r | printRule }}</b></div></md-button><md-button id=\"{{ r }}-delete\" ng-click=\"delete(r)\" aria-label=\"delete rule {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-close\"></i></div><md-tooltip md-direction=\"top\">Delete</md-tooltip></md-button></div><!-- --></md-list-item></md-list></md-content></md-dialog>"
   );
 
 

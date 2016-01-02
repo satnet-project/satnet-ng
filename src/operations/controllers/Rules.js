@@ -80,15 +80,29 @@ angular.module('snRuleControllers', [
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.delete = function (rule) {
-            satnetRPC.rCall('rules.delete', [
-            $scope.identifier, rule.key
-        ]).then(function (results) {
-                // TODO broadcaster.ruleRemoved(identifier);
-                snDialog.success('rules.delete', identifier, results, null);
-                $scope.refresh();
-            }).catch(function (cause) {
-                snDialog.exception('rules.delete', identifier, cause);
+
+            var confirm = $mdDialog.confirm()
+                .title('Confirm')
+                .content('This action will remove your rule from the system.')
+                .ariaLabel('rule removal confirmation')
+                .ok('REMOVE')
+                .cancel('CANCEL');
+
+            $mdDialog.show(confirm).then(function() {
+            
+                satnetRPC.rCall('rules.delete', [
+                    $scope.identifier, rule.key
+                ]).then(function (results) {
+                    // TODO broadcaster.ruleRemoved(identifier);
+                    snDialog.success('rules.delete', identifier, results, null);
+                    $scope.refresh();
+                }).catch(function (cause) {
+                    snDialog.exception('rules.delete', identifier, cause);
+                });
+            }, function () {
+                console.log('Rule removal canceled');
             });
+
         };
 
         /**
