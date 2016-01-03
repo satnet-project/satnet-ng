@@ -117,7 +117,7 @@ describe("Testing Operations Interface", function () {
         $body.empty();
     });
 
-    /*
+    /* TODO :: fix problem with mocking $window
     it('AppCtrl should toggle the menu opening', function () {
 
         var button = $("#toggleMenu");
