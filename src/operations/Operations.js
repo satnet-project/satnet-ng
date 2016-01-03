@@ -50,7 +50,7 @@ angular.module('snOperationsDirective', [
      * @param   {Object} $mdSidenav Side mane service from Angular
      *                              Material.
      */
-    function ($scope, $mdSidenav) {
+    function ($scope, $mdSidenav, $window) {
 
         /**
          * Handler to toggle the menu on and off. It is based on the
@@ -60,6 +60,14 @@ angular.module('snOperationsDirective', [
          * the menu can still be shown.
          */
         $scope.toggleMenu = function () { $mdSidenav("menu").toggle(); };
+
+        /**
+         * Handler that closes the current Operationa application and returns
+         * to the main website.
+         */
+        $scope.exit = function () {
+            $window.location.href = $window.location.origin;
+        };
 
     }
 

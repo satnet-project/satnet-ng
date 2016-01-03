@@ -1,4 +1,5 @@
-<div class="operations-main" ng-controller="operationsAppCtrl"
+<div class="operations-main"
+     ng-controller="operationsAppCtrl"
      layout="column" layout-fill>
 
     <section layout="row" flex>
@@ -11,74 +12,54 @@
 
             <div flex="66" layout="row">
 
-                <!--
-                <div layout="column" layout-align="center left"
-                     flex="15">
-                    <div flex></div>
-                    <div class="sn-rotated sn-rotated-text"
-                         layout-fill
-                         flex>
-                        <p class="sn-rotated-inner">SATNET</p>
-                    </div>
-                    <div flex></div>
-                </div>
+                <md-content class="md-padding"
+                            ng-controller="operationsMenuCtrl">
 
-                <div style="overflow: hidden"
-                     flex="85">
-                -->
+                    <md-button id="menuExit"
+                               ng-click="exit()"
+                               aria-label="exit"
+                               class="md-primary menu-button">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-power-off"></i>
+                            <b>exit</b>
+                        </div>
+                    </md-button>
 
-                    <md-content class="md-padding"
-                                ng-controller="operationsMenuCtrl">
-            
-                        <md-button id="menuExit"
-                                   ng-click="close()"
-                                   aria-label="exit"
-                                   class="md-primary menu-button">
-                            <div layout="row" layout-fill>
-                                <i class="fa fa-power-off"></i>
-                                <b>exit</b>
-                            </div>
-                        </md-button>
+                    <md-divider></md-divider>
 
-                        <md-divider></md-divider>
+                    <md-button id="menuGS"
+                               ng-click="showGsMenu()"
+                               aria-label="ground stations"
+                               class="md-primary menu-button">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-home"></i>
+                            <b>ground stations</b>
+                        </div>
+                    </md-button>
 
-                        <md-button id="menuGS"
-                                   ng-click="showGsMenu()"
-                                   aria-label="ground stations"
-                                   class="md-primary menu-button">
-                            <div layout="row" layout-fill>
-                                <i class="fa fa-home"></i>
-                                <b>ground stations</b>
-                            </div>
-                        </md-button>
+                    <md-button id="menuSC"
+                               ng-click="showScMenu()"
+                               aria-label="spacecraft"
+                               class="md-primary menu-button">
+                        <div layout="row" layout-fill>
+                            <i class="fa fa-space-shuttle"></i>
+                            <b>spacecraft</b>
+                        </div>
+                    </md-button>
 
-                        <md-button id="menuSC"
-                                   ng-click="showScMenu()"
-                                   aria-label="spacecraft"
-                                   class="md-primary menu-button">
-                            <div layout="row" layout-fill>
-                                <i class="fa fa-space-shuttle"></i>
-                                <b>spacecraft</b>
-                            </div>
-                        </md-button>
+                    <md-divider></md-divider>
 
-                        <md-divider></md-divider>
+                    <sn-availability></sn-availability>
+                    <sn-compatibility></sn-compatibility>
+                    <sn-operational></sn-operational>
 
-                        <sn-availability></sn-availability>
-                        <sn-compatibility></sn-compatibility>
-                        <sn-operational></sn-operational>
+                    <md-divider></md-divider>
 
-                        <md-divider></md-divider>
+                    <sn-about></sn-about>
 
-                        <sn-about></sn-about>
+                    <md-divider></md-divider>
 
-                        <md-divider></md-divider>
-
-                    </md-content>
-
-                <!--
-                </div>
-                -->
+                </md-content>
 
             </div>
 
