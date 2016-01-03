@@ -294,7 +294,7 @@ describe('Testing snMapServices Service', function () {
                         draggable: false,
                         message: 'Estimated Location',
                         icon: {
-                            iconUrl: '/images/user.png',
+                            iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/user.png',
                             iconSize: [15, 15]
                         }
                     }
@@ -336,7 +336,7 @@ describe('Testing snMapServices Service', function () {
                         draggable: false,
                         message: 'Estimated Location',
                         icon: {
-                            iconUrl: '/images/user.png',
+                            iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/user.png',
                             iconSize: [15, 15]
                         }
                     }
@@ -380,7 +380,7 @@ describe('Testing snMapServices Service', function () {
                         draggable: false,
                         message: 'Estimated Location',
                         icon: {
-                            iconUrl: '/images/user.png',
+                            iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/user.png',
                             iconSize: [15, 15]
                         }
                     }

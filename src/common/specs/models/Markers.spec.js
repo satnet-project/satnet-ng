@@ -150,7 +150,7 @@ describe('Testing Markers Service', function () {
             draggable: false,
             layer: "network",
             icon: {
-                iconUrl: '/images/server-icon-3.svg',
+                iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/server-icon-3.svg',
                 iconSize: [15, 15]
             },
             label: {
@@ -226,7 +226,7 @@ describe('Testing Markers Service', function () {
             draggable: false,
             layer: 'groundstations',
             icon: {
-                iconUrl: '/images/gs-icon.svg',
+                iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/gs-icon.svg',
                 iconSize: [15, 15]
             },
             label: {
@@ -303,7 +303,7 @@ describe('Testing Markers Service', function () {
             draggable: false,
             layer: 'groundstations',
             icon: {
-                iconUrl: '/images/gs-icon.svg',
+                iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/gs-icon.svg',
                 iconSize: [15, 15]
             },
             label: {
