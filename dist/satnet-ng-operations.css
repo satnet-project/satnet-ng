@@ -398,6 +398,12 @@ div.m-app-loading p {
   padding: 0;
   margin: 0;
   border: 0; }
+  .sn-sch-cell-container p {
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: #607D8B;
+    margin: 0; }
 
 .sn-sch-corner-top, .sn-sch-gs-id {
   border-bottom: 3px solid lightgray; }

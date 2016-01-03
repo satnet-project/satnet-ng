@@ -117,7 +117,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/operational/global.html',
-    "<div ng-controller=\"snGlobalSchCtrl\" ng-init=\"init()\" class=\"sn-sch-table-wrap\"><table id=\"sn-op\" class=\"sn-sch-table\" ng-repeat=\"g in gui.gss\"><tr><td class=\"sn-global-gs-id\"><p>{{ g }}</p></td></tr><tr><td><sn-operational-scheduler segment-id=\"{{ g }}\"></sn-operational-scheduler></td></tr></table></div>"
+    "<div ng-controller=\"snGlobalSchCtrl\" ng-init=\"init()\" class=\"sn-sch-table-wrap\"><table id=\"sn-op\" class=\"sn-sch-table\" ng-repeat=\"g in gui.gss\"><tr><td><sn-operational-scheduler segment-id=\"{{ g }}\"></sn-operational-scheduler></td></tr></table></div>"
   );
 
 
@@ -133,7 +133,16 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
     "        }</style><div class=\"sn-sch-table-overlay\"><div class=\"sn-sch-table-overlay-left\" ng-style=\"{'width': '' + gui.gs_id_width}\"></div><div class=\"sn-sch-table-overlay-container\"><div class=\"sn-sch-table-overlay-right\" ng-style=\"{\n" +
     "                    'animation': 'sn-sch-table-overlay-right ' + gui.animation.duration + 's ' + ' linear',\n" +
     "                    'width': gui.animation.initial_width\n" +
-    "                 }\"></div></div></div><table id=\"a-slots-timeline\" class=\"sn-sch-table\"><colgroup><col class=\"sn-sch-gs-col\"></colgroup><tr><td class=\"sn-sch-corner-top\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><sn-timeline></sn-timeline></td></tr><tr ng-repeat=\"(sc, slots) in gui.slots\"><td class=\"sn-sch-gs-id\" ng-style=\"{'width': '' + gui.gs_id_width}\"><p>{{ sc }}</p></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><div class=\"sn-sch-row-container\"><table class=\"sn-sch-row-table\"><colgroup ng-repeat=\"d in gui.days\"><col span=\"{{ gui.no_cols }}\" class=\"sn-sch-time-col\"><col class=\"sn-sch-day-col\"></colgroup><tr><td ng-repeat=\"t in gui.times track by $index\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td></tr></table><div class=\"sn-sch-row-overlay\"><div class=\"sn-sch-slot-container\"><div class=\"sn-sch-slot\" ng-repeat=\"s in slots\" ng-style=\"{\n" +
+    "                 }\"></div></div></div><table id=\"a-slots-timeline\" class=\"sn-sch-table\"><colgroup><col class=\"sn-sch-gs-col\"></colgroup><tr><td class=\"sn-sch-corner-top\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><p>{{ segmentId }}</p></td></tr><!--\n" +
+    "        <tr>\n" +
+    "            <td class=\"sn-sch-corner-top\"\n" +
+    "                ng-style=\"{'width': '' + gui.gs_id_width}\">\n" +
+    "            </td>\n" +
+    "            <td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\">\n" +
+    "                <sn-timeline></sn-timeline>\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "        --><tr ng-repeat=\"(sc, slots) in gui.slots\"><td class=\"sn-sch-gs-id\" ng-style=\"{'width': '' + gui.gs_id_width}\"><p>{{ sc }}</p></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><div class=\"sn-sch-row-container\"><table class=\"sn-sch-row-table\"><colgroup ng-repeat=\"d in gui.days\"><col span=\"{{ gui.no_cols }}\" class=\"sn-sch-time-col\"><col class=\"sn-sch-day-col\"></colgroup><tr><td ng-repeat=\"t in gui.times track by $index\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td></tr></table><div class=\"sn-sch-row-overlay\"><div class=\"sn-sch-slot-container\"><div class=\"sn-sch-slot\" ng-repeat=\"s in slots\" ng-style=\"{\n" +
     "                                'left': s.slot.left + '%',\n" +
     "                                'width': s.slot.width + '%'\n" +
     "                             }\"></div><div class=\"sn-sch-slot-info\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><ul><li><b>{{ s.slot.state }}</b></li><li>{{ s.slot.s_date | printSlotDate }}</li><li>{{ s.slot.e_date | printSlotDate }}</li></ul></div><div class=\"sn-sch-slot-state\" ng-class=\"{\n" +
