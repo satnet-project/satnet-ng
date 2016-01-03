@@ -410,7 +410,14 @@ div.m-app-loading p {
   padding: 35px 0 35px 0; }
   .sn-sch-gs-id p {
     padding: 0;
-    transform: rotate(-90deg); }
+    transform: rotate(-90deg);
+    min-width: 100%; }
+
+.sn-global-gs-id {
+  max-height: 2em; }
+  .sn-global-gs-id p {
+    text-align: center;
+    margin: 2px; }
 
 .sn-sch-axis-time {
   background-color: #607D8B; }
@@ -455,12 +462,15 @@ div.m-app-loading p {
   border-style: none solid none solid;
   opacity: 0.65; }
 
+.sn-sch-slot:hover {
+  cursor: pointer; }
+
 .sn-sch-slot-info {
   position: absolute;
-  top: -75%;
+  top: -20px;
   background-color: lightgrey;
   color: black;
-  border: 5px solid #607D8B;
+  border: 2px solid #607D8B;
   border-style: none none none solid;
   opacity: 0.0;
   transition: opacity 0.5s;
@@ -468,13 +478,68 @@ div.m-app-loading p {
   font-size: 65%; }
   .sn-sch-slot-info ul {
     list-style: none;
-    padding: 7px; }
-
-.sn-sch-slot:hover {
-  cursor: pointer; }
+    padding: 7px;
+    margin: 0; }
 
 .sn-sch-slot-info:hover {
   opacity: 1.0; }
+
+.sn-sch-slot-state {
+  position: absolute;
+  top: 40px; }
+
+.sn-sch-slot-state:hover {
+  cursor: pointer;
+  font-weight: bolder; }
+
+.sn-state-undefined {
+  font-size: 75%;
+  color: white;
+  background-color: black;
+  border: 2px solid black;
+  border-style: none none none solid; }
+
+.sn-state-free {
+  font-size: 75%;
+  color: white;
+  background-color: forestgreen;
+  border: 2px solid black;
+  border-style: none none none solid; }
+
+.sn-state-selected {
+  font-size: 75%;
+  color: white;
+  background-color: orange;
+  border: 2px solid black;
+  border-style: none none none solid; }
+
+.sn-state-reserved {
+  font-size: 75%;
+  color: white;
+  background-color: darkblue;
+  border: 2px solid black;
+  border-style: none none none solid; }
+
+.sn-state-denied {
+  font-size: 75%;
+  color: white;
+  background-color: red;
+  border: 2px solid black;
+  border-style: none none none solid; }
+
+.sn-state-canceled {
+  font-size: 75%;
+  color: white;
+  background-color: red;
+  border: 2px solid black;
+  border-style: none none none solid; }
+
+.sn-state-removed {
+  font-size: 75%;
+  color: white;
+  background-color: red;
+  border: 2px solid black;
+  border-style: none none none solid; }
 
 .sn-sch-table-wrap {
   position: relative; }

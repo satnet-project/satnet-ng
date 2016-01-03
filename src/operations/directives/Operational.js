@@ -15,8 +15,58 @@
 */
 
 angular.module('snOperationalDirective', [
-    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
+    'ngMaterial',
+    'snControllers', 'snJRPCServices', 'snTimelineServices', 'snSlotFilters'
 ])
+.controller('snGlobalSchCtrl', [
+    '$scope', '$log', 'satnetRPC', 'snDialog',
+
+    /**
+     * Controller function for handling the usage of the Global scheduler.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $log, satnetRPC, snDialog) {
+
+        /** Object with the configuration for the GUI */
+        $scope.gui = {
+            gss: []
+        };
+
+        /**
+         * Function that initializes the 
+         */
+        $scope.init = function () {
+
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                $scope.gui.gss = results;
+                console.log('>>> gui.gss = ' + JSON.stringify($scope.gui));
+            }).catch(function (c) {
+                snDialog.exception('gs.list', '', c);
+            });
+
+        };
+
+    }
+
+])
+.directive('snGlobalScheduler',
+
+    /**
+     * Function that creates the directive to embed the availability scheduler
+     * wherever it is necessary within the application.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/operational/global.html'
+        };
+    }
+
+)
 .controller('snOperationalSchCtrl', [
     '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
 
@@ -62,28 +112,14 @@ angular.module('snOperationalDirective', [
             // 1> init days and hours for the axis
             $scope.gui = timeline.initScope();
 
-            // 2> all the Ground Stations are retrieved
-            satnetRPC.rCall('gs.list', []).then(function (results) {
-                angular.forEach(results, function (gs_id) {
-                    $scope.getGSSlots(gs_id).then(function (results) {
-                        angular.forEach(results.slots, function (slots, sc_id) {
-                            console.log('>>> sc_id = ' + sc_id);
-                            console.log('>>> slots = ' + JSON.stringify(slots));
-                            var filt= timeline.filterSlots(
-                                $scope.gui, sc_id, slots
-                            );
-                            $scope.gui.slots[sc_id] = filt;
-                            console.log('>>> filt = ' + JSON.stringify(filt));
-                        });
-                        console.log(
-                            '>>> $scope.gui.slots = ' + JSON.stringify(
-                                $scope.gui.slots
-                            )
-                        );
-                    });
+            // 2> the slots for the given GS are retrieved
+            $scope.getGSSlots($scope.segmentId).then(function (results) {
+                angular.forEach(results.slots, function (slots, sc_id) {
+                    $scope.gui.slots[sc_id] = timeline.filterSlots(
+                        $scope.gui, sc_id, slots
+                    );
                 });
-
-            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
+            });
 
         };
 
@@ -101,6 +137,9 @@ angular.module('snOperationalDirective', [
     function () {
         return {
             restrict: 'E',
+            scope: {
+                segmentId: '@'
+            },
             templateUrl: 'operations/templates/operational/scheduler.html'
         };
     }

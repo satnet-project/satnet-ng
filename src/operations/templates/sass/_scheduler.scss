@@ -66,6 +66,18 @@ $sch-margin: 7px;
     p {
         padding: 0;
         transform: rotate(-90deg);
+        min-width: 100%;
+    }
+
+}
+
+.sn-global-gs-id {
+
+    max-height: 2em;
+    
+    p {
+        text-align: center;
+        margin: 2px;
     }
 
 }
@@ -124,14 +136,15 @@ $sch-margin: 7px;
     opacity: 0.65;
 
 }
+.sn-sch-slot:hover { cursor: pointer; }
 
 .sn-sch-slot-info {
 
     position: absolute;
-    top: -75%;
+    top: -20px;
     background-color: lightgrey;
     color: black;
-    border: 5px solid $sn-primary-color;
+    border: 2px solid $sn-primary-color;
     border-style: none none none solid;
     opacity: 0.0;
     transition: opacity 0.5s;
@@ -141,21 +154,40 @@ $sch-margin: 7px;
     ul {
         list-style: none;
         padding: $sch-margin;
+        margin: 0;
     }
-    
-}
 
-.sn-sch-slot:hover {
+}
+.sn-sch-slot-info:hover { opacity: 1.0; }
+
+.sn-sch-slot-state {
+    position: absolute;
+    top: 40px;
+}
+.sn-sch-slot-state:hover {
     cursor: pointer;
+    font-weight: bolder;
 }
 
-.sn-sch-slot-info:hover {
-    opacity: 1.0;
+@mixin sn-state($color) {
+    font-size: 75%;
+    //color: $color;
+    //background-color: lightgrey;
+    color: white;
+    background-color: $color;
+    border: 2px solid black;
+    border-style: none none none solid;
 }
 
-.sn-sch-table-wrap {
-    position: relative;
-}
+.sn-state-undefined { @include sn-state(black); }
+.sn-state-free { @include sn-state(forestgreen); }
+.sn-state-selected { @include sn-state(orange); }
+.sn-state-reserved { @include sn-state(darkblue); }
+.sn-state-denied { @include sn-state(red); }
+.sn-state-canceled { @include sn-state(red); }
+.sn-state-removed { @include sn-state(red); }
+
+.sn-sch-table-wrap { position: relative; }
 
 .sn-sch-table-overlay {
     position: absolute;

@@ -111,7 +111,8 @@ angular.module('snTimelineServices', [])
                 slot_l = (start_s / cfg.total_s) * 100,
                 slot_duration_s = slot_e_s - slot_s_s,
                 slot_w = (slot_duration_s / cfg.total_s) * 100,
-                id = raw_slot.identifier + '';
+                id = raw_slot.identifier + '',
+                state = (raw_slot.state) ? raw_slot.state: 'UNDEFINED';
 
             return {
                 raw_slot: raw_slot,
@@ -120,7 +121,15 @@ angular.module('snTimelineServices', [])
                     s_date: moment(n_slot.start).format(),
                     e_date: moment(n_slot.end).format(),
                     left: slot_l.toFixed(3),
-                    width: slot_w.toFixed(3)
+                    width: slot_w.toFixed(3),
+                    state: state,
+                    state_undef: ( state === 'UNDEFINED' ) ? true : false,
+                    state_free: ( state === 'FREE' ) ? true : false,
+                    state_selected: ( state === 'SELECTED' ) ? true : false,
+                    state_reserved: ( state === 'RESERVED' ) ? true: false,
+                    state_denied: ( state === 'DENIED' ) ? true : false,
+                    state_canceled: ( state === 'CANCELED' ) ? true : false,
+                    state_removed: ( state === 'REMOVED' ) ? true : false
                 }
             };
 
@@ -158,18 +167,16 @@ angular.module('snTimelineServices', [])
                     slot_e = moment(raw_slot.date_end);
 
                 // 0) Old or futuristic slots are discarded first.
-                if ( this.discardSlot(cfg, slot_s, slot_e) ) {
-                    continue;
-                }
+                if ( this.discardSlot(cfg, slot_s, slot_e) ) { continue; }
                 console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
                 var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
+                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
                 // 2) The resulting slot is added to the results array
                 results.push(this.createSlot(cfg, raw_slot, n_slot));
-                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }
 

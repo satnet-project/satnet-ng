@@ -15,11 +15,14 @@
         </div>
         <div class="sn-sch-table-overlay-container">
             <div class="sn-sch-table-overlay-right"
-                 ng-style="{ 'animation': 'sn-sch-table-overlay-right ' + gui.animation.duration + 's ' + ' linear', 'width': gui.animation.initial_width }">
+                 ng-style="{
+                    'animation': 'sn-sch-table-overlay-right ' + gui.animation.duration + 's ' + ' linear',
+                    'width': gui.animation.initial_width
+                 }">
             </div>
         </div>
     </div>
-
+    
     <table id="a-slots-timeline" class="sn-sch-table">
 
         <colgroup>
@@ -36,10 +39,14 @@
         </tr>
 
         <tr ng-repeat="(sc, slots) in gui.slots">
-            <td class="sn-sch-gs-id" ng-style="{'width': '' + gui.gs_id_width}">
+
+            <td class="sn-sch-gs-id"
+                ng-style="{'width': '' + gui.gs_id_width}">
                 <p>{{ sc }}</p>
             </td>
-            <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
+            <td colspan="{{ gui.times.length }}"
+                class="sn-sch-cell-container">
+
                 <div class="sn-sch-row-container">
 
                 <table class="sn-sch-row-table">
@@ -59,16 +66,31 @@
 
                 <div class="sn-sch-row-overlay">
                     <div class="sn-sch-slot-container">
-                        <div class="sn-sch-slot" ng-repeat="s in slots"
-                             ng-style="{'left': s.slot.left + '%', 'width': s.slot.width + '%'}">
+
+                        <div class="sn-sch-slot"
+                             ng-repeat="s in slots"
+                             ng-style="{
+                                'left': s.slot.left + '%',
+                                'width': s.slot.width + '%'
+                             }">
                         </div>
                         <div class="sn-sch-slot-info" ng-repeat="s in slots"
                              ng-style="{'left': ( s.slot.left + 1) + '%'}">
                             <ul>
-                                <!-- <li>{{ s.slot.id }}</li> -->
-                                <li>{{ s.slot.s_date }}</li>
-                                <li>{{ s.slot.e_date }}</li>
+                                <li><b>{{ s.slot.state }}</b></li>
+                                <li>{{ s.slot.s_date | printSlotDate }}</li>
+                                <li>{{ s.slot.e_date | printSlotDate }}</li>
                             </ul>
+                        </div>
+
+                        <div class="sn-sch-slot-state"
+                             ng-class="{
+                                'sn-state-free': s.slot.state_free,
+                                'sn-state-requested':  s.slot.state_requested
+                             }"
+                             ng-repeat="s in slots"
+                             ng-style="{'left': ( s.slot.left + 1) + '%'}">
+                            <a>{{ s.raw_slot | printState }}</a>
                         </div>
 
                     </div>

@@ -1641,7 +1641,8 @@ angular.module('snTimelineServices', [])
                 slot_l = (start_s / cfg.total_s) * 100,
                 slot_duration_s = slot_e_s - slot_s_s,
                 slot_w = (slot_duration_s / cfg.total_s) * 100,
-                id = raw_slot.identifier + '';
+                id = raw_slot.identifier + '',
+                state = (raw_slot.state) ? raw_slot.state: 'UNDEFINED';
 
             return {
                 raw_slot: raw_slot,
@@ -1650,7 +1651,15 @@ angular.module('snTimelineServices', [])
                     s_date: moment(n_slot.start).format(),
                     e_date: moment(n_slot.end).format(),
                     left: slot_l.toFixed(3),
-                    width: slot_w.toFixed(3)
+                    width: slot_w.toFixed(3),
+                    state: state,
+                    state_undef: ( state === 'UNDEFINED' ) ? true : false,
+                    state_free: ( state === 'FREE' ) ? true : false,
+                    state_selected: ( state === 'SELECTED' ) ? true : false,
+                    state_reserved: ( state === 'RESERVED' ) ? true: false,
+                    state_denied: ( state === 'DENIED' ) ? true : false,
+                    state_canceled: ( state === 'CANCELED' ) ? true : false,
+                    state_removed: ( state === 'REMOVED' ) ? true : false
                 }
             };
 
@@ -1688,18 +1697,16 @@ angular.module('snTimelineServices', [])
                     slot_e = moment(raw_slot.date_end);
 
                 // 0) Old or futuristic slots are discarded first.
-                if ( this.discardSlot(cfg, slot_s, slot_e) ) {
-                    continue;
-                }
+                if ( this.discardSlot(cfg, slot_s, slot_e) ) { continue; }
                 console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
                 var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
+                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
                 // 2) The resulting slot is added to the results array
                 results.push(this.createSlot(cfg, raw_slot, n_slot));
-                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
             }
 
@@ -1826,7 +1833,9 @@ angular.module('snTimelineServices', [])
    limitations under the License.
 */
 
-angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
+angular
+.module('snSlotFilters', ['snAvailabilityDirective'])
+.constant('SLOT_DATE_FORMAT', 'YYYY.MM.DD@hh:mm:ssZ')
 .filter('slotify', [
     'SN_SCH_TIMELINE_DAYS', 'snAvailabilityDlgCtrl',
 
@@ -1859,6 +1868,43 @@ angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
 
             return r_slots;
 
+        };
+
+    }
+
+]).filter('printState', [
+
+    /**
+     * Function that filters the state for each slot and returns an identifier.
+     */
+    function () {
+
+        return function (slot) {
+
+            if (!slot) { return '!'; }
+
+            if (slot.state === 'UNDEFINED' ) { return '?'; }
+            if (slot.state === 'FREE') { return 'F'; }
+            if (slot.state === 'SELECTED') { return 'S'; }
+            if (slot.state === 'RESERVED') { return 'R'; }
+            if (slot.state === 'DENIED') { return 'D'; }
+            if (slot.state === 'CANCELED') { return 'C'; }
+            if (slot.state === 'REMOVED') { return 'X'; }
+
+        };
+
+    }
+
+]).filter('printSlotDate', [ 'SLOT_DATE_FORMAT',
+
+    /**
+     * Function that filters the date of a slot and applies the proper format.
+     */
+    function (SLOT_DATE_FORMAT) {
+
+        return function (date) {
+            if (!date) { return '!'; }
+            return moment(date).format(SLOT_DATE_FORMAT);
         };
 
     }
@@ -5719,8 +5765,58 @@ angular.module('snOperationsMap', [
 */
 
 angular.module('snOperationalDirective', [
-    'ngMaterial', 'snControllers', 'snJRPCServices', 'snTimelineServices'
+    'ngMaterial',
+    'snControllers', 'snJRPCServices', 'snTimelineServices', 'snSlotFilters'
 ])
+.controller('snGlobalSchCtrl', [
+    '$scope', '$log', 'satnetRPC', 'snDialog',
+
+    /**
+     * Controller function for handling the usage of the Global scheduler.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $log, satnetRPC, snDialog) {
+
+        /** Object with the configuration for the GUI */
+        $scope.gui = {
+            gss: []
+        };
+
+        /**
+         * Function that initializes the 
+         */
+        $scope.init = function () {
+
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                $scope.gui.gss = results;
+                console.log('>>> gui.gss = ' + JSON.stringify($scope.gui));
+            }).catch(function (c) {
+                snDialog.exception('gs.list', '', c);
+            });
+
+        };
+
+    }
+
+])
+.directive('snGlobalScheduler',
+
+    /**
+     * Function that creates the directive to embed the availability scheduler
+     * wherever it is necessary within the application.
+     * 
+     * @returns {Object} Object directive required by Angular, with
+     *                   restrict and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/operational/global.html'
+        };
+    }
+
+)
 .controller('snOperationalSchCtrl', [
     '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
 
@@ -5766,28 +5862,14 @@ angular.module('snOperationalDirective', [
             // 1> init days and hours for the axis
             $scope.gui = timeline.initScope();
 
-            // 2> all the Ground Stations are retrieved
-            satnetRPC.rCall('gs.list', []).then(function (results) {
-                angular.forEach(results, function (gs_id) {
-                    $scope.getGSSlots(gs_id).then(function (results) {
-                        angular.forEach(results.slots, function (slots, sc_id) {
-                            console.log('>>> sc_id = ' + sc_id);
-                            console.log('>>> slots = ' + JSON.stringify(slots));
-                            var filt= timeline.filterSlots(
-                                $scope.gui, sc_id, slots
-                            );
-                            $scope.gui.slots[sc_id] = filt;
-                            console.log('>>> filt = ' + JSON.stringify(filt));
-                        });
-                        console.log(
-                            '>>> $scope.gui.slots = ' + JSON.stringify(
-                                $scope.gui.slots
-                            )
-                        );
-                    });
+            // 2> the slots for the given GS are retrieved
+            $scope.getGSSlots($scope.segmentId).then(function (results) {
+                angular.forEach(results.slots, function (slots, sc_id) {
+                    $scope.gui.slots[sc_id] = timeline.filterSlots(
+                        $scope.gui, sc_id, slots
+                    );
                 });
-
-            }).catch(function (c) { snDialog.exception('gs.list', [], c); });
+            });
 
         };
 
@@ -5805,6 +5887,9 @@ angular.module('snOperationalDirective', [
     function () {
         return {
             restrict: 'E',
+            scope: {
+                segmentId: '@'
+            },
             templateUrl: 'operations/templates/operational/scheduler.html'
         };
     }

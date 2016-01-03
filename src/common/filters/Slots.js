@@ -14,7 +14,9 @@
    limitations under the License.
 */
 
-angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
+angular
+.module('snSlotFilters', ['snAvailabilityDirective'])
+.constant('SLOT_DATE_FORMAT', 'YYYY.MM.DD@hh:mm:ssZ')
 .filter('slotify', [
     'SN_SCH_TIMELINE_DAYS', 'snAvailabilityDlgCtrl',
 
@@ -47,6 +49,43 @@ angular.module('snSlotFilters', [ 'snAvailabilityDirective' ])
 
             return r_slots;
 
+        };
+
+    }
+
+]).filter('printState', [
+
+    /**
+     * Function that filters the state for each slot and returns an identifier.
+     */
+    function () {
+
+        return function (slot) {
+
+            if (!slot) { return '!'; }
+
+            if (slot.state === 'UNDEFINED' ) { return '?'; }
+            if (slot.state === 'FREE') { return 'F'; }
+            if (slot.state === 'SELECTED') { return 'S'; }
+            if (slot.state === 'RESERVED') { return 'R'; }
+            if (slot.state === 'DENIED') { return 'D'; }
+            if (slot.state === 'CANCELED') { return 'C'; }
+            if (slot.state === 'REMOVED') { return 'X'; }
+
+        };
+
+    }
+
+]).filter('printSlotDate', [ 'SLOT_DATE_FORMAT',
+
+    /**
+     * Function that filters the date of a slot and applies the proper format.
+     */
+    function (SLOT_DATE_FORMAT) {
+
+        return function (date) {
+            if (!date) { return '!'; }
+            return moment(date).format(SLOT_DATE_FORMAT);
         };
 
     }
