@@ -90,4 +90,19 @@ angular
 
     }
 
+]).filter('printDuration', [
+
+    function () {
+
+        return function (duration) {
+            if (!duration) { return '!'; }
+            return duration
+                .replace('minutes', '\'')
+                .replace('minute', '\'')
+                .replace('seconds', '"')
+                .replace('second', '"');
+        };
+
+    }
+
 ]);

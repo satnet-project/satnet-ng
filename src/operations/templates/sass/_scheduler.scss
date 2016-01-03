@@ -202,15 +202,15 @@ $sch-margin: 7px;
     position: absolute;
     top: 40px;
     font-size: 60%;
-    border: 2px solid $sn-primary-color;
-    border-style: none none none solid;
+    //border: 2px solid $sn-primary-color;
+    //border-style: solid none none none;
     transform: rotate(45deg);
     transform-origin: 0 0px;
 
     ul {
         list-style: none;
         padding: 0;
-        margin: 0 0 0 2px;
+        margin: 0 0 0 1px;
     }
 
 }

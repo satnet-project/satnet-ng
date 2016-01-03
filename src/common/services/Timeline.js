@@ -116,6 +116,8 @@ angular.module('snTimelineServices', [])
                 id = raw_slot.identifier + '',
                 state = (raw_slot.state) ? raw_slot.state: 'UNDEFINED';
 
+            moment.locale('en');
+            
             return {
                 raw_slot: raw_slot,
                 slot: {
@@ -123,6 +125,9 @@ angular.module('snTimelineServices', [])
                     s_date: moment(n_slot.start).format(),
                     e_date: moment(n_slot.end).format(),
                     duration: moment.utc(slot_d_ms).format(SN_PASS_FORMAT),
+                    duration_human: moment.duration(
+                        slot_duration_s, 'seconds'
+                    ).humanize(),
                     left: slot_l.toFixed(3),
                     width: slot_w.toFixed(3),
                     state: state,
