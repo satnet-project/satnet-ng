@@ -492,11 +492,12 @@ div.m-app-loading p {
 
 .sn-sch-slot-state {
   position: absolute;
-  top: 40px; }
+  top: 5px; }
 
 .sn-sch-slot-state:hover {
   cursor: pointer;
-  font-weight: bolder; }
+  font-weight: bolder;
+  font-size: 150%; }
 
 .sn-state-undefined {
   font-size: 75%;
@@ -546,6 +547,19 @@ div.m-app-loading p {
   background-color: red;
   border: 2px solid black;
   border-style: none none none solid; }
+
+.sn-sch-slot-data {
+  position: absolute;
+  top: 40px;
+  font-size: 60%;
+  border: 2px solid #607D8B;
+  border-style: none none none solid;
+  transform: rotate(45deg);
+  transform-origin: 0 0px; }
+  .sn-sch-slot-data ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 2px; }
 
 .sn-sch-table-wrap {
   position: relative; }

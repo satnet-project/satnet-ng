@@ -21,6 +21,7 @@ angular.module('snTimelineServices', [])
 .constant('SN_SCH_HOURS_DAY', 3)
 .constant('SN_SCH_DATE_FORMAT', 'DD-MM')
 .constant('SN_SCH_HOUR_FORMAT', 'HH:mm')
+.constant('SN_PASS_FORMAT', 'HH:mm:ss')
 .constant('SN_SCH_GS_ID_WIDTH', 10)
 .constant('SN_SCH_GS_ID_MAX_LENGTH', 6)
 .service('timeline', [
@@ -28,7 +29,7 @@ angular.module('snTimelineServices', [])
     'SN_SCH_TIMELINE_DAYS',
     'SN_SCH_HOURS_DAY',
     'SN_SCH_GS_ID_WIDTH', 'SN_SCH_GS_ID_MAX_LENGTH',
-    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT',
+    'SN_SCH_DATE_FORMAT', 'SN_SCH_HOUR_FORMAT', 'SN_PASS_FORMAT',
 
     /**
      * Function services to create reusable timeline services.
@@ -40,7 +41,7 @@ angular.module('snTimelineServices', [])
         SN_SCH_TIMELINE_DAYS,
         SN_SCH_HOURS_DAY,
         SN_SCH_GS_ID_WIDTH, SN_SCH_GS_ID_MAX_LENGTH,
-        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT
+        SN_SCH_DATE_FORMAT, SN_SCH_HOUR_FORMAT, SN_PASS_FORMAT
     ) {
 
         /**
@@ -110,6 +111,7 @@ angular.module('snTimelineServices', [])
                 start_s = slot_s_s - cfg.start_d_s,
                 slot_l = (start_s / cfg.total_s) * 100,
                 slot_duration_s = slot_e_s - slot_s_s,
+                slot_d_ms = slot_duration_s * 1000,
                 slot_w = (slot_duration_s / cfg.total_s) * 100,
                 id = raw_slot.identifier + '',
                 state = (raw_slot.state) ? raw_slot.state: 'UNDEFINED';
@@ -120,6 +122,7 @@ angular.module('snTimelineServices', [])
                     id: id.substring(SN_SCH_GS_ID_MAX_LENGTH),
                     s_date: moment(n_slot.start).format(),
                     e_date: moment(n_slot.end).format(),
+                    duration: moment.utc(slot_d_ms).format(SN_PASS_FORMAT),
                     left: slot_l.toFixed(3),
                     width: slot_w.toFixed(3),
                     state: state,

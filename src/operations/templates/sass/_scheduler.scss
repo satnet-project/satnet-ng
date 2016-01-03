@@ -171,11 +171,12 @@ $sch-margin: 7px;
 
 .sn-sch-slot-state {
     position: absolute;
-    top: 40px;
+    top: 5px;
 }
 .sn-sch-slot-state:hover {
     cursor: pointer;
     font-weight: bolder;
+    font-size: 150%;
 }
 
 @mixin sn-state($color) {
@@ -195,6 +196,24 @@ $sch-margin: 7px;
 .sn-state-denied { @include sn-state(red); }
 .sn-state-canceled { @include sn-state(red); }
 .sn-state-removed { @include sn-state(red); }
+
+.sn-sch-slot-data {
+
+    position: absolute;
+    top: 40px;
+    font-size: 60%;
+    border: 2px solid $sn-primary-color;
+    border-style: none none none solid;
+    transform: rotate(45deg);
+    transform-origin: 0 0px;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 0 2px;
+    }
+
+}
 
 .sn-sch-table-wrap { position: relative; }
 

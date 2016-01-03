@@ -70,6 +70,13 @@
                                     <li>{{ s.slot.e_date }}</li>
                                 </ul>
                             </div>
+                            <div class="sn-sch-slot-data"
+                                 ng-repeat="s in slots"
+                                 ng-style="{'left': ( s.slot.left + 1) + '%'}">
+                                 <ul>
+                                    <li>{{ s.slot.duration }}</li>
+                                 </ul>
+                            </div>
 
                         </div>
                     </div>
