@@ -1308,7 +1308,6 @@ angular.module('snMapServices', [
                         draggable: false,
                         message: 'Estimated Location',
                         icon: {
-                            //iconUrl: '/images/user.png',
                             iconUrl: 'https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/user.png',
                             iconSize: [15, 15]
                         }
@@ -1334,10 +1333,11 @@ angular.module('snMapServices', [
              */
             this.getBaseLayers = function () {
                 return {
+                    /*
                     cartodb_baselayer: {
                         name: 'CartoDB Base Layer',
                         type: 'xyz',
-                        url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                        url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
                         layerOptions: {
                             noWrap: false,
                             continuousWorld: false,
@@ -1359,6 +1359,7 @@ angular.module('snMapServices', [
                             attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                         }
                     },
+                    */
                     osm_baselayer: {
                         name: 'OSM Base Layer',
                         type: 'xyz',
@@ -1371,6 +1372,7 @@ angular.module('snMapServices', [
                             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         }
                     },
+                    /*
                     cartodbdark_baselayer: {
                         name: 'CartoDB Dark Matter',
                         type: 'xyz',
@@ -1384,6 +1386,7 @@ angular.module('snMapServices', [
                             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
                         }
                     },
+                    */
                 };
             };
 

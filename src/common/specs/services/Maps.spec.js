@@ -50,10 +50,11 @@ describe('Testing snMapServices Service', function () {
         expected_MIN_ZOOM = 2,
         expected_MAX_ZOOM = 12,
         x_baselayers = {
+            /*
             cartodb_baselayer: {
                 name: 'CartoDB Base Layer',
                 type: 'xyz',
-                url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
                 layerOptions: {
                     noWrap: false,
                     continuousWorld: false,
@@ -75,6 +76,7 @@ describe('Testing snMapServices Service', function () {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                 }
             },
+            */
             osm_baselayer: {
                 name: 'OSM Base Layer',
                 type: 'xyz',
@@ -87,6 +89,7 @@ describe('Testing snMapServices Service', function () {
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }
             },
+            /*
             cartodbdark_baselayer: {
                 name: 'CartoDB Dark Matter',
                 type: 'xyz',
@@ -100,6 +103,7 @@ describe('Testing snMapServices Service', function () {
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
                 }
             }
+            */
         },
         x_overlays = {
             oms_admin_overlay: {
