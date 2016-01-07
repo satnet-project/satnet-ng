@@ -327,8 +327,23 @@ angular
          * @returns Promise that returns a { latitude, longitude } object.
          */
         this.getServerLocation = function (hostname) {
-            return this.rCall('net.geoip', [hostname])
-                .then(function (location) { return location; });
+            return this.rCall('net.geoip', [hostname]).then(
+
+                function (location) {
+
+                    var lat = (typeof(location.latitude) === 'string') ?
+                                parseFloat(location.latitude):
+                                location.latitude,
+                        lng = (typeof(location.longitude) === 'string') ?
+                                parseFloat(location.longitude):
+                                location.longitude;
+
+                    return {
+                        latitude: lat, longitude: lng
+                    };
+                }
+
+            );
         };
 
         /**
