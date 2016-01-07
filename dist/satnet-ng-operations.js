@@ -1441,6 +1441,7 @@ angular.module('snMapServices', [
              */
             this.getOverlays = function () {
                 return {
+                    /*
                     oms_admin_overlay: {
                         name: 'Administrative Boundaries',
                         type: 'xyz',
@@ -1504,6 +1505,7 @@ angular.module('snMapServices', [
                             attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
                         }
                     },
+                    */
                     network: {
                         name: 'Network',
                         type: 'markercluster',

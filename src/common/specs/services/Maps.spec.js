@@ -106,6 +106,7 @@ describe('Testing snMapServices Service', function () {
             */
         },
         x_overlays = {
+            /*
             oms_admin_overlay: {
                 name: 'Administrative Boundaries',
                 type: 'xyz',
@@ -169,6 +170,7 @@ describe('Testing snMapServices Service', function () {
                     attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>'
                 }
             },
+            */
             network: {
                 name: 'Network',
                 type: 'markercluster',
