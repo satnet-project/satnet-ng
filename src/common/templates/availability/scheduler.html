@@ -28,7 +28,7 @@
             <td class="sn-sch-corner-top"
                 ng-style="{'width': '' + gui.gs_id_width}"/>
             <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
-                <sn-timeline/>
+                <sn-timeline></sn-timeline>
             </td>
         </tr>
 
@@ -49,7 +49,8 @@
 
                     <tr>
                         <td ng-repeat="t in gui.times track by $index"
-                            ng-style="{'width': '' + gui.gs_id_width}"/>
+                            ng-style="{'width': '' + gui.gs_id_width}">
+                        </td>
                     </tr>
 
                 </table>
@@ -89,7 +90,7 @@
             <td class="sn-sch-corner-bottom"
                 ng-style="{'width': '' + gui.gs_id_width}"/>
             <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
-                <sn-timeline/>
+                <sn-timeline></sn-timeline>
             </td>
         </tr>
 
