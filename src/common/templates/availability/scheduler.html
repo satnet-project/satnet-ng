@@ -2,6 +2,13 @@
      ng-init="init()"
      class="sn-sch-table-wrap">
 
+    <div ng-hide="gui.no_gs" class="sn-box-placement" style="padding: 25px">
+        <i class="md-title">
+            (no ground stations)
+        </i>
+    </div>
+
+    <div ng-show="gui.no_gs">
     <style type="text/css">
         @keyframes sn-sch-table-overlay-right {
             from { width: {{ gui.animation.initial_width }}; }
@@ -26,7 +33,8 @@
 
         <tr>
             <td class="sn-sch-corner-top"
-                ng-style="{'width': '' + gui.gs_id_width}"/>
+                ng-style="{'width': '' + gui.gs_id_width}">
+            </td>
             <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
                 <sn-timeline></sn-timeline>
             </td>
@@ -66,7 +74,6 @@
                                  ng-repeat="s in slots"
                                  ng-style="{'left': ( s.slot.left + 1) + '%'}">
                                 <ul>
-                                    <!--<li>{{ s.slot.id }}</li>-->
                                     <li>{{ s.slot.s_date }}</li>
                                     <li>{{ s.slot.e_date }}</li>
                                 </ul>
@@ -95,5 +102,6 @@
         </tr>
 
     </table>
+    </div>
 
 </div>

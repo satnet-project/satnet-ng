@@ -3380,6 +3380,7 @@ angular.module('snAvailabilityDirective', [
 
             // 2> all the Ground Stations are retrieved
             satnetRPC.rCall('gs.list', []).then(function (results) {
+                $scope.gui.no_gs = results.length;
                 angular.forEach(results, function (gs_id) {
                     $scope.getGSSlots(gs_id).then(function (results) {
                         $scope.gui.slots[gs_id] = timeline.filterSlots(
