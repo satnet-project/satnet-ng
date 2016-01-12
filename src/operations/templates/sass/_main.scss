@@ -77,17 +77,16 @@ md-content {
     background-color: $sn-secondary-color;
 }
 
-.sn-about {
-}
-
 .sn-about-logo {
-    min-height: 100%;
-    width: 100%;
-    background-image: url('/images/satnet-logo-x.png');
+    height: 250px;
+    width: 150px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-image: url("https://cdn.rawgit.com/satnet-project/satnet-ng/master/dist/images/satnet-logo-blue.png");
 }
 
 .sn-about-content {
-    margin-left: 15%;
+    margin: 0 15px 0 15px;
     text-align: justify;
 }
 

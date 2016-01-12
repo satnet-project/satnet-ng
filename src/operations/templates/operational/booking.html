@@ -1,13 +1,12 @@
-<md-dialog ng-init="init()" aria-label="Operational Dialog">
+<md-dialog ng-init="init()" aria-label="Booking Dialog">
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
-            <span>Operational Slots</span>
+            <span>Slot Booking</span>
         </h2>
     </md-toolbar>
 
-    <md-content id="sn-sch-md-content">
-        <sn-global-scheduler></sn-global-scheduler>
+    <md-content>
     </md-content>
 
     <md-content class="add-gs-dialog menu-list">
@@ -20,15 +19,6 @@
                 <div layout="row">
                     <i class="fa fa-reply"></i>
                     <b style="margin-left: 15px">cancel</b>
-                </div>
-            </md-button>
-
-            <md-button id="detach" ng-click="detach()" aria-label="Detach"
-                       ng-disabled="{{ !(uiCtrl.detachable) }}"
-                       class="md-primary menu-button" style="width: 125px">
-                <div layout="row" style="sn-margin">
-                    <i class="fa fa-clone"></i>
-                    <b style="margin-left: 15px">detach</b>
                 </div>
             </md-button>
 

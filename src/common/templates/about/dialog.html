@@ -7,9 +7,9 @@
     </md-toolbar>
 
     <md-content>
-        <div class="sn-about">
-            <div class="sn-about-logo"></div>
-            <div class="sn-about-content">
+        <div layout="row" layout-align="center center">
+            <div class="sn-about-logo" flex="none"></div>
+            <div class="sn-about-content" flex>
                 <p>
                 The SatNet Network is a cooperative Open Source project hosted
                 at (<a href="https://github.com/satnet-project">GitHub</a>). Its
@@ -26,10 +26,18 @@
                 </p>
             </div>
         </div>
-    </md-content>
 
-    <div class="md-actions">
-        <md-button id="closeAbout" ng-click="closeDialog()">Close</md-button>
-    </div>
+        <div layout="row">
+            <md-button id="closeAbout" aria-label="Cancel"
+                       class="md-primary menu-button"
+                       ng-click="closeDialog()" >
+                <div layout="row" layout-align="center center">
+                    <i class="fa fa-reply"></i>
+                    <b>cancel</b>
+                </div>
+            </md-button>
+        </div>
+
+    </md-content>
 
 </md-dialog>
