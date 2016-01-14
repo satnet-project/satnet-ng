@@ -1,17 +1,56 @@
-<md-dialog ng-init="init()" aria-label="Booking Dialog">
+<md-dialog aria-label="Booking Dialog">
 
     <md-toolbar class="md-theme-light">
-        <h2 class="md-toolbar-tools">
-            <span>Slot Booking</span>
-        </h2>
+        <h2 class="md-toolbar-tools"><span>Slot Booking</span></h2>
     </md-toolbar>
 
     <md-content>
+        <div layout="column" layout-align="center center">
+            <div layout="row" layout-align="center center">
+                <md-card class="sn-card">
+                    <h3>Slot Information</h3>
+                    <ul>
+                        <li>Start: {{gui.slot.slot.s_date}}</li>
+                        <li>End: {{gui.slot.slot.e_date}}</li>
+                        <li>Duration: {{gui.slot.slot.duration}}</li>
+                        <li>State: {{gui.slot.slot.state}}</li>
+                    </ul>
+                </md-card>
+                <md-card class="sn-card">
+                    <h3>Compatible Channels</h3>
+                </md-card>
+            </div>
+            <div layout="row" layout-align="center center">
+                <md-card class="sn-card" flex="50">
+                    <h3>{{ gui.gs.groundstation_id }} ({{ gui.gs.groundstation_callsign }})</h3>
+                    <ul>
+                        <li>[{{gui.gs.groundstation_latlon[0] | number:2}}&deg;, {{gui.gs.groundstation_latlon[1] | number:2}}&deg;]</li>
+                        <li>{{gui.gs.groundstation_altitude | number:2}} m</li>
+                        <li>{{gui.gs.groundstation_elevation | number:2}}&deg; (contact)</li>
+                    </ul>
+                </md-card>
+                <md-card class="sn-card" flex="50">
+                    <h3>{{ gui.sc.spacecraft_id }} ({{ gui.sc.spacecraft_callsign }})</h3>
+                    <ul>
+                        <li>TLE: {{gui.sc.spacecraft_tle_id}}</li>
+                    </ul>
+                </md-card>
+            </div>
+        </div>
     </md-content>
 
     <md-content class="add-gs-dialog menu-list">
 
-        <div layout="row">
+        <div layout="row" layout-align="center center">
+
+            <md-button id="save" ng-click="save()" aria-label="Save Slot"
+                       class="md-primary menu-button sn-margin"
+                       style="width: 100px">
+                <div layout="row">
+                    <i class="fa fa-floppy-o"></i>
+                    <b style="margin-left: 15px">save</b>
+                </div>
+            </md-button>
 
             <md-button id="cancel" ng-click="close()" aria-label="Cancel"
                        class="md-primary menu-button sn-margin"

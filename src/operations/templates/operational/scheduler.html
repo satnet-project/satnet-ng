@@ -1,6 +1,4 @@
-<div ng-controller="snOperationalSchCtrl"
-     ng-init="init()"
-     class="sn-sch-table-wrap">
+<div class="sn-sch-table-wrap">
 
     <style type="text/css">
         @keyframes sn-sch-table-overlay-right {
@@ -94,7 +92,9 @@
                              }"
                              ng-repeat="s in slots"
                              ng-style="{'left': ( s.slot.left + 1) + '%'}">
-                            <a>{{ s.raw_slot | printState }}</a>
+                            <a ng-click="book(segmentId, sc, s)">
+                                {{ s.raw_slot | printState }}
+                            </a>
                         </div>
                         <!--
                         <div class="sn-sch-slot-info" ng-repeat="s in slots"

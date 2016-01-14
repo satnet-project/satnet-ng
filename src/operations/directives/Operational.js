@@ -47,6 +47,8 @@ angular.module('snOperationalDirective', [
 
         };
 
+        $scope.init();
+
     }
 
 ])
@@ -62,23 +64,92 @@ angular.module('snOperationalDirective', [
     function () {
         return {
             restrict: 'E',
+            controller: 'snGlobalSchCtrl',
             templateUrl: 'operations/templates/operational/global.html'
         };
     }
 
 )
+.controller('snBookingDlgCtrl', [
+    '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog',
+    'groundstationId', 'spacecraftId', 'slot',
+
+    /**
+     * Controller function for handling the usage of the Global scheduler.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $log, $mdDialog, satnetRPC, snDialog,
+        groundstationId, spacecraftId, slot
+    ) {
+
+        /** Object with the configuration for the GUI */
+        $scope.gui = {
+            gs: null,
+            sc: null,
+            slot: null
+        };
+
+        /**
+         * Function that closes the dialog.
+         */
+        $scope.close = function () { $mdDialog.hide(); };
+
+        /**
+         * Function that initializes the 
+         */
+        $scope.init = function () {
+            $scope.gui.slot = slot;
+            satnetRPC.rCall('gs.get', [groundstationId]).then(function (results) {
+                $scope.gui.gs = results;
+            }).catch(function (c) {
+                snDialog.exception('gs.get', '', c);
+            });
+            satnetRPC.rCall('sc.get', [spacecraftId]).then(function (results) {
+                $scope.gui.sc = results;
+            }).catch(function (c) {
+                snDialog.exception('sc.get', '', c);
+            });
+        };
+
+        $scope.init();
+
+    }
+
+])
 .controller('snOperationalSchCtrl', [
-    '$scope', '$log', 'satnetRPC', 'snDialog', 'timeline',
+    '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog', 'timeline',
 
     /**
      * Controller function for handling the SatNet availability scheduler.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $log, satnetRPC, snDialog, timeline) {
+    function ($scope, $log, $mdDialog, satnetRPC, snDialog, timeline) {
 
         /** Object with the configuration for the GUI */
         $scope.gui = null;
+
+        /**
+         * This function launches a dialog window that allows operators to
+         * book the selected slot.
+         * 
+         * @param {String} groundstationId Identifier of the Ground Station
+         * @param {String} spacecraftId Identifier of the Spacecraft
+         * param {Object} slot The slot to be booked
+         */
+        $scope.book = function (groundstationId, spacecraftId, slot) {
+            $mdDialog.show({
+                templateUrl: 'operations/templates/operational/booking.html',
+                controller: 'snBookingDlgCtrl',
+                locals: {
+                    groundstationId: groundstationId,
+                    spacecraftId: spacecraftId,
+                    slot: slot
+                }
+            });
+        };
 
         /**
          * Promise function that should be used to retrieve the availability
@@ -123,6 +194,8 @@ angular.module('snOperationalDirective', [
 
         };
 
+        $scope.init();
+
     }
 ])
 .directive('snOperationalScheduler',
@@ -140,6 +213,7 @@ angular.module('snOperationalDirective', [
             scope: {
                 segmentId: '@'
             },
+            controller: 'snOperationalSchCtrl',
             templateUrl: 'operations/templates/operational/scheduler.html'
         };
     }

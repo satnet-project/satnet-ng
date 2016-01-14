@@ -2,7 +2,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
   'use strict';
 
   $templateCache.put('common/templates/about/dialog.html',
-    "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\" style=\"width: 50%\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><div layout=\"row\" layout-align=\"center center\"><div class=\"sn-about-logo\" flex=\"none\"></div><div class=\"sn-about-content\" flex><p>The SatNet Network is a cooperative Open Source project hosted at (<a href=\"https://github.com/satnet-project\">GitHub</a>). Its objective is to provide a communications network that enables sharing the Ground Stations of the members of the CubeSat developers community.</p><p>All the documentation is edited online in a collaborative wiki website hosted also at GitHub: <a href=\"https://github.com/satnet-project/documentation/wiki\">SatNet Wiki</a>. Frozen versions of the documents can be downloaded in PDF format.</p></div></div><div layout=\"row\"><md-button id=\"closeAbout\" aria-label=\"Cancel\" class=\"md-primary menu-button\" ng-click=\"closeDialog()\"><div layout=\"row\" layout-align=\"center center\"><i class=\"fa fa-reply\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog ng-controller=\"snAboutDlgCtrl\" aria-label=\"About Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>The SatNet Network</span></h2></md-toolbar><md-content><div layout=\"row\" layout-align=\"center center\"><div class=\"sn-about-logo\" flex=\"none\"></div><div class=\"sn-about-content\" flex><p>The SatNet Network is a cooperative Open Source project hosted at (<a href=\"https://github.com/satnet-project\">GitHub</a>). Its objective is to provide a communications network that enables sharing the Ground Stations of the members of the CubeSat developers community.</p><p>All the documentation is edited online in a collaborative wiki website hosted also at GitHub: <a href=\"https://github.com/satnet-project/documentation/wiki\">SatNet Wiki</a>. Frozen versions of the documents can be downloaded in PDF format.</p></div></div><div layout=\"row\"><md-button id=\"closeAbout\" aria-label=\"Cancel\" class=\"md-primary menu-button\" ng-click=\"closeDialog()\"><div layout=\"row\" layout-align=\"center center\"><i class=\"fa fa-reply\"></i> <b>cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
@@ -96,7 +96,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/operational/booking.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Booking Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Booking</span></h2></md-toolbar><md-content></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog aria-label=\"Booking Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Booking</span></h2></md-toolbar><md-content><div layout=\"column\" layout-align=\"center center\"><div layout=\"row\" layout-align=\"center center\"><md-card class=\"sn-card\"><h3>Slot Information</h3><ul><li>Start: {{gui.slot.slot.s_date}}</li><li>End: {{gui.slot.slot.e_date}}</li><li>Duration: {{gui.slot.slot.duration}}</li><li>State: {{gui.slot.slot.state}}</li></ul></md-card><md-card class=\"sn-card\"><h3>Compatible Channels</h3></md-card></div><div layout=\"row\" layout-align=\"center center\"><md-card class=\"sn-card\" flex=\"50\"><h3>{{ gui.gs.groundstation_id }} ({{ gui.gs.groundstation_callsign }})</h3><ul><li>[{{gui.gs.groundstation_latlon[0] | number:2}}&deg;, {{gui.gs.groundstation_latlon[1] | number:2}}&deg;]</li><li>{{gui.gs.groundstation_altitude | number:2}} m</li><li>{{gui.gs.groundstation_elevation | number:2}}&deg; (contact)</li></ul></md-card><md-card class=\"sn-card\" flex=\"50\"><h3>{{ gui.sc.spacecraft_id }} ({{ gui.sc.spacecraft_callsign }})</h3><ul><li>TLE: {{gui.sc.spacecraft_tle_id}}</li></ul></md-card></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\" layout-align=\"center center\"><md-button id=\"save\" ng-click=\"save()\" aria-label=\"Save Slot\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-floppy-o\"></i> <b style=\"margin-left: 15px\">save</b></div></md-button><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
@@ -106,7 +106,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/operational/global.html',
-    "<div ng-controller=\"snGlobalSchCtrl\" ng-init=\"init()\" class=\"sn-sch-table-wrap\"><li ng-hide=\"gui.gss.length\" class=\"sn-no-item\">(no ground stations)</li><table id=\"sn-op\" class=\"sn-sch-table\" ng-repeat=\"g in gui.gss\"><tr><td><sn-operational-scheduler segment-id=\"{{ g }}\"></sn-operational-scheduler></td></tr></table></div>"
+    "<div class=\"sn-sch-table-wrap\"><li ng-hide=\"gui.gss.length\" class=\"sn-no-item\">(no ground stations)</li><table id=\"sn-op\" class=\"sn-sch-table\" ng-repeat=\"g in gui.gss\"><tr><td><sn-operational-scheduler segment-id=\"{{ g }}\"></sn-operational-scheduler></td></tr></table></div>"
   );
 
 
@@ -116,7 +116,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/operational/scheduler.html',
-    "<div ng-controller=\"snOperationalSchCtrl\" ng-init=\"init()\" class=\"sn-sch-table-wrap\"><style type=\"text/css\">@keyframes sn-sch-table-overlay-right {\n" +
+    "<div class=\"sn-sch-table-wrap\"><style type=\"text/css\">@keyframes sn-sch-table-overlay-right {\n" +
     "            from { width: {{ gui.animation.initial_width }}; }\n" +
     "            to { width: {{ gui.animation.final_width }}; }\n" +
     "        }</style><div class=\"sn-sch-table-overlay\"><div class=\"sn-sch-table-overlay-left\" ng-style=\"{'width': '' + gui.gs_id_width}\"></div><div class=\"sn-sch-table-overlay-container\"><div class=\"sn-sch-table-overlay-right\" ng-style=\"{\n" +
@@ -137,7 +137,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
     "                             }\"></div><div class=\"sn-sch-slot-state\" ng-class=\"{\n" +
     "                                'sn-state-free': s.slot.state_free,\n" +
     "                                'sn-state-requested':  s.slot.state_requested\n" +
-    "                             }\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><a>{{ s.raw_slot | printState }}</a></div><!--\n" +
+    "                             }\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><a ng-click=\"book(segmentId, sc, s)\">{{ s.raw_slot | printState }}</a></div><!--\n" +
     "                        <div class=\"sn-sch-slot-info\" ng-repeat=\"s in slots\"\n" +
     "                             ng-style=\"{'left': ( s.slot.left + 1) + '%'}\">\n" +
     "                            <ul>\n" +

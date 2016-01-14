@@ -587,4 +587,17 @@ div.m-app-loading p {
   opacity: 0.25;
   height: 100%; }
 
+.sn-card {
+  padding: 15px;
+  margin: 5px; }
+  .sn-card h3 {
+    text-align: center; }
+  .sn-card ul {
+    text-align: center;
+    list-style: none;
+    margin: 5px;
+    padding: 0; }
+    .sn-card ul li {
+      margin: 5px 0 5px 0; }
+
 /*# sourceMappingURL=satnet-ng-operations.css.map */
