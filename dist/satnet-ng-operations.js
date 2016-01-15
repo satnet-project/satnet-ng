@@ -949,7 +949,9 @@ angular
             'sc.compatibility': this._scheduling
                 .createMethod('sc.compatibility'),
             'gs.operational': this._scheduling
-                .createMethod('gs.operational')
+                .createMethod('gs.operational'),
+            'ss.compatibility': this._scheduling
+                .createMethod('segment.compatibility')
         };
 
         /**
@@ -5838,7 +5840,6 @@ angular.module('snOperationalDirective', [
 
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 $scope.gui.gss = results;
-                console.log('>>> gui.gss = ' + JSON.stringify($scope.gui));
             }).catch(function (c) {
                 snDialog.exception('gs.list', '', c);
             });
@@ -5908,6 +5909,13 @@ angular.module('snOperationalDirective', [
                 $scope.gui.sc = results;
             }).catch(function (c) {
                 snDialog.exception('sc.get', '', c);
+            });
+            satnetRPC.rCall(
+                'ss.compatibility', [spacecraftId, groundstationId]
+            ).then(function (results) {
+                $scope.gui.compatibility = results;
+            }).catch(function (c) {
+                snDialog.exception('ss.compatibility', '', c);
             });
         };
 
@@ -6100,6 +6108,7 @@ angular.module('snOperationalDirective', [
 angular.module('snOperationsDirective', [
     'ngMaterial',
     'ngAnimate',
+    'ngCookies',
     'angular-loading-bar',
     'leaflet-directive',
     'snJRPCServices',
@@ -6124,7 +6133,8 @@ angular.module('snOperationsDirective', [
         .primaryPalette('blue-grey')
         .accentPalette('grey');
 })
-.controller('operationsAppCtrl',
+.controller('operationsAppCtrl', [
+    '$scope', '$mdSidenav', '$window',
 
     /**
      * Main controller for the Operations application.
@@ -6154,7 +6164,7 @@ angular.module('snOperationsDirective', [
 
     }
 
-)
+])
 .directive('operationsApp',
 
     /**

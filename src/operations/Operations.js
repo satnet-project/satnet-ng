@@ -17,6 +17,7 @@
 angular.module('snOperationsDirective', [
     'ngMaterial',
     'ngAnimate',
+    'ngCookies',
     'angular-loading-bar',
     'leaflet-directive',
     'snJRPCServices',
@@ -41,7 +42,8 @@ angular.module('snOperationsDirective', [
         .primaryPalette('blue-grey')
         .accentPalette('grey');
 })
-.controller('operationsAppCtrl',
+.controller('operationsAppCtrl', [
+    '$scope', '$mdSidenav', '$window',
 
     /**
      * Main controller for the Operations application.
@@ -71,7 +73,7 @@ angular.module('snOperationsDirective', [
 
     }
 
-)
+])
 .directive('operationsApp',
 
     /**

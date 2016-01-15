@@ -587,17 +587,49 @@ div.m-app-loading p {
   opacity: 0.25;
   height: 100%; }
 
-.sn-card {
+/* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. */
+.sn-slot-info {
   padding: 15px;
-  margin: 5px; }
-  .sn-card h3 {
-    text-align: center; }
-  .sn-card ul {
-    text-align: center;
+  margin: 5px;
+  font-size: 75%; }
+  .sn-slot-info h4 {
+    text-align: left; }
+  .sn-slot-info p {
+    text-align: left;
     list-style: none;
     margin: 5px;
     padding: 0; }
-    .sn-card ul li {
-      margin: 5px 0 5px 0; }
+
+.sn-slot-info-container {
+  margin: 15px; }
+
+.sn-slot-related {
+  padding: 0 15px;
+  margin: 0 5px;
+  font-size: 75%; }
+
+.sn-dark-right-border {
+  border: 5px solid black;
+  border-style: none solid none none; }
+
+.sn-dark-bottom-border {
+  border: 5px solid black;
+  border-style: none none solid none; }
+
+.sn-light-right-border {
+  border: 1px solid gray;
+  border-style: none solid none none; }
 
 /*# sourceMappingURL=satnet-ng-operations.css.map */

@@ -216,7 +216,9 @@ angular
             'sc.compatibility': this._scheduling
                 .createMethod('sc.compatibility'),
             'gs.operational': this._scheduling
-                .createMethod('gs.operational')
+                .createMethod('gs.operational'),
+            'ss.compatibility': this._scheduling
+                .createMethod('segment.compatibility')
         };
 
         /**

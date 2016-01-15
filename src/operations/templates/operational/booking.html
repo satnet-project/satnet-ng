@@ -5,36 +5,44 @@
     </md-toolbar>
 
     <md-content>
-        <div layout="column" layout-align="center center">
-            <div layout="row" layout-align="center center">
-                <md-card class="sn-card">
-                    <h3>Slot Information</h3>
-                    <ul>
-                        <li>Start: {{gui.slot.slot.s_date}}</li>
-                        <li>End: {{gui.slot.slot.e_date}}</li>
-                        <li>Duration: {{gui.slot.slot.duration}}</li>
-                        <li>State: {{gui.slot.slot.state}}</li>
-                    </ul>
-                </md-card>
-                <md-card class="sn-card">
-                    <h3>Compatible Channels</h3>
-                </md-card>
+        <div layout="row" layout-align="center center">
+            <div class="sn-slot-info sn-dark-right-border" flex="30">
+                <h3>Slot Information</h3>
+                <h4>Start (local TZ)</h4>
+                <p>{{gui.slot.slot.s_date | date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                <h4>End (local TZ)</h4>
+                <p>{{gui.slot.slot.e_date| date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                <h4>Duration</h4>
+                <p>{{gui.slot.slot.duration}}</p>
+                <h4>State</h4>
+                <p>{{gui.slot.slot.state}}</p>
             </div>
-            <div layout="row" layout-align="center center">
-                <md-card class="sn-card" flex="50">
-                    <h3>{{ gui.gs.groundstation_id }} ({{ gui.gs.groundstation_callsign }})</h3>
-                    <ul>
-                        <li>[{{gui.gs.groundstation_latlon[0] | number:2}}&deg;, {{gui.gs.groundstation_latlon[1] | number:2}}&deg;]</li>
-                        <li>{{gui.gs.groundstation_altitude | number:2}} m</li>
-                        <li>{{gui.gs.groundstation_elevation | number:2}}&deg; (contact)</li>
-                    </ul>
-                </md-card>
-                <md-card class="sn-card" flex="50">
-                    <h3>{{ gui.sc.spacecraft_id }} ({{ gui.sc.spacecraft_callsign }})</h3>
-                    <ul>
-                        <li>TLE: {{gui.sc.spacecraft_tle_id}}</li>
-                    </ul>
-                </md-card>
+            <div class="sn-slot-info-container"
+                 layout="column" layout-align="left center" flex>
+                <div class="sn-dark-bottom-border"
+                     layout="row" layout-align="center top">
+                    <div class="sn-slot-related sn-light-right-border"
+                         flex="50">
+                        <h3>{{ gui.gs.groundstation_id }} ({{ gui.gs.groundstation_callsign }})</h3>
+                        <h4>Coordinates</h4>
+                        <p>[{{gui.gs.groundstation_latlon[0] | number:2}}&deg;, {{gui.gs.groundstation_latlon[1] | number:2}}&deg;]</p>
+                        <h4>Altitude</h4>
+                        <p>{{gui.gs.groundstation_altitude | number:2}} (m)</p>
+                        <h4>Contact Elevation</h4>
+                        <p>{{gui.gs.groundstation_elevation | number:2}}&deg;</p>
+                    </div>
+                    <div class="sn-slot-related" flex="50">
+                        <h3>{{ gui.sc.spacecraft_id }} ({{ gui.sc.spacecraft_callsign }})</h3>
+                        <h4>TLE Identifier</h4>
+                        <p>{{gui.sc.spacecraft_tle_id}}</p>
+                    </div>
+                </div>
+                <div class="sn-slot-related sn-dark-bottom-border">
+                    <h3 style="text-align: center">Compatible Channels</h3>
+                </div>
+                <div class="sn-slot-related sn-dark-bottom-border"
+                     layout="column" layout-align="center top">
+                </div>
             </div>
         </div>
     </md-content>

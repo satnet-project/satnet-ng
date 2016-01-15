@@ -40,7 +40,6 @@ angular.module('snOperationalDirective', [
 
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 $scope.gui.gss = results;
-                console.log('>>> gui.gss = ' + JSON.stringify($scope.gui));
             }).catch(function (c) {
                 snDialog.exception('gs.list', '', c);
             });
@@ -110,6 +109,13 @@ angular.module('snOperationalDirective', [
                 $scope.gui.sc = results;
             }).catch(function (c) {
                 snDialog.exception('sc.get', '', c);
+            });
+            satnetRPC.rCall(
+                'ss.compatibility', [spacecraftId, groundstationId]
+            ).then(function (results) {
+                $scope.gui.compatibility = results;
+            }).catch(function (c) {
+                snDialog.exception('ss.compatibility', '', c);
             });
         };
 
