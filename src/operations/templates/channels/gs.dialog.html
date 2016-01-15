@@ -20,7 +20,10 @@
                 <md-input-container style="width: 75%">
                     <md-select ng-model="uiCtrl.configuration.band" required>
                         <md-select-label>{{ uiCtrl.configuration.band ? uiCtrl.configuration.band : 'Band' }}</md-select-label>
-                        <md-option ng-value="m" ng-repeat="m in uiCtrl.options.bands">{{ m }}</md-option>
+                        <md-option ng-value="m"
+                                   ng-repeat="m in uiCtrl.options.bands">
+                            {{ m }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
 
@@ -28,30 +31,46 @@
 
             <div layout="row">
                 <md-input-container style="width: 50%">
-                    <md-select ng-model="uiCtrl.configuration.modulations" multiple="true" required>
+                    <md-select ng-model="uiCtrl.configuration.modulations"
+                               multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.modulations ? uiCtrl.configuration.modulations : 'Modulation(s)' }}</md-select-label>
-                        <md-option ng-value="m" ng-repeat="m in uiCtrl.options.modulations">{{ m }}</md-option>
+                        <md-option ng-value="m"
+                                   ng-repeat="m in uiCtrl.options.modulations">
+                            {{ m }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container style="width: 50%">
-                    <md-select ng-model="uiCtrl.configuration.polarizations" multiple="true" required>
+                    <md-select ng-model="uiCtrl.configuration.polarizations"
+                               multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.polarizations ? uiCtrl.configuration.polarizations : 'Polarization(s)' }}</md-select-label>
-                        <md-option ng-value="p" ng-repeat="p in uiCtrl.options.polarizations">{{ p }}</md-option>
+                        <md-option ng-value="p"
+                                   ng-repeat="p in uiCtrl.options.polarizations">
+                            {{ p }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
             </div>
 
             <div layout="row">
                 <md-input-container style="width: 50%">
-                    <md-select ng-model="uiCtrl.configuration.bitrates" multiple="true" required>
+                    <md-select ng-model="uiCtrl.configuration.bitrates"
+                               multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.bitrates ? uiCtrl.configuration.bitrates : 'Bitrate(s)' }}</md-select-label>
-                        <md-option ng-value="m" ng-repeat="m in uiCtrl.options.bitrates">{{ m }}</md-option>
+                        <md-option ng-value="m"
+                                   ng-repeat="m in uiCtrl.options.bitrates">
+                            {{ m }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container style="width: 50%">
-                    <md-select ng-model="uiCtrl.configuration.bandwidths" multiple="true" required>
+                    <md-select ng-model="uiCtrl.configuration.bandwidths"
+                               multiple="true" required>
                         <md-select-label>{{ uiCtrl.configuration.bandwidths ? uiCtrl.configuration.bandwidths : 'Bandwidth(s)' }}</md-select-label>
-                        <md-option ng-value="p" ng-repeat="p in uiCtrl.options.bandwidths">{{ p }}</md-option>
+                        <md-option ng-value="p"
+                                   ng-repeat="p in uiCtrl.options.bandwidths">
+                            {{ p }}
+                        </md-option>
                     </md-select>
                 </md-input-container>
             </div>
@@ -60,21 +79,29 @@
 
         <div layout="row">
 
-            <md-button id="add" ng-click="add()" ng-show="!uiCtrl.isEditing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Add Ground Station" class="md-primary menu-button">
+            <md-button id="add" ng-click="add()"
+                       ng-show="!uiCtrl.isEditing"
+                       ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid"
+                       aria-label="Add Ground Station"
+                       class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-plus"></i>
                     <b>add</b>
                 </div>
             </md-button>
 
-            <md-button id="edit" ng-click="update()" ng-show="uiCtrl.isEditing" ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid" aria-label="Edit Ground Station" class="md-primary menu-button">
+            <md-button id="edit" ng-click="update()" ng-show="uiCtrl.isEditing"
+                       ng-disabled="uiCtrl.configuration.$pristine || uiCtrl.configuration.$invalid"
+                       aria-label="Edit Ground Station"
+                       class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-floppy-o"></i>
                     <b>save</b>
                 </div>
             </md-button>
 
-            <md-button id="cancel" ng-click="cancel()" aria-label="Cancel" class="md-primary menu-button">
+            <md-button id="cancel" ng-click="cancel()"
+                       aria-label="Cancel" class="md-primary menu-button">
                 <div layout="row">
                     <i class="fa fa-times"></i>
                     <b>cancel</b>

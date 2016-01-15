@@ -6,16 +6,31 @@
 
     <md-content>
         <div layout="row" layout-align="center center">
-            <div class="sn-slot-info sn-dark-right-border" flex="30">
-                <h3>Slot Information</h3>
-                <h4>Start (local TZ)</h4>
-                <p>{{gui.slot.slot.s_date | date:'yyyy-MM-dd hh:mm:ss'}}</p>
-                <h4>End (local TZ)</h4>
-                <p>{{gui.slot.slot.e_date| date:'yyyy-MM-dd hh:mm:ss'}}</p>
-                <h4>Duration</h4>
-                <p>{{gui.slot.slot.duration}}</p>
-                <h4>State</h4>
-                <p>{{gui.slot.slot.state}}</p>
+            <div class="sn-dark-right-border" flex="30">
+                <div class="sn-slot-info"
+                     layout="column" layout-align="top center">
+                    <div class="sn-dark-bottom-border">
+                        <h3>Slot Information</h3>
+                        <h4>Start (local TZ)</h4>
+                        <p>{{gui.slot.slot.s_date | date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                        <h4>End (local TZ)</h4>
+                        <p>{{gui.slot.slot.e_date| date:'yyyy-MM-dd hh:mm:ss'}}</p>
+                        <h4>Duration</h4>
+                        <p>{{gui.slot.slot.duration}}</p>
+                    </div>
+                    <div>
+                        <form name="slot">
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <md-select ng-model="gui.slot.raw_slot.state">
+                                    <md-option ng-repeat="s in gui.slot_states"
+                                               ng-value="s">
+                                        {{s}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="sn-slot-info-container"
                  layout="column" layout-align="left center" flex>
@@ -24,10 +39,9 @@
                     <div class="sn-slot-related sn-light-right-border"
                          flex="50">
                         <h3>{{ gui.gs.groundstation_id }} ({{ gui.gs.groundstation_callsign }})</h3>
-                        <h4>Coordinates</h4>
+                        <h4>Position</h4>
                         <p>[{{gui.gs.groundstation_latlon[0] | number:2}}&deg;, {{gui.gs.groundstation_latlon[1] | number:2}}&deg;]</p>
-                        <h4>Altitude</h4>
-                        <p>{{gui.gs.groundstation_altitude | number:2}} (m)</p>
+                        <p>{{gui.gs.groundstation_altitude | number:1}} (m)</p>
                         <h4>Contact Elevation</h4>
                         <p>{{gui.gs.groundstation_elevation | number:2}}&deg;</p>
                     </div>
@@ -39,9 +53,18 @@
                 </div>
                 <div class="sn-slot-related sn-dark-bottom-border">
                     <h3 style="text-align: center">Compatible Channels</h3>
-                </div>
-                <div class="sn-slot-related sn-dark-bottom-border"
-                     layout="column" layout-align="center top">
+                    <div layout="column" layout-align="top center">
+                        <div ng-repeat="c in gui.compatible_chs"
+                             layout="row" layout-align="center center">
+                            <div class="sn-padded-centered-box sn-light-right-border"
+                                 flex="50">
+                                {{c.GsChannel.identifier}}
+                            </div>
+                            <div class="sn-padded-centered-box" flex="50">
+                                {{c.ScChannel.identifier}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,6 +75,7 @@
         <div layout="row" layout-align="center center">
 
             <md-button id="book" ng-click="book()" aria-label="Book Slot"
+                       ng-disabled="gui.configuration.$pristine || uiCtrl.configuration.$invalid"
                        class="md-primary menu-button sn-margin"
                        style="width: 100px">
                 <div layout="row">

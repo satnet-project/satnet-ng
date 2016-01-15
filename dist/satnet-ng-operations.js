@@ -5887,7 +5887,11 @@ angular.module('snOperationalDirective', [
         $scope.gui = {
             gs: null,
             sc: null,
-            slot: null
+            slot: null,
+            compatible_chs: null,
+            slot_states: [
+                'FREE', 'REQUESTED', 'BOOKED', 'SELECTED'
+            ],
         };
 
         /**
@@ -5896,10 +5900,15 @@ angular.module('snOperationalDirective', [
         $scope.close = function () { $mdDialog.hide(); };
 
         /**
-         * Function that initializes the 
+         * Function that initializes the controller for the booking dialog.
          */
         $scope.init = function () {
+
             $scope.gui.slot = slot;
+            console.log(
+                '>>> $scope.gui.slot = ' + JSON.stringify($scope.gui.slot)
+            );
+
             satnetRPC.rCall('gs.get', [groundstationId]).then(function (results) {
                 $scope.gui.gs = results;
             }).catch(function (c) {
@@ -5913,10 +5922,11 @@ angular.module('snOperationalDirective', [
             satnetRPC.rCall(
                 'ss.compatibility', [spacecraftId, groundstationId]
             ).then(function (results) {
-                $scope.gui.compatibility = results;
+                $scope.gui.compatible_chs = results;
             }).catch(function (c) {
                 snDialog.exception('ss.compatibility', '', c);
             });
+
         };
 
         $scope.init();
