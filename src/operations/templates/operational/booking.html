@@ -19,16 +19,11 @@
                         <p>{{gui.slot.slot.duration}}</p>
                     </div>
                     <div>
-                        <form name="slot">
-                            <md-input-container class="md-block" flex-gt-sm>
-                                <md-select ng-model="gui.slot.raw_slot.state">
-                                    <md-option ng-repeat="s in gui.slot_states"
-                                               ng-value="s">
-                                        {{s}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-                        </form>
+                        <h3>Booking Status</h3>
+                        <p ng-class="{
+                            'sn-booking-free': gui.slot.slot.state_free,
+                            'sn-booking-requested': gui.slot.slot.state_requested
+                        }">{{ gui.slot.raw_slot.state }}</p>
                     </div>
                 </div>
             </div>

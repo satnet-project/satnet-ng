@@ -59,3 +59,12 @@
     border: 1px solid gray;
     border-style: none solid none none;
 }
+
+@mixin sn-booking($color) {
+    color: $color;
+    border: 2px solid $color;
+    text-align: center !important;
+    font-weight: bolder;
+}
+
+.sn-booking-free { @include sn-booking(seagreen); }

@@ -636,4 +636,10 @@ div.m-app-loading p {
   border: 1px solid gray;
   border-style: none solid none none; }
 
+.sn-booking-free {
+  color: seagreen;
+  border: 2px solid seagreen;
+  text-align: center !important;
+  font-weight: bolder; }
+
 /*# sourceMappingURL=satnet-ng-operations.css.map */
