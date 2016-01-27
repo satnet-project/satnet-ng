@@ -71,7 +71,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/app.html',
-    "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\" style=\"overflow: hidden\"><div layout=\"column\"><div flex=\"66\" layout=\"row\"><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"exit()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-availability></sn-availability><sn-compatibility></sn-compatibility><sn-operational></sn-operational><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider></md-content></div><div flex=\"34\"><sn-logger></sn-logger></div></div></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
+    "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\" style=\"overflow: hidden\"><div layout=\"column\"><div flex=\"66\" layout=\"row\"><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"exit()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-availability></sn-availability><sn-compatibility></sn-compatibility><sn-operational></sn-operational><sn-requests></sn-requests><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider></md-content></div><div flex=\"34\"><sn-logger></sn-logger></div></div></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
   );
 
 
@@ -150,6 +150,16 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
     "                            </ul>\n" +
     "                        </div>\n" +
     "                        --><div class=\"sn-sch-slot-data\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><ul><li>{{ s.slot.duration }}</li></ul></div></div></div></div></td></tr><tr><td class=\"sn-sch-corner-bottom\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><sn-timeline></sn-timeline></td></tr></table></div>"
+  );
+
+
+  $templateCache.put('operations/templates/requests/dialog.html',
+    "<md-dialog ng-init=\"init()\" aria-label=\"Slot Requests Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
+  );
+
+
+  $templateCache.put('operations/templates/requests/menu.html',
+    "<md-button id=\"menuRequests\" ng-click=\"openDialog()\" aria-label=\"operational\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-share-alt\"></i> <b>requests</b></div></md-button>"
   );
 
 

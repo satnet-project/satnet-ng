@@ -29,6 +29,7 @@ angular.module('snOperationsDirective', [
     'snCompatibilityDirective',
     'snAvailabilityDirective',
     'snOperationalDirective',
+    'snRequestsDirective',
     'snRuleFilters',
     'snLoggerFilters',
     'snControllers',
