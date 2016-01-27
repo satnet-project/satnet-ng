@@ -218,7 +218,11 @@ angular
             'gs.operational': this._scheduling
                 .createMethod('gs.operational'),
             'ss.compatibility': this._scheduling
-                .createMethod('segment.compatibility')
+                .createMethod('segment.compatibility'),
+            'sc.select': this._scheduling
+                .createMethod('sc.selectSlots'),
+            'sc.cancel': this._scheduling
+                .createMethod('sc.cancelSelections'),
         };
 
         /**

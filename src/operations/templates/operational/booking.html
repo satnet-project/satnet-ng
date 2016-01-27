@@ -69,8 +69,19 @@
 
         <div layout="row" layout-align="center center">
 
+            <md-button id="cancel" ng-click="cancel()"
+                       aria-label="Cancel Slot"
+                       ng-disabled="!isSelected()"
+                       class="md-primary menu-button sn-margin"
+                       style="width: 100px">
+                <div layout="row">
+                    <i class="fa fa-sign-out"></i>
+                    <b style="margin-left: 15px">cancel</b>
+                </div>
+            </md-button>
+
             <md-button id="book" ng-click="book()" aria-label="Book Slot"
-                       ng-disabled="gui.configuration.$pristine || uiCtrl.configuration.$invalid"
+                       ng-disabled="!isFree()"
                        class="md-primary menu-button sn-margin"
                        style="width: 100px">
                 <div layout="row">
@@ -79,12 +90,12 @@
                 </div>
             </md-button>
 
-            <md-button id="cancel" ng-click="close()" aria-label="Cancel"
+            <md-button id="back" ng-click="close()" aria-label="Cancel"
                        class="md-primary menu-button sn-margin"
                        style="width: 100px">
                 <div layout="row">
                     <i class="fa fa-reply"></i>
-                    <b style="margin-left: 15px">cancel</b>
+                    <b style="margin-left: 15px">back</b>
                 </div>
             </md-button>
 

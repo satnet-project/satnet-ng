@@ -951,7 +951,11 @@ angular
             'gs.operational': this._scheduling
                 .createMethod('gs.operational'),
             'ss.compatibility': this._scheduling
-                .createMethod('segment.compatibility')
+                .createMethod('segment.compatibility'),
+            'sc.select': this._scheduling
+                .createMethod('sc.selectSlots'),
+            'sc.cancel': this._scheduling
+                .createMethod('sc.cancelSelections'),
         };
 
         /**
@@ -5869,9 +5873,13 @@ angular.module('snOperationalDirective', [
     }
 
 )
+.constant('SLOT_FREE', 'FREE')
+.constant('SLOT_SELECTED', 'SELECTED')
+.constant('SLOT_BOOKED', 'BOOKED')
 .controller('snBookingDlgCtrl', [
     '$scope', '$log', '$mdDialog', 'satnetRPC', 'snDialog',
     'groundstationId', 'spacecraftId', 'slot',
+    'SLOT_FREE', 'SLOT_SELECTED', 'SLOT_BOOKED',
 
     /**
      * Controller function for handling the usage of the Global scheduler.
@@ -5880,7 +5888,8 @@ angular.module('snOperationalDirective', [
      */
     function (
         $scope, $log, $mdDialog, satnetRPC, snDialog,
-        groundstationId, spacecraftId, slot
+        groundstationId, spacecraftId, slot,
+        SLOT_FREE, SLOT_SELECTED, SLOT_BOOKED
     ) {
 
         /** Object with the configuration for the GUI */
@@ -5890,10 +5899,60 @@ angular.module('snOperationalDirective', [
             slot: null,
             compatible_chs: null,
             slot_states: [
-                'FREE', 'REQUESTED', 'BOOKED', 'SELECTED'
+                SLOT_FREE, SLOT_SELECTED, SLOT_BOOKED
             ],
         };
 
+        $scope.isFree = function () {
+            return $scope.gui.slot.raw_slot.state === SLOT_FREE;
+        };
+        $scope.isSelected = function () {
+            return $scope.gui.slot.raw_slot.state === SLOT_SELECTED;
+        };
+        $scope.isBooked = function () {
+            return $scope.gui.slot.raw_slot.state === SLOT_BOOKED;
+        };
+
+        /**
+         * Function that handles the cancel action over the current slot.
+         */
+        $scope.book = function () {
+            satnetRPC.rCall(
+                'sc.cancel', [
+                    $scope.gui.sc.spacecraft_id, [
+                        $scope.gui.slot.raw_slot.identifier
+                    ]
+                ]
+            ).then(function (results) {
+                console.log(
+                    '>> sc.cancel, results = ' + JSON.stringify(results)
+                );
+                $scope.gui.slot.raw_slot.state = SLOT_FREE;
+            }).catch(function (c) {
+                snDialog.exception('sc.cancel', '', c);
+            });
+        };
+  
+        /**
+         * Function that handles the booking action over the current slot.
+         */
+        $scope.book = function () {
+            satnetRPC.rCall(
+                'sc.select', [
+                    $scope.gui.sc.spacecraft_id, [
+                        $scope.gui.slot.raw_slot.identifier
+                    ]
+                ]
+            ).then(function (results) {
+                console.log(
+                    '>> sc.selected, results = ' + JSON.stringify(results)
+                );
+                $scope.gui.slot.raw_slot.state = SLOT_SELECTED;
+            }).catch(function (c) {
+                snDialog.exception('sc.select', '', c);
+            });
+        };
+  
         /**
          * Function that closes the dialog.
          */
@@ -5909,7 +5968,8 @@ angular.module('snOperationalDirective', [
                 '>>> $scope.gui.slot = ' + JSON.stringify($scope.gui.slot)
             );
 
-            satnetRPC.rCall('gs.get', [groundstationId]).then(function (results) {
+            satnetRPC.rCall('gs.get', [groundstationId]).then(
+                function (results) {
                 $scope.gui.gs = results;
             }).catch(function (c) {
                 snDialog.exception('gs.get', '', c);
