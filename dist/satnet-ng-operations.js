@@ -6179,23 +6179,56 @@ angular.module('snRequestsDirective', [
     'ngMaterial', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestsDlgCtrl', [
-    '$scope', '$mdDialog',
+    '$scope', '$mdDialog', 'satnetRPC','snDialog',
 
     /**
      * Controller function for handling the SatNet requests dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $mdDialog) {
+    function ($scope, $mdDialog, satnetRPC, snDialog) {
 
-        $scope.uiCtrl = {
-            detachable: false,
+        $scope.gui = {
+            groundstations: [],
+            requests: {}
         };
 
         /**
          * Function that closes the dialog.
          */
         $scope.close = function () { $mdDialog.hide(); };
+
+        $scope.init = function () {
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                if (results !== null) {
+                    $scope.gui.groundstations = results.slice(0);
+
+                    console.log(
+                        '>>> @request: gs.list = ' + JSON.stringify($scope.gui)
+                    );
+
+                    angular.forEach($scope.gui.groundstations, function(g) {
+                        satnetRPC.rCall(
+                            'gs.operational', [g]
+                        ).then(function (results) {
+                            $scope.gui.requests[g] = results;
+                            console.log(
+                                '>>> @request: gui = ' + JSON.stringify(
+                                    $scope.gui
+                                )
+                            );
+                        }).catch(function (c) {
+                            snDialog.exception('gs.operational', g, c);
+                        });
+
+                    });
+                }
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', '-', cause);
+            });
+        };
+
+        $scope.init();
 
     }
 
@@ -6217,7 +6250,7 @@ angular.module('snRequestsDirective', [
          */
         $scope.openDialog = function () {
             $mdDialog.show({
-                templateUrl: 'operations/templates/requests/dialog.html',
+                templateUrl: 'operations/templates/requests/list.html',
                 controller: 'snRequestsDlgCtrl'
             });
         };

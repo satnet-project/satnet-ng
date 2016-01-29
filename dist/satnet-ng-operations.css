@@ -25,7 +25,8 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 body {
-  position: relative; }
+  position: relative;
+  font-family: Ubuntu, sans-serif; }
 
 /* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
 
@@ -167,7 +168,6 @@ div.m-app-loading .ng-leave-active {
 
 div.m-app-loading .messaging {
   color: #FFFFFF;
-  font-family: RobotoDraft;
   left: 0;
   margin-top: -37px;
   position: absolute;

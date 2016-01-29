@@ -71,7 +71,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/app.html',
-    "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\" style=\"overflow: hidden\"><div layout=\"column\"><div flex=\"66\" layout=\"row\"><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"exit()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-availability></sn-availability><sn-compatibility></sn-compatibility><sn-operational></sn-operational><sn-requests></sn-requests><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider></md-content></div><div flex=\"34\"><sn-logger></sn-logger></div></div></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
+    "<div class=\"operations-main\" ng-controller=\"operationsAppCtrl\" layout=\"column\" layout-fill><section layout=\"row\" flex><md-sidenav class=\"md-sidenav-left md-whiteframe-z2\" md-component-id=\"menu\" md-is-locked-open=\"$mdMedia('gt-md')\" style=\"overflow: hidden\"><div layout=\"column\"><div flex=\"66\" layout=\"row\"><md-content class=\"md-padding\" ng-controller=\"operationsMenuCtrl\"><md-button id=\"menuExit\" ng-click=\"exit()\" aria-label=\"exit\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-power-off\"></i> <b>exit</b></div></md-button><md-divider></md-divider><md-button id=\"menuGS\" ng-click=\"showGsMenu()\" aria-label=\"ground stations\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-home\"></i> <b>ground stations</b></div></md-button><md-button id=\"menuSC\" ng-click=\"showScMenu()\" aria-label=\"spacecraft\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-space-shuttle\"></i> <b>spacecraft</b></div></md-button><md-divider></md-divider><sn-availability></sn-availability><sn-compatibility></sn-compatibility><md-divider></md-divider><sn-operational></sn-operational><sn-requests></sn-requests><md-divider></md-divider><sn-about></sn-about><md-divider></md-divider></md-content></div><div flex=\"34\"><sn-logger></sn-logger></div></div></md-sidenav><md-content flex class=\"md-padding\"><div layout=\"column\" layout-fill layout-align=\"center center\"><sn-map></sn-map><div><md-button id=\"toggleMenu\" class=\"md-primary\" aria-label=\"show menu\" ng-click=\"toggleMenu()\" hide-gt-md><p class=\"fa fa-bars\"></p><md-tooltip id=\"ttToggleMenu\">show menu</md-tooltip></md-button></div></div></md-content></section></div>"
   );
 
 
@@ -153,13 +153,17 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
   );
 
 
-  $templateCache.put('operations/templates/requests/dialog.html',
-    "<md-dialog ng-init=\"init()\" aria-label=\"Slot Requests Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
+  $templateCache.put('operations/templates/requests/list.html',
+    "<md-dialog aria-label=\"Slot Requests Dialog\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><md-list><li ng-hide=\"gui.groundstations.length\" class=\"sn-no-item\">(no ground stations)</li><md-list-item ng-repeat=\"(g, requests) in gui.requests\"><!--\n" +
+    "                <li ng-hide=\"gui.requests[g].length\" class=\"sn-no-item\">\n" +
+    "                    (no requests)\n" +
+    "                </li>\n" +
+    "                --><h3 style=\"text-align: center\">{{ g }}</h3><div layout=\"row\" layout-fill><li ng-hide=\"requests.length\" class=\"sn-no-item\">(no requests)</li><md-list-item ng-repeat=\"r in requests\"><md-button id=\"{{ r }}-edit\" aria-label=\"edit requrest {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\"><!--{{ r | printRequest }}--></b></div></md-button><md-button id=\"{{ r }}-accept\" ng-click=\"accept(r)\" aria-label=\"accept request {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-check\"></i></div><md-tooltip md-direction=\"top\">accept</md-tooltip></md-button><md-button id=\"{{ r }}-deny\" ng-click=\"deny(r)\" aria-label=\"deny request {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-ban\"></i></div><md-tooltip md-direction=\"top\">deny</md-tooltip></md-button></md-list-item></div></md-list-item></md-list></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
   $templateCache.put('operations/templates/requests/menu.html',
-    "<md-button id=\"menuRequests\" ng-click=\"openDialog()\" aria-label=\"operational\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-share-alt\"></i> <b>requests</b></div></md-button>"
+    "<md-button id=\"menuRequests\" ng-click=\"openDialog()\" aria-label=\"operational\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-mixcloud\"></i> <b>requests</b></div></md-button>"
   );
 
 
@@ -169,28 +173,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/rules/list.html',
-    "<md-dialog aria-label=\"Availability Rules Menu\"><md-content class=\"menu-list\"><md-button id=\"addRule\" ng-click=\"showAddDialog()\" aria-label=\"add rule\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>availability rule</b></div></md-button><md-divider></md-divider><md-list><md-list-item ng-hide=\"ruleList.length\"><span class=\"sn-no-item\" flex>(no rules)</span></md-list-item><md-list-item ng-hide=\"!ruleList.length\" ng-repeat=\"r in ruleList\"><!--\n" +
-    "                <md-card style=\"width: 90%\">\n" +
-    "                    <md-card-title>\n" +
-    "                        <md-card-title-text class=\"md-primary\">\n" +
-    "                            <b>{{ r | printRuleTitle }}</b>\n" +
-    "                        </md-card-title-text>\n" +
-    "                    </md-card-title>\n" +
-    "                    <md-card-content>\n" +
-    "                        {{ r | printRuleDates }}\n" +
-    "                    </md-card-content>\n" +
-    "                    <md-card-actions layout=\"row\" layout-align=\"center end\">\n" +
-    "                        <md-button id=\"{{ r }}-delete\"\n" +
-    "                                   ng-click=\"delete(r)\"\n" +
-    "                                   aria-label=\"delete rule {{ r }}\"\n" +
-    "                                   class=\"md-primary menu-button\" flex>\n" +
-    "                            <div layout=\"row\" layout-fill>\n" +
-    "                                <i class=\"fa fa-close\"></i>\n" +
-    "                            </div>\n" +
-    "                        </md-button>\n" +
-    "                    </md-card-actions>\n" +
-    "                </md-card>\n" +
-    "                --><!-- --><div layout=\"row\" layout-fill><md-button id=\"{{ r }}-edit\" aria-label=\"edit availability rule {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\">{{ r | printRule }}</b></div></md-button><md-button id=\"{{ r }}-delete\" ng-click=\"delete(r)\" aria-label=\"delete rule {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-close\"></i></div><md-tooltip md-direction=\"top\">Delete</md-tooltip></md-button></div><!-- --></md-list-item></md-list></md-content></md-dialog>"
+    "<md-dialog aria-label=\"Availability Rules Menu\"><md-content class=\"menu-list\"><md-button id=\"addRule\" ng-click=\"showAddDialog()\" aria-label=\"add rule\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-plus\"></i> <b>availability rule</b></div></md-button><md-divider></md-divider><md-list><md-list-item ng-hide=\"ruleList.length\"><span class=\"sn-no-item\" flex>(no rules)</span></md-list-item><md-list-item ng-hide=\"!ruleList.length\" ng-repeat=\"r in ruleList\"><div layout=\"row\" layout-fill><md-button id=\"{{ r }}-edit\" aria-label=\"edit availability rule {{ r }}\" class=\"md-primary menu-button\" style=\"width: 90%\"><div layout=\"row\" layout-fill><b style=\"font-size: 75%\">{{ r | printRule }}</b></div></md-button><md-button id=\"{{ r }}-delete\" ng-click=\"delete(r)\" aria-label=\"delete rule {{ r }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-close\"></i></div><md-tooltip md-direction=\"top\">Delete</md-tooltip></md-button></div></md-list-item></md-list></md-content></md-dialog>"
   );
 
 
