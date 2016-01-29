@@ -14,45 +14,57 @@
                 (no ground stations)
             </li>
 
-            <md-list-item ng-repeat="(g, requests) in gui.requests">
+            <md-list-item ng-repeat="(g, scRequests) in gui.requests">
 
                 <h3 style="text-align: center">{{ g }}</h3>
 
-                <div layout="row" layout-fill>
+                <div layout="column" layout-fill>
 
-                    <li ng-hide="requests.length" class="sn-no-item">
+                    <li ng-hide="!Object.keys(scRequests).length"
+                        class="sn-no-item">
                         (no requests)
                     </li>
 
-                    <md-list-item ng-repeat="r in requests">
-                    <md-button id="{{ r }}-edit"
-                               aria-label="edit requrest {{ r }}"
-                               class="md-primary menu-button"
-                               style="width: 90%">
+                    <md-list-item ng-repeat="(s, requests) in scRequests">
+
+                        <md-list-item ng-repeat="r in requests">
+
                         <div layout="row" layout-fill>
-                            <b style="font-size: 75%">
-                                <!--{{ r | printRequest }}-->
-                            </b>
-                        </div>
-                    </md-button>
+                        <md-button id="{{ r.identifier }}-edit"
+                                   aria-label="edit requrest {{ r }}"
+                                   class="md-primary menu-button"
+                                   flex="90">
+                            <div layout="row" layout-fill>
+                                <b style="font-size: 75%">
+                                    <!--{{ r | printRequest }}-->
+                                </b>
+                            </div>
+                        </md-button>
 
-                    <md-button id="{{ r }}-accept" ng-click="accept(r)"
-                               aria-label="accept request {{ r }}"
-                               class="md-primary menu-button" flex>
-                        <div layout="row" layout-fill class="sn-red-action">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <md-tooltip md-direction="top">accept</md-tooltip>
-                    </md-button>
+                        <md-button id="{{ r.identifier }}-accept"
+                                   ng-click="accept(r)"
+                                   aria-label="accept {{ r.identifier }}"
+                                   class="md-primary menu-button" flex>
+                            <div layout="row" layout-fill>
+                                <i class="fa fa-check"></i>
+                            </div>
+                            <md-tooltip md-direction="top">accept</md-tooltip>
+                        </md-button>
 
-                    <md-button id="{{ r }}-deny" ng-click="deny(r)"
-                               aria-label="deny request {{ r }}"
-                               class="md-primary menu-button" flex>
-                        <div layout="row" layout-fill class="sn-red-action">
-                            <i class="fa fa-ban"></i>
+                        <md-button id="{{ r.identifier }}-deny"
+                                   ng-click="deny(r)"
+                                   aria-label="deny {{ r.identifier }}"
+                                   class="md-primary menu-button" flex>
+                            <div layout="row" layout-fill
+                                 class="sn-red-action">
+                                <i class="fa fa-ban"></i>
+                            </div>
+                            <md-tooltip md-direction="top">deny</md-tooltip>
+                        </md-button>
                         </div>
-                        <md-tooltip md-direction="top">deny</md-tooltip>
-                    </md-button>
+
+                        </md-list-item>
+                        
                     </md-list-item>
 
                 </div>
