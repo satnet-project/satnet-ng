@@ -6198,6 +6198,9 @@ angular.module('snRequestsDirective', [
          */
         $scope.close = function () { $mdDialog.hide(); };
 
+        /**
+         * Initialization of the controller.
+         */
         $scope.init = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 if (results !== null) {
