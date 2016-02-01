@@ -109,7 +109,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/operational/global.html',
-    "<div class=\"sn-sch-table-wrap\"><li ng-hide=\"gui.gss.length\" class=\"sn-no-item\">(no ground stations)</li><table id=\"sn-op\" class=\"sn-sch-table\" ng-repeat=\"g in gui.gss\"><tr><td><sn-operational-scheduler segment-id=\"{{ g }}\"></sn-operational-scheduler></td></tr></table></div>"
+    "<div class=\"sn-sch-table-wrap sn-overflow-y\"><li ng-hide=\"gui.gss.length\" class=\"sn-no-item\">(no ground stations)</li><table id=\"sn-op\" class=\"sn-sch-table\" ng-repeat=\"g in gui.gss\"><tr><td><sn-operational-scheduler segment-id=\"{{ g }}\"></sn-operational-scheduler></td></tr></table></div>"
   );
 
 

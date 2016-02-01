@@ -376,7 +376,7 @@ div.m-app-loading p {
    limitations under the License. */
 #sn-sch-md-content {
   padding: 15px 0 15px 0;
-  overflow: hidden; }
+  overflow: auto; }
 
 .sn-sch-gs-col {
   border-right: 3px solid lightgray; }
