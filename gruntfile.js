@@ -71,6 +71,7 @@ module.exports = function (grunt) {
                     'src/common/models/GroundStations.js',
                     'src/common/models/Spacecraft.js',
                     'src/common/directives/*.js',
+                    'src/operations/filters/*.js',
                     'src/operations/controllers/*.js',
                     'src/operations/directives/*.js',
                     'src/operations/Operations.js'

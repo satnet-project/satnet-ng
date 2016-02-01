@@ -4079,6 +4079,77 @@ angular.module('snTimelineDirective', ['snTimelineServices'])
    limitations under the License.
 */
 
+angular.module('snRequestsFilters', [])
+.constant('SLOT_DATE_FORMAT', 'YYYY.MM.DD@hh:mm:ssZ')
+.filter('filterSelected',
+
+    /**
+     * Filters out all the slots whose state is not 'SELECTED'.
+     * 
+     * @returns Slot object if the slot is 'SELECTED'.
+     */
+    function () {
+        return function (slot) {
+            if (slot.state === 'SELECTED') { return slot; }
+        };
+    }
+
+)
+.filter('filterFree',
+
+    /**
+     * Filters out all the slots whose state is not 'FREE'.
+     * 
+     * @returns Slot object if the slot is 'FREE'.
+     */
+    function () {
+        return function (slot) {
+            if (slot.state === 'FREE') {
+                console.log('FREE');
+                return slot;
+            }
+            return;
+        };
+    }
+
+)
+.filter('printRequest', [ 'SLOT_DATE_FORMAT',
+
+    /**
+     * Filter that prints out a human-readable definition of the slot request.
+     * 
+     * @returns {String} Human-readable string
+     */
+    function (SLOT_DATE_FORMAT) {
+        return function (slot) {
+
+            var start_d = moment(slot.date_start),
+                end_d = moment(slot.date_end),
+                duration = moment.duration(end_d.diff(start_d));
+
+            return start_d.format(SLOT_DATE_FORMAT) +
+                ' <' + duration.humanize() + '>';
+
+        };
+    }
+
+]);
+;/*
+   Copyright 2014 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 angular.module('snChannelControllers', [
     'ngMaterial',
     'snJRPCServices',
@@ -6176,21 +6247,59 @@ angular.module('snOperationalDirective', [
 */
 
 angular.module('snRequestsDirective', [
-    'ngMaterial', 'snControllers', 'snJRPCServices'
+    'ngMaterial', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
+.constant('SLOT_FREE', 'FREE')
+.constant('SLOT_SELECTED', 'SELECTED')
+.constant('SLOT_BOOKED', 'BOOKED')
 .controller('snRequestsDlgCtrl', [
     '$scope', '$mdDialog', 'satnetRPC','snDialog',
+    'SLOT_FREE', 'SLOT_SELECTED', 'SLOT_BOOKED',
 
     /**
      * Controller function for handling the SatNet requests dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $mdDialog, satnetRPC, snDialog) {
+    function (
+        $scope, $mdDialog, satnetRPC, snDialog,
+        SLOT_FREE, SLOT_SELECTED, SLOT_BOOKED
+    ) {
 
         $scope.gui = {
             groundstations: [],
-            requests: {}
+            requests: {},
+            free: [],
+            selected: [],
+            booked: []
+        };
+
+        /**
+         * This function organizes the received slots into a category given by
+         * their state.
+         *
+         * @param {Object} Array with the slots sorted per spacecraft, as they
+         *                  come from the server
+         */
+        $scope._processSlots = function(results) {
+
+            angular.forEach(results, function(v, k) {
+                angular.forEach(v, function(s) {
+                    if ( s.state === SLOT_FREE ) {
+                        s.spacecraft_id = k;
+                        $scope.gui.free.push(s);
+                    }
+                    if ( s.state === SLOT_SELECTED ) {
+                        s.spacecraft_id = k;
+                        $scope.gui.selected.push(s);
+                    }
+                    if ( s.state === SLOT_BOOKED ) {
+                        s.spacecraft_id = k;
+                        $scope.gui.booked.push(s);
+                    }
+                });
+            });
+
         };
 
         /**
@@ -6215,6 +6324,7 @@ angular.module('snRequestsDirective', [
                             'gs.operational', [g]
                         ).then(function (results) {
                             $scope.gui.requests[g] = results;
+                            $scope._processSlots(results);
                             console.log(
                                 '>>> @request: gui = ' + JSON.stringify(
                                     $scope.gui
@@ -6313,6 +6423,7 @@ angular.module('snOperationsDirective', [
     'snRequestsDirective',
     'snRuleFilters',
     'snLoggerFilters',
+    'snRequestsFilters',
     'snControllers',
     'snOperationsMap',
     'snOperationsMenuControllers',

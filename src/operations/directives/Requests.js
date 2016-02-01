@@ -15,21 +15,59 @@
 */
 
 angular.module('snRequestsDirective', [
-    'ngMaterial', 'snControllers', 'snJRPCServices'
+    'ngMaterial', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
+.constant('SLOT_FREE', 'FREE')
+.constant('SLOT_SELECTED', 'SELECTED')
+.constant('SLOT_BOOKED', 'BOOKED')
 .controller('snRequestsDlgCtrl', [
     '$scope', '$mdDialog', 'satnetRPC','snDialog',
+    'SLOT_FREE', 'SLOT_SELECTED', 'SLOT_BOOKED',
 
     /**
      * Controller function for handling the SatNet requests dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $mdDialog, satnetRPC, snDialog) {
+    function (
+        $scope, $mdDialog, satnetRPC, snDialog,
+        SLOT_FREE, SLOT_SELECTED, SLOT_BOOKED
+    ) {
 
         $scope.gui = {
             groundstations: [],
-            requests: {}
+            requests: {},
+            free: [],
+            selected: [],
+            booked: []
+        };
+
+        /**
+         * This function organizes the received slots into a category given by
+         * their state.
+         *
+         * @param {Object} Array with the slots sorted per spacecraft, as they
+         *                  come from the server
+         */
+        $scope._processSlots = function(results) {
+
+            angular.forEach(results, function(v, k) {
+                angular.forEach(v, function(s) {
+                    if ( s.state === SLOT_FREE ) {
+                        s.spacecraft_id = k;
+                        $scope.gui.free.push(s);
+                    }
+                    if ( s.state === SLOT_SELECTED ) {
+                        s.spacecraft_id = k;
+                        $scope.gui.selected.push(s);
+                    }
+                    if ( s.state === SLOT_BOOKED ) {
+                        s.spacecraft_id = k;
+                        $scope.gui.booked.push(s);
+                    }
+                });
+            });
+
         };
 
         /**
@@ -54,6 +92,7 @@ angular.module('snRequestsDirective', [
                             'gs.operational', [g]
                         ).then(function (results) {
                             $scope.gui.requests[g] = results;
+                            $scope._processSlots(results);
                             console.log(
                                 '>>> @request: gui = ' + JSON.stringify(
                                     $scope.gui

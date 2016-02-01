@@ -587,6 +587,22 @@ div.m-app-loading p {
   opacity: 0.25;
   height: 100%; }
 
+.sn-title {
+  font-weight: bolder; }
+
+.sn-sch-slot-requests ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 75%;
+  display: table;
+  table-layout: fixed;
+  width: 100%; }
+  .sn-sch-slot-requests ul li p {
+    text-align: center;
+    margin: 5px 0; }
+
 /* Copyright 2013, 2014, 2015 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");

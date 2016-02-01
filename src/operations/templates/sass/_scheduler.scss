@@ -243,3 +243,30 @@ $sch-margin: 7px;
     opacity: 0.25;
     height: 100%;
 }
+
+.sn-title {
+    font-weight: bolder;
+}
+
+.sn-sch-slot-requests {
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        font-size: 75%;
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+
+        li {
+            p {
+                text-align: center;
+                margin: 5px 0;
+            }
+        }
+
+    }
+    
+}

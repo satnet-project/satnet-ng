@@ -1,4 +1,4 @@
-<md-dialog aria-label="Slot Requests Dialog">
+<md-dialog aria-label="Slot Requests Dialog" style="width: 350px">
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
@@ -27,17 +27,27 @@
 
                     <md-list-item ng-repeat="(s, requests) in scRequests">
 
-                        <md-list-item ng-repeat="r in requests">
+                    <li ng-hide="(requests | filterFree).length"
+                        class="sn-no-item">
+                        (no requests)
+                    </li>
+
+                        <md-list-item
+                            ng-repeat="r in requests | filterFree">
 
                         <div layout="row" layout-fill>
                         <md-button id="{{ r.identifier }}-edit"
                                    aria-label="edit requrest {{ r }}"
                                    class="md-primary menu-button"
-                                   flex="90">
-                            <div layout="row" layout-fill>
-                                <b style="font-size: 75%">
-                                    <!--{{ r | printRequest }}-->
-                                </b>
+                                   flex="80">
+                            <div class="sn-sch-slot-requests"
+                                 layout="row" layout-fill>
+                                <ul>
+                                    <li class="sn-title">
+                                        <p>{{ g }} &ang; {{ s }}</p>
+                                    </li>
+                                    <li><p>{{ r | printRequest }}</p></li>
+                                </ul>
                             </div>
                         </md-button>
 
