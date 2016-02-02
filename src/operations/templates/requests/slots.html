@@ -1,0 +1,40 @@
+
+<li ng-hide="gui.slots.length" class="sn-no-item">
+    (no {{ gui.state }} requests)
+</li>
+
+<md-list-item ng-repeat="r in gui.slots">
+
+    <div layout="row" layout-fill>
+        <md-button aria-label="edit request {{ r }}"
+                   class="md-primary menu-button" flex="80">
+            <div class="sn-sch-slot-requests" layout="row" layout-fill>
+                <ul>
+                    <li class="sn-title"><p>
+                        {{ gui.groundstation_id }} &ang; {{ gui.spacecraft_id }}
+                    </p></li>
+                    <li><p>{{ r | printRequest }}</p></li>
+                </ul>
+            </div>
+        </md-button>
+
+        <md-button ng-click="accept(r)"
+                   aria-label="accept {{ r.identifier }}"
+                   class="md-primary menu-button" flex>
+            <div layout="row" layout-fill>
+                <i class="fa fa-check"></i>
+            </div>
+            <md-tooltip md-direction="top">accept</md-tooltip>
+        </md-button>
+
+        <md-button ng-click="deny(r)"
+                   aria-label="deny {{ r.identifier }}"
+                   class="md-primary menu-button" flex>
+            <div layout="row" layout-fill class="sn-red-action">
+                <i class="fa fa-ban"></i>
+            </div>
+            <md-tooltip md-direction="top">deny</md-tooltip>
+        </md-button>
+    </div>
+
+</md-list-item>
