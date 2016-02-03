@@ -66,6 +66,7 @@ module.exports = function (grunt) {
                     'src/common/filters/Slots.js',
                     'src/common/filters/Logger.js',
                     'src/common/filters/Rules.js',
+                    'src/common/filters/Common.js',
                     'src/common/models/Markers.js',
                     'src/common/models/Network.js',
                     'src/common/models/GroundStations.js',

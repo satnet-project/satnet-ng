@@ -144,8 +144,13 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
   );
 
 
+  $templateCache.put('operations/templates/requests/groundstation.html',
+    "<li ng-show=\"gui.requests | isEmpty\" class=\"sn-no-item\">(no spacecraft requests)</li><md-list-item ng-repeat=\"(s, slots) in gui.requests\"><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"FREE\"></sn-sc-requests><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"SELECTED\"></sn-sc-requests><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"BOOKED\"></sn-sc-requests></md-list-item>"
+  );
+
+
   $templateCache.put('operations/templates/requests/list.html',
-    "<md-dialog aria-label=\"Slot Requests Dialog\" style=\"width: 350px\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><li ng-hide=\"gui.groundstations.length\" class=\"sn-no-item\">(no ground stations)</li><md-tabs md-dynamic-height md-border-bottom md-selected=\"gui.activeTab\"><md-tab ng-repeat=\"(g, scRequests) in gui.requests\" label=\"{{ g }}\"><!-- ###################################################################### --><md-list><md-list-item ng-repeat=\"(g, scRequests) in gui.requests\"><div layout=\"column\" layout-fill><li ng-hide=\"!Object.keys(scRequests).length\" class=\"sn-no-item\">(no compatible spacecraft)</li><md-list-item ng-repeat=\"(s, requests) in scRequests\"><sn-request-slots gs=\"{{ g }}\" sc=\"{{ s }}\" slots=\"rs\" state=\"FREE\"></sn-request-slots></md-list-item><md-list-item ng-repeat=\"(s, requests) in scRequests\"><sn-request-slots gs=\"{{ g }}\" sc=\"{{ s }}\" slots=\"rs\" state=\"BOOKED\"></sn-request-slots></md-list-item></div></md-list-item></md-list><!-- ###################################################################### --></md-tab></md-tabs></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog aria-label=\"Slot Requests Dialog\" style=\"width: 350px\"><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\"><li ng-hide=\"gui.groundstations.length\" class=\"sn-no-item\">(no ground stations available)</li><md-tabs md-dynamic-height md-border-bottom md-selected=\"gui.tab\"><md-tab ng-repeat=\"g in gui.groundstations\" label=\"{{ g }}\"><sn-gs-requests gs=\"{{ g }}\"></sn-gs-requests></md-tab></md-tabs></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button id=\"cancel\" ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
@@ -154,8 +159,13 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
   );
 
 
-  $templateCache.put('operations/templates/requests/slots.html',
-    "<li ng-hide=\"gui.slots.length\" class=\"sn-no-item\">(no {{ gui.state }} requests)</li><md-list-item ng-repeat=\"r in gui.slots\"><div layout=\"row\" layout-fill><md-button aria-label=\"edit request {{ r }}\" class=\"md-primary menu-button\" flex=\"80\"><div class=\"sn-sch-slot-requests\" layout=\"row\" layout-fill><ul><li class=\"sn-title\"><p>{{ gui.groundstation_id }} &ang; {{ gui.spacecraft_id }}</p></li><li><p>{{ r | printRequest }}</p></li></ul></div></md-button><md-button ng-click=\"accept(r)\" aria-label=\"accept {{ r.identifier }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-check\"></i></div><md-tooltip md-direction=\"top\">accept</md-tooltip></md-button><md-button ng-click=\"deny(r)\" aria-label=\"deny {{ r.identifier }}\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-ban\"></i></div><md-tooltip md-direction=\"top\">deny</md-tooltip></md-button></div></md-list-item>"
+  $templateCache.put('operations/templates/requests/slot.html',
+    "<div layout=\"row\" layout-fill><md-button aria-label=\"edit request\" class=\"md-primary menu-button\" flex=\"80\"><div class=\"sn-sch-slot-requests\" layout=\"row\" layout-fill><ul><li class=\"sn-title\"><p>{{ gui.groundstation_id }} &ang; {{ gui.spacecraft_id }}</p></li><li><p>{{ gui.slot | printRequest }}</p></li></ul></div></md-button><md-button ng-show=\"gui.state === 'SELECTED'\" ng-click=\"accept()\" aria-label=\"accept\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-check\"></i></div><md-tooltip md-direction=\"top\">accept</md-tooltip></md-button><md-button ng-show=\"gui.state === 'SELECTED'\" ng-click=\"deny()\" aria-label=\"deny\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-ban\"></i></div><md-tooltip md-direction=\"top\">deny</md-tooltip></md-button><md-button ng-show=\"gui.state === 'BOOKED'\" ng-click=\"drop()\" aria-label=\"deny\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-close\"></i></div><md-tooltip md-direction=\"top\">drop</md-tooltip></md-button></div>"
+  );
+
+
+  $templateCache.put('operations/templates/requests/spacecraft.html',
+    "<li ng-hide=\"gui.filtered.length\" class=\"sn-no-item\">(no {{ gui.state }} requests)</li><md-list-item ng-repeat=\"f in gui.filtered\"><sn-request-slot gs=\"gui.groundstation_id\" sc=\"{{ gui.spacecraft_id }}\" slot=\"f\" state=\"{{ gui.state }}\"></sn-request-slot></md-list-item>"
   );
 
 

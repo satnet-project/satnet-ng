@@ -2106,6 +2106,37 @@ angular.module('snRuleFilters', [])
     }
 
 ]);
+;/*
+   Copyright 2015 Ricardo Tubio-Pardavila
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+angular.module('snCommonFilters', [])
+.filter('isEmpty', [
+
+    /**
+     * Filter that returns a function to filter out the empty objects.
+     *
+     * @returns {Function} Function to be used as a filter.
+     */
+    function () {
+        return function (object) {
+            return angular.equals({}, object);
+        };
+    }
+
+]);
 ;/**
  * Copyright 2014 Ricardo Tubio-Pardavila
  *
@@ -6247,14 +6278,11 @@ angular.module('snOperationalDirective', [
 */
 
 angular.module('snRequestsDirective', [
-    'ngMaterial', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
+    'ngMaterial',
+    'snCommonFilters', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
-.constant('SLOT_FREE', 'FREE')
-.constant('SLOT_SELECTED', 'SELECTED')
-.constant('SLOT_BOOKED', 'BOOKED')
-.controller('snRequestsDlgCtrl', [
+.controller('snRequestSlotCtrl', [
     '$scope', '$mdDialog', 'satnetRPC','snDialog',
-    'SLOT_FREE', 'SLOT_SELECTED', 'SLOT_BOOKED',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -6262,44 +6290,235 @@ angular.module('snRequestsDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $mdDialog, satnetRPC, snDialog,
-        SLOT_FREE, SLOT_SELECTED, SLOT_BOOKED
+        $scope, $mdDialog, satnetRPC, snDialog
     ) {
 
         $scope.gui = {
-            groundstations: [],
-            requests: {},
-            free: [],
-            selected: [],
-            booked: []
+            groundstation_id: '',
+            spacecraft_id: '',
+            state: '',
+            slot: {}
         };
 
         /**
-         * This function organizes the received slots into a category given by
-         * their state.
-         *
-         * @param {Object} Array with the slots sorted per spacecraft, as they
-         *                  come from the server
+         * Function that handles the process of accepting a given request that
+         * has already been selected.
          */
-        $scope._processSlots = function(results) {
+        $scope.accept = function () {
 
-            angular.forEach(results, function(v, k) {
-                angular.forEach(v, function(s) {
-                    if ( s.state === SLOT_FREE ) {
-                        s.spacecraft_id = k;
-                        $scope.gui.free.push(s);
-                    }
-                    if ( s.state === SLOT_SELECTED ) {
-                        s.spacecraft_id = k;
-                        $scope.gui.selected.push(s);
-                    }
-                    if ( s.state === SLOT_BOOKED ) {
-                        s.spacecraft_id = k;
-                        $scope.gui.booked.push(s);
-                    }
-                });
+        };
+
+        /**
+         * Function that handles the process of denying a given request that
+         * has already been selected.
+         */
+        $scope.deny = function () {
+
+        };
+
+        /**
+         * Function that handles the process of droping a given request that
+         * has already been booked.
+         */
+        $scope.drop = function () {
+
+        };
+
+        /**
+         * Initialization of the controller.
+         */
+        $scope.init = function () {
+
+            $scope.gui.groundstation_id = $scope.gs;
+            $scope.gui.spacecraft_id = $scope.sc;
+            $scope.gui.state = $scope.state;
+            $scope.gui.slot = $scope.slot;
+
+            console.log('>>> slot.gui = ' + JSON.stringify(
+                $scope.gui, null, 4
+            ));
+        };
+
+        $scope.init();
+
+    }
+
+])
+.directive('snRequestSlot',
+
+    /**
+     * Function that creates the directive itself returning the object required
+     * by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with restrict
+     *                   and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/requests/slot.html',
+            controller: 'snRequestSlotCtrl',
+            scope: {
+                sc: '@',
+                gs: '@',
+                state: '@',
+                slot: '='
+            }
+        };
+    }
+
+)
+.controller('snScRequestsCtrl', ['$scope',
+
+    /**
+     * Controller function for handling the SatNet requests dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope) {
+
+        $scope.gui = {
+            groundstation_id: '',
+            spacecraft_id: '',
+            state: '',
+            slots: [],
+            filtered: []
+        };
+
+        /**
+         * Function that filters the slots by state, holding only those who
+         * match the required state. The result is hold at the
+         * $scope.gui.filtered internal variable.
+         *
+         * @param {Array} slots Array with the slots to be filtered
+         */
+        $scope._filterSlots = function(slots) {
+            angular.forEach(slots, function(s) {
+                if (s.state === $scope.gui.state) {
+                    $scope.gui.filtered.push(s);
+                }
+            });
+        };
+
+        /**
+         * Initialization of the controller.
+         */
+        $scope.init = function () {
+
+            $scope.gui.groundstation_id = $scope.gs;
+            $scope.gui.spacecraft_id = $scope.sc;
+            $scope.gui.state = $scope.state;
+            $scope.gui.slots = $scope.slots;
+
+            $scope._filterSlots($scope.slots);
+
+        };
+
+        $scope.init();
+
+    }
+
+])
+.directive('snScRequests',
+
+    /**
+     * Function that creates the directive itself returning the object required
+     * by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with restrict
+     *                   and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/requests/spacecraft.html',
+            controller: 'snScRequestsCtrl',
+            scope: {
+                sc: '@',
+                gs: '@',
+                state: '@',
+                slots: '='
+            }
+        };
+    }
+
+)
+.controller('snGsRequestsCtrl', [
+    '$scope', '$mdDialog', 'satnetRPC','snDialog',
+
+    /**
+     * Controller function for handling the SatNet requests dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $mdDialog, satnetRPC, snDialog
+    ) {
+
+        $scope.gui = {
+            groundstation_id: '',
+            requests: {}
+        };
+
+        /**
+         * Initialization of the controller.
+         */
+        $scope.init = function () {
+
+            $scope.gui.groundstation_id = $scope.gs;
+
+            satnetRPC.rCall(
+                'gs.operational', [$scope.gui.groundstation_id]
+            ).then(function (results) {
+                $scope.gui.requests = results;
+                console.log('>>> @gs: gui = ' + JSON.stringify($scope.gui));
+            }).catch(function (c) {
+                snDialog.exception(
+                    'gs.operational', $scope.gui.groundstation_id, c
+                );
             });
 
+        };
+
+        $scope.init();
+
+    }
+
+])
+.directive('snGsRequests',
+
+    /**
+     * Function that creates the directive itself returning the object required
+     * by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with restrict
+     *                   and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/requests/groundstation.html',
+            controller: 'snGsRequestsCtrl',
+            scope: {
+                gs: '@'
+            }
+        };
+    }
+
+)
+.controller('snRequestsDlgCtrl', [
+    '$scope', '$mdDialog', 'satnetRPC','snDialog',
+
+    /**
+     * Controller function for handling the SatNet requests dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function ($scope, $mdDialog, satnetRPC, snDialog) {
+
+        $scope.gui = {
+            groundstations: [],
+            tab: 0
         };
 
         /**
@@ -6312,30 +6531,7 @@ angular.module('snRequestsDirective', [
          */
         $scope.init = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
-                if (results !== null) {
-                    $scope.gui.groundstations = results.slice(0);
-
-                    console.log(
-                        '>>> @request: gs.list = ' + JSON.stringify($scope.gui)
-                    );
-
-                    angular.forEach($scope.gui.groundstations, function(g) {
-                        satnetRPC.rCall(
-                            'gs.operational', [g]
-                        ).then(function (results) {
-                            $scope.gui.requests[g] = results;
-                            $scope._processSlots(results);
-                            console.log(
-                                '>>> @request: gui = ' + JSON.stringify(
-                                    $scope.gui
-                                )
-                            );
-                        }).catch(function (c) {
-                            snDialog.exception('gs.operational', g, c);
-                        });
-
-                    });
-                }
+                $scope.gui.groundstations = results.slice(0);
             }).catch(function (cause) {
                 snDialog.exception('gs.list', '-', cause);
             });
@@ -6424,6 +6620,7 @@ angular.module('snOperationsDirective', [
     'snRuleFilters',
     'snLoggerFilters',
     'snRequestsFilters',
+    'snCommonFilters',
     'snControllers',
     'snOperationsMap',
     'snOperationsMenuControllers',

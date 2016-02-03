@@ -33,6 +33,7 @@ angular.module('snOperationsDirective', [
     'snRuleFilters',
     'snLoggerFilters',
     'snRequestsFilters',
+    'snCommonFilters',
     'snControllers',
     'snOperationsMap',
     'snOperationsMenuControllers',
