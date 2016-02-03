@@ -8,6 +8,12 @@
                     {{ gui.groundstation_id }} &ang; {{ gui.spacecraft_id }}
                 </p></li>
                 <li><p>{{ gui.slot | printRequest }}</p></li>
+                <li><p ng-class="{
+                        'sn-state-free': gui.state === 'FREE',
+                        'sn-state-selected':  gui.state === 'SELECTED',
+                        'sn-state-reserved':  gui.state === 'RESERVED'
+                    }">{{ gui.state }}
+                </p></li>
             </ul>
         </div>
     </md-button>
@@ -30,7 +36,7 @@
         <md-tooltip md-direction="top">deny</md-tooltip>
     </md-button>
 
-    <md-button ng-show="gui.state === 'BOOKED'"
+    <md-button ng-show="gui.state === 'RESERVED'"
                 ng-click="drop()" aria-label="deny"
                 class="md-primary menu-button" flex>
         <div layout="row" layout-fill class="sn-red-action">

@@ -77,7 +77,8 @@
                         <div class="sn-sch-slot-state"
                              ng-class="{
                                 'sn-state-free': s.slot.state_free,
-                                'sn-state-requested':  s.slot.state_requested
+                                'sn-state-selected':  s.slot.state_selected,
+                                'sn-state-reserved':  s.slot.state_reserved
                              }"
                              ng-repeat="s in slots"
                              ng-style="{'left': ( s.slot.left + 1) + '%'}">
@@ -85,16 +86,6 @@
                                 {{ s.raw_slot | printState }}
                             </a>
                         </div>
-                        <!--
-                        <div class="sn-sch-slot-info" ng-repeat="s in slots"
-                             ng-style="{'left': ( s.slot.left + 1) + '%'}">
-                            <ul>
-                                <li><b>{{ s.slot.state }}</b></li>
-                                <li>{{ s.slot.s_date | printSlotDate }}</li>
-                                <li>{{ s.slot.e_date | printSlotDate }}</li>
-                            </ul>
-                        </div>
-                        -->
 
                         <div class="sn-sch-slot-data"
                              ng-repeat="s in slots"

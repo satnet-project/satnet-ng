@@ -5,12 +5,9 @@
 
 <md-list-item ng-repeat="(s, slots) in gui.requests">
     <sn-sc-requests gs="gui.groundstation_id" sc="{{ s }}"
-                    slots="slots" state="FREE">
-    </sn-sc-requests>
-    <sn-sc-requests gs="gui.groundstation_id" sc="{{ s }}"
                     slots="slots" state="SELECTED">
     </sn-sc-requests>
     <sn-sc-requests gs="gui.groundstation_id" sc="{{ s }}"
-                    slots="slots" state="BOOKED">
+                    slots="slots" state="RESERVED">
     </sn-sc-requests>
 </md-list-item>

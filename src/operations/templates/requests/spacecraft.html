@@ -1,7 +1,10 @@
 
-<li ng-hide="gui.filtered.length" class="sn-no-item">
-    (no {{ gui.state }} requests)
-</li>
+<md-list-item ng-show="gui.filtered.length" class="sn-no-item">
+    <h4>{{ gui.state }} slots</h4>
+</md-list-item>
+<md-list-item ng-hide="gui.filtered.length" class="sn-no-item">
+    <h4>(no {{ gui.state }} slots)</h4>
+</md-list-item>
 
 <md-list-item ng-repeat="f in gui.filtered">
     <sn-request-slot gs="gui.groundstation_id" sc="{{ gui.spacecraft_id }}"

@@ -34,7 +34,7 @@ angular.module('snOperationalDirective', [
         };
 
         /**
-         * Function that initializes the 
+         * Function that initializes the
          */
         $scope.init = function () {
 
@@ -56,7 +56,7 @@ angular.module('snOperationalDirective', [
     /**
      * Function that creates the directive to embed the availability scheduler
      * wherever it is necessary within the application.
-     * 
+     *
      * @returns {Object} Object directive required by Angular, with
      *                   restrict and templateUrl
      */
@@ -112,7 +112,7 @@ angular.module('snOperationalDirective', [
         /**
          * Function that handles the cancel action over the current slot.
          */
-        $scope.book = function () {
+        $scope.cancel = function () {
             satnetRPC.rCall(
                 'sc.cancel', [
                     $scope.gui.sc.spacecraft_id, [
@@ -128,7 +128,7 @@ angular.module('snOperationalDirective', [
                 snDialog.exception('sc.cancel', '', c);
             });
         };
-  
+
         /**
          * Function that handles the booking action over the current slot.
          */
@@ -148,7 +148,7 @@ angular.module('snOperationalDirective', [
                 snDialog.exception('sc.select', '', c);
             });
         };
-  
+
         /**
          * Function that closes the dialog.
          */
@@ -206,7 +206,7 @@ angular.module('snOperationalDirective', [
         /**
          * This function launches a dialog window that allows operators to
          * book the selected slot.
-         * 
+         *
          * @param {String} groundstationId Identifier of the Ground Station
          * @param {String} spacecraftId Identifier of the Spacecraft
          * param {Object} slot The slot to be booked
@@ -226,7 +226,7 @@ angular.module('snOperationalDirective', [
         /**
          * Promise function that should be used to retrieve the availability
          * slots for each of the Ground Stations.
-         * 
+         *
          * @param {String} groundstation_id Ground Station identifier
          */
         $scope.getGSSlots = function (groundstation_id) {
@@ -246,7 +246,7 @@ angular.module('snOperationalDirective', [
          * Function that initializes the data structures for the visualization
          * of the available operational slots. The following data structures
          * have to be pulled out of the server:
-         * 
+         *
          * 1) retrieve all the ground station identifiers from the server,
          * 2) retrieve the operatonal slots for the ground stations.
          */
@@ -275,7 +275,7 @@ angular.module('snOperationalDirective', [
     /**
      * Function that creates the directive to embed the availability scheduler
      * wherever it is necessary within the application.
-     * 
+     *
      * @returns {Object} Object directive required by Angular, with
      *                   restrict and templateUrl
      */

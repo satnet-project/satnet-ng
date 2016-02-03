@@ -130,22 +130,14 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
     "                                'width': s.slot.width + '%'\n" +
     "                             }\"></div><div class=\"sn-sch-slot-state\" ng-class=\"{\n" +
     "                                'sn-state-free': s.slot.state_free,\n" +
-    "                                'sn-state-requested':  s.slot.state_requested\n" +
-    "                             }\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><a ng-click=\"book(segmentId, sc, s)\">{{ s.raw_slot | printState }}</a></div><!--\n" +
-    "                        <div class=\"sn-sch-slot-info\" ng-repeat=\"s in slots\"\n" +
-    "                             ng-style=\"{'left': ( s.slot.left + 1) + '%'}\">\n" +
-    "                            <ul>\n" +
-    "                                <li><b>{{ s.slot.state }}</b></li>\n" +
-    "                                <li>{{ s.slot.s_date | printSlotDate }}</li>\n" +
-    "                                <li>{{ s.slot.e_date | printSlotDate }}</li>\n" +
-    "                            </ul>\n" +
-    "                        </div>\n" +
-    "                        --><div class=\"sn-sch-slot-data\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><ul><li>{{ s.slot.duration }}</li></ul></div></div></div></div></td></tr><tr><td class=\"sn-sch-corner-bottom\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><sn-timeline></sn-timeline></td></tr></table></div>"
+    "                                'sn-state-selected':  s.slot.state_selected,\n" +
+    "                                'sn-state-reserved':  s.slot.state_reserved\n" +
+    "                             }\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><a ng-click=\"book(segmentId, sc, s)\">{{ s.raw_slot | printState }}</a></div><div class=\"sn-sch-slot-data\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><ul><li>{{ s.slot.duration }}</li></ul></div></div></div></div></td></tr><tr><td class=\"sn-sch-corner-bottom\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><sn-timeline></sn-timeline></td></tr></table></div>"
   );
 
 
   $templateCache.put('operations/templates/requests/groundstation.html',
-    "<li ng-show=\"gui.requests | isEmpty\" class=\"sn-no-item\">(no spacecraft requests)</li><md-list-item ng-repeat=\"(s, slots) in gui.requests\"><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"FREE\"></sn-sc-requests><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"SELECTED\"></sn-sc-requests><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"BOOKED\"></sn-sc-requests></md-list-item>"
+    "<li ng-show=\"gui.requests | isEmpty\" class=\"sn-no-item\">(no spacecraft requests)</li><md-list-item ng-repeat=\"(s, slots) in gui.requests\"><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"SELECTED\"></sn-sc-requests><sn-sc-requests gs=\"gui.groundstation_id\" sc=\"{{ s }}\" slots=\"slots\" state=\"RESERVED\"></sn-sc-requests></md-list-item>"
   );
 
 
@@ -160,12 +152,16 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/requests/slot.html',
-    "<div layout=\"row\" layout-fill><md-button aria-label=\"edit request\" class=\"md-primary menu-button\" flex=\"80\"><div class=\"sn-sch-slot-requests\" layout=\"row\" layout-fill><ul><li class=\"sn-title\"><p>{{ gui.groundstation_id }} &ang; {{ gui.spacecraft_id }}</p></li><li><p>{{ gui.slot | printRequest }}</p></li></ul></div></md-button><md-button ng-show=\"gui.state === 'SELECTED'\" ng-click=\"accept()\" aria-label=\"accept\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-check\"></i></div><md-tooltip md-direction=\"top\">accept</md-tooltip></md-button><md-button ng-show=\"gui.state === 'SELECTED'\" ng-click=\"deny()\" aria-label=\"deny\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-ban\"></i></div><md-tooltip md-direction=\"top\">deny</md-tooltip></md-button><md-button ng-show=\"gui.state === 'BOOKED'\" ng-click=\"drop()\" aria-label=\"deny\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-close\"></i></div><md-tooltip md-direction=\"top\">drop</md-tooltip></md-button></div>"
+    "<div layout=\"row\" layout-fill><md-button aria-label=\"edit request\" class=\"md-primary menu-button\" flex=\"80\"><div class=\"sn-sch-slot-requests\" layout=\"row\" layout-fill><ul><li class=\"sn-title\"><p>{{ gui.groundstation_id }} &ang; {{ gui.spacecraft_id }}</p></li><li><p>{{ gui.slot | printRequest }}</p></li><li><p ng-class=\"{\n" +
+    "                        'sn-state-free': gui.state === 'FREE',\n" +
+    "                        'sn-state-selected':  gui.state === 'SELECTED',\n" +
+    "                        'sn-state-reserved':  gui.state === 'RESERVED'\n" +
+    "                    }\">{{ gui.state }}</p></li></ul></div></md-button><md-button ng-show=\"gui.state === 'SELECTED'\" ng-click=\"accept()\" aria-label=\"accept\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill><i class=\"fa fa-check\"></i></div><md-tooltip md-direction=\"top\">accept</md-tooltip></md-button><md-button ng-show=\"gui.state === 'SELECTED'\" ng-click=\"deny()\" aria-label=\"deny\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-ban\"></i></div><md-tooltip md-direction=\"top\">deny</md-tooltip></md-button><md-button ng-show=\"gui.state === 'RESERVED'\" ng-click=\"drop()\" aria-label=\"deny\" class=\"md-primary menu-button\" flex><div layout=\"row\" layout-fill class=\"sn-red-action\"><i class=\"fa fa-close\"></i></div><md-tooltip md-direction=\"top\">drop</md-tooltip></md-button></div>"
   );
 
 
   $templateCache.put('operations/templates/requests/spacecraft.html',
-    "<li ng-hide=\"gui.filtered.length\" class=\"sn-no-item\">(no {{ gui.state }} requests)</li><md-list-item ng-repeat=\"f in gui.filtered\"><sn-request-slot gs=\"gui.groundstation_id\" sc=\"{{ gui.spacecraft_id }}\" slot=\"f\" state=\"{{ gui.state }}\"></sn-request-slot></md-list-item>"
+    "<md-list-item ng-show=\"gui.filtered.length\" class=\"sn-no-item\"><h4>{{ gui.state }} slots</h4></md-list-item><md-list-item ng-hide=\"gui.filtered.length\" class=\"sn-no-item\"><h4>(no {{ gui.state }} slots)</h4></md-list-item><md-list-item ng-repeat=\"f in gui.filtered\"><sn-request-slot gs=\"gui.groundstation_id\" sc=\"{{ gui.spacecraft_id }}\" slot=\"f\" state=\"{{ gui.state }}\"></sn-request-slot></md-list-item>"
   );
 
 
