@@ -531,6 +531,8 @@ angular
 .service('snDialog', [
     '$log', '$mdDialog', '$mdToast',
 
+
+
     /**
      * Set of helpers for the SatNet dialogs.
      *
@@ -539,6 +541,20 @@ angular
      * @param {Object} $mdToast  Angular Material $mdToast service
      */
     function ($log, $mdDialog, $mdToast) {
+
+        /**
+         * Function that is used to notify a success in an action with a given
+         * slot.
+         *
+         * @param {String} action Human-readable action description
+         * @param {Number} identifier Identifier of the slot
+         */
+        this.toastAction = function(action, identifier) {
+            $mdToast.show($mdToast.simple()
+                .content(action + ' ' + identifier)
+                .hideDelay(2000)
+            );
+        };
 
         /**
          * Function that is used to notify a success in an operation
@@ -590,7 +606,8 @@ angular
 
     }
 
-]);;/**
+]);
+;/**
  * Copyright 2014 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -758,7 +775,7 @@ angular
      * properties from the underlaying Angular JS $http and $cookies services.
      * Basically, it sets the 'X-CSRFToken' in the HTTP packages with the
      * cookie CSRF Token currently in use. This avoids problems with CSRF.
-     * 
+     *
      * @param {Object} $http    Angular JS $http service
      * @param {Object} $cookies Angular JS $cookies service
      */
@@ -950,6 +967,12 @@ angular
                 .createMethod('sc.compatibility'),
             'gs.operational': this._scheduling
                 .createMethod('gs.operational'),
+            'gs.operational.accept': this._scheduling
+                .createMethod('gs.confirmSelections'),
+            'gs.operational.deny': this._scheduling
+                .createMethod('gs.denySelections'),
+            'gs.operational.drop': this._scheduling
+                .createMethod('gs.cancelReservations'),
             'ss.compatibility': this._scheduling
                 .createMethod('segment.compatibility'),
             'sc.select': this._scheduling
@@ -6026,10 +6049,10 @@ angular.module('snOperationalDirective', [
                     ]
                 ]
             ).then(function (results) {
-                console.log(
-                    '>> sc.cancel, results = ' + JSON.stringify(results)
-                );
                 $scope.gui.slot.raw_slot.state = SLOT_FREE;
+                snDialog.toastAction(
+                    'Canceled slot #', $scope.gui.slot.raw_slot.identifier
+                );
             }).catch(function (c) {
                 snDialog.exception('sc.cancel', '', c);
             });
@@ -6046,10 +6069,10 @@ angular.module('snOperationalDirective', [
                     ]
                 ]
             ).then(function (results) {
-                console.log(
-                    '>> sc.selected, results = ' + JSON.stringify(results)
-                );
                 $scope.gui.slot.raw_slot.state = SLOT_SELECTED;
+                snDialog.toastAction(
+                    'Requested slot #', $scope.gui.slot.raw_slot.identifier
+                );
             }).catch(function (c) {
                 snDialog.exception('sc.select', '', c);
             });
@@ -6066,9 +6089,6 @@ angular.module('snOperationalDirective', [
         $scope.init = function () {
 
             $scope.gui.slot = slot;
-            console.log(
-                '>>> $scope.gui.slot = ' + JSON.stringify($scope.gui.slot)
-            );
 
             satnetRPC.rCall('gs.get', [groundstationId]).then(
                 function (results) {
@@ -6282,7 +6302,7 @@ angular.module('snRequestsDirective', [
     'snCommonFilters', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestSlotCtrl', [
-    '$scope', '$mdDialog', 'satnetRPC','snDialog',
+    '$scope', '$mdDialog', '$mdToast', 'satnetRPC','snDialog',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -6290,7 +6310,7 @@ angular.module('snRequestsDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $mdDialog, satnetRPC, snDialog
+        $scope, $mdDialog, $mdToast, satnetRPC, snDialog
     ) {
 
         $scope.gui = {
@@ -6305,7 +6325,13 @@ angular.module('snRequestsDirective', [
          * has already been selected.
          */
         $scope.accept = function () {
-
+            satnetRPC.rCall(
+                'gs.operational.accept', [$scope.slot.identifier]
+            ).then(function (results) {
+                snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
+            }).catch(function (c) {
+                snDialog.exception('gs.operational.accept', '', c);
+            });
         };
 
         /**
@@ -6313,7 +6339,13 @@ angular.module('snRequestsDirective', [
          * has already been selected.
          */
         $scope.deny = function () {
-
+            satnetRPC.rCall(
+                'gs.operational.deny', [$scope.slot.identifier]
+            ).then(function (results) {
+                snDialog.toastAction('Denied slot #', $scope.slot.identifier);
+            }).catch(function (c) {
+                snDialog.exception('gs.operational.deny', '', c);
+            });
         };
 
         /**
@@ -6321,22 +6353,23 @@ angular.module('snRequestsDirective', [
          * has already been booked.
          */
         $scope.drop = function () {
-
+            satnetRPC.rCall(
+                'gs.operational.drop', [$scope.slot.identifier]
+            ).then(function (results) {
+                snDialog.toastAction('Dropped slot #', $scope.slot.identifier);
+            }).catch(function (c) {
+                snDialog.exception('gs.operational.drop', '', c);
+            });
         };
 
         /**
          * Initialization of the controller.
          */
         $scope.init = function () {
-
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
             $scope.gui.state = $scope.state;
             $scope.gui.slot = $scope.slot;
-
-            console.log('>>> slot.gui = ' + JSON.stringify(
-                $scope.gui, null, 4
-            ));
         };
 
         $scope.init();
@@ -6404,14 +6437,11 @@ angular.module('snRequestsDirective', [
          * Initialization of the controller.
          */
         $scope.init = function () {
-
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
             $scope.gui.state = $scope.state;
             $scope.gui.slots = $scope.slots;
-
             $scope._filterSlots($scope.slots);
-
         };
 
         $scope.init();
@@ -6471,7 +6501,6 @@ angular.module('snRequestsDirective', [
                 'gs.operational', [$scope.gui.groundstation_id]
             ).then(function (results) {
                 $scope.gui.requests = results;
-                console.log('>>> @gs: gui = ' + JSON.stringify($scope.gui));
             }).catch(function (c) {
                 snDialog.exception(
                     'gs.operational', $scope.gui.groundstation_id, c

@@ -25,7 +25,7 @@ angular
      * properties from the underlaying Angular JS $http and $cookies services.
      * Basically, it sets the 'X-CSRFToken' in the HTTP packages with the
      * cookie CSRF Token currently in use. This avoids problems with CSRF.
-     * 
+     *
      * @param {Object} $http    Angular JS $http service
      * @param {Object} $cookies Angular JS $cookies service
      */
@@ -217,6 +217,12 @@ angular
                 .createMethod('sc.compatibility'),
             'gs.operational': this._scheduling
                 .createMethod('gs.operational'),
+            'gs.operational.accept': this._scheduling
+                .createMethod('gs.confirmSelections'),
+            'gs.operational.deny': this._scheduling
+                .createMethod('gs.denySelections'),
+            'gs.operational.drop': this._scheduling
+                .createMethod('gs.cancelReservations'),
             'ss.compatibility': this._scheduling
                 .createMethod('segment.compatibility'),
             'sc.select': this._scheduling

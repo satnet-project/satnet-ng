@@ -19,6 +19,8 @@ angular
 .service('snDialog', [
     '$log', '$mdDialog', '$mdToast',
 
+
+
     /**
      * Set of helpers for the SatNet dialogs.
      *
@@ -27,6 +29,20 @@ angular
      * @param {Object} $mdToast  Angular Material $mdToast service
      */
     function ($log, $mdDialog, $mdToast) {
+
+        /**
+         * Function that is used to notify a success in an action with a given
+         * slot.
+         *
+         * @param {String} action Human-readable action description
+         * @param {Number} identifier Identifier of the slot
+         */
+        this.toastAction = function(action, identifier) {
+            $mdToast.show($mdToast.simple()
+                .content(action + ' ' + identifier)
+                .hideDelay(2000)
+            );
+        };
 
         /**
          * Function that is used to notify a success in an operation

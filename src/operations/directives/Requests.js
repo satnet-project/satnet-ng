@@ -19,7 +19,7 @@ angular.module('snRequestsDirective', [
     'snCommonFilters', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestSlotCtrl', [
-    '$scope', '$mdDialog', 'satnetRPC','snDialog',
+    '$scope', '$mdDialog', '$mdToast', 'satnetRPC','snDialog',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -27,7 +27,7 @@ angular.module('snRequestsDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $mdDialog, satnetRPC, snDialog
+        $scope, $mdDialog, $mdToast, satnetRPC, snDialog
     ) {
 
         $scope.gui = {
@@ -42,7 +42,13 @@ angular.module('snRequestsDirective', [
          * has already been selected.
          */
         $scope.accept = function () {
-
+            satnetRPC.rCall(
+                'gs.operational.accept', [$scope.slot.identifier]
+            ).then(function (results) {
+                snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
+            }).catch(function (c) {
+                snDialog.exception('gs.operational.accept', '', c);
+            });
         };
 
         /**
@@ -50,7 +56,13 @@ angular.module('snRequestsDirective', [
          * has already been selected.
          */
         $scope.deny = function () {
-
+            satnetRPC.rCall(
+                'gs.operational.deny', [$scope.slot.identifier]
+            ).then(function (results) {
+                snDialog.toastAction('Denied slot #', $scope.slot.identifier);
+            }).catch(function (c) {
+                snDialog.exception('gs.operational.deny', '', c);
+            });
         };
 
         /**
@@ -58,22 +70,23 @@ angular.module('snRequestsDirective', [
          * has already been booked.
          */
         $scope.drop = function () {
-
+            satnetRPC.rCall(
+                'gs.operational.drop', [$scope.slot.identifier]
+            ).then(function (results) {
+                snDialog.toastAction('Dropped slot #', $scope.slot.identifier);
+            }).catch(function (c) {
+                snDialog.exception('gs.operational.drop', '', c);
+            });
         };
 
         /**
          * Initialization of the controller.
          */
         $scope.init = function () {
-
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
             $scope.gui.state = $scope.state;
             $scope.gui.slot = $scope.slot;
-
-            console.log('>>> slot.gui = ' + JSON.stringify(
-                $scope.gui, null, 4
-            ));
         };
 
         $scope.init();
@@ -141,14 +154,11 @@ angular.module('snRequestsDirective', [
          * Initialization of the controller.
          */
         $scope.init = function () {
-
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
             $scope.gui.state = $scope.state;
             $scope.gui.slots = $scope.slots;
-
             $scope._filterSlots($scope.slots);
-
         };
 
         $scope.init();
@@ -208,7 +218,6 @@ angular.module('snRequestsDirective', [
                 'gs.operational', [$scope.gui.groundstation_id]
             ).then(function (results) {
                 $scope.gui.requests = results;
-                console.log('>>> @gs: gui = ' + JSON.stringify($scope.gui));
             }).catch(function (c) {
                 snDialog.exception(
                     'gs.operational', $scope.gui.groundstation_id, c

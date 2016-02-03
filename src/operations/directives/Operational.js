@@ -120,10 +120,10 @@ angular.module('snOperationalDirective', [
                     ]
                 ]
             ).then(function (results) {
-                console.log(
-                    '>> sc.cancel, results = ' + JSON.stringify(results)
-                );
                 $scope.gui.slot.raw_slot.state = SLOT_FREE;
+                snDialog.toastAction(
+                    'Canceled slot #', $scope.gui.slot.raw_slot.identifier
+                );
             }).catch(function (c) {
                 snDialog.exception('sc.cancel', '', c);
             });
@@ -140,10 +140,10 @@ angular.module('snOperationalDirective', [
                     ]
                 ]
             ).then(function (results) {
-                console.log(
-                    '>> sc.selected, results = ' + JSON.stringify(results)
-                );
                 $scope.gui.slot.raw_slot.state = SLOT_SELECTED;
+                snDialog.toastAction(
+                    'Requested slot #', $scope.gui.slot.raw_slot.identifier
+                );
             }).catch(function (c) {
                 snDialog.exception('sc.select', '', c);
             });
@@ -160,9 +160,6 @@ angular.module('snOperationalDirective', [
         $scope.init = function () {
 
             $scope.gui.slot = slot;
-            console.log(
-                '>>> $scope.gui.slot = ' + JSON.stringify($scope.gui.slot)
-            );
 
             satnetRPC.rCall('gs.get', [groundstationId]).then(
                 function (results) {
