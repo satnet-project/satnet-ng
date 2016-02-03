@@ -531,8 +531,6 @@ angular
 .service('snDialog', [
     '$log', '$mdDialog', '$mdToast',
 
-
-
     /**
      * Set of helpers for the SatNet dialogs.
      *
