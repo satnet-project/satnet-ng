@@ -31,6 +31,12 @@ angular.module('snRequestsDirective', [
         $scope.gui = {
             groundstation_id: '',
             spacecraft_id: '',
+            primary: '',
+            hide: {
+                accept: true,
+                drop: true,
+                deny: true,
+            },
             state: '',
             slot: {}
         };
@@ -77,14 +83,39 @@ angular.module('snRequestsDirective', [
             });
         };
 
+        $scope.showAccept = function () {
+            return ($scope.gui.state === 'SELECTED') &&
+                !($scope.gui.hide.accept);
+        };
+        $scope.showDeny = function () {
+            return ($scope.gui.state === 'SELECTED') &&
+                !($scope.gui.hide.deny);
+        };
+        $scope.showDrop = function () {
+            return !($scope.gui.hide.drop) && (
+                    ($scope.gui.state === 'SELECTED') ||
+                    ($scope.gui.state === 'CONFIRMED')
+                );
+        };
+
         /**
          * Initialization of the controller.
          */
         $scope.init = function () {
+
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
+            $scope.gui.primary = $scope.primary;
             $scope.gui.state = $scope.state;
             $scope.gui.slot = $scope.slot;
+
+            if ( $scope.gui.primary === 'spacecraft' ) {
+                $scope.gui.hide.drop = false;
+            } else {
+                $scope.gui.hide.accept = false;
+                $scope.gui.hide.deny = false;
+            }
+
         };
 
         $scope.init();
@@ -109,6 +140,7 @@ angular.module('snRequestsDirective', [
             scope: {
                 sc: '@',
                 gs: '@',
+                primary: '@',
                 state: '@',
                 slot: '='
             }
@@ -128,6 +160,7 @@ angular.module('snRequestsDirective', [
         $scope.gui = {
             groundstation_id: '',
             spacecraft_id: '',
+            primary: '',
             state: '',
             slots: [],
             filtered: []
@@ -154,6 +187,7 @@ angular.module('snRequestsDirective', [
         $scope.init = function () {
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
+            $scope.gui.primary = $scope.primary;
             $scope.gui.state = $scope.state;
             $scope.gui.slots = $scope.slots;
             $scope._filterSlots($scope.slots);
@@ -181,6 +215,7 @@ angular.module('snRequestsDirective', [
             scope: {
                 sc: '@',
                 gs: '@',
+                primary: '@',
                 state: '@',
                 slots: '='
             }

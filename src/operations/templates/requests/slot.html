@@ -17,8 +17,8 @@
         </div>
     </md-button>
 
-    <md-button ng-show="gui.state === 'SELECTED'" ng-click="accept()"
-                aria-label="accept"
+    <md-button ng-show="showAccept()"
+                ng-click="accept()" aria-label="accept"
                 class="md-primary menu-button" flex>
         <div layout="row" layout-fill>
             <i class="fa fa-check"></i>
@@ -26,7 +26,7 @@
         <md-tooltip md-direction="top">accept</md-tooltip>
     </md-button>
 
-    <md-button ng-show="gui.state === 'SELECTED'"
+    <md-button ng-show="showDeny()"
                 ng-click="deny()" aria-label="deny"
                 class="md-primary menu-button" flex>
         <div layout="row" layout-fill class="sn-red-action">
@@ -35,7 +35,7 @@
         <md-tooltip md-direction="top">deny</md-tooltip>
     </md-button>
 
-    <md-button ng-show="gui.state === 'RESERVED'"
+    <md-button ng-show="showDrop()"
                 ng-click="drop()" aria-label="deny"
                 class="md-primary menu-button" flex>
         <div layout="row" layout-fill class="sn-red-action">

@@ -5,9 +5,11 @@
 
 <md-list-item ng-repeat="(g, slots) in gui.requests">
     <sn-gs-sc-requests sc="{{ gui.spacecraft_id }}" gs="{{ g }}"
+                    primary="spacecraft"
                     slots="slots" state="SELECTED">
     </sn-gs-sc-requests>
     <sn-gs-sc-requests sc="{{ gui.spacecraft_id }}" gs="{{ g }}"
+                    primary="spacecraft"
                     slots="slots" state="RESERVED">
     </sn-gs-sc-requests>
 </md-list-item>
