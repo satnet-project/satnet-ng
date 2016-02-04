@@ -7,7 +7,8 @@
 </md-list-item>
 
 <md-list-item ng-repeat="f in gui.filtered">
-    <sn-request-slot gs="gui.groundstation_id" sc="{{ gui.spacecraft_id }}"
-                     slot="f" state="{{ gui.state }}">
+    <sn-request-slot gs="{{ gui.groundstation_id }}"
+                    sc="{{ gui.spacecraft_id }}"
+                    slot="f" state="{{ gui.state }}">
     </sn-request-slot>
 </md-list-item>

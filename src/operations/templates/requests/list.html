@@ -19,20 +19,16 @@
 
     </md-content>
 
-    <md-content class="add-gs-dialog menu-list">
+    <md-content class="add-gs-dialog menu-list"><div layout="row">
 
-        <div layout="row">
+        <md-button ng-click="close()" aria-label="Cancel"
+                   class="md-primary menu-button sn-margin"
+                   style="width: 100px">
+            <div layout="row">
+                <i class="fa fa-reply"></i>
+                <b style="margin-left: 15px">cancel</b>
+            </div>
+        </md-button>
 
-            <md-button id="cancel" ng-click="close()" aria-label="Cancel"
-                       class="md-primary menu-button sn-margin"
-                       style="width: 100px">
-                <div layout="row">
-                    <i class="fa fa-reply"></i>
-                    <b style="margin-left: 15px">cancel</b>
-                </div>
-            </md-button>
-
-        </div>
-
-    </md-content>
+    </div></md-content>
 </md-dialog>
