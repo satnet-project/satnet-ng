@@ -177,7 +177,11 @@ angular
                 .createMethod('sc.passes'),
             'gs.getPasses': this._simulation
                 .createMethod('gs.passes'),
-            /* LEOP services
+
+            /** ************************************************************ */
+            /** ************************************************************ */
+            /* LEOP services */
+
             'leop.getCfg': this._leop
                 .createMethod('getConfiguration'),
             'leop.setCfg': this._leop
@@ -204,7 +208,11 @@ angular
                 .createMethod('launch.update'),
             'leop.getMessages': this._leop
                 .createMethod('getMessages'),
-            */
+
+            /** ************************************************************ */
+            /** ************************************************************ */
+            /** ************************************************************ */
+
             // NETWORK services
             'net.alive': this._network
                 .createMethod('alive'),
@@ -223,12 +231,14 @@ angular
                 .createMethod('gs.denySelections'),
             'gs.operational.drop': this._scheduling
                 .createMethod('gs.cancelReservations'),
-            'ss.compatibility': this._scheduling
-                .createMethod('segment.compatibility'),
+            'sc.operational': this._scheduling
+                .createMethod('sc.operational'),
             'sc.select': this._scheduling
                 .createMethod('sc.selectSlots'),
             'sc.cancel': this._scheduling
                 .createMethod('sc.cancelSelections'),
+            'ss.compatibility': this._scheduling
+                .createMethod('segment.compatibility'),
         };
 
         /**

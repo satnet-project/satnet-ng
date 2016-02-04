@@ -161,10 +161,6 @@ angular.module('snOperationalDirective', [
 
             $scope.gui.slot = slot;
 
-            console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
-            console.log('XXXXXXXXX slot = ' + JSON.stringify(slot, null, 4));
-            console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
-
             satnetRPC.rCall('gs.get', [groundstationId]).then(
                 function (results) {
                 $scope.gui.gs = results;

@@ -3,7 +3,9 @@
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools">
             <span ng-show="!uiCtrl.isEditing">Add new Rule</span>
-            <span ng-show="uiCtrl.isEditing">Edit Rule #{{ configuration.key }}</span>
+            <span ng-show="uiCtrl.isEditing">
+                Edit Rule #{{ configuration.key }}
+            </span>
         </h2>
     </md-toolbar>
 
@@ -39,7 +41,8 @@
                         <label for="start_date">Start Date</label>
                         <input name="start_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.start_date" ng-change="startDateChanged()" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
                     </md-input-container>
-                    <md-input-container ng-class="{ 'md-input-invalid': uiCtrl.invalidDate }">
+                    <md-input-container
+                        ng-class="{ 'md-input-invalid': uiCtrl.invalidDate }">
                         <label for="end_date">End Date</label>
                         <input name="end_date" type="date" placeholder="yyyy-MM-dd" ng-model="rule.end_date" ng-change="endDateChanged()" ng-disabled="uiCtrl.endDateDisabled" min="{{ uiCtrl.minDate }}" max="{{ uiCtrl.maxDate }}" required />
                     </md-input-container>
@@ -82,7 +85,7 @@
                 </md-tabs>
 
             </div>
-            
+
         </form>
 
         <div layout="row">

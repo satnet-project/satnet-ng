@@ -1,21 +1,35 @@
 
-<md-dialog aria-label="Slot Requests Dialog" style="width: 350px">
+<md-dialog aria-label="Slot Requests Dialog"
+            style="width: 80%; max-width: 800px;" ng-cloak>
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools"><span>Slot Requests</span></h2>
     </md-toolbar>
 
-    <md-content id="sn-sch-md-content">
+    <md-content id="sn-sch-md-content" md-padding>
 
         <li ng-hide="gui.groundstations.length" class="sn-no-item">
             (no ground stations available)
         </li>
 
-        <md-tabs md-dynamic-height md-border-bottom md-selected="gui.tab">
-            <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}">
-                <sn-gs-requests gs="{{ g }}"></sn-gs-requests>
-            </md-tab>
-        </md-tabs>
+        <div layout="row">
+            <div style="margin: 10px; padding: 10px;">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}"
+                            ng-disabled="false">
+                        <sn-gs-requests gs="{{ g }}"></sn-gs-requests>
+                    </md-tab>
+                </md-tabs>
+            </div>
+            <div style="margin: 10px; padding: 10px;">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab ng-repeat="s in gui.spacecraft" label="{{ s }}"
+                            ng-disabled="false">
+                        <sn-sc-requests sc="{{ s }}"></sn-sc-requests>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </div>
 
     </md-content>
 

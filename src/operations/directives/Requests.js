@@ -26,9 +26,7 @@ angular.module('snRequestsDirective', [
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $mdDialog, $mdToast, satnetRPC, snDialog
-    ) {
+    function ($scope, $mdDialog, $mdToast, satnetRPC, snDialog) {
 
         $scope.gui = {
             groundstation_id: '',
@@ -118,7 +116,7 @@ angular.module('snRequestsDirective', [
     }
 
 )
-.controller('snScRequestsCtrl', ['$scope',
+.controller('snGsScRequestsCtrl', ['$scope',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -166,6 +164,71 @@ angular.module('snRequestsDirective', [
     }
 
 ])
+.directive('snGsScRequests',
+
+    /**
+     * Function that creates the directive itself returning the object required
+     * by Angular.
+     *
+     * @returns {Object} Object directive required by Angular, with restrict
+     *                   and templateUrl
+     */
+    function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'operations/templates/requests/gssc-requests.html',
+            controller: 'snGsScRequestsCtrl',
+            scope: {
+                sc: '@',
+                gs: '@',
+                state: '@',
+                slots: '='
+            }
+        };
+    }
+
+)
+.controller('snScRequestsCtrl', [
+    '$scope', '$mdDialog', 'satnetRPC','snDialog',
+
+    /**
+     * Controller function for handling the SatNet requests dialog.
+     *
+     * @param {Object} $scope $scope for the controller
+     */
+    function (
+        $scope, $mdDialog, satnetRPC, snDialog
+    ) {
+
+        $scope.gui = {
+            spacecraft_id: '',
+            requests: {}
+        };
+
+        /**
+         * Initialization of the controller.
+         */
+        $scope.init = function () {
+
+            $scope.gui.spacecraft_id = $scope.sc;
+
+            satnetRPC.rCall(
+                'sc.operational', [$scope.gui.spacecraft_id]
+            ).then(function (results) {
+                $scope.gui.requests = results;
+            }).catch(function (c) {
+                snDialog.exception(
+                    'sc.operational', $scope.gui.spacecraft_id, c
+                );
+            });
+
+        };
+
+        $scope.init();
+
+    }
+
+])
 .directive('snScRequests',
 
     /**
@@ -181,10 +244,7 @@ angular.module('snRequestsDirective', [
             templateUrl: 'operations/templates/requests/spacecraft.html',
             controller: 'snScRequestsCtrl',
             scope: {
-                sc: '@',
-                gs: '@',
-                state: '@',
-                slots: '='
+                sc: '@'
             }
         };
     }
@@ -264,7 +324,7 @@ angular.module('snRequestsDirective', [
 
         $scope.gui = {
             groundstations: [],
-            tab: 0
+            spacecraft: []
         };
 
         /**
@@ -280,6 +340,11 @@ angular.module('snRequestsDirective', [
                 $scope.gui.groundstations = results.slice(0);
             }).catch(function (cause) {
                 snDialog.exception('gs.list', '-', cause);
+            });
+            satnetRPC.rCall('sc.list', []).then(function (results) {
+                $scope.gui.spacecraft = results.slice(0);
+            }).catch(function (cause) {
+                snDialog.exception('sc.list', '-', cause);
             });
         };
 
