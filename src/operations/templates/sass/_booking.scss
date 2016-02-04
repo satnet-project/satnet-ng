@@ -27,7 +27,7 @@
         margin: 5px;
         padding: 0;
     }
-    
+
 }
 
 .sn-slot-info-container {
@@ -68,3 +68,5 @@
 }
 
 .sn-booking-free { @include sn-booking(seagreen); }
+.sn-booking-selected { @include sn-booking(orange); }
+.sn-booking-reserved { @include sn-booking($sn-blue-color); }

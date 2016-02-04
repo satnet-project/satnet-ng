@@ -1,5 +1,4 @@
 <div class="sn-sch-table-wrap">
-
     <style type="text/css">
         @keyframes sn-sch-table-overlay-right {
             from { width: {{ gui.animation.initial_width }}; }
@@ -22,34 +21,26 @@
     </div>
 
     <table id="a-slots-timeline" class="sn-sch-table">
-
-        <colgroup>
-            <col class="sn-sch-gs-col"/>
-        </colgroup>
+        <colgroup><col class="sn-sch-gs-col"/></colgroup>
 
         <tr>
             <td class="sn-sch-corner-top"
                 ng-style="{'width': '' + gui.gs_id_width}">
             </td>
-            <td colspan="{{ gui.times.length }}"
-                class="sn-sch-cell-container">
+            <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
                 <p>{{ segmentId }}</p>
             </td>
         </tr>
 
         <tr ng-repeat="(sc, slots) in gui.slots">
 
-            <td class="sn-sch-gs-id"
-                ng-style="{'width': '' + gui.gs_id_width}">
+            <td class="sn-sch-gs-id" ng-style="{'width': '' + gui.gs_id_width}">
                 <p>{{ sc }}</p>
             </td>
-            <td colspan="{{ gui.times.length }}"
-                class="sn-sch-cell-container">
-
+            <td colspan="{{ gui.times.length }}" class="sn-sch-cell-container">
                 <div class="sn-sch-row-container">
 
                 <table class="sn-sch-row-table">
-
                     <colgroup ng-repeat="d in gui.days">
                         <col span="{{ gui.no_cols }}" class="sn-sch-time-col"/>
                         <col class="sn-sch-day-col"/>
@@ -60,14 +51,11 @@
                             ng-style="{'width': '' + gui.gs_id_width}">
                         </td>
                     </tr>
-
                 </table>
 
                 <div class="sn-sch-row-overlay">
                     <div class="sn-sch-slot-container">
-
-                        <div class="sn-sch-slot"
-                             ng-repeat="s in slots"
+                        <div class="sn-sch-slot" ng-repeat="s in slots"
                              ng-style="{
                                 'left': s.slot.left + '%',
                                 'width': s.slot.width + '%'
@@ -87,14 +75,9 @@
                             </a>
                         </div>
 
-                        <div class="sn-sch-slot-data"
-                             ng-repeat="s in slots"
+                        <div class="sn-sch-slot-data" ng-repeat="s in slots"
                              ng-style="{'left': ( s.slot.left + 1) + '%'}">
-                             <ul>
-                                <li>
-                                    {{ s.slot.duration }}
-                                </li>
-                             </ul>
+                             <ul><li>{{ s.slot.duration }}</li></ul>
                         </div>
 
                     </div>
@@ -114,5 +97,4 @@
         </tr>
 
     </table>
-
 </div>

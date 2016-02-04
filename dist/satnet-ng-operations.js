@@ -1611,7 +1611,7 @@ angular.module('snTimelineServices', [])
 
     /**
      * Function services to create reusable timeline services.
-     * 
+     *
      * @param {Object} $log Angular JS $log services
      */
     function (
@@ -1625,7 +1625,7 @@ angular.module('snTimelineServices', [])
         /**
          * Function that discards the given slot depending on whether it is
          * within the applicable window or outside.
-         * 
+         *
          * @param   {Object} cfg    Configuration object by this service
          * @param   {Object} start  moment.js slot start
          * @param   {Object} end    moment.js slot end
@@ -1660,7 +1660,7 @@ angular.module('snTimelineServices', [])
         /**
          * Function that normalizes a given slot, restricting its start and end
          * to the upper and lower limits for the applicable window.
-         * 
+         *
          * @param   {Object} cfg    Configuration object by this service
          * @param   {Object} start  moment.js slot start
          * @param   {Object} end    moment.js slot end
@@ -1676,7 +1676,7 @@ angular.module('snTimelineServices', [])
 
         /**
          * Creates a slot that can be displayed within the GUI.
-         * 
+         *
          * @param {Object} cfg Configuration of the controller
          * @param {Object} raw_slot Non-modified original slot
          * @param {Object} n_slot Normalized slot
@@ -1695,7 +1695,7 @@ angular.module('snTimelineServices', [])
                 state = (raw_slot.state) ? raw_slot.state: 'UNDEFINED';
 
             moment.locale('en');
-            
+
             return {
                 raw_slot: raw_slot,
                 slot: {
@@ -1725,7 +1725,7 @@ angular.module('snTimelineServices', [])
          * This function filters all the slots for a given ground station and
          * creates slot objects that can be directly positioned and displayed
          * over a timeline.
-         * 
+         *
          * @param   {String}   groundstation_id Identifier of the Ground Station
          * @param   {Array}    slots            Array with the slots
          * @param   {Object}   start_d          moment.js object with the start
@@ -1773,7 +1773,7 @@ angular.module('snTimelineServices', [])
         /**
          * Function that initializes the days within the given scope for the
          * timeline.
-         * 
+         *
          * @param {Object} x_scope Object with timeline's configuration
          */
         this.initTimeScope = function (scope) {
@@ -1820,7 +1820,7 @@ angular.module('snTimelineServices', [])
             };
 
         };
-  
+
         /**
          * Function that initializes the dictionary with the days and hours for
          * the axis of the timeline. It simply contains as many days as
@@ -4133,47 +4133,17 @@ angular.module('snTimelineDirective', ['snTimelineServices'])
 
 angular.module('snRequestsFilters', [])
 .constant('SLOT_DATE_FORMAT', 'YYYY.MM.DD@hh:mm:ssZ')
-.filter('filterSelected',
-
-    /**
-     * Filters out all the slots whose state is not 'SELECTED'.
-     * 
-     * @returns Slot object if the slot is 'SELECTED'.
-     */
-    function () {
-        return function (slot) {
-            if (slot.state === 'SELECTED') { return slot; }
-        };
-    }
-
-)
-.filter('filterFree',
-
-    /**
-     * Filters out all the slots whose state is not 'FREE'.
-     * 
-     * @returns Slot object if the slot is 'FREE'.
-     */
-    function () {
-        return function (slot) {
-            if (slot.state === 'FREE') {
-                console.log('FREE');
-                return slot;
-            }
-            return;
-        };
-    }
-
-)
 .filter('printRequest', [ 'SLOT_DATE_FORMAT',
 
     /**
      * Filter that prints out a human-readable definition of the slot request.
-     * 
+     *
      * @returns {String} Human-readable string
      */
     function (SLOT_DATE_FORMAT) {
         return function (slot) {
+
+            moment.locale('en');
 
             var start_d = moment(slot.date_start),
                 end_d = moment(slot.date_end),
@@ -6088,6 +6058,10 @@ angular.module('snOperationalDirective', [
 
             $scope.gui.slot = slot;
 
+            console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
+            console.log('XXXXXXXXX slot = ' + JSON.stringify(slot, null, 4));
+            console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
+
             satnetRPC.rCall('gs.get', [groundstationId]).then(
                 function (results) {
                 $scope.gui.gs = results;
@@ -6133,7 +6107,7 @@ angular.module('snOperationalDirective', [
          *
          * @param {String} groundstationId Identifier of the Ground Station
          * @param {String} spacecraftId Identifier of the Spacecraft
-         * param {Object} slot The slot to be booked
+         * @param {Object} slot The slot to be booked
          */
         $scope.book = function (groundstationId, spacecraftId, slot) {
             $mdDialog.show({
@@ -6206,11 +6180,11 @@ angular.module('snOperationalDirective', [
     function () {
         return {
             restrict: 'E',
+            controller: 'snOperationalSchCtrl',
+            templateUrl: 'operations/templates/operational/scheduler.html',
             scope: {
                 segmentId: '@'
-            },
-            controller: 'snOperationalSchCtrl',
-            templateUrl: 'operations/templates/operational/scheduler.html'
+            }
         };
     }
 

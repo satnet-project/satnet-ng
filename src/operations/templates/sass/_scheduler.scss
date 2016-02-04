@@ -50,7 +50,7 @@ $sch-margin: 7px;
 
     p {
         font-weight: bold;
-        text-align: center; 
+        text-align: center;
         color: white;
         background-color: $sn-primary-color;
         margin: 0;
@@ -83,7 +83,7 @@ $sch-margin: 7px;
 .sn-global-gs-id {
 
     max-height: 2em;
-    
+
     p {
         text-align: center;
         margin: 2px;
@@ -202,8 +202,6 @@ $sch-margin: 7px;
     position: absolute;
     top: 40px;
     font-size: 60%;
-    //border: 2px solid $sn-primary-color;
-    //border-style: solid none none none;
     transform: rotate(45deg);
     transform-origin: 0 0px;
 
@@ -268,5 +266,5 @@ $sch-margin: 7px;
         }
 
     }
-    
+
 }

@@ -22,7 +22,8 @@
                         <h3>Booking Status</h3>
                         <p ng-class="{
                             'sn-booking-free': gui.slot.slot.state_free,
-                            'sn-booking-selected': gui.slot.slot.state_selected
+                            'sn-booking-selected': gui.slot.slot.state_selected,
+                            'sn-booking-reserved': gui.slot.slot.state_reserved
                         }">{{ gui.slot.raw_slot.state }}</p>
                     </div>
                 </div>

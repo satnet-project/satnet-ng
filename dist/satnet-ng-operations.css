@@ -658,4 +658,16 @@ div.m-app-loading p {
   text-align: center !important;
   font-weight: bolder; }
 
+.sn-booking-selected {
+  color: orange;
+  border: 2px solid orange;
+  text-align: center !important;
+  font-weight: bolder; }
+
+.sn-booking-reserved {
+  color: #0B486B;
+  border: 2px solid #0B486B;
+  text-align: center !important;
+  font-weight: bolder; }
+
 /*# sourceMappingURL=satnet-ng-operations.css.map */

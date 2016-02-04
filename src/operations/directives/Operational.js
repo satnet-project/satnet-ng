@@ -161,6 +161,10 @@ angular.module('snOperationalDirective', [
 
             $scope.gui.slot = slot;
 
+            console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
+            console.log('XXXXXXXXX slot = ' + JSON.stringify(slot, null, 4));
+            console.log('XXXXXXXXXXXXXXXXXXXXXXXXX');
+
             satnetRPC.rCall('gs.get', [groundstationId]).then(
                 function (results) {
                 $scope.gui.gs = results;
@@ -206,7 +210,7 @@ angular.module('snOperationalDirective', [
          *
          * @param {String} groundstationId Identifier of the Ground Station
          * @param {String} spacecraftId Identifier of the Spacecraft
-         * param {Object} slot The slot to be booked
+         * @param {Object} slot The slot to be booked
          */
         $scope.book = function (groundstationId, spacecraftId, slot) {
             $mdDialog.show({
@@ -279,11 +283,11 @@ angular.module('snOperationalDirective', [
     function () {
         return {
             restrict: 'E',
+            controller: 'snOperationalSchCtrl',
+            templateUrl: 'operations/templates/operational/scheduler.html',
             scope: {
                 segmentId: '@'
-            },
-            controller: 'snOperationalSchCtrl',
-            templateUrl: 'operations/templates/operational/scheduler.html'
+            }
         };
     }
 

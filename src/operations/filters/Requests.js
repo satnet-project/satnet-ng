@@ -16,47 +16,17 @@
 
 angular.module('snRequestsFilters', [])
 .constant('SLOT_DATE_FORMAT', 'YYYY.MM.DD@hh:mm:ssZ')
-.filter('filterSelected',
-
-    /**
-     * Filters out all the slots whose state is not 'SELECTED'.
-     * 
-     * @returns Slot object if the slot is 'SELECTED'.
-     */
-    function () {
-        return function (slot) {
-            if (slot.state === 'SELECTED') { return slot; }
-        };
-    }
-
-)
-.filter('filterFree',
-
-    /**
-     * Filters out all the slots whose state is not 'FREE'.
-     * 
-     * @returns Slot object if the slot is 'FREE'.
-     */
-    function () {
-        return function (slot) {
-            if (slot.state === 'FREE') {
-                console.log('FREE');
-                return slot;
-            }
-            return;
-        };
-    }
-
-)
 .filter('printRequest', [ 'SLOT_DATE_FORMAT',
 
     /**
      * Filter that prints out a human-readable definition of the slot request.
-     * 
+     *
      * @returns {String} Human-readable string
      */
     function (SLOT_DATE_FORMAT) {
         return function (slot) {
+
+            moment.locale('en');
 
             var start_d = moment(slot.date_start),
                 end_d = moment(slot.date_end),
