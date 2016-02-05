@@ -1072,6 +1072,46 @@ angular
         };
 
         /**
+         * Function that retrieves the list of groundstations that belong
+         * exclusively to the given user.
+         *
+         * @param {String} username String with the name of the user
+         * @returns Promise that returns a list with the groundstations of the
+         *          user.
+         */
+        this.getUserGroundStations = function (username) {
+            return this.rCall('gs.list', []).then(function (results) {
+                var filtered;
+                angular.forEach(results, function(r) {
+                    if (r.username === username) {
+                        filtered.push(r);
+                    }
+                });
+                return filtered;
+            });
+        };
+
+        /**
+         * Function that retrieves the list of spacecraft that belong
+         * exclusively to the specified user.
+         *
+         * @param {String} username String with the name of the user
+         * @returns Promise that returns a list with the spacecraft of the
+         *          user.
+         */
+        this.getUserSpacecraft = function (username) {
+            return this.rCall('sc.list', []).then(function (results) {
+                var filtered;
+                angular.forEach(results, function(r) {
+                    if (r.username === username) {
+                        filtered.push(r);
+                    }
+                });
+                return filtered;
+            });
+        };
+
+        /**
          * Retrieves the user location using an available Internet service.
          *
          * @returns Promise that returns a { latitude, longitude } object.

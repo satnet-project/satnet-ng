@@ -169,7 +169,7 @@ describe('Testing SatNet Service', function () {
 
     });
 
-    it('should internal handle JRPC errors', function () {
+    it('should handle JRPC errors internally', function () {
 
         var x_service = 'x_srv',
             x_param = ['p1'],
