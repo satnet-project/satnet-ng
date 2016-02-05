@@ -13,7 +13,7 @@
         </li>
 
         <div layout="row">
-            <div style="margin: 10px; padding: 10px;">
+            <div style="margin: 10px; padding: 10px;" flex="45">
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}"
                             ng-disabled="false">
@@ -21,7 +21,7 @@
                     </md-tab>
                 </md-tabs>
             </div>
-            <div style="margin: 10px; padding: 10px;">
+            <div style="margin: 10px; padding: 10px;" flex="45">
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab ng-repeat="s in gui.spacecraft" label="{{ s }}"
                             ng-disabled="false">
