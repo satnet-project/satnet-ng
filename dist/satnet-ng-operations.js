@@ -6321,10 +6321,13 @@ angular.module('snRequestsDirective', [
         /**
          * Function that handles the process of denying a given request that
          * has already been selected.
+         *
+         * TODO :: Temporary, it has been linked to the drop function so that
+         *          the slot does not stay forever with the DENIED state.
          */
         $scope.deny = function () {
             satnetRPC.rCall(
-                'gs.operational.deny', [
+                'gs.operational.drop', [
                     $scope.groundstation_id, [$scope.slot.identifier]
                 ]
             ).then(function (results) {
