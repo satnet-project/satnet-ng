@@ -962,10 +962,10 @@ angular
             /** ************************************************************ */
 
             // NETWORK services
-            'net.alive': this._network
-                .createMethod('alive'),
-            'net.geoip': this._network
-                .createMethod('geoip'),
+            'net.alive': this._network.createMethod('alive'),
+            'net.geoip': this._network.createMethod('geoip'),
+            'net.user':  this._network.createMethod('user'),
+
             // SCHEDULING services
             'gs.availability': this._scheduling
                 .createMethod('gs.availability'),
@@ -4588,6 +4588,9 @@ angular.module('snGsControllers', [
         $log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC, snDialog
     ) {
 
+        $scope.cfg = {
+            user: ''
+        };
         $scope.gsList = [];
 
         /**
@@ -4619,7 +4622,7 @@ angular.module('snGsControllers', [
         /**
          * Function that triggers the opening of a dialog with the list of
          * channels for this Ground Station.
-         * 
+         *
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.showChannelList = function (identifier) {
@@ -4633,7 +4636,7 @@ angular.module('snGsControllers', [
         /**
          * Function that triggers the opening of a dialog with the list of
          * Availability Rules for this Ground Station.
-         * 
+         *
          * @param {String} identifier Identifier of the Ground Station
          */
         $scope.showRuleList = function (identifier) {
@@ -4687,6 +4690,11 @@ angular.module('snGsControllers', [
          * Function that refreshes the list of registered ground stations.
          */
         $scope.refresh = function () {
+            satnetRPC.rCall('net.user', []).then(function (result) {
+                $scope.cfg.user = result;
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', '-', cause);
+            });
             satnetRPC.rCall('gs.list', []).then(function (results) {
                 if (results !== null) {
                     $scope.gsList = results.slice(0);
@@ -4908,7 +4916,8 @@ angular.module('snGsControllers', [
 
     }
 
-]);;/*
+]);
+;/*
    Copyright 2014 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");

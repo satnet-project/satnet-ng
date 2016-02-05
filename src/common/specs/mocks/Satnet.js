@@ -18,6 +18,15 @@
 
 /** Module definition (empty array is vital!). */
 angular.module('snJRPCMock', [])
+.constant('USERNAME_MOCK', 'test-user')
+.constant('GS_CFG_MOCK', {
+    identifier: 'gs-id-1',
+    callsign: 'asfdasd',
+    elevation: 12,
+    groundstation_latlon: [
+        '40.0', '50.0'
+    ],
+})
 .constant('CHANNEL_ID_MOCK', 'channel-test')
 .constant('CHANNEL_LIST_MOCK', ['channel_1', 'channel_2'])
 .constant('SC_LIST_MOCK', ['sc-test-1', 'sc-test-2'])
@@ -120,6 +129,7 @@ angular.module('snJRPCMock', [])
 .constant('GS_RULE_ID_MOCK', 1)
 .service('satnetRPC', [
     '$log', '$q',
+    'USERNAME_MOCK', 'GS_CFG_MOCK',
     'CHANNEL_ID_MOCK', 'CHANNEL_LIST_MOCK', 'CHANNELS_OPTIONS_MOCK',
     'SC_LIST_MOCK', 'GS_LIST_MOCK',
     'SC_COMPATIBILITY_MOCK',
@@ -129,6 +139,7 @@ angular.module('snJRPCMock', [])
 
     function (
         $log, $q,
+        USERNAME_MOCK, GS_CFG_MOCK,
         CHANNEL_ID_MOCK, CHANNEL_LIST_MOCK, CHANNELS_OPTIONS_MOCK,
         SC_LIST_MOCK, GS_LIST_MOCK,
         SC_COMPATIBILITY_MOCK,
@@ -160,6 +171,14 @@ angular.module('snJRPCMock', [])
                 '@satnetRPC [MOCK]: ' + service +
                 ', params = ' + JSON.stringify(params, null, '  ')
             );
+
+            if (service === 'net.user') {
+                result = USERNAME_MOCK;
+            }
+
+            if (service === 'gs.get') {
+                result = GS_CFG_MOCK;
+            }
 
             if (service === 'sc.list') {
                 result = SC_LIST_MOCK;
@@ -217,7 +236,7 @@ angular.module('snJRPCMock', [])
             if (result === null) {
                 throw '@satnetRPC [MOCK]: Service <' + service + '> not found';
             }
-            
+
             return $q.when().then(function() {
                 return result;
             });

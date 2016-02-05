@@ -214,10 +214,10 @@ angular
             /** ************************************************************ */
 
             // NETWORK services
-            'net.alive': this._network
-                .createMethod('alive'),
-            'net.geoip': this._network
-                .createMethod('geoip'),
+            'net.alive': this._network.createMethod('alive'),
+            'net.geoip': this._network.createMethod('geoip'),
+            'net.user':  this._network.createMethod('user'),
+
             // SCHEDULING services
             'gs.availability': this._scheduling
                 .createMethod('gs.availability'),
