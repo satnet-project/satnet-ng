@@ -66,7 +66,8 @@
                              ng-class="{
                                 'sn-state-free': s.slot.state_free,
                                 'sn-state-selected':  s.slot.state_selected,
-                                'sn-state-reserved':  s.slot.state_reserved
+                                'sn-state-reserved':  s.slot.state_reserved,
+                                'sn-state-denied':  s.slot.state_denied
                              }"
                              ng-repeat="s in slots"
                              ng-style="{'left': ( s.slot.left + 1) + '%'}">

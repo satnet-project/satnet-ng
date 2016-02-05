@@ -6333,34 +6333,58 @@ angular.module('snRequestsDirective', [
             ).then(function (results) {
                 snDialog.toastAction('Denied slot #', $scope.slot.identifier);
             }).catch(function (c) {
-                snDialog.exception('gs.operational.deny', '', c);
+                snDialog.exception('gs.operational.drop', '', c);
             });
         };
 
         /**
          * Function that handles the process of droping a given request that
          * has already been booked.
+         *
+         * IMPORTANT: This function works both for spacecraft and for
+         *              groundstation slots; therefore, there is an inherent
+         *              level of complexity added in addition in order to
+         *              handle both cases.
          */
         $scope.drop = function () {
+
+            var rpc = ($scope.gui.primary === 'groundstation') ?
+                        'gs.operational.drop' : 'sc.cancel',
+                segment_id = ($scope.gui.primary === 'groundstation') ?
+                        $scope.groundstation_id : $scope.spacecraft_id;
+
             satnetRPC.rCall(
-                'gs.operational.drop', [
-                    $scope.groundstation_id, [$scope.slot.identifier]
-                ]
+                rpc, [segment_id, [$scope.slot.identifier]]
             ).then(function (results) {
                 snDialog.toastAction('Dropped slot #', $scope.slot.identifier);
             }).catch(function (c) {
-                snDialog.exception('gs.operational.drop', '', c);
+                snDialog.exception(rpc, '', c);
             });
+
         };
 
+        /**
+         * Function that returns whether o not the "accept" button should be
+         * displayed, taking into account the state of the controller.
+         */
         $scope.showAccept = function () {
             return ($scope.gui.state === 'SELECTED') &&
                 !($scope.gui.hide.accept);
         };
+
+        /**
+         * Function that returns whether o not the "deny" button should be
+         * displayed, taking into account the state of the controller.
+         */
         $scope.showDeny = function () {
             return ($scope.gui.state === 'SELECTED') &&
                 !($scope.gui.hide.deny);
         };
+
+        /**
+         * Function that returns whether o not the "drop" button should be
+         * displayed, taking into account the state of the controller.
+         */
         $scope.showDrop = function () {
             if ($scope.gui.primary === 'spacecraft') {
                 return !($scope.gui.hide.drop) && (

@@ -132,7 +132,8 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
     "                             }\"></div><div class=\"sn-sch-slot-state\" ng-class=\"{\n" +
     "                                'sn-state-free': s.slot.state_free,\n" +
     "                                'sn-state-selected':  s.slot.state_selected,\n" +
-    "                                'sn-state-reserved':  s.slot.state_reserved\n" +
+    "                                'sn-state-reserved':  s.slot.state_reserved,\n" +
+    "                                'sn-state-denied':  s.slot.state_denied\n" +
     "                             }\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><a ng-click=\"book(segmentId, sc, s)\">{{ s.raw_slot | printState }}</a></div><div class=\"sn-sch-slot-data\" ng-repeat=\"s in slots\" ng-style=\"{'left': ( s.slot.left + 1) + '%'}\"><ul><li>{{ s.slot.duration }}</li></ul></div></div></div></div></td></tr><tr><td class=\"sn-sch-corner-bottom\" ng-style=\"{'width': '' + gui.gs_id_width}\"></td><td colspan=\"{{ gui.times.length }}\" class=\"sn-sch-cell-container\"><sn-timeline></sn-timeline></td></tr></table></div>"
   );
 
