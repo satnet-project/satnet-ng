@@ -1,7 +1,7 @@
 
-<li ng-show="gui.requests | isEmpty" class="sn-no-item">
+<h5 ng-show="gui.requests | isEmpty" class="sn-no-item">
     (no groundstations requests)
-</li>
+</h5>
 
 <md-list-item ng-repeat="(g, slots) in gui.requests">
     <sn-gs-sc-requests sc="{{ gui.spacecraft_id }}" gs="{{ g }}"

@@ -1,5 +1,5 @@
 <md-dialog ng-init="init()" aria-label="Compatibility Dialog">
-    
+
 <md-toolbar class="md-theme-light">
     <h2 class="md-toolbar-tools">
         <span>Compatible Ground Station Channels</span>
@@ -23,19 +23,25 @@
                         {{ sc.spacecraft_id }}
                     </h3>
                     <md-list class="md-list-item-text">
-                        <md-list-item ng-show="!sc.Compatibility.length">
-                            <span class="sn-no-item" style="margin-left: 25px">(no channels available)</span>
-                        </md-list-item>
-                        <md-list-item class="md-4-line" ng-repeat="sc_ch in sc.Compatibility" layout="row">
+                        <h5 ng-show="!sc.Compatibility.length"
+                            class="sn-no-item">
+                            (no channels available)
+                        </h5>
+                        <md-list-item class="md-4-line"
+                            ng-repeat="sc_ch in sc.Compatibility" layout="row">
                             <div class="sn-box-100">
-                                <a class="md-title sn-padding sn-fg-color">{{ sc_ch.ScChannel.identifier }}</a>
+                                <a class="md-title sn-padding sn-fg-color">
+                                    {{ sc_ch.ScChannel.identifier }}
+                                </a>
                             </div>
-                            <div ng-show="!sc_ch.Compatibility.length" class="sn-box-placement">
+                            <div ng-show="!sc_ch.Compatibility.length"
+                                class="sn-box-placement">
                                 <i class="md-title sn-padding">
                                     (no compatible channels found)
                                 </i>
                             </div>
-                            <div class="sn-box-100 sn-box-format" ng-repeat="gs_compat in sc_ch.Compatibility">
+                            <div class="sn-box-100 sn-box-format"
+                                ng-repeat="gs_compat in sc_ch.Compatibility">
                                 <div>
                                     <i class="md-title sn-padding">
                                         {{ gs_compat.GsChannel.identifier }}
