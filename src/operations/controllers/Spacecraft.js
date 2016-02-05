@@ -40,6 +40,11 @@ angular.module('snScControllers', [
         $log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC, snDialog
     ) {
 
+        $scope.cfg = {
+            user: '',
+            owners: {},
+            isOwner: {}
+        };
         $scope.scList = [];
 
         /**
@@ -71,7 +76,7 @@ angular.module('snScControllers', [
         /**
          * Function that triggers the opening of a window to add a new
          * Availability Rule to this Spacecraft.
-         * 
+         *
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.showChannelList = function (identifier) {
@@ -90,7 +95,7 @@ angular.module('snScControllers', [
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.delete = function (identifier) {
-            
+
             var confirm = $mdDialog.confirm()
                 .title('Confirm')
                 .content(
@@ -120,15 +125,35 @@ angular.module('snScControllers', [
         };
 
         /**
+         * Internal function that loads the segments and its owners.
+         */
+        $scope._loadList = function () {
+            satnetRPC.rCall('sc.list', []).then(function (results) {
+                $scope.scList = results.slice(0);
+                angular.forEach($scope.scList, function(s) {
+                    satnetRPC.rCall('sc.get', [s]).then(function (r) {
+                        $scope.cfg.owners[s] = r.username;
+                        $scope.cfg.isOwner[s] = (
+                            r.username === $scope.cfg.user
+                        );
+                    }).catch(function (cause) {
+                        snDialog.exception('sc.get', '-', cause);
+                    });
+                });
+            }).catch(function (cause) {
+                snDialog.exception('sc.list', '-', cause);
+            });
+        };
+
+        /**
          * Function that refreshes the list of registered spacecraft.
          */
         $scope.refresh = function () {
-            satnetRPC.rCall('sc.list', []).then(function (results) {
-                if (results !== null) {
-                    $scope.scList = results.slice(0);
-                }
+            satnetRPC.rCall('net.user', []).then(function (result) {
+                $scope.cfg.user = result;
+                $scope._loadList();
             }).catch(function (cause) {
-                snDialog.exception('sc.list', '-', cause);
+                snDialog.exception('net.user', '-', cause);
             });
         };
 
@@ -140,7 +165,6 @@ angular.module('snScControllers', [
             $scope.refresh();
         };
 
-        // INITIALIZATION: avoids using ng-init within the template
         $scope.init();
 
     }

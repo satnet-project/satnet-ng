@@ -4589,7 +4589,9 @@ angular.module('snGsControllers', [
     ) {
 
         $scope.cfg = {
-            user: ''
+            user: '',
+            owners: {},
+            isOwner: {}
         };
         $scope.gsList = [];
 
@@ -4687,20 +4689,35 @@ angular.module('snGsControllers', [
         };
 
         /**
+         * Internal function that loads the segments and its owners.
+         */
+        $scope._loadList = function () {
+            satnetRPC.rCall('gs.list', []).then(function (results) {
+                $scope.gsList = results.slice(0);
+                angular.forEach($scope.gsList, function(g) {
+                    satnetRPC.rCall('gs.get', [g]).then(function (r) {
+                        $scope.cfg.owners[g] = r.username;
+                        $scope.cfg.isOwner[g] = (
+                            r.username === $scope.cfg.user
+                        );
+                    }).catch(function (cause) {
+                        snDialog.exception('gs.get', '-', cause);
+                    });
+                });
+            }).catch(function (cause) {
+                snDialog.exception('gs.list', '-', cause);
+            });
+        };
+
+        /**
          * Function that refreshes the list of registered ground stations.
          */
         $scope.refresh = function () {
             satnetRPC.rCall('net.user', []).then(function (result) {
                 $scope.cfg.user = result;
+                $scope._loadList();
             }).catch(function (cause) {
-                snDialog.exception('gs.list', '-', cause);
-            });
-            satnetRPC.rCall('gs.list', []).then(function (results) {
-                if (results !== null) {
-                    $scope.gsList = results.slice(0);
-                }
-            }).catch(function (cause) {
-                snDialog.exception('gs.list', '-', cause);
+                snDialog.exception('net.user', '-', cause);
             });
         };
 
@@ -4815,8 +4832,10 @@ angular.module('snGsControllers', [
 
             var cfg = {
                 groundstation_id: identifier,
-                groundstation_callsign: $scope.configuration.callsign,
-                groundstation_elevation: $scope.configuration.elevation.toFixed(2),
+                groundstation_callsign:
+                    $scope.configuration.callsign,
+                groundstation_elevation:
+                    $scope.configuration.elevation.toFixed(2),
                 groundstation_latlon: [
                     $scope.markers.gs.lat.toFixed(6),
                     $scope.markers.gs.lng.toFixed(6)
@@ -5555,6 +5574,11 @@ angular.module('snScControllers', [
         $log, $scope, $mdDialog, $mdToast, broadcaster, satnetRPC, snDialog
     ) {
 
+        $scope.cfg = {
+            user: '',
+            owners: {},
+            isOwner: {}
+        };
         $scope.scList = [];
 
         /**
@@ -5586,7 +5610,7 @@ angular.module('snScControllers', [
         /**
          * Function that triggers the opening of a window to add a new
          * Availability Rule to this Spacecraft.
-         * 
+         *
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.showChannelList = function (identifier) {
@@ -5605,7 +5629,7 @@ angular.module('snScControllers', [
          * @param {String} identifier Identifier of the Spacecraft
          */
         $scope.delete = function (identifier) {
-            
+
             var confirm = $mdDialog.confirm()
                 .title('Confirm')
                 .content(
@@ -5635,15 +5659,35 @@ angular.module('snScControllers', [
         };
 
         /**
+         * Internal function that loads the segments and its owners.
+         */
+        $scope._loadList = function () {
+            satnetRPC.rCall('sc.list', []).then(function (results) {
+                $scope.scList = results.slice(0);
+                angular.forEach($scope.scList, function(s) {
+                    satnetRPC.rCall('sc.get', [s]).then(function (r) {
+                        $scope.cfg.owners[s] = r.username;
+                        $scope.cfg.isOwner[s] = (
+                            r.username === $scope.cfg.user
+                        );
+                    }).catch(function (cause) {
+                        snDialog.exception('sc.get', '-', cause);
+                    });
+                });
+            }).catch(function (cause) {
+                snDialog.exception('sc.list', '-', cause);
+            });
+        };
+
+        /**
          * Function that refreshes the list of registered spacecraft.
          */
         $scope.refresh = function () {
-            satnetRPC.rCall('sc.list', []).then(function (results) {
-                if (results !== null) {
-                    $scope.scList = results.slice(0);
-                }
+            satnetRPC.rCall('net.user', []).then(function (result) {
+                $scope.cfg.user = result;
+                $scope._loadList();
             }).catch(function (cause) {
-                snDialog.exception('sc.list', '-', cause);
+                snDialog.exception('net.user', '-', cause);
             });
         };
 
@@ -5655,7 +5699,6 @@ angular.module('snScControllers', [
             $scope.refresh();
         };
 
-        // INITIALIZATION: avoids using ng-init within the template
         $scope.init();
 
     }
@@ -5802,7 +5845,8 @@ angular.module('snScControllers', [
 
     }
 
-]);;/**
+]);
+;/**
  * Copyright 2015 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

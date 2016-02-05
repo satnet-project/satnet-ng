@@ -26,6 +26,7 @@ angular.module('snJRPCMock', [])
     groundstation_latlon: [
         '40.0', '50.0'
     ],
+    username: 'test-user'
 })
 .constant('CHANNEL_ID_MOCK', 'channel-test')
 .constant('CHANNEL_LIST_MOCK', ['channel_1', 'channel_2'])

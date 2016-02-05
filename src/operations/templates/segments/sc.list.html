@@ -30,23 +30,26 @@
 
                     <md-button id="{{ sc }}-delete"
                                ng-click="delete(sc)"
+                               ng-disabled="!cfg.isOwner[sc]"
                                aria-label="delete spacecraft {{ sc }}"
                                class="md-primary menu-button" flex>
-                        <div layout="row" layout-fill>
-                            <i class="fa fa-close sn-red-action"></i>
+                        <div layout="row" layout-fill
+                            ng-class="{'sn-red-action': cfg.isOwner[sc]}">
+                            <i class="fa fa-close"></i>
                         </div>
-                        <md-tooltip md-direction="top">Delete</md-tooltip>
+                        <md-tooltip md-direction="top">delete</md-tooltip>
                     </md-button>
 
                     <md-button id="{{ sc }}-edit"
                                ng-click="showEditDialog(sc)"
+                               ng-disabled="!cfg.isOwner[sc]"
                                aria-label="edit spacecraft {{ sc }}"
                                class="md-primary menu-button"
                                style="text-align:center; width: 70%">
                         <div layout="row" layout-fill>
                             <b>{{ sc }}</b>
                         </div>
-                        <md-tooltip md-direction="top">Edit</md-tooltip>
+                        <md-tooltip md-direction="top">edit</md-tooltip>
                     </md-button>
 
                     <sn-passes segment-id="{{ sc }}" is-spacecraft="true">
@@ -54,12 +57,13 @@
 
                     <md-button id="{{ sc }}-channels"
                                ng-click="showChannelList(sc)"
+                               ng-disabled="!cfg.isOwner[sc]"
                                aria-label="spacecraft channels {{ sc }}"
                                class="md-primary menu-button" flex>
                         <div layout="row" layout-fill>
                             <i class="fa fa-rss"></i>
                         </div>
-                        <md-tooltip md-direction="top">Channels</md-tooltip>
+                        <md-tooltip md-direction="top">channels</md-tooltip>
                     </md-button>
 
                 </div>
