@@ -37,13 +37,9 @@ angular.module('snOperationalDirective', [
          * Function that initializes the
          */
         $scope.init = function () {
-
-            satnetRPC.rCall('gs.list', []).then(function (results) {
-                $scope.gui.gss = results;
-            }).catch(function (c) {
-                snDialog.exception('gs.list', '', c);
+            satnetRPC.getMyGroundStations().then(function (gss) {
+                $scope.gui.gss = gss;
             });
-
         };
 
         $scope.init();

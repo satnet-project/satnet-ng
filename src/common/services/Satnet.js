@@ -324,43 +324,63 @@ angular
         };
 
         /**
-         * Function that retrieves the list of groundstations that belong
-         * exclusively to the given user.
+         * Function that retrieves the username of the currently logged user.
          *
-         * @param {String} username String with the name of the user
-         * @returns Promise that returns a list with the groundstations of the
-         *          user.
+         * @returns {String} String with the name of the user
          */
-        this.getUserGroundStations = function (username) {
-            return this.rCall('gs.list', []).then(function (results) {
-                var filtered;
-                angular.forEach(results, function(r) {
-                    if (r.username === username) {
-                        filtered.push(r);
-                    }
-                });
-                return filtered;
+        this.getMyUsername = function () {
+            return this.rCall('net.user', []).then(function (result) {
+                return result;
+            }).catch(function (cause) {
+                console.error('net.user', '-', cause);
             });
         };
 
         /**
-         * Function that retrieves the list of spacecraft that belong
-         * exclusively to the specified user.
+         * Function that retrieves the list of groundstations that belong
+         * exclusively to the currently logged user.
          *
-         * @param {String} username String with the name of the user
+         * @param String segment 'spacecraft' or 'groundstations'
+         * @returns Promise that returns a list with the segments of the user.
+         */
+        this.getMySegments = function (segment) {
+
+            var rpc = ( segment === 'groundstations' ) ? 'gs.list': 'sc.list';
+
+            return this.getMyUsername().then(function (username) {
+                this.rCall(rpc, []).then(function (results) {
+                    var filtered;
+                    angular.forEach(results, function(r) {
+                        if (r.username === username) {
+                            filtered.push(r);
+                        }
+                    });
+                    return filtered;
+                });
+            });
+
+        };
+
+        /**
+         * Function that retrieves the list of spacecraft that belong
+         * exclusively to the currently logged user.
+         *
          * @returns Promise that returns a list with the spacecraft of the
          *          user.
          */
-        this.getUserSpacecraft = function (username) {
-            return this.rCall('sc.list', []).then(function (results) {
-                var filtered;
-                angular.forEach(results, function(r) {
-                    if (r.username === username) {
-                        filtered.push(r);
-                    }
-                });
-                return filtered;
-            });
+        this.getMySpacecraft = function () {
+            return this.getMySegments('spacecraft');
+        };
+
+        /**
+         * Function that retrieves the list of spacecraft that belong
+         * exclusively to the currently logged user.
+         *
+         * @returns Promise that returns a list with the spacecraft of the
+         *          user.
+         */
+        this.getMyGroundStations = function () {
+            return this.getMySegments('groundstations');
         };
 
         /**
