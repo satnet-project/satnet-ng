@@ -181,8 +181,6 @@ $sch-margin: 7px;
 
 @mixin sn-state($color) {
     font-size: 75%;
-    //color: $color;
-    //background-color: lightgrey;
     color: white;
     background-color: $color;
     border: 2px solid black;
@@ -192,7 +190,7 @@ $sch-margin: 7px;
 .sn-state-undefined { @include sn-state(black); }
 .sn-state-free { @include sn-state(forestgreen); }
 .sn-state-selected { @include sn-state(orange); }
-.sn-state-reserved { @include sn-state(darkblue); }
+.sn-state-reserved { @include sn-state($sn-blue-color); }
 .sn-state-denied { @include sn-state(red); }
 .sn-state-canceled { @include sn-state(red); }
 .sn-state-removed { @include sn-state(red); }

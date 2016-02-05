@@ -1,6 +1,6 @@
 
 <md-dialog aria-label="Slot Requests Dialog"
-            style="width: 80%; max-width: 800px;" ng-cloak>
+            style="width: 80%; max-width: 650px;" ng-cloak>
 
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools"><span>Slot Requests</span></h2>
@@ -8,12 +8,12 @@
 
     <md-content id="sn-sch-md-content" md-padding>
 
-        <li ng-hide="gui.groundstations.length" class="sn-no-item">
+        <h5 ng-hide="gui.groundstations.length" class="sn-no-item">
             (no ground stations available)
-        </li>
+        </h5>
 
         <div layout="row">
-            <div style="margin: 10px; padding: 10px;" flex="45">
+            <div style="margin: 10px; padding: 2px;" flex="47">
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}"
                             ng-disabled="false">
@@ -21,7 +21,7 @@
                     </md-tab>
                 </md-tabs>
             </div>
-            <div style="margin: 10px; padding: 10px;" flex="45">
+            <div style="margin: 10px; padding: 2px;" flex="47">
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab ng-repeat="s in gui.spacecraft" label="{{ s }}"
                             ng-disabled="false">

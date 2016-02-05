@@ -6308,7 +6308,9 @@ angular.module('snRequestsDirective', [
          */
         $scope.accept = function () {
             satnetRPC.rCall(
-                'gs.operational.accept', [$scope.slot.identifier]
+                'gs.operational.accept', [
+                    $scope.groundstation_id, [$scope.slot.identifier]
+                ]
             ).then(function (results) {
                 snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
             }).catch(function (c) {
@@ -6322,7 +6324,9 @@ angular.module('snRequestsDirective', [
          */
         $scope.deny = function () {
             satnetRPC.rCall(
-                'gs.operational.deny', [$scope.slot.identifier]
+                'gs.operational.deny', [
+                    $scope.groundstation_id, [$scope.slot.identifier]
+                ]
             ).then(function (results) {
                 snDialog.toastAction('Denied slot #', $scope.slot.identifier);
             }).catch(function (c) {
@@ -6336,7 +6340,9 @@ angular.module('snRequestsDirective', [
          */
         $scope.drop = function () {
             satnetRPC.rCall(
-                'gs.operational.drop', [$scope.slot.identifier]
+                'gs.operational.drop', [
+                    $scope.groundstation_id, [$scope.slot.identifier]
+                ]
             ).then(function (results) {
                 snDialog.toastAction('Dropped slot #', $scope.slot.identifier);
             }).catch(function (c) {
@@ -6353,10 +6359,16 @@ angular.module('snRequestsDirective', [
                 !($scope.gui.hide.deny);
         };
         $scope.showDrop = function () {
-            return !($scope.gui.hide.drop) && (
-                    ($scope.gui.state === 'SELECTED') ||
-                    ($scope.gui.state === 'CONFIRMED')
-                );
+            if ($scope.gui.primary === 'spacecraft') {
+                return !($scope.gui.hide.drop) && (
+                        ($scope.gui.state === 'SELECTED') ||
+                        ($scope.gui.state === 'RESERVED')
+                    );
+            } else {
+                return !($scope.gui.hide.drop) && (
+                        ($scope.gui.state === 'RESERVED')
+                    );
+            }
         };
 
         /**
@@ -6375,6 +6387,7 @@ angular.module('snRequestsDirective', [
             } else {
                 $scope.gui.hide.accept = false;
                 $scope.gui.hide.deny = false;
+                $scope.gui.hide.drop = false;
             }
 
         };
