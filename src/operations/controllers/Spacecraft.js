@@ -50,6 +50,7 @@ angular.module('snScControllers', [
         /**
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
+         * @returns
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
@@ -126,6 +127,7 @@ angular.module('snScControllers', [
 
         /**
          * Internal function that loads the segments and its owners.
+         * @returns
          */
         $scope._loadList = function () {
             satnetRPC.rCall('sc.list', []).then(function (results) {
@@ -147,6 +149,7 @@ angular.module('snScControllers', [
 
         /**
          * Function that refreshes the list of registered spacecraft.
+         * @returns
          */
         $scope.refresh = function () {
             satnetRPC.rCall('net.user', []).then(function (result) {
@@ -160,6 +163,7 @@ angular.module('snScControllers', [
         /**
          * Function that initializes the list of ground stations that are to be
          * displayed.
+         * @returns
          */
         $scope.init = function () {
             $scope.refresh();
@@ -216,6 +220,7 @@ angular.module('snScControllers', [
         /**
          * Function that updates the list of selectable TLE's once the group
          * has changed in the other select control.
+         * @returns
          */
         $scope.updateTles = function () {
             if (!$scope.configuration.tle_group) {

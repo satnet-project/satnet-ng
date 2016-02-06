@@ -23,7 +23,7 @@ angular
     /**
      * Function that filters out the availability slots and transforms them
      * into an array of slots that can be directly displayed in a timeline.
-     * 
+     *
      * @param   {Number} SN_SCH_TIMELINE_DAYS Constant with the number of days
      *                                        to be displayed in the timeline
      *                                        where the slots are supposed to
@@ -82,18 +82,15 @@ angular
      * Function that filters the date of a slot and applies the proper format.
      */
     function (SLOT_DATE_FORMAT) {
-
         return function (date) {
             if (!date) { return '!'; }
             return moment(date).format(SLOT_DATE_FORMAT);
         };
-
     }
 
 ]).filter('printDuration', [
 
     function () {
-
         return function (duration) {
             if (!duration) { return '!'; }
             return duration
@@ -102,7 +99,6 @@ angular
                 .replace('seconds', '"')
                 .replace('second', '"');
         };
-
     }
 
 ]);

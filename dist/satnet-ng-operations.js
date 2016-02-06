@@ -995,11 +995,12 @@ angular
          * remote invokation of the SatNet services.
          *
          * @param {String} service Name of the SatNet JRPC service that
-         *                         has just been invoked.
+         *                         has just been invoked
          * @param {Array}  params  Array with the parameters for the
-         *                         service to be invoked.
-         * @param {String} code    Error code.
-         * @param {String} message Messsage description.
+         *                         service to be invoked
+         * @param {String} code    Error code
+         * @param {String} message Messsage description
+         * @returns
          */
         this._generateError = function (service, params, code, message) {
 
@@ -1016,8 +1017,8 @@ angular
          * Method for calling the remote service through JSON-RPC.
          *
          * @param service The name of the service, as per the internal
-         * services name definition.
-         * @param params The parameters for the service (as an array).
+         * services name definition
+         * @param params The parameters for the service (as an array)
          * @returns {*}
          */
         this.rCall = function (service, params) {
@@ -1063,7 +1064,7 @@ angular
          * Simple convenience method for invoking the remote keep alive of
          * the network sevice.
          *
-         * @returns {*} Promise that returns True.
+         * @returns {*} Promise that returns True
          */
         this.alive = function () {
             return this.rCall('net.alive', []).then(function () {
@@ -1089,7 +1090,7 @@ angular
          * exclusively to the currently logged user.
          *
          * @param String segment 'spacecraft' or 'groundstations'
-         * @returns Promise that returns a list with the segments of the user.
+         * @returns Promise that returns a list with the segments of the user
          */
         this.getMySegments = function (segment) {
 
@@ -1124,8 +1125,7 @@ angular
          * Function that retrieves the list of spacecraft that belong
          * exclusively to the currently logged user.
          *
-         * @returns Promise that returns a list with the spacecraft of the
-         *          user.
+         * @returns Promise that returns a list with the spacecraft of the user
          */
         this.getMyGroundStations = function () {
             return this.getMySegments('groundstations');
@@ -1134,7 +1134,7 @@ angular
         /**
          * Retrieves the user location using an available Internet service.
          *
-         * @returns Promise that returns a { latitude, longitude } object.
+         * @returns Promise that returns a { latitude, longitude } object
          */
         this.getUserLocation = function () {
             var url = this._getSatNetAddress() + '/configuration/user/geoip';
@@ -1154,7 +1154,7 @@ angular
          * Retrieves the server location using an available Internet
          * service.
          *
-         * @returns Promise that returns a { latitude, longitude } object.
+         * @returns Promise that returns a { latitude, longitude } object
          */
         this.getServerLocation = function (hostname) {
             return this.rCall('net.geoip', [hostname]).then(
@@ -1968,7 +1968,7 @@ angular
     /**
      * Function that filters out the availability slots and transforms them
      * into an array of slots that can be directly displayed in a timeline.
-     * 
+     *
      * @param   {Number} SN_SCH_TIMELINE_DAYS Constant with the number of days
      *                                        to be displayed in the timeline
      *                                        where the slots are supposed to
@@ -2027,18 +2027,15 @@ angular
      * Function that filters the date of a slot and applies the proper format.
      */
     function (SLOT_DATE_FORMAT) {
-
         return function (date) {
             if (!date) { return '!'; }
             return moment(date).format(SLOT_DATE_FORMAT);
         };
-
     }
 
 ]).filter('printDuration', [
 
     function () {
-
         return function (duration) {
             if (!duration) { return '!'; }
             return duration
@@ -2047,7 +2044,6 @@ angular
                 .replace('seconds', '"')
                 .replace('second', '"');
         };
-
     }
 
 ]);
@@ -4658,6 +4654,8 @@ angular.module('snGsControllers', [
         /**
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
+         *
+         * @returns
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
@@ -4672,6 +4670,7 @@ angular.module('snGsControllers', [
          * of a given Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
@@ -4686,6 +4685,7 @@ angular.module('snGsControllers', [
          * channels for this Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.showChannelList = function (identifier) {
             $mdDialog.show({
@@ -4700,6 +4700,7 @@ angular.module('snGsControllers', [
          * Availability Rules for this Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.showRuleList = function (identifier) {
             $mdDialog.show({
@@ -4715,6 +4716,7 @@ angular.module('snGsControllers', [
          * confirmation before executing this removal.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.delete = function (identifier) {
 
@@ -4750,6 +4752,7 @@ angular.module('snGsControllers', [
 
         /**
          * Internal function that loads the segments and its owners.
+         * @returns
          */
         $scope._loadList = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
@@ -4771,6 +4774,7 @@ angular.module('snGsControllers', [
 
         /**
          * Function that refreshes the list of registered ground stations.
+         * @returns
          */
         $scope.refresh = function () {
             satnetRPC.rCall('net.user', []).then(function (result) {
@@ -4784,6 +4788,7 @@ angular.module('snGsControllers', [
         /**
          * Function that initializes the list of ground stations that are to be
          * displayed.
+         * @returns
          */
         $scope.init = function () {
             $scope.refresh();
@@ -5644,6 +5649,7 @@ angular.module('snScControllers', [
         /**
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
+         * @returns
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
@@ -5720,6 +5726,7 @@ angular.module('snScControllers', [
 
         /**
          * Internal function that loads the segments and its owners.
+         * @returns
          */
         $scope._loadList = function () {
             satnetRPC.rCall('sc.list', []).then(function (results) {
@@ -5741,6 +5748,7 @@ angular.module('snScControllers', [
 
         /**
          * Function that refreshes the list of registered spacecraft.
+         * @returns
          */
         $scope.refresh = function () {
             satnetRPC.rCall('net.user', []).then(function (result) {
@@ -5754,6 +5762,7 @@ angular.module('snScControllers', [
         /**
          * Function that initializes the list of ground stations that are to be
          * displayed.
+         * @returns
          */
         $scope.init = function () {
             $scope.refresh();
@@ -5810,6 +5819,7 @@ angular.module('snScControllers', [
         /**
          * Function that updates the list of selectable TLE's once the group
          * has changed in the other select control.
+         * @returns
          */
         $scope.updateTles = function () {
             if (!$scope.configuration.tle_group) {

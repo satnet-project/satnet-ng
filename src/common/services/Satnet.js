@@ -247,11 +247,12 @@ angular
          * remote invokation of the SatNet services.
          *
          * @param {String} service Name of the SatNet JRPC service that
-         *                         has just been invoked.
+         *                         has just been invoked
          * @param {Array}  params  Array with the parameters for the
-         *                         service to be invoked.
-         * @param {String} code    Error code.
-         * @param {String} message Messsage description.
+         *                         service to be invoked
+         * @param {String} code    Error code
+         * @param {String} message Messsage description
+         * @returns
          */
         this._generateError = function (service, params, code, message) {
 
@@ -268,8 +269,8 @@ angular
          * Method for calling the remote service through JSON-RPC.
          *
          * @param service The name of the service, as per the internal
-         * services name definition.
-         * @param params The parameters for the service (as an array).
+         * services name definition
+         * @param params The parameters for the service (as an array)
          * @returns {*}
          */
         this.rCall = function (service, params) {
@@ -315,7 +316,7 @@ angular
          * Simple convenience method for invoking the remote keep alive of
          * the network sevice.
          *
-         * @returns {*} Promise that returns True.
+         * @returns {*} Promise that returns True
          */
         this.alive = function () {
             return this.rCall('net.alive', []).then(function () {
@@ -341,7 +342,7 @@ angular
          * exclusively to the currently logged user.
          *
          * @param String segment 'spacecraft' or 'groundstations'
-         * @returns Promise that returns a list with the segments of the user.
+         * @returns Promise that returns a list with the segments of the user
          */
         this.getMySegments = function (segment) {
 
@@ -376,8 +377,7 @@ angular
          * Function that retrieves the list of spacecraft that belong
          * exclusively to the currently logged user.
          *
-         * @returns Promise that returns a list with the spacecraft of the
-         *          user.
+         * @returns Promise that returns a list with the spacecraft of the user
          */
         this.getMyGroundStations = function () {
             return this.getMySegments('groundstations');
@@ -386,7 +386,7 @@ angular
         /**
          * Retrieves the user location using an available Internet service.
          *
-         * @returns Promise that returns a { latitude, longitude } object.
+         * @returns Promise that returns a { latitude, longitude } object
          */
         this.getUserLocation = function () {
             var url = this._getSatNetAddress() + '/configuration/user/geoip';
@@ -406,7 +406,7 @@ angular
          * Retrieves the server location using an available Internet
          * service.
          *
-         * @returns Promise that returns a { latitude, longitude } object.
+         * @returns Promise that returns a { latitude, longitude } object
          */
         this.getServerLocation = function (hostname) {
             return this.rCall('net.geoip', [hostname]).then(

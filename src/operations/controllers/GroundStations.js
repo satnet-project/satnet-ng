@@ -51,6 +51,8 @@ angular.module('snGsControllers', [
         /**
          * Function that triggers the opening of a window to add a new ground
          * station into the system.
+         *
+         * @returns
          */
         $scope.showAddDialog = function () {
             $mdDialog.show({
@@ -65,6 +67,7 @@ angular.module('snGsControllers', [
          * of a given Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.showEditDialog = function (identifier) {
             $mdDialog.show({
@@ -79,6 +82,7 @@ angular.module('snGsControllers', [
          * channels for this Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.showChannelList = function (identifier) {
             $mdDialog.show({
@@ -93,6 +97,7 @@ angular.module('snGsControllers', [
          * Availability Rules for this Ground Station.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.showRuleList = function (identifier) {
             $mdDialog.show({
@@ -108,6 +113,7 @@ angular.module('snGsControllers', [
          * confirmation before executing this removal.
          *
          * @param {String} identifier Identifier of the Ground Station
+         * @returns
          */
         $scope.delete = function (identifier) {
 
@@ -143,6 +149,7 @@ angular.module('snGsControllers', [
 
         /**
          * Internal function that loads the segments and its owners.
+         * @returns
          */
         $scope._loadList = function () {
             satnetRPC.rCall('gs.list', []).then(function (results) {
@@ -164,6 +171,7 @@ angular.module('snGsControllers', [
 
         /**
          * Function that refreshes the list of registered ground stations.
+         * @returns
          */
         $scope.refresh = function () {
             satnetRPC.rCall('net.user', []).then(function (result) {
@@ -177,6 +185,7 @@ angular.module('snGsControllers', [
         /**
          * Function that initializes the list of ground stations that are to be
          * displayed.
+         * @returns
          */
         $scope.init = function () {
             $scope.refresh();
