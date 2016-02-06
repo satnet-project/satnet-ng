@@ -1669,9 +1669,8 @@ angular.module('snTimelineServices', [])
         this.discardSlot = function (cfg, start, end) {
 
             if (moment(start).isBefore(cfg.start_d)) {
-                $log.warn(
-                    'Discarded, too OLD! ' +
-                    'slot = (' + start.toISOString() +
+                $log.info(
+                    'Old slot = (' + start.toISOString() +
                     ', ' + end.toISOString() +
                     '), interval = (' + cfg.start_d.toISOString() +
                     ', ' + cfg.end_d.toISOString() + ')'
@@ -1679,9 +1678,8 @@ angular.module('snTimelineServices', [])
                 return true;
             }
             if (moment(end).isAfter(cfg.end_d)) {
-                $log.warn(
-                    'Discarded, too FUTURISTIC! ' +
-                    'slot = (' + start.toISOString() +
+                $log.info(
+                    'Futuristic slot = (' + start.toISOString() +
                     ', ' + end.toISOString() +
                     '), interval = (' + cfg.start_d.toISOString() +
                     ', ' + cfg.end_d.toISOString() + ')'

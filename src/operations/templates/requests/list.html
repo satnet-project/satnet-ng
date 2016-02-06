@@ -8,13 +8,12 @@
 
     <md-content id="sn-sch-md-content" md-padding>
 
-        <h5 ng-hide="gui.groundstations.length" class="sn-no-item">
-            (no ground stations available)
-        </h5>
-
         <div layout="row">
             <div style="margin: 10px; padding: 2px;" flex="47">
                 <md-tabs md-dynamic-height md-border-bottom>
+                    <h5 ng-hide="gui.groundstations.length" class="sn-no-item">
+                        (no ground stations available)
+                    </h5>
                     <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}"
                             ng-disabled="false">
                         <sn-gs-requests gs="{{ g }}"></sn-gs-requests>
