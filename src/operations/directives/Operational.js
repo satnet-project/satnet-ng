@@ -39,6 +39,9 @@ angular.module('snOperationalDirective', [
         $scope.init = function () {
             satnetRPC.rCall('gs.list.mine', []).then(function (gss) {
                 $scope.gui.gss = gss;
+                console.log(
+                    '>>>>> LIST MINE GS: ' + JSON.stringify(gss, null, 4)
+                );
             });
         };
 

@@ -115,7 +115,7 @@ angular
             'gs.list':
                 this._configuration.createMethod('gs.list'),
             'gs.list.mine':
-                this._configuration.createMethod('gs.list'),
+                this._configuration.createMethod('gs.list.mine'),
             'gs.list.others':
                 this._configuration.createMethod('gs.list.others'),
             'gs.add':
