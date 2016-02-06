@@ -15,9 +15,11 @@
                             ng-disabled="false">
                         <sn-gs-requests gs="{{ g }}"></sn-gs-requests>
                     </md-tab>
-                    <h5 ng-hide="gui.groundstations.length" class="sn-no-item">
-                        (no ground stations available)
-                    </h5>
+                    <md-tab ng-hide="gui.groundstations.length">
+                        <h5 class="sn-no-item">
+                            (no ground stations available)
+                        </h5>
+                    </md-tab>
                 </md-tabs>
             </div>
             <div style="margin: 10px; padding: 2px;" flex="47">
