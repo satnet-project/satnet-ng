@@ -10,22 +10,18 @@
 
         <div layout="row">
             <div style="margin: 10px; padding: 2px;" flex="47">
+                <h5 ng-hide="gui.groundstations.length" class="sn-no-item">
+                    (no ground stations available)
+                </h5>
                 <md-tabs md-dynamic-height md-border-bottom>
-                    <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}"
-                            ng-disabled="false">
+                    <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}">
                         <sn-gs-requests gs="{{ g }}"></sn-gs-requests>
-                    </md-tab>
-                    <md-tab ng-hide="gui.groundstations.length">
-                        <h5 class="sn-no-item">
-                            (no ground stations available)
-                        </h5>
                     </md-tab>
                 </md-tabs>
             </div>
             <div style="margin: 10px; padding: 2px;" flex="47">
                 <md-tabs md-dynamic-height md-border-bottom>
-                    <md-tab ng-repeat="s in gui.spacecraft" label="{{ s }}"
-                            ng-disabled="false">
+                    <md-tab ng-repeat="s in gui.spacecraft" label="{{ s }}">
                         <sn-sc-requests sc="{{ s }}"></sn-sc-requests>
                     </md-tab>
                 </md-tabs>
