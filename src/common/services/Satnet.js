@@ -109,136 +109,147 @@ angular
         this._scheduling = jsonrpc.newService('scheduling', _rpc);
 
         this._services = {
-            'channels.options': this._configuration
-                .createMethod('bands.available'),
+            'channels.options':
+                this._configuration.createMethod('bands.available'),
             // Configuration methods (Ground Stations)
-            'gs.list': this._configuration
-                .createMethod('gs.list'),
-            'gs.add': this._configuration
-                .createMethod('gs.create'),
-            'gs.get': this._configuration
-                .createMethod('gs.get'),
-            'gs.update': this._configuration
-                .createMethod('gs.set'),
-            'gs.delete': this._configuration
-                .createMethod('gs.delete'),
-            'gs.channel.list': this._configuration
-                .createMethod('gs.channel.list'),
-            'gs.channel.add': this._configuration
-                .createMethod('gs.channel.create'),
-            'gs.channel.get': this._configuration
-                .createMethod('gs.channel.get'),
-            'gs.channel.set': this._configuration
-                .createMethod('gs.channel.set'),
-            'gs.channel.delete': this._configuration
-                .createMethod('gs.channel.delete'),
+            'gs.list':
+                this._configuration.createMethod('gs.list'),
+            'gs.list.mine':
+                this._configuration.createMethod('gs.list'),
+            'gs.list.others':
+                this._configuration.createMethod('gs.list.others'),
+            'gs.add':
+                this._configuration.createMethod('gs.create'),
+            'gs.get':
+                this._configuration.createMethod('gs.get'),
+            'gs.update':
+                this._configuration.createMethod('gs.set'),
+            'gs.delete':
+                this._configuration.createMethod('gs.delete'),
+            'gs.channel.list':
+                this._configuration.createMethod('gs.channel.list'),
+            'gs.channel.add':
+                this._configuration.createMethod('gs.channel.create'),
+            'gs.channel.get':
+                this._configuration.createMethod('gs.channel.get'),
+            'gs.channel.set':
+                this._configuration.createMethod('gs.channel.set'),
+            'gs.channel.delete':
+                this._configuration.createMethod('gs.channel.delete'),
             // Rules management
-            'rules.list': this._configuration
-                .createMethod('gs.rules.list'),
-            'rules.add': this._configuration
-                .createMethod('gs.rules.add'),
-            'rules.delete': this._configuration
-                .createMethod('gs.rules.delete'),
+            'rules.list':
+                this._configuration.createMethod('gs.rules.list'),
+            'rules.add':
+                this._configuration.createMethod('gs.rules.add'),
+            'rules.delete':
+                this._configuration.createMethod('gs.rules.delete'),
             // Configuration methods (Spacecraft)
-            'sc.list': this._configuration
-                .createMethod('sc.list'),
-            'sc.add': this._configuration
-                .createMethod('sc.create'),
-            'sc.get': this._configuration
-                .createMethod('sc.get'),
-            'sc.update': this._configuration
-                .createMethod('sc.set'),
-            'sc.delete': this._configuration
-                .createMethod('sc.delete'),
-            'sc.channel.list': this._configuration
-                .createMethod('sc.channel.list'),
-            'sc.channel.add': this._configuration
-                .createMethod('sc.channel.create'),
-            'sc.channel.get': this._configuration
-                .createMethod('sc.channel.get'),
-            'sc.channel.set': this._configuration
-                .createMethod('sc.channel.set'),
-            'sc.channel.delete': this._configuration
-                .createMethod('sc.channel.delete'),
+            'sc.list':
+                this._configuration.createMethod('sc.list'),
+            'sc.list.mine':
+                this._configuration.createMethod('sc.list.mine'),
+            'sc.list.others':
+                this._configuration.createMethod('sc.list.others'),
+            'sc.add':
+                this._configuration.createMethod('sc.create'),
+            'sc.get':
+                this._configuration.createMethod('sc.get'),
+            'sc.update':
+                this._configuration.createMethod('sc.set'),
+            'sc.delete':
+                this._configuration.createMethod('sc.delete'),
+            'sc.channel.list':
+                this._configuration.createMethod('sc.channel.list'),
+            'sc.channel.add':
+                this._configuration.createMethod('sc.channel.create'),
+            'sc.channel.get':
+                this._configuration.createMethod('sc.channel.get'),
+            'sc.channel.set':
+                this._configuration.createMethod('sc.channel.set'),
+            'sc.channel.delete':
+                this._configuration.createMethod('sc.channel.delete'),
             // User configuration
-            'user.getLocation': this._configuration
-                .createMethod('user.getLocation'),
+            'user.getLocation':
+                this._configuration.createMethod('user.getLocation'),
             // TLE methods
-            'tle.celestrak.getSections': this._configuration
-                .createMethod('tle.celestrak.sections'),
-            'tle.celestrak.getResource': this._configuration
-                .createMethod('tle.celestrak.resource'),
-            'tle.celestrak.getTle': this._configuration
-                .createMethod('tle.celestrak.tle'),
+            'tle.celestrak.getSections':
+                this._configuration.createMethod('tle.celestrak.sections'),
+            'tle.celestrak.getResource':
+                this._configuration.createMethod('tle.celestrak.resource'),
+            'tle.celestrak.getTle':
+                this._configuration.createMethod('tle.celestrak.tle'),
             // Simulation methods
-            'sc.getGroundtrack': this._simulation
-                .createMethod('sc.groundtrack'),
-            'sc.getPasses': this._simulation
-                .createMethod('sc.passes'),
-            'gs.getPasses': this._simulation
-                .createMethod('gs.passes'),
+            'sc.getGroundtrack':
+                this._simulation.createMethod('sc.groundtrack'),
+            'sc.getPasses':
+                this._simulation.createMethod('sc.passes'),
+            'gs.getPasses':
+                this._simulation.createMethod('gs.passes'),
 
             /** ************************************************************ */
             /** ************************************************************ */
             /* LEOP services */
 
-            'leop.getCfg': this._leop
-                .createMethod('getConfiguration'),
-            'leop.setCfg': this._leop
-                .createMethod('setConfiguration'),
-            'leop.getPasses': this._leop
-                .createMethod('getPasses'),
-            'leop.gs.list': this._leop
-                .createMethod('gs.list'),
-            'leop.sc.list': this._leop
-                .createMethod('sc.list'),
-            'leop.gs.add': this._leop
-                .createMethod('gs.add'),
-            'leop.gs.remove': this._leop
-                .createMethod('gs.remove'),
-            'leop.ufo.add': this._leop
-                .createMethod('launch.addUnknown'),
-            'leop.ufo.remove': this._leop
-                .createMethod('launch.removeUnknown'),
-            'leop.ufo.identify': this._leop
-                .createMethod('launch.identify'),
-            'leop.ufo.forget': this._leop
-                .createMethod('launch.forget'),
-            'leop.ufo.update': this._leop
-                .createMethod('launch.update'),
-            'leop.getMessages': this._leop
-                .createMethod('getMessages'),
+            'leop.getCfg':
+                this._leop.createMethod('getConfiguration'),
+            'leop.setCfg':
+                this._leop.createMethod('setConfiguration'),
+            'leop.getPasses':
+                this._leop.createMethod('getPasses'),
+            'leop.gs.list':
+                this._leop.createMethod('gs.list'),
+            'leop.sc.list':
+                this._leop.createMethod('sc.list'),
+            'leop.gs.add':
+                this._leop.createMethod('gs.add'),
+            'leop.gs.remove':
+                this._leop.createMethod('gs.remove'),
+            'leop.ufo.add':
+                this._leop.createMethod('launch.addUnknown'),
+            'leop.ufo.remove':
+                this._leop.createMethod('launch.removeUnknown'),
+            'leop.ufo.identify':
+                this._leop.createMethod('launch.identify'),
+            'leop.ufo.forget':
+                this._leop.createMethod('launch.forget'),
+            'leop.ufo.update':
+                this._leop.createMethod('launch.update'),
+            'leop.getMessages':
+                this._leop.createMethod('getMessages'),
 
             /** ************************************************************ */
             /** ************************************************************ */
             /** ************************************************************ */
 
             // NETWORK services
-            'net.alive': this._network.createMethod('alive'),
-            'net.geoip': this._network.createMethod('geoip'),
-            'net.user':  this._network.createMethod('user'),
+            'net.alive':
+                this._network.createMethod('alive'),
+            'net.geoip':
+                this._network.createMethod('geoip'),
+            'net.user':
+                this._network.createMethod('user'),
 
             // SCHEDULING services
-            'gs.availability': this._scheduling
-                .createMethod('gs.availability'),
-            'sc.compatibility': this._scheduling
-                .createMethod('sc.compatibility'),
-            'gs.operational': this._scheduling
-                .createMethod('gs.operational'),
-            'gs.operational.accept': this._scheduling
-                .createMethod('gs.confirmSelections'),
-            'gs.operational.deny': this._scheduling
-                .createMethod('gs.denySelections'),
-            'gs.operational.drop': this._scheduling
-                .createMethod('gs.cancelReservations'),
-            'sc.operational': this._scheduling
-                .createMethod('sc.operational'),
-            'sc.select': this._scheduling
-                .createMethod('sc.selectSlots'),
-            'sc.cancel': this._scheduling
-                .createMethod('sc.cancelSelections'),
-            'ss.compatibility': this._scheduling
-                .createMethod('segment.compatibility'),
+            'gs.availability':
+                this._scheduling.createMethod('gs.availability'),
+            'sc.compatibility':
+                this._scheduling.createMethod('sc.compatibility'),
+            'gs.operational':
+                this._scheduling.createMethod('gs.operational'),
+            'gs.operational.accept':
+                this._scheduling.createMethod('gs.confirmSelections'),
+            'gs.operational.deny':
+                this._scheduling.createMethod('gs.denySelections'),
+            'gs.operational.drop':
+                this._scheduling.createMethod('gs.cancelReservations'),
+            'sc.operational':
+                this._scheduling.createMethod('sc.operational'),
+            'sc.select':
+                this._scheduling.createMethod('sc.selectSlots'),
+            'sc.cancel':
+                this._scheduling.createMethod('sc.cancelSelections'),
+            'ss.compatibility':
+                this._scheduling.createMethod('segment.compatibility'),
         };
 
         /**
@@ -335,52 +346,6 @@ angular
             }).catch(function (cause) {
                 console.error('net.user', '-', cause);
             });
-        };
-
-        /**
-         * Function that retrieves the list of groundstations that belong
-         * exclusively to the currently logged user.
-         *
-         * @param String segment 'spacecraft' or 'groundstations'
-         * @returns Promise that returns a list with the segments of the user
-         */
-        this.getMySegments = function (segment) {
-
-            var rpc = ( segment === 'groundstations' ) ? 'gs.list': 'sc.list';
-
-            return this.getMyUsername().then(function (username) {
-                this.rCall(rpc, []).then(function (results) {
-                    var filtered;
-                    angular.forEach(results, function(r) {
-                        if (r.username === username) {
-                            filtered.push(r);
-                        }
-                    });
-                    return filtered;
-                });
-            });
-
-        };
-
-        /**
-         * Function that retrieves the list of spacecraft that belong
-         * exclusively to the currently logged user.
-         *
-         * @returns Promise that returns a list with the spacecraft of the
-         *          user.
-         */
-        this.getMySpacecraft = function () {
-            return this.getMySegments('spacecraft');
-        };
-
-        /**
-         * Function that retrieves the list of spacecraft that belong
-         * exclusively to the currently logged user.
-         *
-         * @returns Promise that returns a list with the spacecraft of the user
-         */
-        this.getMyGroundStations = function () {
-            return this.getMySegments('groundstations');
         };
 
         /**

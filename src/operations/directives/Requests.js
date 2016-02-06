@@ -411,10 +411,10 @@ angular.module('snRequestsDirective', [
          * Initialization of the controller.
          */
         $scope.init = function () {
-            satnetRPC.rCall('gs.list', []).then(function (results) {
+            satnetRPC.rCall('gs.list.mine', []).then(function (results) {
                 $scope.gui.groundstations = results.slice(0);
             }).catch(function (cause) {
-                snDialog.exception('gs.list', '-', cause);
+                snDialog.exception('gs.list.mine', '-', cause);
             });
             satnetRPC.rCall('sc.list', []).then(function (results) {
                 $scope.gui.spacecraft = results.slice(0);

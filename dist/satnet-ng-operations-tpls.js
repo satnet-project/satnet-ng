@@ -159,7 +159,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/requests/menu.html',
-    "<md-button id=\"menuRequests\" ng-click=\"openDialog()\" aria-label=\"operational\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-mixcloud\"></i> <b>requests</b></div></md-button>"
+    "<md-button id=\"menuRequests\" ng-click=\"openDialog()\" aria-label=\"operational\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-usb\"></i> <b>requests</b></div></md-button>"
   );
 
 
@@ -172,7 +172,7 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/requests/spacecraft.html',
-    "<h5 ng-show=\"gui.requests | isEmpty\" class=\"sn-no-item\">(no groundstations requests)</h5><md-list-item ng-repeat=\"(g, slots) in gui.requests\"><sn-gs-sc-requests sc=\"{{ gui.spacecraft_id }}\" gs=\"{{ g }}\" primary=\"spacecraft\" slots=\"slots\" state=\"SELECTED\"></sn-gs-sc-requests><sn-gs-sc-requests sc=\"{{ gui.spacecraft_id }}\" gs=\"{{ g }}\" primary=\"spacecraft\" slots=\"slots\" state=\"RESERVED\"></sn-gs-sc-requests></md-list-item>"
+    "<h5 ng-show=\"gui.requests | isEmpty\" class=\"sn-no-item\">(no groundstation requests)</h5><md-list-item ng-repeat=\"(g, slots) in gui.requests\"><sn-gs-sc-requests sc=\"{{ gui.spacecraft_id }}\" gs=\"{{ g }}\" primary=\"spacecraft\" slots=\"slots\" state=\"SELECTED\"></sn-gs-sc-requests><sn-gs-sc-requests sc=\"{{ gui.spacecraft_id }}\" gs=\"{{ g }}\" primary=\"spacecraft\" slots=\"slots\" state=\"RESERVED\"></sn-gs-sc-requests></md-list-item>"
   );
 
 
