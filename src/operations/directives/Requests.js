@@ -211,28 +211,6 @@ angular.module('snRequestsDirective', [
             filtered: []
         };
 
-        /*
-        $scope.$on(
-            snApplicationBus.createName(
-                snApplicationBus.CHANNELS.requests.id,
-                snApplicationBus.EVENTS.accepted
-            ),
-            function (e, slot) {
-                console.log('>>> @snGsScRequestsCtrl.e = ' + e);
-                if ($scope.gui.state === 'SELECTED') {
-                    if (slot.state === 'SELECTED') {
-                        var found = $filter('findProperty')(
-                            'state', 'XXX', $scope.filtered
-                        );
-                    }
-                }
-                if ($scope.gui.state === 'RESERVED' ) {
-                    console.log('RESERVED');
-                }
-            }
-        );
-        */
-
         /**
          * Function that filters the slots by state, holding only those who
          * match the required state. The result is hold at the
