@@ -17,19 +17,17 @@
  */
 
 /** Module definition (empty array is vital!). */
-angular.module('snBroadcasterServices', [
-    'snPushServices'
-])
+angular.module('snBroadcasterServices', ['snPushServices'])
 .service('broadcaster', [
     '$rootScope', '$log', 'satnetPush',
 
     /**
      * Broadcaster service that enables the sending and reception of messages
      * among all the modules of this Angular application.
-     * 
-     * @param {Object}   $rootScope Main Angular scope for this service
-     * @param {[[Type]]} $log       $log Angular service
-     * @param {Object}   satnetPush Pusher.com service access
+     *
+     * @param {Object} $rootScope Main Angular scope for this service
+     * @param {Object} $log       $log Angular service
+     * @param {Object} satnetPush Pusher.com service access
      */
     function ($rootScope, $log, satnetPush) {
 

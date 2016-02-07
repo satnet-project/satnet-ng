@@ -160,12 +160,6 @@ angular.module('snTimelineServices', [])
 
             var results = [];
 
-            console.log(
-                '%%%% WINDOW: (' + moment(cfg.start_d).format() +
-                ', ' + moment(cfg.end_d).format() + '), no_slots = ' +
-                slots.length
-            );
-
             for (var i = 0; i < slots.length; i++ ) {
 
                 var raw_slot = slots[i],
@@ -174,12 +168,10 @@ angular.module('snTimelineServices', [])
 
                 // 0) Old or futuristic slots are discarded first.
                 if ( this.discardSlot(cfg, slot_s, slot_e) ) { continue; }
-                console.log('%%%% raw_slot = ' + JSON.stringify(raw_slot));
 
                 // 1) The dates are first normalized, so that the slots are
                 //      only displayed within the given start and end dates.
                 var n_slot = this.normalizeSlot(cfg, slot_s, slot_e);
-                console.log('%%%% n_slot = ' + JSON.stringify(n_slot));
 
                 // 2) The resulting slot is added to the results array
                 results.push(this.createSlot(cfg, raw_slot, n_slot));
