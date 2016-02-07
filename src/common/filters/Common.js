@@ -15,17 +15,24 @@
 */
 
 angular.module('snCommonFilters', [])
-.filter('isEmpty', [
-
-    /**
-     * Filter that returns a function to filter out the empty objects.
-     *
-     * @returns {Function} Function to be used as a filter.
-     */
-    function () {
-        return function (object) {
-            return angular.equals({}, object);
+.filter('isEmpty', function () {
+    return function (object) {
+        return angular.equals({}, object);
+    };
+})
+.filter('findProperty', function() {
+    return function(propertyName, propertyValue, collection) {
+        for (var i = 0, len = collection.length; i < len; i++) {
+            if (collection[i][propertyName] === propertyValue) {
+                return {
+                    index: i,
+                    value: collection[i]
+                };
+            }
+        }
+        return {
+            index: -1,
+            value: null
         };
-    }
-
-]);
+    };
+});

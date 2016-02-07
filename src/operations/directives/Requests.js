@@ -16,12 +16,12 @@
 
 angular.module('snRequestsDirective', [
     'ngMaterial',
-    'snApplicationBus', 'snCommonFilters',
+    'snCommonFilters',
     'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestSlotCtrl', [
     '$scope', '$mdDialog', '$mdToast',
-    'satnetRPC', 'snDialog', 'snApplicationBus',
+    'satnetRPC', 'snDialog',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -29,7 +29,7 @@ angular.module('snRequestsDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $mdDialog, $mdToast, satnetRPC, snDialog, snApplicationBus
+        $scope, $mdDialog, $mdToast, satnetRPC, snDialog
     ) {
 
         $scope.gui = {
@@ -56,11 +56,6 @@ angular.module('snRequestsDirective', [
                 ]
             ).then(function (results) {
                 snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
-                snApplicationBus.send(
-                    snApplicationBus.CHANNELS.requests.id,
-                    snApplicationBus.EVENTS.accepted.id,
-                    $scope.slot
-                );
             }).catch(function (c) {
                 snDialog.exception('gs.operational.accept', '', c);
             });
@@ -197,7 +192,8 @@ angular.module('snRequestsDirective', [
     }
 
 )
-.controller('snGsScRequestsCtrl', ['$scope',
+.controller('snGsScRequestsCtrl', [
+    '$scope',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -215,9 +211,27 @@ angular.module('snRequestsDirective', [
             filtered: []
         };
 
+        /*
         $scope.$on(
-
+            snApplicationBus.createName(
+                snApplicationBus.CHANNELS.requests.id,
+                snApplicationBus.EVENTS.accepted
+            ),
+            function (e, slot) {
+                console.log('>>> @snGsScRequestsCtrl.e = ' + e);
+                if ($scope.gui.state === 'SELECTED') {
+                    if (slot.state === 'SELECTED') {
+                        var found = $filter('findProperty')(
+                            'state', 'XXX', $scope.filtered
+                        );
+                    }
+                }
+                if ($scope.gui.state === 'RESERVED' ) {
+                    console.log('RESERVED');
+                }
+            }
         );
+        */
 
         /**
          * Function that filters the slots by state, holding only those who

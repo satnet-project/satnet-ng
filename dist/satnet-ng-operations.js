@@ -58,6 +58,18 @@ angular
         };
 
         /**
+         * This function creates the name for the event, combining both the
+         * name of the channel and the event in a single channel identifier,
+         * as required by Angular JS.
+         *
+         * @param channel String with the channel identifier
+         * @param event String with the event identifier
+         */
+        this.createName = function (channel, even) {
+            return channel + ':' + event;
+        };
+
+        /**
          * Method that allows sending a message to a channel with an associated
          * event.
          *
@@ -66,7 +78,7 @@ angular
          * @param {Object} data Object with the data to be serialized
          */
         this.send = function (channel, event, data) {
-            var name = channel + ':' + event;
+            var name = this.createName(channel, event);
             $log.log(
                 '>>> @sn-msg-bus: notification <' + name +
                 '>: ' + JSON.stringify(data, null, 4)
@@ -2243,20 +2255,27 @@ angular.module('snRuleFilters', [])
 */
 
 angular.module('snCommonFilters', [])
-.filter('isEmpty', [
-
-    /**
-     * Filter that returns a function to filter out the empty objects.
-     *
-     * @returns {Function} Function to be used as a filter.
-     */
-    function () {
-        return function (object) {
-            return angular.equals({}, object);
+.filter('isEmpty', function () {
+    return function (object) {
+        return angular.equals({}, object);
+    };
+})
+.filter('findProperty', function() {
+    return function(propertyName, propertyValue, collection) {
+        for (var i = 0, len = collection.length; i < len; i++) {
+            if (collection[i][propertyName] === propertyValue) {
+                return {
+                    index: i,
+                    value: collection[i]
+                };
+            }
+        }
+        return {
+            index: -1,
+            value: null
         };
-    }
-
-]);
+    };
+});
 ;/**
  * Copyright 2014 Ricardo Tubio-Pardavila
  *
@@ -6492,12 +6511,12 @@ angular.module('snOperationalDirective', [
 
 angular.module('snRequestsDirective', [
     'ngMaterial',
-    'snApplicationBus', 'snCommonFilters',
+    'snCommonFilters',
     'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestSlotCtrl', [
     '$scope', '$mdDialog', '$mdToast',
-    'satnetRPC', 'snDialog', 'snApplicationBus',
+    'satnetRPC', 'snDialog',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -6505,7 +6524,7 @@ angular.module('snRequestsDirective', [
      * @param {Object} $scope $scope for the controller
      */
     function (
-        $scope, $mdDialog, $mdToast, satnetRPC, snDialog, snApplicationBus
+        $scope, $mdDialog, $mdToast, satnetRPC, snDialog
     ) {
 
         $scope.gui = {
@@ -6532,11 +6551,6 @@ angular.module('snRequestsDirective', [
                 ]
             ).then(function (results) {
                 snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
-                snApplicationBus.send(
-                    snApplicationBus.CHANNELS.requests.id,
-                    snApplicationBus.EVENTS.accepted.id,
-                    $scope.slot
-                );
             }).catch(function (c) {
                 snDialog.exception('gs.operational.accept', '', c);
             });
@@ -6673,7 +6687,8 @@ angular.module('snRequestsDirective', [
     }
 
 )
-.controller('snGsScRequestsCtrl', ['$scope',
+.controller('snGsScRequestsCtrl', [
+    '$scope',
 
     /**
      * Controller function for handling the SatNet requests dialog.
@@ -6691,9 +6706,27 @@ angular.module('snRequestsDirective', [
             filtered: []
         };
 
+        /*
         $scope.$on(
-
+            snApplicationBus.createName(
+                snApplicationBus.CHANNELS.requests.id,
+                snApplicationBus.EVENTS.accepted
+            ),
+            function (e, slot) {
+                console.log('>>> @snGsScRequestsCtrl.e = ' + e);
+                if ($scope.gui.state === 'SELECTED') {
+                    if (slot.state === 'SELECTED') {
+                        var found = $filter('findProperty')(
+                            'state', 'XXX', $scope.filtered
+                        );
+                    }
+                }
+                if ($scope.gui.state === 'RESERVED' ) {
+                    console.log('RESERVED');
+                }
+            }
         );
+        */
 
         /**
          * Function that filters the slots by state, holding only those who

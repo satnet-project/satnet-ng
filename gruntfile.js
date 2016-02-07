@@ -290,7 +290,7 @@ module.exports = function (grunt) {
     // TASKS
     grunt.registerTask(
         'test', [
-            'jshint',
+            //'jshint',
             'karma'
         ]
     );

@@ -58,6 +58,18 @@ angular
         };
 
         /**
+         * This function creates the name for the event, combining both the
+         * name of the channel and the event in a single channel identifier,
+         * as required by Angular JS.
+         *
+         * @param channel String with the channel identifier
+         * @param event String with the event identifier
+         */
+        this.createName = function (channel, even) {
+            return channel + ':' + event;
+        };
+
+        /**
          * Method that allows sending a message to a channel with an associated
          * event.
          *
@@ -66,7 +78,7 @@ angular
          * @param {Object} data Object with the data to be serialized
          */
         this.send = function (channel, event, data) {
-            var name = channel + ':' + event;
+            var name = this.createName(channel, event);
             $log.log(
                 '>>> @sn-msg-bus: notification <' + name +
                 '>: ' + JSON.stringify(data, null, 4)
