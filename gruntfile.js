@@ -56,6 +56,7 @@ module.exports = function (grunt) {
             },
             operations: {
                 src: [
+                    'src/common/services/ApplicationBus.js',
                     'src/common/services/Broadcaster.js',
                     'src/common/services/Celestrak.js',
                     'src/common/services/Controllers.js',

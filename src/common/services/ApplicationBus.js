@@ -45,6 +45,15 @@ angular
             },
             deleted : {
                 id: 'deleted'
+            },
+            accepted: {
+                id: 'accepted'
+            },
+            denied: {
+                id: 'denied'
+            },
+            dropped: {
+                id: 'dropped'
             }
         };
 
@@ -57,11 +66,12 @@ angular
          * @param {Object} data Object with the data to be serialized
          */
         this.send = function (channel, event, data) {
+            var name = channel + ':' + event;
             $log.log(
-                '>>> @sn-msg-bus: notification <' + channel + ', ' + event +
+                '>>> @sn-msg-bus: notification <' + name +
                 '>: ' + JSON.stringify(data, null, 4)
             );
-            $rootScope.$broadcast(channel, event, data);
+            $rootScope.$broadcast(name, data);
         };
 
     }

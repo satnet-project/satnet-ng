@@ -48,8 +48,8 @@ describe('Testing ApplicationBus Service', function () {
             message
         );
         expect($rootScope.$broadcast).toHaveBeenCalledWith(
-            snMessageBus.CHANNELS.requests.id,
-            snMessageBus.EVENTS.created.id,
+            snMessageBus.CHANNELS.requests.id + ':' +
+                snMessageBus.EVENTS.created.id,
             message
         );
         $rootScope.$broadcast.calls.reset();
@@ -60,8 +60,8 @@ describe('Testing ApplicationBus Service', function () {
             message
         );
         expect($rootScope.$broadcast).toHaveBeenCalledWith(
-            snMessageBus.CHANNELS.requests.id,
-            snMessageBus.EVENTS.updated.id,
+            snMessageBus.CHANNELS.requests.id + ':' +
+                snMessageBus.EVENTS.updated.id,
             message
         );
         $rootScope.$broadcast.calls.reset();
@@ -72,8 +72,8 @@ describe('Testing ApplicationBus Service', function () {
             message
         );
         expect($rootScope.$broadcast).toHaveBeenCalledWith(
-            snMessageBus.CHANNELS.requests.id,
-            snMessageBus.EVENTS.deleted.id,
+            snMessageBus.CHANNELS.requests.id + ':' +
+                snMessageBus.EVENTS.deleted.id,
             message
         );
         $rootScope.$broadcast.calls.reset();

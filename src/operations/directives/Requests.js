@@ -16,17 +16,21 @@
 
 angular.module('snRequestsDirective', [
     'ngMaterial',
-    'snCommonFilters', 'snRequestsFilters', 'snControllers', 'snJRPCServices'
+    'snApplicationBus', 'snCommonFilters',
+    'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestSlotCtrl', [
-    '$scope', '$mdDialog', '$mdToast', 'satnetRPC','snDialog',
+    '$scope', '$mdDialog', '$mdToast',
+    'satnetRPC', 'snDialog', 'snApplicationBus',
 
     /**
      * Controller function for handling the SatNet requests dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $mdDialog, $mdToast, satnetRPC, snDialog) {
+    function (
+        $scope, $mdDialog, $mdToast, satnetRPC, snDialog, snApplicationBus
+    ) {
 
         $scope.gui = {
             groundstation_id: '',
@@ -52,6 +56,11 @@ angular.module('snRequestsDirective', [
                 ]
             ).then(function (results) {
                 snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
+                snApplicationBus.send(
+                    snApplicationBus.CHANNELS.requests.id,
+                    snApplicationBus.EVENTS.accepted.id,
+                    $scope.slot
+                );
             }).catch(function (c) {
                 snDialog.exception('gs.operational.accept', '', c);
             });
@@ -205,6 +214,10 @@ angular.module('snRequestsDirective', [
             slots: [],
             filtered: []
         };
+
+        $scope.$on(
+
+        );
 
         /**
          * Function that filters the slots by state, holding only those who
