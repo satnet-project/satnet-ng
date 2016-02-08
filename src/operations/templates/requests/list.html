@@ -10,19 +10,33 @@
 
         <div layout="row">
             <div style="margin: 10px; padding: 2px;" flex="47">
-                <h5 ng-hide="gui.groundstations.length" class="sn-no-item">
+                <h5 ng-hide="gui.gss.length" class="sn-no-item">
                     (no ground stations available)
                 </h5>
                 <md-tabs md-dynamic-height md-border-bottom>
-                    <md-tab ng-repeat="g in gui.groundstations" label="{{ g }}">
-                        <sn-gs-requests gs="{{ g }}"></sn-gs-requests>
+                    <md-tab ng-repeat="g in gui.gss" label="{{ g }}">
+
+                        <h5 ng-show="gui.slots | isEmpty" class="sn-no-item">
+                            (no requests)
+                        </h5>
+                        <md-list-item ng-repeat="slot in gui.slots[g]">
+                            <sn-request-slot gs="{{ g }}"
+                                            sc="{{ Object.keys(slot)[0] }}"
+                                            slot="slot[]"
+                                            primary="groundstation">
+                            </sn-request-slot>
+                        </md-list-item>
+
                     </md-tab>
                 </md-tabs>
             </div>
             <div style="margin: 10px; padding: 2px;" flex="47">
                 <md-tabs md-dynamic-height md-border-bottom>
-                    <md-tab ng-repeat="s in gui.spacecraft" label="{{ s }}">
-                        <sn-sc-requests sc="{{ s }}"></sn-sc-requests>
+                    <md-tab ng-repeat="s in gui.scs" label="{{ s }}">
+                        <!--
+                        <sn-ss-requests ss="{{ s }}" slots={{ slots }}>
+                        </sn-ss-requests>
+                        -->
                     </md-tab>
                 </md-tabs>
             </div>

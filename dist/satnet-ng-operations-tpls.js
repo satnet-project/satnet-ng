@@ -154,12 +154,20 @@ angular.module('snOperationsDirective').run(['$templateCache', function($templat
 
 
   $templateCache.put('operations/templates/requests/list.html',
-    "<md-dialog aria-label=\"Slot Requests Dialog\" style=\"width: 80%; max-width: 650px\" ng-cloak><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\" md-padding><div layout=\"row\"><div style=\"margin: 10px; padding: 2px\" flex=\"47\"><h5 ng-hide=\"gui.groundstations.length\" class=\"sn-no-item\">(no ground stations available)</h5><md-tabs md-dynamic-height md-border-bottom><md-tab ng-repeat=\"g in gui.groundstations\" label=\"{{ g }}\"><sn-gs-requests gs=\"{{ g }}\"></sn-gs-requests></md-tab></md-tabs></div><div style=\"margin: 10px; padding: 2px\" flex=\"47\"><md-tabs md-dynamic-height md-border-bottom><md-tab ng-repeat=\"s in gui.spacecraft\" label=\"{{ s }}\"><sn-sc-requests sc=\"{{ s }}\"></sn-sc-requests></md-tab></md-tabs></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
+    "<md-dialog aria-label=\"Slot Requests Dialog\" style=\"width: 80%; max-width: 650px\" ng-cloak><md-toolbar class=\"md-theme-light\"><h2 class=\"md-toolbar-tools\"><span>Slot Requests</span></h2></md-toolbar><md-content id=\"sn-sch-md-content\" md-padding><div layout=\"row\"><div style=\"margin: 10px; padding: 2px\" flex=\"47\"><h5 ng-hide=\"gui.gss.length\" class=\"sn-no-item\">(no ground stations available)</h5><md-tabs md-dynamic-height md-border-bottom><md-tab ng-repeat=\"g in gui.gss\" label=\"{{ g }}\"><h5 ng-show=\"gui.slots | isEmpty\" class=\"sn-no-item\">(no requests)</h5><md-list-item ng-repeat=\"slot in gui.slots[g]\"><sn-request-slot gs=\"{{ g }}\" sc=\"{{ Object.keys(slot)[0] }}\" slot=\"slot[]\" primary=\"groundstation\"></sn-request-slot></md-list-item></md-tab></md-tabs></div><div style=\"margin: 10px; padding: 2px\" flex=\"47\"><md-tabs md-dynamic-height md-border-bottom><md-tab ng-repeat=\"s in gui.scs\" label=\"{{ s }}\"><!--\n" +
+    "                        <sn-ss-requests ss=\"{{ s }}\" slots={{ slots }}>\n" +
+    "                        </sn-ss-requests>\n" +
+    "                        --></md-tab></md-tabs></div></div></md-content><md-content class=\"add-gs-dialog menu-list\"><div layout=\"row\"><md-button ng-click=\"close()\" aria-label=\"Cancel\" class=\"md-primary menu-button sn-margin\" style=\"width: 100px\"><div layout=\"row\"><i class=\"fa fa-reply\"></i> <b style=\"margin-left: 15px\">cancel</b></div></md-button></div></md-content></md-dialog>"
   );
 
 
   $templateCache.put('operations/templates/requests/menu.html',
     "<md-button id=\"menuRequests\" ng-click=\"openDialog()\" aria-label=\"operational\" class=\"md-primary menu-button\"><div layout=\"row\" layout-fill><i class=\"fa fa-usb\"></i> <b>requests</b></div></md-button>"
+  );
+
+
+  $templateCache.put('operations/templates/requests/segment.html',
+    "<h5 ng-show=\"gui.requests | isEmpty\" class=\"sn-no-item\">(no requests)</h5><md-list-item ng-repeat=\"(s, slots) in gui.requests\"><sn-gs-sc-requests gs=\"{{ gui.groundstation_id }}\" sc=\"{{ s }}\" primary=\"groundstation\" slots=\"slots\" state=\"SELECTED\"></sn-gs-sc-requests><sn-gs-sc-requests gs=\"{{ gui.groundstation_id }}\" sc=\"{{ s }}\" primary=\"groundstation\" slots=\"slots\" state=\"RESERVED\"></sn-gs-sc-requests></md-list-item>"
   );
 
 

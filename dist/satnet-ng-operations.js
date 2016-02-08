@@ -6536,7 +6536,6 @@ angular.module('snRequestsDirective', [
                 drop: true,
                 deny: true,
             },
-            state: '',
             slot: {}
         };
 
@@ -6606,7 +6605,7 @@ angular.module('snRequestsDirective', [
          * displayed, taking into account the state of the controller.
          */
         $scope.showAccept = function () {
-            return ($scope.gui.state === 'SELECTED') &&
+            return ($scope.gui.slot.state === 'SELECTED') &&
                 !($scope.gui.hide.accept);
         };
 
@@ -6615,7 +6614,7 @@ angular.module('snRequestsDirective', [
          * displayed, taking into account the state of the controller.
          */
         $scope.showDeny = function () {
-            return ($scope.gui.state === 'SELECTED') &&
+            return ($scope.gui.slot.state === 'SELECTED') &&
                 !($scope.gui.hide.deny);
         };
 
@@ -6626,12 +6625,12 @@ angular.module('snRequestsDirective', [
         $scope.showDrop = function () {
             if ($scope.gui.primary === 'spacecraft') {
                 return !($scope.gui.hide.drop) && (
-                        ($scope.gui.state === 'SELECTED') ||
-                        ($scope.gui.state === 'RESERVED')
+                        ($scope.gui.slot.state === 'SELECTED') ||
+                        ($scope.gui.slot.state === 'RESERVED')
                     );
             } else {
                 return !($scope.gui.hide.drop) && (
-                        ($scope.gui.state === 'RESERVED')
+                        ($scope.gui.slot.state === 'RESERVED')
                     );
             }
         };
@@ -6644,8 +6643,7 @@ angular.module('snRequestsDirective', [
             $scope.gui.groundstation_id = $scope.gs;
             $scope.gui.spacecraft_id = $scope.sc;
             $scope.gui.primary = $scope.primary;
-            $scope.gui.state = $scope.state;
-            $scope.gui.slot = $scope.slot;
+            $scope.gui.slot = $scope.slot[$scope.sc];
 
             if ( $scope.gui.primary === 'spacecraft' ) {
                 $scope.gui.hide.drop = false;
@@ -6680,7 +6678,6 @@ angular.module('snRequestsDirective', [
                 sc: '@',
                 gs: '@',
                 primary: '@',
-                state: '@',
                 slot: '='
             }
         };
@@ -6898,8 +6895,9 @@ angular.module('snRequestsDirective', [
     function ($scope, $mdDialog, satnetRPC, snDialog) {
 
         $scope.gui = {
-            groundstations: [],
-            spacecraft: []
+            gss: [],
+            scs: [],
+            slots: {}
         };
 
         /**
@@ -6908,19 +6906,80 @@ angular.module('snRequestsDirective', [
         $scope.close = function () { $mdDialog.hide(); };
 
         /**
-         * Initialization of the controller.
+         * This function retrieves the operational slots from the server for a
+         * given segment and stores them internally in a single list for the
+         * controller.
+         * IMPORTANT: It processes the list so that it adds the reference to
+         * the other segment related in the slot by place its id inside the
+         * object of the slot rather than as a key to access the slot.
+         *
+         * @param segmentType String that indicates whether the reference
+         *                      segment is a ground station ('sc') or a
+         *                      spacecraft ('sc')
+         * @param segmentId String Identifier of the segment
          */
-        $scope.init = function () {
+        $scope._pullSlots = function (segmentType, segmentId) {
+            var rpc_name = segmentType + '.operational';
+
+            satnetRPC.rCall(rpc_name, [segmentId]).then(function (results) {
+
+                if ((results === null) || (angular.equals({}, results))) {
+                    return;
+                }
+
+                var ss_id = Object.keys(results)[0],
+                    slots = results[ss_id];
+
+                for (var i = 0, L = slots.length; i < L; i++) {
+                    slots[i].segment_id = ss_id;
+                }
+
+                $scope.gui.slots[segmentId] = slots;
+
+            }).catch(function (cause) {
+                snDialog.exception(segmentType + '.operational', '-', cause);
+            });
+
+        };
+
+        /**
+         * Retrieves the slots for all the ground stations owned by the
+         * currently logged-in user.
+         * @returns
+         */
+        $scope._pullGsSlots = function () {
             satnetRPC.rCall('gs.list.mine', []).then(function (results) {
-                $scope.gui.groundstations = results.slice(0);
+                $scope.gui.gss = results;
+                for (var i = 0, l = $scope.gui.gss.length;i < l; i++) {
+                    $scope._pullSlots('gs', $scope.gui.gss[i]);
+                }
             }).catch(function (cause) {
                 snDialog.exception('gs.list.mine', '-', cause);
             });
+        };
+
+        /**
+         * Retrieves the slots for all the spacecraft owned by the
+         * currently logged-in user.
+         * @returns
+         */
+        $scope._pullScSlots = function () {
             satnetRPC.rCall('sc.list', []).then(function (results) {
-                $scope.gui.spacecraft = results.slice(0);
+                $scope.gui.scs = results;
+                for (var i = 0, l = $scope.gui.scs.length; i < l; i++ ) {
+                    $scope._pullSlots('sc', $scope.gui.scs[i]);
+                }
             }).catch(function (cause) {
                 snDialog.exception('sc.list', '-', cause);
             });
+        };
+
+        /**
+         * Initialization of the controller.
+         */
+        $scope.init = function () {
+            $scope._pullGsSlots();
+            $scope._pullScSlots();
         };
 
         $scope.init();

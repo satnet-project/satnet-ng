@@ -128,6 +128,34 @@ angular.module('snJRPCMock', [])
     '1', '2', '3'
 ])
 .constant('GS_RULE_ID_MOCK', 1)
+.constant('GS_OPERATIONAL_SLOTS', {
+    "sc-test-1": [{
+        "identifier": "gs-baker-humsat-d-1454089695749824",
+        "date_start": "2016-01-29T17:48:15.749824+00:00",
+        "date_end": "2016-01-29T18:00:47.241727+00:00",
+        "state": "FREE"
+    }]
+})
+.constant('SC_OPERATIONAL_SLOTS',  {
+    "gs-1": [{
+        "identifier": "gs-baker-humsat-d-1454089695749824",
+        "date_start": "2016-01-29T17:48:15.749824+00:00",
+        "date_end": "2016-01-29T18:00:47.241727+00:00",
+        "state": "FREE"
+    }],
+    "gs-2": [{
+        "identifier": "gs-baker-humsat-d-1454089695749824",
+        "date_start": "2016-01-29T17:48:15.749824+00:00",
+        "date_end": "2016-01-29T18:00:47.241727+00:00",
+        "state": "FREE"
+    }],
+    "gs-3": [{
+        "identifier": "gs-baker-humsat-d-1454089695749824",
+        "date_start": "2016-01-29T17:48:15.749824+00:00",
+        "date_end": "2016-01-29T18:00:47.241727+00:00",
+        "state": "FREE"
+    }]
+})
 .service('satnetRPC', [
     '$log', '$q',
     'USERNAME_MOCK', 'GS_CFG_MOCK',
@@ -137,6 +165,7 @@ angular.module('snJRPCMock', [])
     'GS_AVAILABILITY_MOCK',
     'SC_CHANNEL_MOCK', 'GS_CHANNEL_MOCK',
     'GS_RULES_MOCK', 'GS_RULE_ID_MOCK',
+    'GS_OPERATIONAL_SLOTS', 'SC_OPERATIONAL_SLOTS',
 
     function (
         $log, $q,
@@ -146,7 +175,8 @@ angular.module('snJRPCMock', [])
         SC_COMPATIBILITY_MOCK,
         GS_AVAILABILITY_MOCK,
         SC_CHANNEL_MOCK, GS_CHANNEL_MOCK,
-        GS_RULES_MOCK, GS_RULE_ID_MOCK
+        GS_RULES_MOCK, GS_RULE_ID_MOCK,
+        GS_OPERATIONAL_SLOTS, SC_OPERATIONAL_SLOTS
     ) {
 
         this.getServerLocation = function (hostname) {
@@ -186,6 +216,14 @@ angular.module('snJRPCMock', [])
             }
 
             if (service === 'gs.list') {
+                result = GS_LIST_MOCK;
+            }
+
+            if (service === 'sc.list.mine') {
+                result = SC_LIST_MOCK;
+            }
+
+            if (service === 'gs.list.mine') {
                 result = GS_LIST_MOCK;
             }
 
@@ -232,6 +270,13 @@ angular.module('snJRPCMock', [])
             }
             if (service === 'rules.delete') {
                 result = true;
+            }
+
+            if (service === 'gs.operational') {
+                result = GS_OPERATIONAL_SLOTS;
+            }
+            if (service === 'sc.operational') {
+                result = SC_OPERATIONAL_SLOTS;
             }
 
             if (result === null) {
