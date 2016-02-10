@@ -25,14 +25,11 @@ angular.module('snRequestsFilters', [])
      */
     function () {
         return function (slot, state) {
-
             if (slot === undefined) { return null; }
-
             if (slot.state === state) {
                 return null;
             }
             return slot;
-
         };
     }
 
