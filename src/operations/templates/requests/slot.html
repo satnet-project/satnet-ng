@@ -9,9 +9,9 @@
                 </p></li>
                 <li><p>{{ gui.slot | printRequest }}</p></li>
                 <li><p ng-class="{
-                        'sn-state-selected':  gui.state === 'SELECTED',
-                        'sn-state-reserved':  gui.state === 'RESERVED'
-                    }">{{ gui.state }}
+                        'sn-state-selected': gui.slot.state === 'SELECTED',
+                        'sn-state-reserved': gui.slot.state === 'RESERVED'
+                    }">{{ gui.slot.state }}
                 </p></li>
             </ul>
         </div>

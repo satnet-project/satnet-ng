@@ -317,7 +317,7 @@ angular
                 return data.data;
 
             }, function (error) {
-                console.log("error = " + JSON.stringify(error));
+                $log.error("error = " + JSON.stringify(error));
                 error_fn(service, params, 'NONE', error);
             });
 
