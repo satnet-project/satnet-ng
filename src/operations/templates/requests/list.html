@@ -16,30 +16,41 @@
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab ng-repeat="g in gui.gss" label="{{ g }}">
 
-                        <h5 ng-show="gui.slots | isEmpty" class="sn-no-item">
+                        <h5 ng-hide="gui.slots[g].length" class="sn-no-item">
                             (no requests)
                         </h5>
-                        <md-list-item ng-repeat="slot in gui.slots[g]">
-                            <sn-request-slot gs="{{ g }}"
-                                            sc="{{ Object.keys(slot)[0] }}"
-                                            slot="slot[]"
-                                            primary="groundstation">
-                            </sn-request-slot>
-                        </md-list-item>
+
+<md-list-item ng-repeat="slot in gui.slots[g]">
+    <sn-request-slot gs="{{ g }}" sc="{{ slot.segment_id }}" slot="slot"
+                        primary="'groundstation'">
+    </sn-request-slot>
+</md-list-item>
 
                     </md-tab>
                 </md-tabs>
             </div>
+
             <div style="margin: 10px; padding: 2px;" flex="47">
+                <h5 ng-hide="gui.scs.length" class="sn-no-item">
+                    (no spacecraft available)
+                </h5>
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab ng-repeat="s in gui.scs" label="{{ s }}">
-                        <!--
-                        <sn-ss-requests ss="{{ s }}" slots={{ slots }}>
-                        </sn-ss-requests>
-                        -->
+
+                        <h5 ng-hide="gui.slots[s].length" class="sn-no-item">
+                            (no requests)
+                        </h5>
+
+<md-list-item ng-repeat="slot in gui.slots[s]">
+    <sn-request-slot gs="{{ s }}" sc="{{ slot.segment_id }}" slot="slot"
+                        primary="'groundstation'">
+    </sn-request-slot>
+</md-list-item>
+
                     </md-tab>
                 </md-tabs>
             </div>
+
         </div>
 
     </md-content>

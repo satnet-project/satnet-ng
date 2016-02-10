@@ -16,6 +16,27 @@
 
 angular.module('snRequestsFilters', [])
 .constant('SLOT_DATE_FORMAT', 'YYYY.MM.DD@hh:mm:ssZ')
+.filter('outByState', [
+
+    /**
+     * Filters out the sltos with the given state.
+     *
+     * @returns {Object} The given slot if the state does not match or 'null'
+     */
+    function () {
+        return function (slot, state) {
+
+            if (slot === undefined) { return null; }
+
+            if (slot.state === state) {
+                return null;
+            }
+            return slot;
+
+        };
+    }
+
+])
 .filter('printRequest', [ 'SLOT_DATE_FORMAT',
 
     /**
@@ -30,10 +51,10 @@ angular.module('snRequestsFilters', [])
 
             var start_d = moment(slot.date_start),
                 end_d = moment(slot.date_end),
-                duration = moment.duration(end_d.diff(start_d));
+                duration = moment.duration(end_d.diff(start_d)),
+                duration_s = duration.humanize().replace(/ minute(s)*/, '\'');
 
-            return start_d.format(SLOT_DATE_FORMAT) +
-                ' <' + duration.humanize() + '>';
+            return start_d.format(SLOT_DATE_FORMAT) + ' :: ' + duration_s;
 
         };
     }
