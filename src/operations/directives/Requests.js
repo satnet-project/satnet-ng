@@ -16,21 +16,18 @@
 
 angular.module('snRequestsDirective', [
     'ngMaterial',
-    'snCommonFilters',
+    'snCommonFilters', 'snApplicationBus',
     'snRequestsFilters', 'snControllers', 'snJRPCServices'
 ])
 .controller('snRequestSlotCtrl', [
-    '$scope', '$mdDialog', '$mdToast',
-    'satnetRPC', 'snDialog',
+    '$scope', '$mdDialog', '$mdToast', 'satnetRPC', 'snDialog', 'snMessageBus',
 
     /**
      * Controller function for handling the SatNet requests dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function (
-        $scope, $mdDialog, $mdToast, satnetRPC, snDialog
-    ) {
+    function ($scope, $mdDialog, $mdToast, satnetRPC, snDialog, snMessageBus) {
 
         $scope.gui = {
             groundstation_id: '',
@@ -55,6 +52,16 @@ angular.module('snRequestsDirective', [
                 ]
             ).then(function (results) {
                 snDialog.toastAction('Confirmed slot #',$scope.slot.identifier);
+                $scope.slot.state = 'RESERVED';
+                snMessageBus.send(
+                    snMessageBus.CHANNELS.requests.id,
+                    snMessageBus.EVENTS.accepted.id, {
+                        gs_id: $scope.gui.groundstation_id,
+                        sc_id: $scope.gui.spacecraft_id,
+                        primary: $scope.gui.primary,
+                        slot: $scope.gui.slot
+                    }
+                );
             }).catch(function (c) {
                 snDialog.exception('gs.operational.accept', '', c);
             });
@@ -74,6 +81,16 @@ angular.module('snRequestsDirective', [
                 ]
             ).then(function (results) {
                 snDialog.toastAction('Denied slot #', $scope.slot.identifier);
+                $scope.slot.state = 'FREE';
+                snMessageBus.send(
+                    snMessageBus.CHANNELS.requests.id,
+                    snMessageBus.EVENTS.denied.id, {
+                        gs_id: $scope.gui.groundstation_id,
+                        sc_id: $scope.gui.spacecraft_id,
+                        primary: $scope.gui.primary,
+                        slot: $scope.gui.slot
+                    }
+                );
             }).catch(function (c) {
                 snDialog.exception('gs.operational.drop', '', c);
             });
@@ -99,6 +116,16 @@ angular.module('snRequestsDirective', [
                 rpc, [segment_id, [$scope.slot.identifier]]
             ).then(function (results) {
                 snDialog.toastAction('Dropped slot #', $scope.slot.identifier);
+                $scope.slot.state = 'FREE';
+                snMessageBus.send(
+                    snMessageBus.CHANNELS.requests.id,
+                    snMessageBus.EVENTS.dropped.id, {
+                        gs_id: $scope.gui.groundstation_id,
+                        sc_id: $scope.gui.spacecraft_id,
+                        primary: $scope.gui.primary,
+                        slot: $scope.gui.slot
+                    }
+                );
             }).catch(function (c) {
                 snDialog.exception(rpc, '', c);
             });
@@ -190,14 +217,100 @@ angular.module('snRequestsDirective', [
 
 )
 .controller('snRequestsDlgCtrl', [
-    '$scope', '$filter', '$mdDialog', 'satnetRPC','snDialog',
+    '$scope', '$log', '$mdDialog', 'satnetRPC','snDialog', 'snMessageBus',
 
     /**
      * Controller function for handling the SatNet requests dialog.
      *
      * @param {Object} $scope $scope for the controller
      */
-    function ($scope, $filter, $mdDialog, satnetRPC, snDialog) {
+    function ($scope, $log, $mdDialog, satnetRPC, snDialog, snMessageBus) {
+
+        $scope.events =  {
+            requests: {
+                accepted: {
+                    id: snMessageBus.createName(
+                        snMessageBus.CHANNELS.requests.id,
+                        snMessageBus.EVENTS.accepted.id
+                    )
+                },
+                denied: {
+                    id: snMessageBus.createName(
+                        snMessageBus.CHANNELS.requests.id,
+                        snMessageBus.EVENTS.denied.id
+                    )
+                },
+                dropped: {
+                    id: snMessageBus.createName(
+                        snMessageBus.CHANNELS.requests.id,
+                        snMessageBus.EVENTS.dropped.id
+                    )
+                }
+            }
+        };
+
+        /**
+         * This function finds the given slot within the dictionary/array of
+         * slots within this controller.
+         *
+         * @param {String} segmentId Identifier of the segment
+         * @param {String} slotId Identifier of the slot
+         */
+        $scope._findSlot = function (segmentId, slotId) {
+
+            var slots = $scope.gui.slots[segmentId];
+            if ((slots === undefined) || (slots.length === 0)) {
+                throw 'No slots for ss = ' + segmentId;
+            }
+
+            for (var i = 0, L = slots.length; i < L; i++) {
+                if (slots[i].identifier === slotId) {
+                    return {
+                        index: i,
+                        slot: slots[i]
+                    };
+                }
+            }
+            throw 'Slot not found for ss = ' + segmentId;
+
+        };
+
+        /**
+         * CALLBACK
+         * This function is the callback that handles the event triggered
+         * whenever a request slot has been accepted, canceled or denied.
+         *
+         * @param {String} event The name of the event
+         * @param {Object} data The data object generated by the event
+         */
+        $scope._updateRequestCb = function (event, data) {
+            $log.info(
+                '>>> @requests: event rx, id = ' + event +
+                ', data = ' + JSON.stringify(data, null, 4)
+            );
+            var ss_id = (data.primary === 'spacecraft') ?
+                    data.gs_id: data.sc_id;
+            try {
+                var result = $scope._findSlot(ss_id, data.slot.identifier);
+                if (data.slot.state === 'FREE') {
+                    $scope.gui.slots[ss_id].splice(result.index, 1);
+                } else {
+                    result.slot.state = data.slot.state;
+                }
+            } catch (e) {
+                $log.info(e);
+            }
+        };
+
+        $scope.$on(
+            $scope.events.requests.accepted.id, $scope._updateRequestCb
+        );
+        $scope.$on(
+            $scope.events.requests.denied.id, $scope._updateRequestCb
+        );
+        $scope.$on(
+            $scope.events.requests.dropped.id, $scope._updateRequestCb
+        );
 
         $scope.gui = {
             gss: [],
@@ -210,6 +323,44 @@ angular.module('snRequestsDirective', [
          * Function that closes the dialog.
          */
         $scope.close = function () { $mdDialog.hide(); };
+
+        /**
+         * This function is used to check whether the given slot has to be
+         * discarded from amongst the other slots or not.
+         *
+         * @param {Object} slot The slot to be checked
+         * @param {Boolean} 'true' if the slot has to be discarded
+         */
+        $scope._filterByState = function(slot) {
+            return (slot.state !== 'SELECTED') && (slot.state !== 'RESERVED');
+        };
+
+        /**
+         * This function processes the slots received from the server in order
+         * to adapt them to a more JavaScript "friendly" data structure. It
+         * stores the results directly in the controller's data section.
+         *
+         * @param {String} segmentId Identifier of the segment
+         * @param {Object} results Object with the results from the server
+         */
+        $scope._processSlots = function (segmentId, results) {
+
+            $scope.gui.slots[segmentId] = [];
+
+            if ((results === null) || (angular.equals({}, results))) {
+                return;
+            }
+
+            var ss_id = Object.keys(results)[0],
+                slots = results[ss_id];
+
+            for (var i = 0, L = slots.length; i < L; i++) {
+                if ($scope._filterByState(slots[i])) {continue;}
+                slots[i].segment_id = ss_id;
+                $scope.gui.slots[segmentId].push(slots[i]);
+            }
+
+        };
 
         /**
          * This function retrieves the operational slots from the server for a
@@ -228,36 +379,11 @@ angular.module('snRequestsDirective', [
          */
         $scope._pullSlots = function (segmentType, segmentId) {
             var rpc_name = segmentType + '.operational';
-
             satnetRPC.rCall(rpc_name, [segmentId]).then(function (results) {
-
-                $scope.gui.slots[segmentId] = [];
-
-                if ((results === null) || (angular.equals({}, results))) {
-                    return;
-                }
-
-                var ss_id = Object.keys(results)[0],
-                    slots = results[ss_id];
-
-                for (var i = 0, L = slots.length; i < L; i++) {
-
-                    if (
-                        (slots[i].state !== 'SELECTED') &&
-                        (slots[i].state !== 'RESERVED')
-                    ) {
-                        continue;
-                    }
-
-                    slots[i].segment_id = ss_id;
-                    $scope.gui.slots[segmentId].push(slots[i]);
-
-                }
-
+                $scope._processSlots(segmentId, results);
             }).catch(function (cause) {
                 snDialog.exception(segmentType + '.operational', '-', cause);
             });
-
         };
 
         /**

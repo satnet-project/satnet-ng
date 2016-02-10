@@ -65,7 +65,7 @@ angular
          * @param channel String with the channel identifier
          * @param event String with the event identifier
          */
-        this.createName = function (channel, even) {
+        this.createName = function (channel, event) {
             return channel + ':' + event;
         };
 

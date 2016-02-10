@@ -60,62 +60,6 @@ describe('Testing Requests controllers', function () {
         expect($scope.gui.gss).toEqual(['gs-1', 'gs-2', 'gs-3']);
         expect($scope.gui.scs).toEqual(['sc-test-1', 'sc-test-2']);
 
-        console.log('>>> $scope.gui = ' + JSON.stringify($scope.gui, null, 4));
-
     });
-
-    /*
-    it('should create the Dialog Controller for creation', function () {
-
-        var $scope = $rootScope.$new(),
-            test_id = 'gs-id-1';
-
-        $controller("gsDialogCtrl", {
-            $scope: $scope,
-            $mdDialog: $mdDialog,
-            satnetRPC: satnetRPC,
-            identifier: test_id,
-            isEditing: true
-        });
-
-        $scope.init();
-        $rootScope.$digest();
-
-        expect($scope.center).toEqual({
-            lat: '40.0', lng: '50.0', zoom: 8
-        });
-
-    });
-
-    it('should create the Dialog Controller for edition', function () {
-
-        var $scope = $rootScope.$new(),
-            test_id = 'gs-id-1',
-            test_lat = '40.0', test_lng = '50.0',
-            x_cfg = {
-                callsign: "asfdasd",
-                elevation: 12,
-                identifier: test_id
-            };
-
-        $controller("gsDialogCtrl", {
-            $scope: $scope,
-            $mdDialog: $mdDialog,
-            satnetRPC: satnetRPC,
-            identifier: test_id,
-            isEditing: true
-        });
-
-        $scope.init();
-        $rootScope.$digest();
-
-        expect($scope.center).toEqual({
-            lat: test_lat, lng: test_lng, zoom: 8
-        });
-        // TODO Understand how 'mapServices' loads the GS...
-        // expect($scope.configuration).toEqual(x_cfg);
-
-    });
-    */
 
 });
