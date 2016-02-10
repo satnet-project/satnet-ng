@@ -1,5 +1,6 @@
 <!--
 [![Circle CI](https://circleci.com/gh/satnet-project/satnet-ng.svg?style=shield)](https://circleci.com/gh/satnet-project/satnet-ng)
+[![Dependencies Status](https://david-dm.org/satnet-project/satnet-ng/dev-status.svg)](https://david-dm.org/satnet-project/satnet-ng#info=devDependencies)
 -->
 
 [![Build Status](https://travis-ci.org/satnet-project/server.svg?branch=master)](https://travis-ci.org/satnet-project/server)
@@ -8,8 +9,6 @@
 [![Code Health](https://landscape.io/github/satnet-project/satnet-ng/master/landscape.svg?style=flat)](https://landscape.io/github/satnet-project/satnet-ng/master)
 [![Codacy Badge](https://www.codacy.com/project/badge/cf2f7e18001244ab96137cd71806385e)](https://www.codacy.com/app/rtubiopa/satnet-ng)
 [![Inline docs](http://inch-ci.org/github/satnet-project/satnet-ng.png)](http://inch-ci.org/github/satnet-project/satnet-ng)
-
-[![Dependencies Status](https://david-dm.org/satnet-project/satnet-ng/dev-status.svg)](https://david-dm.org/satnet-project/satnet-ng#info=devDependencies)
 
 satnet-ng
 ================
