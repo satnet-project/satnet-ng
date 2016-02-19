@@ -186,41 +186,6 @@ angular
             'gs.getPasses':
                 this._simulation.createMethod('gs.passes'),
 
-            /** ************************************************************ */
-            /** ************************************************************ */
-            /* LEOP services */
-
-            'leop.getCfg':
-                this._leop.createMethod('getConfiguration'),
-            'leop.setCfg':
-                this._leop.createMethod('setConfiguration'),
-            'leop.getPasses':
-                this._leop.createMethod('getPasses'),
-            'leop.gs.list':
-                this._leop.createMethod('gs.list'),
-            'leop.sc.list':
-                this._leop.createMethod('sc.list'),
-            'leop.gs.add':
-                this._leop.createMethod('gs.add'),
-            'leop.gs.remove':
-                this._leop.createMethod('gs.remove'),
-            'leop.ufo.add':
-                this._leop.createMethod('launch.addUnknown'),
-            'leop.ufo.remove':
-                this._leop.createMethod('launch.removeUnknown'),
-            'leop.ufo.identify':
-                this._leop.createMethod('launch.identify'),
-            'leop.ufo.forget':
-                this._leop.createMethod('launch.forget'),
-            'leop.ufo.update':
-                this._leop.createMethod('launch.update'),
-            'leop.getMessages':
-                this._leop.createMethod('getMessages'),
-
-            /** ************************************************************ */
-            /** ************************************************************ */
-            /** ************************************************************ */
-
             // NETWORK services
             'net.alive':
                 this._network.createMethod('alive'),
@@ -250,6 +215,7 @@ angular
                 this._scheduling.createMethod('sc.cancelSelections'),
             'ss.compatibility':
                 this._scheduling.createMethod('segment.compatibility'),
+
         };
 
         /**
@@ -420,45 +386,6 @@ angular
             });
         };
 
-        /**
-         * Reads the configuration for all the GroundStations associated
-         * with this LEOP cluster.
-         *
-         * @param leop_id Identifier of the LEOP cluster.
-         * @returns Promise to be resolved with the result.
-         */
-        this.readAllLEOPGS = function (leop_id) {
-            var self = this;
-            return this.rCall('leop.gs.list', [leop_id])
-                .then(function (gss) {
-                    var p = [];
-                    angular.forEach(gss.leop_gs_available, function (gs) {
-                        p.push(self.rCall('gs.get', [gs]));
-                    });
-                    angular.forEach(gss.leop_gs_inuse, function (gs) {
-                        p.push(self.rCall('gs.get', [gs]));
-                    });
-                    return $q.all(p).then(function (results) {
-                        var a_cfgs = [],
-                            u_cfgs = [],
-                            j, r_j, r_j_id;
-                        for (j = 0; j < results.length; j += 1) {
-                            r_j = results[j];
-                            r_j_id = r_j.groundstation_id;
-                            if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
-                                a_cfgs.push(r_j);
-                            } else {
-                                u_cfgs.push(r_j);
-                            }
-                        }
-                        return {
-                            leop_gs_available: a_cfgs,
-                            leop_gs_inuse: u_cfgs
-                        };
-                    });
-                }
-            );
-        };
     }
 
 ]);

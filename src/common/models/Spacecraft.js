@@ -33,32 +33,13 @@ angular.module('snSpacecraftModels', [
          */
         this.initAll = function () {
             var self = this;
-            return satnetRPC.rCall('sc.list', []).then(function (scs) {
+            return satnetRPC.rCall('sc.list.mine', []).then(function (scs) {
                 var p = [];
                 angular.forEach(scs, function (sc) { p.push(self.addSC(sc)); });
                 return $q.all(p).then(function (sc_ids) {
                     return sc_ids;
                 });
             });
-        };
-
-        /**
-         * Initializes all the configuration objects for the available
-         * spacecraft.
-         * @returns {ng.IPromise<[String]>} Identifier of the read SC.
-         */
-        this.initAllLEOP = function () {
-            var self = this;
-            return satnetRPC.rCall('leop.sc.list', [$rootScope.leop_id])
-                .then(function (scs) {
-                    var p = [];
-                    angular.forEach(scs, function (sc) {
-                        p.push(self.addSC(sc));
-                    });
-                    return $q.all(p).then(function (sc_ids) {
-                        return sc_ids;
-                    });
-                });
         };
 
         /**

@@ -431,13 +431,13 @@ angular.module('snRequestsDirective', [
          * @returns
          */
         $scope._pullScSlots = function () {
-            satnetRPC.rCall('sc.list', []).then(function (results) {
+            satnetRPC.rCall('sc.list.mine', []).then(function (results) {
                 $scope.gui.scs = results;
                 for (var i = 0, l = $scope.gui.scs.length; i < l; i++ ) {
                     $scope._pullSlots('sc', $scope.gui.scs[i]);
                 }
             }).catch(function (cause) {
-                snDialog.exception('sc.list', '-', cause);
+                snDialog.exception('sc.list.mine', '-', cause);
             });
         };
 

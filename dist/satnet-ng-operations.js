@@ -1024,41 +1024,6 @@ angular
             'gs.getPasses':
                 this._simulation.createMethod('gs.passes'),
 
-            /** ************************************************************ */
-            /** ************************************************************ */
-            /* LEOP services */
-
-            'leop.getCfg':
-                this._leop.createMethod('getConfiguration'),
-            'leop.setCfg':
-                this._leop.createMethod('setConfiguration'),
-            'leop.getPasses':
-                this._leop.createMethod('getPasses'),
-            'leop.gs.list':
-                this._leop.createMethod('gs.list'),
-            'leop.sc.list':
-                this._leop.createMethod('sc.list'),
-            'leop.gs.add':
-                this._leop.createMethod('gs.add'),
-            'leop.gs.remove':
-                this._leop.createMethod('gs.remove'),
-            'leop.ufo.add':
-                this._leop.createMethod('launch.addUnknown'),
-            'leop.ufo.remove':
-                this._leop.createMethod('launch.removeUnknown'),
-            'leop.ufo.identify':
-                this._leop.createMethod('launch.identify'),
-            'leop.ufo.forget':
-                this._leop.createMethod('launch.forget'),
-            'leop.ufo.update':
-                this._leop.createMethod('launch.update'),
-            'leop.getMessages':
-                this._leop.createMethod('getMessages'),
-
-            /** ************************************************************ */
-            /** ************************************************************ */
-            /** ************************************************************ */
-
             // NETWORK services
             'net.alive':
                 this._network.createMethod('alive'),
@@ -1088,6 +1053,7 @@ angular
                 this._scheduling.createMethod('sc.cancelSelections'),
             'ss.compatibility':
                 this._scheduling.createMethod('segment.compatibility'),
+
         };
 
         /**
@@ -1258,45 +1224,6 @@ angular
             });
         };
 
-        /**
-         * Reads the configuration for all the GroundStations associated
-         * with this LEOP cluster.
-         *
-         * @param leop_id Identifier of the LEOP cluster.
-         * @returns Promise to be resolved with the result.
-         */
-        this.readAllLEOPGS = function (leop_id) {
-            var self = this;
-            return this.rCall('leop.gs.list', [leop_id])
-                .then(function (gss) {
-                    var p = [];
-                    angular.forEach(gss.leop_gs_available, function (gs) {
-                        p.push(self.rCall('gs.get', [gs]));
-                    });
-                    angular.forEach(gss.leop_gs_inuse, function (gs) {
-                        p.push(self.rCall('gs.get', [gs]));
-                    });
-                    return $q.all(p).then(function (results) {
-                        var a_cfgs = [],
-                            u_cfgs = [],
-                            j, r_j, r_j_id;
-                        for (j = 0; j < results.length; j += 1) {
-                            r_j = results[j];
-                            r_j_id = r_j.groundstation_id;
-                            if (gss.leop_gs_available.indexOf(r_j_id) >= 0) {
-                                a_cfgs.push(r_j);
-                            } else {
-                                u_cfgs.push(r_j);
-                            }
-                        }
-                        return {
-                            leop_gs_available: a_cfgs,
-                            leop_gs_inuse: u_cfgs
-                        };
-                    });
-                }
-            );
-        };
     }
 
 ]);
@@ -3114,38 +3041,9 @@ angular
              */
             this.initAll = function () {
                 var self = this;
-                return satnetRPC.rCall('gs.list', []).then(function (gss) {
+                return satnetRPC.rCall('gs.list.mine', []).then(function (gss) {
                     return self._initAll(gss);
                 });
-            };
-
-            /**
-             * Initializes all the GroundStations reading the information from
-             * the server, for all those that are registered for this LEOP cluster.
-             * Markers are indirectly initialized.
-             *
-             * @returns {Object} Promise that returns the identifier of the Ground
-             *                   Station
-             */
-            this.initAllLEOP = function (leop_id) {
-                var self = this,
-                    p = [];
-                return satnetRPC.rCall('leop.gs.list', [leop_id])
-                    .then(function (gss) {
-                        angular.forEach(gss.leop_gs_inuse, function (gs) {
-                            p.push(self.addGS(gs));
-                        });
-                        angular.forEach(gss.leop_gs_available, function (gs) {
-                            p.push(self.addUnconnectedGS(gs));
-                        });
-                        return $q.all(p).then(function (gs_ids) {
-                            var ids = [];
-                            angular.forEach(gs_ids, function (id) {
-                                ids.push(id);
-                            });
-                            return ids;
-                        });
-                    });
             };
 
             /**
@@ -3293,7 +3191,8 @@ angular
             };
 
     }
-]);;/**
+]);
+;/**
  * Copyright 2014 Ricardo Tubio-Pardavila
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -3328,32 +3227,13 @@ angular.module('snSpacecraftModels', [
          */
         this.initAll = function () {
             var self = this;
-            return satnetRPC.rCall('sc.list', []).then(function (scs) {
+            return satnetRPC.rCall('sc.list.mine', []).then(function (scs) {
                 var p = [];
                 angular.forEach(scs, function (sc) { p.push(self.addSC(sc)); });
                 return $q.all(p).then(function (sc_ids) {
                     return sc_ids;
                 });
             });
-        };
-
-        /**
-         * Initializes all the configuration objects for the available
-         * spacecraft.
-         * @returns {ng.IPromise<[String]>} Identifier of the read SC.
-         */
-        this.initAllLEOP = function () {
-            var self = this;
-            return satnetRPC.rCall('leop.sc.list', [$rootScope.leop_id])
-                .then(function (scs) {
-                    var p = [];
-                    angular.forEach(scs, function (sc) {
-                        p.push(self.addSC(sc));
-                    });
-                    return $q.all(p).then(function (sc_ids) {
-                        return sc_ids;
-                    });
-                });
         };
 
         /**
@@ -3413,7 +3293,8 @@ angular.module('snSpacecraftModels', [
         };
 
     }
-]);;/*
+]);
+;/*
    Copyright 2015 Ricardo Tubio-Pardavila
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -6944,13 +6825,13 @@ angular.module('snRequestsDirective', [
          * @returns
          */
         $scope._pullScSlots = function () {
-            satnetRPC.rCall('sc.list', []).then(function (results) {
+            satnetRPC.rCall('sc.list.mine', []).then(function (results) {
                 $scope.gui.scs = results;
                 for (var i = 0, l = $scope.gui.scs.length; i < l; i++ ) {
                     $scope._pullSlots('sc', $scope.gui.scs[i]);
                 }
             }).catch(function (cause) {
-                snDialog.exception('sc.list', '-', cause);
+                snDialog.exception('sc.list.mine', '-', cause);
             });
         };
 

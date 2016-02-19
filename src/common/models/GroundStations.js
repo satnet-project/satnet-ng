@@ -51,38 +51,9 @@ angular
              */
             this.initAll = function () {
                 var self = this;
-                return satnetRPC.rCall('gs.list', []).then(function (gss) {
+                return satnetRPC.rCall('gs.list.mine', []).then(function (gss) {
                     return self._initAll(gss);
                 });
-            };
-
-            /**
-             * Initializes all the GroundStations reading the information from
-             * the server, for all those that are registered for this LEOP cluster.
-             * Markers are indirectly initialized.
-             *
-             * @returns {Object} Promise that returns the identifier of the Ground
-             *                   Station
-             */
-            this.initAllLEOP = function (leop_id) {
-                var self = this,
-                    p = [];
-                return satnetRPC.rCall('leop.gs.list', [leop_id])
-                    .then(function (gss) {
-                        angular.forEach(gss.leop_gs_inuse, function (gs) {
-                            p.push(self.addGS(gs));
-                        });
-                        angular.forEach(gss.leop_gs_available, function (gs) {
-                            p.push(self.addUnconnectedGS(gs));
-                        });
-                        return $q.all(p).then(function (gs_ids) {
-                            var ids = [];
-                            angular.forEach(gs_ids, function (id) {
-                                ids.push(id);
-                            });
-                            return ids;
-                        });
-                    });
             };
 
             /**
